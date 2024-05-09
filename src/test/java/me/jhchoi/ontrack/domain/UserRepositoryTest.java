@@ -16,7 +16,7 @@ public class UserRepositoryTest {
     @Test
     void save(){
         OnTrackUser user = OnTrackUser.builder()
-                .userEmail("user@abc.com")
+                .userEmail("user2@abc.com")
                 .password("user1234")
                 .userName("Jane doe")
                 .registeredAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())

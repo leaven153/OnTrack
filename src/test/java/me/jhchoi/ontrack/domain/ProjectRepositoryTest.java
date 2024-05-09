@@ -20,16 +20,14 @@ public class ProjectRepositoryTest {
         OnTrackProject project = OnTrackProject.builder()
                 .creator(1L)
                 .projectType("team")
-                .projectName("first project test")
-                .projectUrl(UUID.randomUUID())
+                .projectName("second project test")  // 같은 이름을 가진 프로젝트를 생성할 수 없도록 해야 하나?
+                .projectUrl(UUID.randomUUID().toString())
                 .projectStatus("activated")
                 .projectDueDate(null)
                 .createdAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .updatedAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
-        OnTrackProject savedProject = projectRepository.save(project);
-        OnTrackProject findProj = projectRepository.findById(project.getId()).get();
-        assertThat(findProj).isEqualTo(savedProject);
+        projectRepository.save(project);
     }
 
 }

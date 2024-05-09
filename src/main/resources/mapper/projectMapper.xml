@@ -4,7 +4,7 @@
 <mapper namespace="me.jhchoi.ontrack.mapper.ProjectMapper">
     <insert id="save">
         INSERT INTO ontrack_project(CREATOR, project_type, project_name, project_url, project_dueDate, project_status, createdAt, updatedAt)
-        VALUES (#{creator}, #{projectType}, #{projectName}, #{projectUrl}, #{projectStatus}, #{projectDueDate}, #{createdAt}, #{updatedAt})
+        VALUES (#{creator}, #{projectType}, #{projectName}, #{projectUrl}, #{projectDueDate}, #{projectStatus}, #{createdAt}, #{updatedAt})
     </insert>
 
     <select id="findById" resultType="OnTrackProject">
