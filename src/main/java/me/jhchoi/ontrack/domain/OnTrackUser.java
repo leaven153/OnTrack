@@ -17,7 +17,7 @@ public class OnTrackUser {
 
 
     @Builder
-    public OnTrackUser(String userEmail, String userName, String password, LocalDateTime registeredAt, LocalDateTime visitedAt) {
+    public OnTrackUser(String userEmail, String userName, String password, LocalDateTime registeredAt {
         this.userEmail = userEmail;
         this.userName = userName;
         this.password = password;
