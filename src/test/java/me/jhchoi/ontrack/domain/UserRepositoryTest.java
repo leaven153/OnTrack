@@ -19,8 +19,7 @@ public class UserRepositoryTest {
                 .userEmail("user@abc.com")
                 .password("user1234")
                 .userName("Jane doe")
-                .createdAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                .visitedAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .registeredAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
         userRepository.save(user);
 
