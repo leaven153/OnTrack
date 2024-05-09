@@ -13,15 +13,15 @@ public class OnTrackUser {
     private String userEmail;
     private String userName;
     private String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime visitedAt;
+    private LocalDateTime registeredAt;
+
 
     @Builder
-    public OnTrackUser(String userEmail, String userName, String password, LocalDateTime createdAt, LocalDateTime visitedAt) {
+    public OnTrackUser(String userEmail, String userName, String password, LocalDateTime registeredAt, LocalDateTime visitedAt) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.password = password;
-        this.createdAt = createdAt;
-        this.visitedAt = visitedAt;
+        this.registeredAt = registeredAt;
+
     }
 }

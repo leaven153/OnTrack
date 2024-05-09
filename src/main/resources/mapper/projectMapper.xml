@@ -6,4 +6,10 @@
         INSERT INTO ontrack_project(CREATOR, project_type, project_name, project_url, project_dueDate, project_status, createdAt, updatedAt)
         VALUES (#{creator}, #{projectType}, #{projectName}, #{projectUrl}, #{projectStatus}, #{projectDueDate}, #{createdAt}, #{updatedAt})
     </insert>
+
+    <select id="findById" resultType="OnTrackProject">
+        SELECT id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
+        FROM ontrack_project
+        WHERE id = #{id}
+    </select>
 </mapper>

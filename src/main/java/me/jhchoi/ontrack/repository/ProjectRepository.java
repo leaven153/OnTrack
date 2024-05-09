@@ -5,6 +5,8 @@ import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.mapper.ProjectMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ProjectRepository {
@@ -13,5 +15,9 @@ public class ProjectRepository {
     public OnTrackProject save(OnTrackProject project){
         projectMapper.save(project);
         return project;
+    }
+
+    public Optional<OnTrackProject> findById(Long projectId) {
+        return projectMapper.findById(projectId);
     }
 }
