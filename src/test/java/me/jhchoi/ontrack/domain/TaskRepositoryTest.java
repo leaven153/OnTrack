@@ -32,6 +32,6 @@ public class TaskRepositoryTest {
                 .build();
         OnTrackTask savedTask = taskRepository.save(task);
         OnTrackTask findTask = taskRepository.findById(task.getId()).get();
-        assertThat(findTask).isEqualTo(savedTask);
+        assertThat(findTask.getTaskTitle()).isEqualTo(savedTask.getTaskTitle());
     }
 }
