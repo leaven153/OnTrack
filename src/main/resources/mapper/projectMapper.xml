@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/schema/mybatis-3-mapper.dtd">
 <mapper namespace="me.jhchoi.ontrack.mapper.ProjectMapper">
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ontrack_project(CREATOR, project_type, project_name, project_url, project_dueDate, project_status, createdAt, updatedAt)
         VALUES (#{creator}, #{projectType}, #{projectName}, #{projectUrl}, #{projectDueDate}, #{projectStatus}, #{createdAt}, #{updatedAt})
     </insert>

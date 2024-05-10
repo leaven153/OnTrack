@@ -7,6 +7,10 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
+// 새 할 일
+// 자동: project id, author(user_id), createdAt, updatedAt, updatedBy(user_id)
+// 필수입력: task title
+//
 @Data
 @NoArgsConstructor
 public class OnTrackTask {

@@ -2,8 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/schema/mybatis-3-mapper.dtd">
 <mapper namespace="me.jhchoi.ontrack.mapper.TaskMapper" >
-    <insert id="save">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ontrack_task(project_id, task_title, AUTHOR, task_priority, task_status, task_dueDate, task_parent_id, createdAt, updatedAt, updatedBy)
         VALUES (#{projectId}, #{taskTitle}, #{author}, #{taskPriority}, #{taskStatus}, #{taskDueDate}, #{taskParentId}, #{createdAt}, #{updatedAt}, #{updatedBy})
     </insert>
+
+    <select id="findById" resultType="OnTrackTask">
+        SELECT task_title, AUTHOR, task_status, createdAt
+        FROM ontrack_task
+        WHERE id = #{id}
+    </select>
 </mapper>
