@@ -2,14 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/schema/mybatis-3-mapper.dtd">
 <mapper namespace="me.jhchoi.ontrack.mapper.TaskMapper" >
-    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+
+    <insert id="newTask" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO ontrack_task(project_id, task_title, AUTHOR, task_priority, task_status, task_dueDate, task_parent_id, createdAt, updatedAt, updatedBy)
         VALUES (#{projectId}, #{taskTitle}, #{author}, #{taskPriority}, #{taskStatus}, #{taskDueDate}, #{taskParentId}, #{createdAt}, #{updatedAt}, #{updatedBy})
+    </insert>
+
+    <insert id="assign" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_assignment(project_id, task_id, member_id, user_id, role, assignedAt)
+        VALUES
+        <foreach collection="list" item="ta">
+            (#{ta.projectId}, #{ta.taskId}, #{ta.memberId}, #{ta.userId}, #{ta.role}, #{ta.assignedAt})
+        </foreach>
+    </insert>
+
+
+    <insert id="newTaskHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_history(task_id, project_id, task_modItem, task_modType, task_modContent, updated)
     </insert>
 
     <select id="findById" resultType="OnTrackTask">
         SELECT task_title, AUTHOR, task_status, createdAt
         FROM ontrack_task
         WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultType="TasksResponse">
+        SELECT task_title, task_status, task_dueDate, task_priority, author
+        FROM ontrack_task
+        WHERE project_id = #{projectId}
     </select>
 </mapper>

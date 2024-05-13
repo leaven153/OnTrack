@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,10 +16,10 @@ public class TaskAssignment {
     private Long memberId;
     private Long userId;
     private String role;
-    private LocalDateTime assignedAt;
+    private LocalDate assignedAt;
 
     @Builder
-    public TaskAssignment(Long projectId, Long taskId, Long memberId, Long userId, String role, LocalDateTime assignedAt) {
+    public TaskAssignment(Long projectId, Long taskId, Long memberId, Long userId, String role, LocalDate assignedAt) {
         this.projectId = projectId;
         this.taskId = taskId;
         this.memberId = memberId;

@@ -1,6 +1,8 @@
 package me.jhchoi.ontrack.mapper;
 
 import me.jhchoi.ontrack.domain.OnTrackTask;
+import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.dto.TasksResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +13,16 @@ import java.util.Optional;
 public interface TaskMapper {
     
     // 새 할 일 저장
-    void save(OnTrackTask task);
+    void newTask(OnTrackTask task);
+
+    // 담당자 배정
+    void assign(List<TaskAssignment> taskAssignment);
+
+    // 담당자 삭제
+    void unassign(TaskAssignment taskAssignment);
+
+    // 할 일: 파일 첨부
+
 
     // 할 일 수정
     void update(@Param("taskId") Long taskId, @Param("updateParam")OnTrackTask task);
@@ -19,12 +30,8 @@ public interface TaskMapper {
     // 할 일 상세
     Optional<OnTrackTask> findById(Long taskId);
 
-    // 할 일 - 탭: 소통하기
-
-    // 할 일 - 탭: 진행내역
-    
-    // 할 일 - 탭: 파일
-    
     // 할 일 목록
-    List<OnTrackTask> findAll(OnTrackTask task);
+    List<TasksResponse> findAll();
+
+
 }
