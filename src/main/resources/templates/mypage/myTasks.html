@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+ <head th:fragment="header">
+  <meta charset="UTF-8">
+  <meta name="Author" content="JHCHOI">
+  <meta name="Keywords" content="mypage">
+  <meta name="Description" content="all projects">
+
+  <title>MMOM -Mypage(tasks)</title>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png">
+  <link rel="stylesheet" href="../../static/css/style.css">
+  <!-- <script src="../../static/js/main.js"></script> -->
+ </head>
+ <body>
+
+  <!--------------------->
+  <!----- Begin nav ----->
+  <nav class="" th:fragment="nav">
+    <div class="navWrapper flex-col-between-center-nowrap">
+      <div class="nav-btn-list">
+        <!--
+        <div class="" data-id="">
+          <img src="../../static/imgs/icon_bar.png" alt="" class="">
+        </div>
+
+        <div class="btn-open-modal-create-project nav-menu" data-id="modal-create-project">
+          <img src="../../static/imgs/plus.png" alt="create project">
+          <span class="menu-tip">새 프로젝트 만들기</span>
+        </div>
+        -->
+        <div class="nav-menu" data-id="" id="nav-btn-task">
+          <!-- task의 모두 확인 요청 사용여부 결정요망 -->
+          <div class="task-alarm-comment-required-reading"></div>
+          <a href="../mypage/myTasks.html"><img src="../../static/imgs/icon_tasks2.png" alt="tasks" class=""></a>
+          <span class="menu-tip">나의 모든일</span>
+        </div>
+        
+        <div class="nav-menu" data-id="" id="nav-btn-project">
+          <div class="project-alarm-notice"></div>
+          <div class="project-alarm-invitation"></div>
+          <a href="../mypage/myProjects.html"><img src="../../static/imgs/icon_projects.png" alt="projects" ></a>
+          <span class="menu-tip">나의 모든 프로젝트</span>
+        </div>
+        
+        
+        <div class="휴지통" data-id=""><a href="../mypage/bin.html"><img src="../../static/imgs/icon_bin2.png" alt="bin"></a></div>
+      </div>     
+      <div class="nav-btn-list">
+        <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" alt="account"></div>
+        <div class="" data-id=""><a href=""><img src="../../static/imgs/icon_question.png" alt="qna"></a></div>
+      </div>  
+    </div>
+  </nav>
+  <!-- nav End -->
+  <!---------------------->
+
+  <!----------------------------------------->
+  <!----------- 상단 고정(my name, page title) 시작 ---------->
+  <!--(name, title, view tab)-->
+  <div class="flex-col-start-nowrap mypage-fixed-top" th:fragment="dunno">
+    <div class="flex-row-end-center-nowrap wrapper">
+      <div class="user-name flex-row-start-nowrap cursorP">
+        <img src="../../static/imgs/icon_point3.png" alt="point name" class="icon-signup4 hide">
+        <span class="font-18 bold">존 레전드</span>
+        <span class="signup4-guide hide">나의 이름을 설정해주세요</span>
+        <!-- <div class="alarm review"></div>
+        <div class="alarm done"></div> -->
+      </div>
+    </div> <!-- 사용자 이름 끝 -->
+    <div class="flex-row-justify-start-align-center wrapper mb-20">
+      <img src="../../static/imgs/icon_tasks2(411c02).png" alt="" class="img-40 mr-10">
+      <span class="font-36 bold c411">나의 일 모아보기</span>
+    </div>
+    <div class="컬럼명 my-tasks-col-names flex-row-justify-start-align-center">
+      <div class=""><span class="">최종수정일시</span></div>
+      <div class=""><span class="">최종수정자</span></div>
+      <div class=""><span class="">프로젝트</span></div>
+      <div class=""><span class="">할 일</span></div>
+      <div class=""><span class="">진행상태</span></div>
+      <div class=""><span class="">마감일</span></div>
+      <div class=""><span class="">작성일</span></div>
+    </div>
+  </div>
+  <!-- 상단 고정(my name, page title) 끝 -->
+
+  <!---------------------------->
+  <div class="nextfixedWrapper116 ">
+    <!-- 나의 모든 일 구분 탭 시작 -->
+    <!--
+    <div class="탭버튼 wrapper flex-row-between-nowrap bottom-line-subtle">
+      <ul class="프로젝트탭box flex-row-start-nowrap nowrapNoshrink mr-5">
+        <li class="프로젝트탭 my-tasks-btn-tab my-tasks-btn-tab-choosen">함께하는 일</li>
+        <li class="프로젝트탭 my-tasks-btn-tab">혼자하는 일</li>
+      </ul>
+    </div> -->
+    <!-- 나의 모든 일 구분 탭 끝 -->
+
+    <!-- 나의 모든 일 목록 시작 -->
+    <!-- 최종수정일(정렬기준), 최종수정자, 프로젝트명, 할일명, 진행상태, 마감일, 작성일 -->
+    <div class="wrapper flex-col-start-center-nowrap">
+      <div class="각row my-tasks-col flex-row-justify-start-align-center">
+          <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
+          <div class=""><span class="">크러쉬</span></div>
+          <div class=""><span class="">Essential;</span></div>
+          <div class="할일 textL "><span class="">By Your Side</span></div>
+          <div class="flex-row-justify-start-align-center">
+            <div class="진행상태 status-sign not-yet"></div>
+            <span class="">시작 안 함</span></div>
+          <div class="">
+            <span class="altivo-regular">24.12.10</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
+          <div class=""><span class="altivo-light">23.11.15</span></div>
+      </div><!-- 각 row 끝 -->
+      <div class="각row my-tasks-col flex-row-justify-start-align-center">
+          <div class=""><span class="altivo-regular">24.01.10 09:07</span></div>
+          <div class=""><span class="">제시카 차스테인</span></div>
+          <div class=""><span class="">목적을 위해 자신을 도구로 삼는 자</span></div>
+          <div class="할일 textL "><span class="">미스 슬로운</span></div>
+          <div class="flex-row-justify-start-align-center">
+            <div class="진행상태 status-sign planning"></div>
+            <span class="">계획중</span></div>
+          <div class="">
+            <span class="altivo-regular">24.03.05</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
+          <div class=""><span class="altivo-light">24.02.15</span></div>
+      </div><!-- 각 row 끝 -->
+      <div class="각row my-tasks-col flex-row-justify-start-align-center">
+        <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
+        <div class=""><span class="">나탈리 포트만</span></div>
+        <div class=""><span class="">블랙 스완</span></div>
+        <div class="할일 textL "><span class="">흑조 마스터 하기</span></div>
+        <div class="flex-row-justify-start-align-center">
+          <div class="진행상태 status-sign ing"></div>
+          <span class="">진행중</span></div>
+        <div class="">
+          <span class="altivo-regular">24.04.23</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
+        <div class=""><span class="altivo-light">24.01.31</span></div>
+    </div><!-- 각 row 끝 -->
+    <div class="각row my-tasks-col flex-row-justify-start-align-center">
+        <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
+        <div class=""><span class="">로버트 다우니 주니어</span></div>
+        <div class=""><span class="">배우 미스 슬로운 라라라 빙빙빙</span></div>
+        <div class="할일 textL "><span class="">아이언맨 할 수 있어 하면 된다 해내자 해내보자</span></div>
+        <div class="flex-row-justify-start-align-center">
+          <div class="진행상태 status-sign review"></div>
+          <span class="">검토중</span></div>
+        <div class="">
+          <span class="altivo-regular">24.04.30</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
+        <div class=""><span class="altivo-light">24.02.07</span></div>
+    </div><!-- 각 row 끝 -->
+    <div class="각row my-tasks-col flex-row-justify-start-align-center">
+      <div class=""><span class="altivo-regular">23.11.11 08:15</span></div>
+      <div class=""><span class="">젠다야</span></div>
+      <div class=""><span class="">듄 part.2</span></div>
+      <div class="할일 textL "><span class="">안 봤는데 소설부터 보고싶네요</span></div>
+      <div class="flex-row-justify-start-align-center">
+        <div class="진행상태 status-sign done"></div>
+        <span class="">완료</span></div>
+      <div class="">
+        <span class="altivo-regular">24.04.30</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
+      <div class=""><span class="altivo-light">23.12.31</span></div>
+  </div><!-- 각 row 끝 -->
+    </div><!-- wrapper 끝 -->
+    <!-- 나의 모든 일 목록 끝 -->
+  </div>
+
+  <!-------------------------->
+  <!-- Modal Starts -->
+  
+  <!-- Modal Ends -->
+  <!------------------------>
+ </body>
+</html>

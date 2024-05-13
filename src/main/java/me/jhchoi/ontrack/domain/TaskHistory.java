@@ -14,7 +14,7 @@ public class TaskHistory {
     private Long id;
     private Long taskId;
     private Long projectId;
-    private String modItem; // 변경한 카테고리: 중요도, 진행상태, 마감일, 세부할일분화, 담당자
+    private String modItem; // 변경한 카테고리: 할일명, 중요도, 진행상태, 마감일, 세부할일분화, 담당자
     private String modType; // 설정/등록, 변경, 삭제
     private String modContent; // 변경한 내용
     private LocalDateTime updatedAt;

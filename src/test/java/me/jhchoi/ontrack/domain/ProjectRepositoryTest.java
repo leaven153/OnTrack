@@ -31,8 +31,8 @@ public class ProjectRepositoryTest {
                 .projectUrl(UUID.randomUUID().toString())
                 .projectStatus("activated")
                 .projectDueDate(null)
-                .createdAt(now.minusNanos((long) nanosec))
-                .updatedAt(now.minusNanos((long) nanosec)) //new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                .createdAt(now.minusNanos(nanosec))
+                .updatedAt(now.minusNanos(nanosec)) //new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 .build();
         projectRepository.save(project);
         OnTrackProject findProj = projectRepository.findById(project.getId()).get();
