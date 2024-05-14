@@ -36,7 +36,7 @@ public class TaskRepositoryTest {
         OnTrackTask savedTask = taskRepository.newTask(task);
         OnTrackTask findTask = taskRepository.findById(task.getId()).get();
         assertThat(findTask.getTaskTitle()).isEqualTo(savedTask.getTaskTitle());
-    }
+    }// test: new task
 
     @Test
     void assign(){
@@ -53,5 +53,11 @@ public class TaskRepositoryTest {
         assignees.add(ta);
         taskRepository.assign(assignees);
         assertThat(ta.getId()).isEqualTo(1L);
+    } // test: assign
+
+    @Test
+    void log(){
+
     }
+
 }

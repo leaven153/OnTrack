@@ -17,8 +17,9 @@
     </insert>
 
 
-    <insert id="newTaskHistory" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO task_history(task_id, project_id, task_modItem, task_modType, task_modContent, updated)
+    <insert id="log" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_history(project_id, task_id, modItem, modType, modContent, updatedAt, updatedBy)
+        VALUES (#{projectId}, #{taskId}, #{modItem}, #{modType}, #{modContent}, #{updatedAt}, #{updatedBy})
     </insert>
 
     <select id="findById" resultType="OnTrackTask">

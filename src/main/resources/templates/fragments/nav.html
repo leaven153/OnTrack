@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>nav</title>
+</head>
+<body>
+<nav>
+    <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
+        <div class="nav-btn-list">
+            <div class="nav-menu" data-id="" id="nav-btn-task">
+                <!-- task의 모두 확인 요청 사용여부 결정요망 -->
+                <div class="task-alarm-comment-required-reading"></div>
+                <a th:href="@{/mypage/myTasks}"><img src="/imgs/icon_tasks2.png" alt="tasks" class=""></a>
+                <span class="menu-tip">나의 모든일</span>
+            </div>
+            <div class="nav-menu" data-id="" id="nav-btn-project">
+                <div class="project-alarm-notice"></div>
+                <div class="project-alarm-invitation"></div>
+                <a th:href="@{/mypage/myProjects}"><img src="/imgs/icon_projects.png" alt="projects" ></a>
+                <span class="menu-tip">나의 모든 프로젝트</span>
+            </div>
+            <div class="" data-id=""><a th:href="@{/mypage/bin}"><img src="/imgs/icon_bin2.png" alt="bin"></a></div>
+        </div>
+        <div class="nav-btn-list">
+            <div class="btn-modal-open-account-settings" data-id=""><img src="/imgs/icon_user_setting.png" alt="account"></div>
+            <div class="" data-id=""><a href="#"><img src="/imgs/icon_question.png" alt="qna"></a></div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

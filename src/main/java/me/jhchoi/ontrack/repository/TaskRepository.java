@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.repository;
 import lombok.RequiredArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.TasksResponse;
 import me.jhchoi.ontrack.mapper.TaskMapper;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +23,11 @@ public class TaskRepository {
         taskMapper.newTask(task);
         return task;
     }
+
+    // 기록(history): 새 할 일 등록
+    public void log(TaskHistory taskHistory){
+        taskMapper.log(taskHistory);
+    };
 
     // 할 일 담당자 등록
     public void assign(List<TaskAssignment> assignees){
