@@ -7,47 +7,15 @@
   <meta name="Description" content="all projects">
 
   <title>MMOM -Mypage(bin)</title>
-  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="../../static/css/style.css">
-  <script src="../../static/js/bin.js"></script>
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/bin.js"></script>
  </head>
  <body>
 
   <!--------------------->
   <!----- Begin nav ----->
-  <nav class="" th:fragment="nav">
-    <div class="navWrapper flex-col-between-center-nowrap">
-      <div class="nav-btn-list">
-      <!--
-
-        <div class="" data-id="">
-          <img src="../../static/imgs/icon_bar.png" alt="" class="">
-        </div>
-
-        <div class="btn-open-modal-create-project nav-menu" data-id="modal-create-project">
-          <img src="../../static/imgs/plus.png" alt="create project">
-          <span class="menu-tip">새 프로젝트 만들기</span>
-        </div>
-        -->
-        <div class="nav-menu" data-id="" id="nav-btn-task">
-          <!-- task의 모두 확인 요청 사용여부 결정요망 -->
-          <div class="task-alarm-comment-required-reading"></div>
-          <a href="../mypage/myTasks.html"><img src="../../static/imgs/icon_tasks2.png" alt="tasks" class=""></a>
-          <span class="menu-tip">나의 모든일</span>
-        </div>
-        <div class="nav-menu" data-id="" id="nav-btn-project">
-          <div class="project-alarm-notice"></div>
-          <div class="project-alarm-invitation"></div>
-          <a href="../mypage/myProjects.html"><img src="../../static/imgs/icon_projects.png" alt="projects" ></a>
-          <span class="menu-tip">나의 모든 프로젝트</span>
-        </div>
-        <div class="" data-id=""><a href="../mypage/bin.html"><img src="../../static/imgs/icon_bin2.png" alt="bin"></a></div>
-      </div>     
-      <div class="nav-btn-list">
-        <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" alt="account"></div>
-        <div class="" data-id=""><a href="#"><img src="../../static/imgs/icon_question.png" alt="qna"></a></div>
-      </div>  
-    </div>
+  <nav th:replace="~{/fragments/nav :: nav}">
   </nav>
   <!-- nav End -->
   <!---------------------->
@@ -65,7 +33,7 @@
     </div>
     <div class="flex-row-justify-start-align-center wrapper mb-20 noShrink">
       <div class="flex-row-justify-start-align-center noShrink">
-        <img src="../../static/imgs/icon_bin.png" alt="" class="img-40 mr-5">
+        <img src="/imgs/icon_bin.png" alt="" class="img-40 mr-5">
         <span class="font-36 bold c411 noShrink">휴지통</span>
         <p class="bin-guide noShrink">휴지통에 있는 컨텐츠는 삭제일로부터 7일 후 <br/>완전히 삭제되며 복원이 불가능합니다. </p>
       </div>
@@ -77,11 +45,11 @@
       -->
       <div class="flex-row-start-nowrap ml-24 noShrink">
         <div class="my-bin-btn-after-checked flex-row-justify-start-align-center noShrink">
-          <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-24">
+          <img src="/imgs/icon_bin4(red).png" alt="" class="img-24">
           <span class="cRed bold">영구삭제</span>
         </div>
         <div class="my-bin-btn-after-checked flex-row-justify-start-align-center noShrink ml-10">
-          <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-24">
+          <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-24">
           <span class="c411 bold">복원</span>
         </div>
       </div>
@@ -95,7 +63,7 @@
       <div class=""><span class="">위치</span></div>
       <div class=""><span class="">삭제한 사람</span></div>
       <div class="flex-row-justify-start-align-center">
-        <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+        <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
       </div>
     </div>
   </div>
@@ -115,14 +83,14 @@
         <div class="위치"><span class="">-</span></div>
         <div class="삭제한사람"><span class="">해리슨 포드</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
@@ -136,14 +104,14 @@
         <div class="위치"><span class="">Essential;</span></div>
         <div class="삭제한사람"><span class="">신디 크로포드</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
@@ -157,14 +125,14 @@
         <div class="위치"><span class="">Essential;</span></div>
         <div class="삭제한사람"><span class="">게리 올드만</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
@@ -178,14 +146,14 @@
         <div class="위치"><span class="">할일의 이름 할일의 이름 할 일의 이름</span></div>
         <div class="삭제한사람"><span class="">우마 서먼</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
@@ -199,14 +167,14 @@
         <div class="위치"><span class="">긴 프로젝트 이름 긴 프로젝트 이름 긴 프로젝트 이름</span></div>
         <div class="삭제한사람"><span class="">우마 서먼</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="../../static/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="../../static/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="../../static/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>

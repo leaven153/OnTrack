@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.service;
 import lombok.RequiredArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.TasksResponse;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,19 @@ public class TaskService {
     // 새 할 일 등록
     // 할 일 담당자: nullable
     // 첨부파일: nullable
-    public void addTask(OnTrackTask task, List<TaskAssignment> assignees) {
+    public void addTask(OnTrackTask task, List<TaskAssignment> assignees, TaskHistory taskHistory) {
 
         taskRepository.newTask(task);
+
+        // 추가요망: 담당자 유무 check
         taskRepository.assign(assignees);
 
+        // 추가요망: 파일첨부 여부 check
+        //taskRepository.attatch();
+
+        taskRepository.log(taskHistory);
         // history 등록 - 할 일 명, 담당자
+
 
     }
 

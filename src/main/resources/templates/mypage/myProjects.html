@@ -7,50 +7,16 @@
   <meta name="Description" content="all projects">
 
   <title>MMOM -Mypage(projects)</title>
-  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="../../static/css/style.css">
-  <script src="../../static/js/myprojects.js"></script>
-  <!-- <script src="../../static/js/main.js"></script> -->
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/myprojects.js"></script>
+  <!-- <script src="/js/main.js"></script> -->
  </head>
  <body>
 
   <!--------------------->
   <!----- Begin nav ----->
-  <nav class="" th:fragment="nav">
-    <div class="navWrapper flex-col-between-center-nowrap">
-      <div class="nav-btn-list">
-        <!--
-        <div class="" data-id="">
-          <img src="../../static/imgs/icon_bar.png" alt="" class="">
-        </div>
-        
-        <div class="btn-open-modal-create-project nav-menu" data-id="modal-create-project">
-          <img src="../../static/imgs/plus.png" alt="create project">
-          <span class="menu-tip">새 프로젝트 만들기</span>
-        </div>
-        -->
-        <div class="nav-menu" data-id="" id="nav-btn-task">
-          <!-- task의 모두 확인 요청 사용여부 결정요망 -->
-          <div class="task-alarm-comment-required-reading hide"></div>
-          <a href="../mypage/myTasks.html"><img src="../../static/imgs/icon_tasks2.png" alt="tasks" class=""></a>
-          <span class="menu-tip">나의 모든일</span>
-        </div>
-        <div class="nav-menu" data-id="" id="nav-btn-project">
-          <div class="project-alarm-notice hide"></div>
-          <div class="project-alarm-invitation hide"></div>
-          <a href="../mypage/myProjects.html"><img src="../../static/imgs/icon_projects.png" alt="projects" ></a>
-          <span class="menu-tip">나의 모든 프로젝트</span>
-        </div>
-        
-        
-        <div class="휴지통" data-id=""><a href="../mypage/bin.html"><img src="../../static/imgs/icon_bin2.png" alt="bin"></a></div>
-      </div>
-
-      <div class="nav-btn-list">
-        <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" alt="account"></div>
-        <div class="" data-id=""><a href=""><img src="../../static/imgs/icon_question.png" alt="qna"></a></div>
-      </div>  
-    </div>
+  <nav th:replace="~{/fragments/nav :: nav}">
   </nav>
   <!-- nav End -->
   <!---------------------->
@@ -92,7 +58,7 @@
     <div class="검색 flex-row-end-end-nowrap mb-5">
       <div class="검색box flex-row-between-nowrap searchbox">
         <input type="text" placeholder=" S E A R C H" class="">
-        <button class=""><img src="../../static/imgs/icon_search(br).png" alt="search" class="mr-10"></button>
+        <button class=""><img src="/imgs/icon_search(br).png" alt="search" class="mr-10"></button>
       </div>
     </div>
   </div>
@@ -103,7 +69,7 @@
     <h2 class="font-120 font-blur mt-30 btn-open-modal-create-project cursorP">새 프로젝트 시작하기</h2>
     <!-- <span class="noproject-tip">클릭하면 새 프로젝트를 생성하는 창이 뜹니다.</span> -->
   </div>
-  <!-- Begin Project card-->
+  <!-- 프로젝트 카드 시작(초대) -->
   <div class="myprojects">
     <div class="wrapper grid-c5 mt-20"><!-- flex-row-justify-start-align-center-wrap -->
       <a href="../project/project.html" class="각프로젝트 aColor">
@@ -111,11 +77,11 @@
           <div class="알림닷 alarm-big sign-invitation right"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 ">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 ">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">잠겨죽어도 좋으니</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -148,11 +114,11 @@
           <div class="알림닷 alarm-big sign-notice right"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18">
               <span class="project-card-title ml-3">너는 물처럼</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -180,16 +146,16 @@
           </div>
         </div> <!-- 프로젝트 카드 끝 -->
       </a>
-      <a href="../project/project.html" class="각프로젝트 aColor">
+      <a th:href="@{/project/project}" class="각프로젝트 aColor">
         <div class="프로젝트카드 project-card">
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -222,11 +188,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -259,11 +225,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -296,11 +262,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -333,11 +299,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -370,11 +336,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -407,11 +373,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -444,11 +410,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -481,11 +447,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -518,11 +484,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -555,11 +521,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">내게 밀려오라</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -592,11 +558,11 @@
           <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="../../static/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="../../static/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
               <span class="project-card-title ml-3">올리 초이의 길</span>
             </div>
-            <img src="../../static/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
@@ -650,12 +616,12 @@
             <input type="radio" id="team" name="newProjectType" value="team" class="new-project-type input-radio-project-type hide">
             <div class="">
               <label for="solo" class="btn-radio w100 radio-r">
-                <img src="../../static/imgs/icon_solo1315.png" alt="solo" class="vertical-ctrl015 hide">
-                <img src="../../static/imgs/icon_blur_solo1315.png" alt="solo" class="vertical-ctrl015">
+                <img src="/imgs/icon_solo1315.png" alt="solo" class="vertical-ctrl015 hide">
+                <img src="/imgs/icon_blur_solo1315.png" alt="solo" class="vertical-ctrl015">
                 <span class="font-blur">개인</span>
               </label><label for="team" class="btn-radio w100 radio-l">
-                <img src="../../static/imgs/icon_group2215.png" alt="team" class="vertical-ctrl015 hide">
-                <img src="../../static/imgs/icon_blur_group2215.png" alt="team" class="vertical-ctrl015">
+                <img src="/imgs/icon_group2215.png" alt="team" class="vertical-ctrl015 hide">
+                <img src="/imgs/icon_blur_group2215.png" alt="team" class="vertical-ctrl015">
                 <span class="font-blur">팀</span>
               </label>
             </div>
