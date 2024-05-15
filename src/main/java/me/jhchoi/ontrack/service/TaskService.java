@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.dto.TasksResponse;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -21,18 +24,54 @@ public class TaskService {
      * return  :
      * explain : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
-    public void addTask(OnTrackTask task, List<TaskAssignment> assignees, TaskHistory taskHistory) {
+    public void addTask(AddTaskRequest addTaskRequest) {
 
+        OnTrackTask task = addTaskRequest.dtoToEntityTask();
         taskRepository.newTask(task);
 
-        // 추가요망: 담당자 유무 check
-        taskRepository.assign(assignees);
+        // 담당자 유무 확인하여 담당자 객체(TaskAssignment) 생성 및 DB 저장
+        if (!addTaskRequest.getMemberId().isEmpty()) {
+
+            List<TaskAssignment> assignees = new ArrayList<>();
+//            IntStream.range(0, addTaskRequest.getMemberId().size()).forEach(i -> {
+//                TaskAssignment assignee = TaskAssignment.builder()
+//                        .projectId(addTaskRequest.getProjectId())
+//                        .taskId(task.getId())
+//                        .userId(addTaskRequest.getAssigneesUserId().get(i))
+//                        .memberId(addTaskRequest.getMemberId().get(i))
+//                        .nickname(addTaskRequest.getNickname().get(i))
+//                        .build();
+//                assignees.add(assignee);
+//            });
+
+            taskRepository.assign(assignees);
+            
+            // 담당자 인원만큼 history 객체 생성하여 DB에 저장
+            IntStream.range(0, assignees.size()).forEach(i -> {
+                TaskHistory logAssign = TaskHistory.builder()
+                        .taskId(assignees.get(i).getId())
+                        .projectId(assignees.get(i).getProjectId())
+                        .modItem("assignee")
+                        .modType("register")
+                        .modContent(assignees.get(i).getNickname()).build();
+                taskRepository.log(logAssign);
+            });
+        }
 
         // 추가요망: 파일첨부 여부 check
-        //taskRepository.attatch();
+        //taskRepository.attach();
 
-        // history 등록 - 할 일 명, 담당자 (추후 AOP로!)
-        taskRepository.log(taskHistory);
+        // history 등록 - ①할 일 명, ②담당자 (추후 AOP로!)
+        TaskHistory logNewTask = TaskHistory.builder()
+                .taskId(task.getId())
+                .projectId(task.getProjectId())
+                .modItem("title")
+                .modType("register")
+                .modContent(task.getTaskTitle())
+                .updatedAt(task.getCreatedAt())
+                .updatedBy(task.getAuthor())
+                .build();
+        taskRepository.log(logNewTask);
 
     }
 

@@ -1,22 +1,48 @@
 package me.jhchoi.ontrack.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.dto.AddTaskRequest;
 import org.springframework.stereotype.Controller;
+
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
 public class HomeController {
     @GetMapping("/project")
-    public String working(){
+    public String working(Model model){
         log.info("================from home to project directly====================");
+
+        model.addAttribute("addTaskRequest", new AddTaskRequest());
+        model.addAttribute("testProj", 1L);
+        model.addAttribute("testAuthor", 1L);
 //        System.out.println("please...");
         return "project/project";
     }
 
+    /**
+     * created  : 24-05
+     * param    : void
+     * return   : 회원 가입 페이지
+     * explain  : 첫 화면에서 회원가입페이지로 이동
+     * */
     @GetMapping("/signup")
     public String signUp(){
-        log.info("================sign up===================");
+        log.info("================go to sign up===================");
         return "signup/signup";
+    }
+
+    /**
+     * created  : 24-05-15
+     * param    : OntrackUser,
+     * return   :
+     * explain  : 회원가입
+     * */
+    @PostMapping("/signup")
+    public String signUpSubmit(){
+        log.info("==============submit sign up===================");
+        return null;
     }
 }

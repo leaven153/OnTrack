@@ -19,9 +19,9 @@ public class TaskRepository {
     private final TaskMapper taskMapper;
 
     // 새 할 일 등록
-    public OnTrackTask newTask(OnTrackTask task){
+    public Long newTask(OnTrackTask task){
         taskMapper.newTask(task);
-        return task;
+        return task.getId();
     }
 
     // 기록(history): 새 할 일 등록
