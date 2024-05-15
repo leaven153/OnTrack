@@ -33,9 +33,8 @@ public class TaskRepositoryTest {
                 .updatedAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .updatedBy(1L)
                 .build();
-        OnTrackTask savedTask = taskRepository.newTask(task);
-        OnTrackTask findTask = taskRepository.findById(task.getId()).get();
-        assertThat(findTask.getTaskTitle()).isEqualTo(savedTask.getTaskTitle());
+        Long savedTaskId = taskRepository.newTask(task);
+        assertThat(task.getId()).isEqualTo(savedTaskId);
     }// test: new task
 
     @Test
@@ -47,6 +46,7 @@ public class TaskRepositoryTest {
                 .taskId(1L)
                 .userId(1L)
                 .memberId(1L)
+                .nickname("Jessica")
                 .role("assignee")
                 .assignedAt(LocalDate.now())
                 .build();

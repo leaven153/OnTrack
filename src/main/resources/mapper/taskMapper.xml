@@ -9,13 +9,12 @@
     </insert>
 
     <insert id="assign" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO task_assignment(project_id, task_id, member_id, user_id, role, assignedAt)
+        INSERT INTO task_assignment(project_id, task_id, member_id, user_id, nickname, role, assignedAt)
         VALUES
         <foreach collection="list" item="ta">
-            (#{ta.projectId}, #{ta.taskId}, #{ta.memberId}, #{ta.userId}, #{ta.role}, #{ta.assignedAt})
+            (#{ta.projectId}, #{ta.taskId}, #{ta.memberId}, #{ta.userId}, #{ta.nickname}, #{ta.role}, #{ta.assignedAt})
         </foreach>
     </insert>
-
 
     <insert id="log" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO task_history(project_id, task_id, modItem, modType, modContent, updatedAt, updatedBy)

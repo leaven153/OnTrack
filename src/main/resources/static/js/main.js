@@ -652,14 +652,16 @@ window.onload = function(){
     const modalCreateTask = document.querySelector("#container-create-task");
     const formCreateTask = document.querySelector("#form-create-task");
     const btnCreateTaskSubmit = document.querySelector("#create-task-submit"); // button
-    
+
     let createTaskFileDelCnt = 0;
+
     btnCreateTaskSubmit.addEventListener("click", (e)=>{
-        e.preventDefault();
+        // e.preventDefault();
 
         /* form submit 하고 전송되는 값 확인 */
         console.log(formCreateTask.elements.projectId.value); // project01
         console.log(formCreateTask.elements.taskAuthor.value); // taskAuthor01
+        console.log(formCreateTask.elements.taskTitle.value); // test
         console.log(formCreateTask.elements.taskPriority.value); // ip
         console.log(formCreateTask.elements.taskDueDate.value); // 2024-04-17
         console.log(formCreateTask.elements.taskAssignee); // RadioNodeList { 0: input#assignee1.hide.chosen, 1: input#assignee2.hide.chosen, 2: input#assignee3.hide.chosen, 3: input#assignee4.hide.chosen, 4: input#assignee5.hide, 5: input#assignee6.hide, 6: input#assignee7.hide, value: "", length: 7 }
@@ -668,16 +670,16 @@ window.onload = function(){
                 console.log(eachOne.id); // assignee1 assignee2 assignee5
             }
         });
-        // 부분 삭제가 이뤄졌을 때만 새로운 array가 가고 아닐 경우, 기존의 fileList가 전송된다. 
+        // 부분 삭제가 이뤄졌을 때만 새로운 array가 가고 아닐 경우, 기존의 fileList가 전송된다.
         if (createTaskFileDelCnt > 0) {
             console.log(`부분 삭제 후: `);
             console.log(rewriteCreateTaskFileList);
         } else {
             console.log(formCreateTask.elements.taskFile.files); // .files: FileList [ File, File ] // .value: C:\fakepath\100자.txt
         }
-        
-        
-        
+
+
+
     });
     /*---- ▲ Modal(Create task;할 일 추가): submit 끝 ▲ ----*/
 
