@@ -14,10 +14,13 @@ public class HomeController {
     @GetMapping("/project")
     public String working(Model model){
         log.info("================from home to project directly====================");
-
-        model.addAttribute("addTaskRequest", new AddTaskRequest());
-        model.addAttribute("testProj", 1L);
-        model.addAttribute("testAuthor", 1L);
+        AddTaskRequest addTask = AddTaskRequest.builder()
+                .projectId(1L)
+                .taskAuthor(1L)
+                .build();
+        model.addAttribute("addTaskRequest", addTask);
+//        model.addAttribute("testProj", 1L);
+//        model.addAttribute("testAuthor", 1L);
 //        System.out.println("please...");
         return "project/project";
     }
