@@ -4231,7 +4231,7 @@
 <!-- 모달: 프로젝트 설정 끝 -->
 
   <!-- 모달: 새 할 일 추가 -->
-  <!-- 모달 컨테이너 -->
+  <!--/* 모달 컨테이너 */-->
   <div id="container-create-task" class="modal-container hide">
     <!-- 새 할 일 추가 시작 -->
     <div class="modal-center flex-col-start-nowrap">
@@ -4243,13 +4243,13 @@
         <span class="btn-close-modal-createTask cursorP font-24">&times;</span>
       </div>
       <form th:action="@{/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
-        <input type="hidden" th:name="*{projectId}" th:value="${testProj}" id="test"><!--<input type="hidden" name="" value="1" id="test">-->
-        <input type="hidden" th:field="*{taskAuthor}" th:value="${testAuthor}"><!--<input type="hidden" value="" id="taskAuthor" name="taskAuthor">-->
+        <input type="hidden" th:field="*{projectId}"><!--<input type="hidden" name="" value="1" id="test">-->
+        <input type="hidden" th:field="*{taskAuthor}"><!--<input type="hidden" value="" id="taskAuthor" name="taskAuthor">-->
         <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
           <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
           <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
           <input type="text" class="modal-add-task" th:field="*{taskTitle}" name="taskTitle" maxlength="20" placeholder="할 일을 입력하세요">
-        </div><!-- 할일제목 끝 -->
+        </div><!--/* 할일제목 끝 */-->
 
         <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task">
           <span class="font-18 c411">중요도</span>
