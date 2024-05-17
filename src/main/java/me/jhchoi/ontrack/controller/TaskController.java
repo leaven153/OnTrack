@@ -18,13 +18,6 @@ public class TaskController {
     private final TaskService taskService;
 
 
-//    @GetMapping("/addTask")
-//    public String addTask(Model model){
-//        model.addAttribute("addTaskRequest", new AddTaskRequest());
-//        return "";
-//    }
-
-
     @PostMapping("/addTask")
     public void addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest){
         System.out.println("please");

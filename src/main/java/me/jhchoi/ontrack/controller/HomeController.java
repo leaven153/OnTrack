@@ -19,9 +19,6 @@ public class HomeController {
                 .taskAuthor(1L)
                 .build();
         model.addAttribute("addTaskRequest", addTask);
-//        model.addAttribute("testProj", 1L);
-//        model.addAttribute("testAuthor", 1L);
-//        System.out.println("please...");
         return "project/project";
     }
 
