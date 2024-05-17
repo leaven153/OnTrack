@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,11 +14,11 @@ public class OnTrackUser {
     private String userEmail;
     private String userName;
     private String password;
-    private LocalDateTime registeredAt;
+    private LocalDate registeredAt;
 
 
     @Builder
-    public OnTrackUser(String userEmail, String userName, String password, LocalDateTime registeredAt) {
+    public OnTrackUser(String userEmail, String userName, String password, LocalDate registeredAt) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.password = password;

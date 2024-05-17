@@ -21,13 +21,12 @@ public class ProjectRepositoryTest {
 
     @Test
     void save(){
-
         LocalDateTime now = LocalDateTime.now();
         int nanosec = now.getNano();
         OnTrackProject project = OnTrackProject.builder()
                 .creator(1L)
                 .projectType("team")
-                .projectName("sixth project test")  // 같은 이름을 가진 프로젝트를 생성할 수 없도록 해야 하나?
+                .projectName("sixth project test")  // 같은 아이디가 같은 이름을 가진 프로젝트를 (대량)생성할 수 없도록 해야 하나?
                 .projectUrl(UUID.randomUUID().toString())
                 .projectStatus("activated")
                 .projectDueDate(null)

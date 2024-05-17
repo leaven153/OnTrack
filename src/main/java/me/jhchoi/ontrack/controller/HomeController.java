@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Slf4j
 @Controller
 public class HomeController {
+    
+    // ModelAttribute: 중요도(radio), 진행상태(radio), 프로젝트팀원목록(multi checkbox)
+    // 유저, 프로젝트, 멤버 C 먼저 해야 할 듯
+    /**
+     * 유저, 멤버: 회원가입 생략 하고 repository test에서 intstream으로 입력
+     * */
     @GetMapping("/project")
     public String working(Model model){
         log.info("================from home to project directly====================");
