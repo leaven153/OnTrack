@@ -10,6 +10,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/project")
 public class ProjectController {
 
+
+    /**
+     * created : 2024-05-
+     * param   :
+     * return  :
+     * explain : 프로젝트 생성(team)
+     * */
+
+    /**
+     * created : 2024-05-
+     * param   :
+     * return  :
+     * explain : 프로젝트 생성(solo)
+     * */
+
+    /**
+     * created : 2024-05-
+     * param   :
+     * return  :
+     * explain : 프로젝트 초대
+     * */
+
+
     /**
      * created : 2024-05-
      * param   :

@@ -23,7 +23,6 @@ class MemberRepositoryTest {
         ProjectMember pMember = ProjectMember.builder()
                 .projectId(1L)
                 .userId(1L)
-                .memberId(1L)
                 .nickname("Jessica")
                 .position("member")
                 .capacity("W")
@@ -33,6 +32,11 @@ class MemberRepositoryTest {
         memberRepository.joinProject(pMember);
 
         assertThat(pMember.getId()).isEqualTo(1);
+
+    }
+
+    @Test
+    void multiMember(){
 
     }
 }

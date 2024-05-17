@@ -6,4 +6,6 @@
         INSERT INTO project_member(project_id, user_id, nickname, position, capacity, joinedAt)
         VALUES (#{projectId}, #{userId}, #{nickname}, #{position}, #{capacity}, #{joinedAt})
     </insert>
+
+
 </mapper>

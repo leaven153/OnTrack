@@ -6,4 +6,5 @@
         INSERT INTO ontrack_user(user_email, user_name, password, registeredAt)
         VALUES (#{userEmail}, #{userName}, #{password}, #{registeredAt})
     </insert>
+
 </mapper>
