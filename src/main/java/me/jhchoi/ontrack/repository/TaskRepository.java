@@ -27,7 +27,7 @@ public class TaskRepository {
     // 기록(history): 새 할 일 등록
     public void log(TaskHistory taskHistory){
         taskMapper.log(taskHistory);
-    };
+    }
 
     // 할 일 담당자 등록
     public void assign(List<TaskAssignment> assignees){
@@ -41,7 +41,7 @@ public class TaskRepository {
 
 
     // 할 일 목록
-    public List<TasksResponse> findAll(){
+    public List<TasksResponse> allTasksInProject(Long projectId){
         return taskMapper.findAll();
     }
 }

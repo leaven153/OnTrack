@@ -130,8 +130,8 @@ public class TaskService {
      * return  :
      * explain : 할 일 목록
      * */
-    public List<TasksResponse> findAll(){
-        return taskRepository.findAll();
+    public List<TasksResponse> findAll(Long projectId){
+        return taskRepository.allTasksInProject(projectId);
     }
 
 

@@ -27,7 +27,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="findAll" resultType="TasksResponse">
+    <select id="allTasksInProject" parameterType="Long" resultType="TasksResponse">
         SELECT task_title, task_status, task_dueDate, task_priority, author
         FROM ontrack_task
         WHERE project_id = #{projectId}
