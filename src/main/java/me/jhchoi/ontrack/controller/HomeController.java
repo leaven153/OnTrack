@@ -2,6 +2,7 @@ package me.jhchoi.ontrack.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
+import me.jhchoi.ontrack.dto.LoginRequest;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -50,5 +51,17 @@ public class HomeController {
     public String signUpSubmit(){
         log.info("==============submit sign up===================");
         return null;
+    }
+
+    /**
+     * created  : 24-05-
+     * param    :
+     * return   :
+     * explain  : 로그인 페이지로 이동
+     * */
+    @GetMapping("login")
+    public String login(Model model){
+        model.addAttribute("LoginRequest", new LoginRequest());
+        return "login/login";
     }
 }

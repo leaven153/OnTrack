@@ -7,4 +7,9 @@
         VALUES (#{userEmail}, #{userName}, #{password}, #{registeredAt})
     </insert>
 
+    <select id="findByLoginId" parameterType="String" resultType="LoginRequest">
+        SELECT user_email as loginId, user_name, password as loginPw
+        FROM ontrack_user
+        WHERE user_email = #{loginId}
+    </select>
 </mapper>

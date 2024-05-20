@@ -7,9 +7,9 @@
   <meta name="Description" content="all projects">
 
   <title>on track - login</title>
-  <link rel="icon" type="image/x-icon" href="imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/login.js"></script>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{imgs/icons8-octaedro-32.png}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}">
+<!--  <script src="../../static/js/login.js" th:src="@{js/login.js}"></script>-->
   <!-- <script src="../../static/js/main.js"></script> -->
  </head>
  <body>
@@ -19,34 +19,43 @@
                 <span class="font-24 altivo-bold ml-30 ls-clear">on track</span>
             </div>
             <div class="로그인box flex-col-start-center-nowrap modal-login">
+
                 <span class="font-30 extrabold mb-60">로그인</span>
-                <!-- <span class="altivo-regular ls-clear font-11 mb-30">on track</span> -->
-                <!-- 이메일 입력 -->
-                <div class="flex-col-justify-center mb-20 signup-step-1">
+                <form action="/login" th:action th:object="${LoginRequest}" method="POST">
+<!--                    <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--                        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
+<!--                    </div>-->
+                    <!-- 이메일 입력 -->
+                    <div class="flex-col-justify-center mb-20 signup-step-1">
                     <div class="flex-row-between-nowrap mb-20">
                         <div class="">
-                            <span class="font-12 bold valid-email-guide c451">이메일<span class="valid-email-guide cRed bold hide">이 유효하지 않습니다.</span></span>
+                            <label th:attr="for='loginId'">
+                                <span class="font-12 bold valid-email-guide c451">아이디</span>
+                                <span th:errors="*{loginId}" th:errorclass="c451 bold font-12">테스트중</span>
+                            </label>
                         </div>
                         <div class="">
                             <button type="button" class="login-find-email font-12 bold">이메일찾기</button>
                         </div>
                     </div>
-                    <input type="text" class="bg-5ec input-login-email" placeholder="이메일 주소를 입력하세요">
+                    <input type="text" class="bg-5ec input-login-id" th:field="*{loginId}" placeholder="이메일 주소를 입력하세요">
                 </div>
                 
-                <!-- 비밀번호 입력 -->
-                <div class="flex-col-justify-center mb-20 signup-step-3">
+                    <!-- 비밀번호 입력 -->
+                    <div class="flex-col-justify-center mb-20 signup-step-3">
                     <div class="flex-row-between-nowrap mb-20">
-                        <div class=""><span class="font-12 bold c451">비밀번호</span></div>
+                        <div class=""><label th:attr="for='loginPw'"><span class="font-12 bold c451 valid-pw-guide">비밀번호<span th:errors="*{loginPw}" th:errorclass="valid-pw-guide cRed bold" >를 입력해주세요.</span></span></label></div>
                         <div class=""><button type="button" class="login-find-pw font-12 bold">비밀번호 찾기</button></div>
                     </div>
-                    <input type="password" class="bg-5ec input-login mb-7" placeholder="●●●●●●●●">
+                    <input type="password" class="bg-5ec input-login-pw mb-7" th:field="*{loginPw}" placeholder="●●●●●●●●">
                 </div>
-                <!-- step 1, 3. 계속 버튼 -->
-                <button type="submit" class="btn-login-continue mt-14">계속</button>
+<!--                    <div th:if="${#fields.hasGlobalErrors()}">-->
+<!--                        <span class="valid-email-guide font-12 cRed bold" th:text="*{#fields.globalErrors()}">아이디 또는 비밀번호를 확인해주세요.</span>-->
+<!--                    </div>-->
+                    <button type="submit" class="btn-login-submit mt-14">로그인</button>
+                </form>
 
-
-                <!-- step 1. OAuth -->
+                <!--/* OAuth */-->
                 <div class="mb-10 ">
                     <span class="mid-line bold font-14">간편 로그인</span>
                 </div>

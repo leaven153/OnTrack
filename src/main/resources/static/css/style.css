@@ -2328,7 +2328,7 @@ input[type="password"]::placeholder {
     box-shadow: 0 0 3px #00000022;
 }
 
-.btn-login-continue,
+.btn-login-submit,
 .btn-signup-continue {
     /*btn-large done font-white bold mb-30*/
     padding: 10px 40px;
