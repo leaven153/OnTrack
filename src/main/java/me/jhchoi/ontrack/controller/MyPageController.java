@@ -34,7 +34,7 @@ public class MyPageController {
         model.addAttribute("projectList", projectList);
 
         log.info("project list: {}", projectList);
-        return "/mypage/myProjects";
+        return "mypage/myProjects";
     }
 
 

@@ -86,15 +86,15 @@
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
-            <span th:text="*{project.creator}">이정하</span>
+            <span th:text="*{project.creatorId}">이정하</span>
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성일</span>
-            <span class="altivo-light" th:text="${#temporals.format(*{project.createdAt}, 'yyyy.mm.dd')}">24.01.06</span>
+            <span class="altivo-light" th:text="*{project.createdAt}">24.01.06</span>
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3 hide">
             <span class="">최종수정일</span>
-            <span class="altivo-light" th:text="${#temporals.format(*{project.updatedAt}, 'yyyy.mm.dd')}">24.04.01</span>
+            <span class="altivo-light" th:text="*{project.updatedAt}">24.04.01</span>
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3 hide">
             <span class="">마감일</span>

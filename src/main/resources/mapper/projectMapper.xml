@@ -14,7 +14,7 @@
     </select>
 
     <select id="allMyProjects" resultType="ProjectList">
-        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, pm.nickname as creatorName, p.createdAt, p.updatedAt
+        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, pm.nickname as creatorName, p.project_dueDate,p.createdAt, p.updatedAt
         FROM ontrack_project p INNER JOIN project_member pm
         ON p.id = pm.project_id
         WHERE p.id = #{id}
