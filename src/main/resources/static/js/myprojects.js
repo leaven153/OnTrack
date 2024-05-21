@@ -11,18 +11,19 @@ window.onload = function(){
 
         // form 초기화
         document.querySelector("form#form-create-project").reset();
-        
-        // 생성하기 버튼(submit) 비활성화
+
+        // 생성하기 버튼(submit)
         const submitCreateProject = document.querySelector(".btn-submit-create-project");
-        submitCreateProject.disabled = true;
-        submitCreateProject.classList.remove("bg533");
-        submitCreateProject.classList.add("btn-blur");
-        submitCreateProject.classList.add("cursorNot");
         
         /* 새 프로젝트 추가 모달 열기 */
         document.querySelectorAll(".btn-open-modal-create-project").forEach(function(chosenBtn){
             chosenBtn.addEventListener("click", ()=>{
                 modalCreateProject.classList.remove("hide");
+                // 생성하기 버튼(submit) 비활성화
+                submitCreateProject.disabled = true;
+                submitCreateProject.classList.remove("bg533");
+                submitCreateProject.classList.add("btn-blur");
+                submitCreateProject.classList.add("cursorNot");
             });
         });
 
@@ -34,6 +35,7 @@ window.onload = function(){
         document.querySelectorAll("input[type=radio].new-project-type").forEach(function(eachOne){
             eachOne.addEventListener("click", ()=>{
                 newProjectType = document.querySelector("input[type=radio].new-project-type:checked").value;
+                // console.log(`newProjectType: ${newProjectType}`);
             });
         });
 
@@ -56,13 +58,13 @@ window.onload = function(){
         });
 
         // submit 버튼 클릭 시 data 확인 (추후 새 프로젝트 추가의 위치, a태그로 바꿀지 말지 결정한 후 수정요망)
+        /*
         document.querySelector(".btn-submit-create-project").addEventListener("click", (e)=>{
-            e.preventDefault();
+            // e.preventDefault();
             console.log(document.getElementsByName("newProjectName")[0].value);
             console.log(document.querySelector("input[type=radio].new-project-type:checked").value);
             console.log(document.getElementsByName("newProjectDueDate")[0].value);
-        });
-
+        });*/
         /* 새 프로젝트 추가 모달 닫기 */
         document.querySelector("#btn-close-modal-create-project").addEventListener("click", ()=>{
             document.querySelector("form#form-create-project").reset();

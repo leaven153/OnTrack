@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>fragment - project card</title>
+    <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+</head>
+<body>
+    <th:block th:each="project : ${projectList}" th:fragment="projectCard">
+        <a href="../project/project.html" class="각프로젝트 aColor">
+            <div class="프로젝트카드 project-card" th:classappend=""> <!--project-invitation-->
+                <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
+                <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
+                    <div class="flex-row-justify-start-align-center">
+                        <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
+                        <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+                        <span class="project-card-title ml-3">올리 초이의 길</span>
+                    </div>
+                    <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
+                </div>
+                <div class="project-card-el flex-row-between-nowrap pd-a3">
+                    <span class="">생성자</span>
+                    <span class="">이정하</span>
+                </div>
+                <div class="project-card-el flex-row-between-nowrap pd-a3">
+                    <span class="">생성일</span>
+                    <span class="altivo-light">24.01.06</span>
+                </div>
+                <div class="project-card-el flex-row-between-nowrap pd-a3">
+                    <span class="">최종수정일</span>
+                    <span class="altivo-light">24.04.01</span>
+                </div>
+                <div class="project-card-el flex-row-between-nowrap pd-a3">
+                    <span class="">마감일</span>
+                    <span class="altivo-light">24.04.15</span>
+                </div>
+                <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3 hide">
+                    <span class="">초대받은날</span>
+                    <span class="altivo-light">24.01.07</span>
+                </div>
+                <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap hide">
+                    <button class="btn-test done btn-small font-white">수락</button>
+                    <button class="btn-test not-yet btn-small">거절</button>
+                </div>
+            </div> <!-- 프로젝트 카드 끝 -->
+        </a>
+    </th:block>
+</body>
+</html>
