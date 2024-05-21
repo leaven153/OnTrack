@@ -2,7 +2,7 @@ package me.jhchoi.ontrack.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
-import me.jhchoi.ontrack.dto.LoginRequest;
+import me.jhchoi.ontrack.dto.LoginUser;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -18,7 +18,7 @@ public class HomeController {
     /**
      * 유저, 멤버: 회원가입 생략 하고 repository test에서 intstream으로 입력
      * */
-    @GetMapping("/project")
+//    @GetMapping("/project")
     public String working(Model model){
         log.info("================from home to project directly====================");
         AddTaskRequest addTask = AddTaskRequest.builder()
@@ -61,7 +61,7 @@ public class HomeController {
      * */
     @GetMapping("login")
     public String login(Model model){
-        model.addAttribute("LoginRequest", new LoginRequest());
+        model.addAttribute("loginRequest", new LoginUser());
         return "login/login";
     }
 }

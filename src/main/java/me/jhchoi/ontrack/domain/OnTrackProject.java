@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -30,12 +31,12 @@ public class OnTrackProject {
     private String projectName; // 프로젝트 명(20자 이내)
     private String projectUrl;
     private String projectStatus; // 프로젝트 상태: 활성, 비활성(휴지통), 종료, 삭제예정(discard), 보관됨
-    private LocalDateTime projectDueDate;
+    private LocalDate projectDueDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt; // 프로젝트 정보(기준 성립 요망)가 업데이트 된 일자
 
     @Builder
-    public OnTrackProject(Long creator, String projectType, String projectName, String projectUrl, String projectStatus, LocalDateTime projectDueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public OnTrackProject(Long creator, String projectType, String projectName, String projectUrl, String projectStatus, LocalDate projectDueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.creator = creator;
         this.projectType = projectType;
         this.projectName = projectName;

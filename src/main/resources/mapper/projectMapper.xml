@@ -7,9 +7,18 @@
         VALUES (#{creator}, #{projectType}, #{projectName}, #{projectUrl}, #{projectDueDate}, #{projectStatus}, #{createdAt}, #{updatedAt})
     </insert>
 
-    <select id="findById" resultType="OnTrackProject">
+    <select id="findByProjectId" resultType="OnTrackProject">
         SELECT id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
         FROM ontrack_project
         WHERE id = #{id}
     </select>
+
+    <select id="allMyProjects" resultType="ProjectList">
+        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, pm.nickname as creatorName, p.createdAt, p.updatedAt
+        FROM ontrack_project p INNER JOIN project_member pm
+        ON p.id = pm.project_id
+        WHERE p.id = #{id}
+        AND pm.position = "creator"
+    </select>
+
 </mapper>

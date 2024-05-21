@@ -6,6 +6,10 @@
         INSERT INTO project_member(project_id, user_id, nickname, position, capacity, joinedAt)
         VALUES (#{projectId}, #{userId}, #{nickname}, #{position}, #{capacity}, #{joinedAt})
     </insert>
-
+    <select id="findProjectsByUserId" resultType="ProjectMember">
+        SELECT id, project_id, position, joinedAt
+        FROM project_member
+        WHERE user_id = #{userId}
+    </select>
 
 </mapper>
