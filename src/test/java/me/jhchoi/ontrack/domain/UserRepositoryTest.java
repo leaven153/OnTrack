@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.domain;
 
 import me.jhchoi.ontrack.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +36,7 @@ public class UserRepositoryTest {
 
     }
 
-    @Test
+    @Test @DisplayName("회원가입테스트")
     void multisave(){
         String[] names = new String[]{"토르", "메리 포핀스", "줄리 앤드류스",
                 "블랙위도우", "아이언맨", "크리스 에반스",
@@ -48,10 +49,10 @@ public class UserRepositoryTest {
                 "송혜교", "안유진", "나탈리 포트만",
                 "코난 오브라이언", "젠다야", "전길남"};
 
-        IntStream.range(10,29).forEach(i -> {
+        IntStream.range(0,29).forEach(i -> {
             OnTrackUser user = OnTrackUser.builder()
                     .userEmail("users"+i+"@abc.com")
-                    .password("user1234")
+                    .password(encoder.encode("asdf123"))
                     .userName(names[i])
                     .registeredAt(LocalDate.now()).build();
             userRepository.save(user);

@@ -27,7 +27,7 @@
   <div class="mypage-fixed-top flex-col-start-nowrap">
     <div class="flex-row-end-center-nowrap wrapper">
       <div class="user-name flex-row-start-nowrap cursorP mb-20">
-        <span class="font-18 bold">권지용</span>
+        <span class="font-18 bold" th:text="${loginUser.userName}">권지용</span>
       </div>
     </div> <!-- 사용자 이름 끝 -->
 
@@ -67,175 +67,56 @@
   <!-- No Project page -->
   <div class="noproject mt-30 wrapper hide">
     <h2 class="font-120 font-blur mt-30 btn-open-modal-create-project cursorP">새 프로젝트 시작하기</h2>
-    <!-- <span class="noproject-tip">클릭하면 새 프로젝트를 생성하는 창이 뜹니다.</span> -->
+    <!--/* <span class="noproject-tip">클릭하면 새 프로젝트를 생성하는 창이 뜹니다.</span> */-->
   </div>
-  <!-- 프로젝트 카드 시작(초대) -->
+  <!--/* 프로젝트 카드 시작(초대) */-->
   <div class="myprojects">
-    <div class="wrapper grid-c5 mt-20"><!-- flex-row-justify-start-align-center-wrap -->
+    <div class="wrapper grid-c5 mt-20"><!--/* flex-row-justify-start-align-center-wrap */-->
       <th:block th:each="project : ${projectList}">
-        <a href="../project/project.html" th:href="@{/project/*{project.id}}" class="각프로젝트 aColor">
-        <div class="프로젝트초대 project-card project-invitation">
-          <div class="알림닷 alarm-big sign-invitation right"></div>
+        <a href="../project/project.html" th:href="@{|/project/*{project.projectId}/*{project.memberId}|}" class="각프로젝트 aColor">
+        <div class="프로젝트초대 project-card" th:classappend="*{project.position == 'invited'} ? 'project-invitation'">
+          <div class="알림닷 alarm-big right" th:classappend="*{project.position == 'invited'} ? 'sign-invitation'"></div> <!--sign-notice-->
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
-              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 ">
-              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
+              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28" th:classappend="*{project.projectType == 'solo'} ? 'hide'">
+              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18" th:classappend="*{project.projectType == 'team'} ? 'hide'">
               <span class="project-card-title ml-3" th:text="*{project.projectName}">잠겨죽어도 좋으니</span>
             </div>
-            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
+            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24" th:classappend="*{project.creatorId != loginUser.userId} ? 'hide'">
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성자</span>
-            <span th:text="*{project.creatorId}">이정하</span>
+            <span th:text="*{project.creatorName}">이정하</span>
           </div>
           <div class="project-card-el flex-row-between-nowrap pd-a3">
             <span class="">생성일</span>
             <span class="altivo-light" th:text="*{project.createdAt}">24.01.06</span>
           </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3 hide">
+          <div class="project-card-el flex-row-between-nowrap pd-a3" th:classappend="*{project.position == 'invited'} ? 'hide'">
             <span class="">최종수정일</span>
             <span class="altivo-light" th:text="*{project.updatedAt}">24.04.01</span>
           </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3 hide">
+          <div class="project-card-el flex-row-between-nowrap pd-a3"  th:classappend="*{project.position == 'invited'} ? 'hide'">
             <span class="">마감일</span>
             <span class="altivo-light" th:text="*{project.projectDueDate} eq null?'없음':*{project.projectDueDate}">24.04.15</span>
           </div>
-          <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3">
+          <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3"  th:classappend="*{project.position != 'invited'} ? 'hide'">
             <span class="">초대받은날</span>
-            <span class="altivo-light">24.01.07</span>
+            <span class="altivo-light" th:text="*{project.invitedAt}">24.01.07</span>
           </div>
-          <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap">
+          <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap"  th:classappend="*{project.position != 'invited'} ? 'hide'">
             <button class="done btn-small font-white">수락</button>
             <button class="btn-blur btn-small">거절</button>
           </div>
         </div> <!--/* 프로젝트초대 끝 */-->
       </a>
       </th:block>
-      <th:block>
-        <a href="../project/project.html" class="각프로젝트 aColor">
-          <div class="프로젝트카드 project-card project-notice">
-            <div class="알림닷 alarm-big sign-notice right"></div>
-            <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
-              <div class="flex-row-justify-start-align-center">
-                <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-                <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18">
-                <span class="project-card-title ml-3">너는 물처럼</span>
-              </div>
-              <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 hide">
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">생성자</span>
-              <span class="">이정하</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">생성일</span>
-              <span class="altivo-light">24.01.06</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">최종수정일</span>
-              <span class="altivo-light">24.04.01</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">마감일</span>
-              <span class="altivo-light">24.04.15</span>
-            </div>
-            <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3 hide">
-              <span class="">초대받은날</span>
-              <span class="altivo-light">24.01.07</span>
-            </div>
-            <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap hide">
-              <button class="btn-test done btn-small font-white">수락</button>
-              <button class="btn-test not-yet btn-small">거절</button>
-            </div>
-          </div> <!-- 프로젝트 카드 끝 -->
-        </a>
-      </th:block>
-      <th:block>
-        <a th:href="@{/project/project}" class="각프로젝트 aColor">
-          <div class="프로젝트카드 project-card">
-            <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
-            <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
-              <div class="flex-row-justify-start-align-center">
-                <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-                <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
-                <span class="project-card-title ml-3">내게 밀려오라</span>
-              </div>
-              <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">생성자</span>
-              <span class="">이정하</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">생성일</span>
-              <span class="altivo-light">24.01.06</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">최종수정일</span>
-              <span class="altivo-light">24.04.01</span>
-            </div>
-            <div class="project-card-el flex-row-between-nowrap pd-a3">
-              <span class="">마감일</span>
-              <span class="altivo-light">24.04.15</span>
-            </div>
-            <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3 hide">
-              <span class="">초대받은날</span>
-              <span class="altivo-light">24.01.07</span>
-            </div>
-            <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap hide">
-              <button class="btn-test done btn-small font-white">수락</button>
-              <button class="btn-test not-yet btn-small">거절</button>
-            </div>
-          </div> <!-- 프로젝트 카드 끝 -->
-        </a>
-      </th:block>
-      <th:block th:replace="~{/fragments/projectCard :: projectCard}">
-        <a href="../project/project.html" class="각프로젝트 aColor">
-        <div class="프로젝트카드 project-card">
-          <div class="알림닷 alarm-big sign-invitation right img-hidden"></div>
-          <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
-            <div class="flex-row-justify-start-align-center">
-              <img src="/imgs/icon_group.png" alt="group" class="ml-3 icon-group28 hide">
-              <img src="/imgs/icon_share.png" alt="shared" class="pd-a3 img-18 hide">
-              <span class="project-card-title ml-3">올리 초이의 길</span>
-            </div>
-            <img src="/imgs/icon_setting_s.png" alt="settings" class="img-24 ">
-          </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3">
-            <span class="">생성자</span>
-            <span class="">이정하</span>
-          </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3">
-            <span class="">생성일</span>
-            <span class="altivo-light">24.01.06</span>
-          </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3">
-            <span class="">최종수정일</span>
-            <span class="altivo-light">24.04.01</span>
-          </div>
-          <div class="project-card-el flex-row-between-nowrap pd-a3">
-            <span class="">마감일</span>
-            <span class="altivo-light">24.04.15</span>
-          </div>
-          <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3 hide">
-            <span class="">초대받은날</span>
-            <span class="altivo-light">24.01.07</span>
-          </div>
-          <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap hide">
-            <button class="btn-test done btn-small font-white">수락</button>
-            <button class="btn-test not-yet btn-small">거절</button>
-          </div>
-        </div> <!-- 프로젝트 카드 끝 -->
-      </a>
-      </th:block>
-
     </div>
   </div>
   <!--/* End Project card */-->
 
-
   <!--/* 모달: 새프로젝트 추가 */-->
-  <th:block th:replace="~{/fragments/addProjectForm :: addProjectForm}"></th:block>
+  <th:block th:replace="~{/fragments/addProjectForm :: addProjectForm(addProjectRequest=${addProjectRequest})}"></th:block>
   <!--/* 모달: 새프로젝트 추가 끝 */-->
 
 

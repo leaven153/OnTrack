@@ -4,15 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.domain.ProjectMember;
+import me.jhchoi.ontrack.dto.MemberNickNames;
 import me.jhchoi.ontrack.dto.ProjectList;
+import me.jhchoi.ontrack.dto.ReqProjectUser;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -37,34 +38,53 @@ public class ProjectService {
 
     /**
      * created  : 24-05-21
+     * updated  : 24-05-22
      * param    : userId
-     * return   : List<OnTrackProject>
+     * return   : List<ProjectList>
      * explain  : my page의 project 목록
      * */
     public List<ProjectList> allMyProjects(Long userId){
+
         log.info("===============project 목록조회 service 접근===============");
-        // 1. project member테이블에서 내 userId와 동일한 row에 있는 project(id+)를 가져온다.
-        List<ProjectMember> myProjects = memberRepository.findProjectsByUserId(userId);
-        log.info("myProjects: {}", myProjects);
-        List<ProjectList> test = myProjects.stream().map(p -> projectRepository.allMyProjects(p.getProjectId())).collect(Collectors.toList());
-        log.info("test: {}", test);
+        // 1. 해당 유저가 속한 프로젝트 목록 
+        List<ProjectList> projectList =projectRepository.allMyProjects(userId);
 
-        List<Long> projectsIds = myProjects.stream().map(ProjectMember::getProjectId).collect(Collectors.toList());
-        log.info("projects ids: {}", projectsIds);
+        // 2. 해당 프로젝트 생성자(들)의 id 목록
+        List<Long> creators = projectList.stream().map(ProjectList::getCreatorId).toList();
 
-        // member id, project id, position(invited여부), joinedAt
-        // 2. 프로젝트를 목록에 담는다.
-        List<ProjectList> projectList = new ArrayList<>();
-        for (Long projectsId : projectsIds) {
-            projectList.add(projectRepository.allMyProjects(projectsId));
+        // 3. 생성자 id의 각 idx 가져오기(map으로 생성자의 user id를 key으로 하여 index를 value로 매핑)
+        Map<Long, Integer> idxOfCreator = new HashMap<>();
+        IntStream.range(0, projectList.size()).forEach(i -> {
+            for (Long creator : creators) {
+                if (Objects.equals(projectList.get(i).getCreatorId(), creator)) {
+                    idxOfCreator.put(creator, i);
+                }
+            }
+        });
+
+        // 4. 생성자가 2개 이상의 프로젝트를 가지고 있고, 각각의 프로젝트에서 다른 nickname을 사용할 수 있으므로
+        // 생성자의 user id와 project id가 일치하는 row의 nickname을 받아오기 위해
+        // 전용 dto 생성
+        List<ReqProjectUser> reqList = new ArrayList<>();
+        for (ProjectList list : projectList) {
+            ReqProjectUser request = ReqProjectUser.builder()
+                    .projectId(list.getProjectId())
+                    .userId(list.getCreatorId())
+                    .build();
+            reqList.add(request);
         }
-        log.info("projectList: {}", projectList);
 
-        // project id가 동일한 member의 id와 position
-        // project id가 동일한 project의 정보를 project list에 담는다
+        // 5. data요청
+        List<MemberNickNames> mnn = new ArrayList<>();
+        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getNickName(reqList.get(i))));
 
-        // ★ 초대받은 날짜!!! from project_invitation
-
+        // 6. 생성자의 이름을 project List에 매칭하여 저장
+        IntStream.range(0, mnn.size()).forEach(i -> {
+            // 생성자 id가 키값(mnn.get(i).getUserId())인 map(idxOfCreator)에서
+            // value를 가져오면 그것은 생성자의 이름이 들어갈 위치!
+            // 해당 인덱스에 생성자의 이름을 넣는다.
+            projectList.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickname());
+        });
 
         return projectList;
     }

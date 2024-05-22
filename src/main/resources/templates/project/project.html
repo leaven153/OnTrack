@@ -4254,9 +4254,9 @@
         <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task">
           <span class="font-18 c411">중요도</span>
           <div class="">
-            <input type="radio" id="vip" th:field="*{taskPriority}" name="taskPriority" value="vip" class="input-radio hide">
-            <input type="radio" id="ip" th:field="*{taskPriority}" name="taskPriority" value="ip" class="input-radio hide">
-            <input type="radio" id="norm" th:field="*{taskPriority}" name="taskPriority" value="norm" class="input-radio hide" checked="checked">
+            <input type="radio" id="vip" th:field="*{taskPriority}" value="vip" class="input-radio hide">
+            <input type="radio" id="ip" th:field="*{taskPriority}" value="ip" class="input-radio hide">
+            <input type="radio" id="norm" th:field="*{taskPriority}" value="norm" class="input-radio hide" checked="checked">
             <div class="">
               <label for="vip" class="btn-radio w100 radio-l">
                 <span class="font-15 vip">매우중요</span>
@@ -4273,7 +4273,7 @@
           <span class="font-18 c411">마감일</span>
           <div class="">
             <div class="bottom-line200">
-              <input type="date" th:field="*{taskDueDate}"  name="taskDueDate" class="altivo-light">
+              <input type="date" th:field="*{taskDueDate}" class="altivo-light">
             </div>
           </div>
         </div><!--/* 할일마감일 끝 */-->
@@ -4309,7 +4309,7 @@
 
         <div class="할일파일첨부 flex-row-justify-start-align-center">
           <div class="filebox flex-row-justify-start-align-center">
-            <input type="file" id="create-task-attach-file" th:field="*{taskFile}" name="taskFile" class="opacity0 wh0" multiple>
+            <input type="file" id="create-task-attach-file" th:field="*{taskFile}" class="opacity0 wh0" multiple>
             <label for="create-task-attach-file" class="flex-row-justify-start-align-center btn-attach">
               <img src="/imgs/icon_upload1519.png" alt="upload" class="">
               <span class="ml-5">파일첨부</span>
