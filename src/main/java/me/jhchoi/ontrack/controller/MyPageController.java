@@ -24,7 +24,7 @@ public class MyPageController {
     private final ProjectService projectService;
 
     @GetMapping("/myProjects")
-    public String myProjects(HttpSession session, HttpServletRequest request, Model model){
+    public String myProjects(HttpSession session, Model model){
 
         log.info("=================myProjects====================");
         log.info("session을 찾아라: {}", session.getAttribute("loginUser"));
@@ -32,8 +32,8 @@ public class MyPageController {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
         model.addAttribute("projectList", projectList);
-
-        log.info("project list: {}", projectList);
+        model.addAttribute("loginUser", loginUser);
+        log.info("컨트롤러가 화면으로 넘기는 project list: {}", projectList);
         return "mypage/myProjects";
     }
 
