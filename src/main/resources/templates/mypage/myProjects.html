@@ -64,17 +64,16 @@
   </div>
   <!-- End Search and Sort -->
 
-  <!-- No Project page -->
-  <div class="noproject mt-30 wrapper hide">
+  <!--/* No Project page */-->
+  <div class="noproject mt-30 wrapper" th:classappend="${noProject != true}? 'hide'">
     <h2 class="font-120 font-blur mt-30 btn-open-modal-create-project cursorP">새 프로젝트 시작하기</h2>
-    <!--/* <span class="noproject-tip">클릭하면 새 프로젝트를 생성하는 창이 뜹니다.</span> */-->
   </div>
   <!--/* 프로젝트 카드 시작(초대) */-->
-  <div class="myprojects">
+  <div class="myprojects" th:classappend="${noProject == true} ? 'hide'">
     <div class="wrapper grid-c5 mt-20"><!--/* flex-row-justify-start-align-center-wrap */-->
       <th:block th:each="project : ${projectList}">
-        <a href="../project/project.html" th:href="@{|/project/*{project.projectId}/*{project.memberId}|}" class="각프로젝트 aColor">
         <div class="프로젝트초대 project-card" th:classappend="*{project.position == 'invited'} ? 'project-invitation'">
+        <a href="../project/project.html" th:href="@{|/project/*{project.projectId}/*{project.memberId}|}" class="각프로젝트 aColor">
           <div class="알림닷 alarm-big right" th:classappend="*{project.position == 'invited'} ? 'sign-invitation'"></div> <!--sign-notice-->
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">
@@ -100,23 +99,25 @@
             <span class="">마감일</span>
             <span class="altivo-light" th:text="*{project.projectDueDate} eq null?'없음':*{project.projectDueDate}">24.04.15</span>
           </div>
+        </a>
           <div class="초대카드에만적용 project-card-el flex-row-between-nowrap pd-a3"  th:classappend="*{project.position != 'invited'} ? 'hide'">
             <span class="">초대받은날</span>
             <span class="altivo-light" th:text="*{project.invitedAt}">24.01.07</span>
           </div>
           <div class="초대카드에만적용 수락거절버튼div mt-30 flex-row-end-center-nowrap"  th:classappend="*{project.position != 'invited'} ? 'hide'">
-            <button class="done btn-small font-white">수락</button>
-            <button class="btn-blur btn-small">거절</button>
+            <a th:href="@{/join(projectType=*{project.projectType}, projectId=*{project.projectId}, invitedAs=*{project.invitedAs})}"><button type="button" class="done btn-small font-white">수락</button></a>
+            <button type="button" class="btn-blur btn-small">거절</button>
           </div>
+
         </div> <!--/* 프로젝트초대 끝 */-->
-      </a>
+
       </th:block>
     </div>
   </div>
   <!--/* End Project card */-->
 
   <!--/* 모달: 새프로젝트 추가 */-->
-  <th:block th:replace="~{/fragments/addProjectForm :: addProjectForm(addProjectRequest=${addProjectRequest})}"></th:block>
+  <th:block th:replace="~{/fragments/createProjectForm :: createProjectForm(createProjectRequest=${createProjectRequest})}"></th:block>
   <!--/* 모달: 새프로젝트 추가 끝 */-->
 
 

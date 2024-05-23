@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.domain.ProjectMember;
-import me.jhchoi.ontrack.dto.MemberNickNames;
-import me.jhchoi.ontrack.dto.ProjectList;
-import me.jhchoi.ontrack.dto.ReqProjectUser;
+import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -27,13 +24,13 @@ public class ProjectService {
      * created  : 24-05-21
      * param    : OnTrackProject, ProjectMember
      * return   : void
-     * explain  : 새 프로젝트 등록, 해당 프로젝트 생성자 member로 등록
+     * explain  : 새 프로젝트 등록, 해당 프로젝트의 생성자(ProjectMember 테이블)로 등록
      * */
-    public void createProject(OnTrackProject newProj, ProjectMember pm){
+    public void createProject(OnTrackProject newProj, ProjectMember creator){
         log.info("===============project 생성 service 접근===============");
         projectRepository.save(newProj);
-        pm.setProjectId(newProj.getId());
-        memberRepository.joinProject(pm);
+        creator.setProjectId(newProj.getId());
+        memberRepository.joinProject(creator);
     }
 
     /**
@@ -41,7 +38,7 @@ public class ProjectService {
      * updated  : 24-05-22
      * param    : userId
      * return   : List<ProjectList>
-     * explain  : my page의 project 목록
+     * explain  : 내 모든 프로젝트 목록 조회(my page)
      * */
     public List<ProjectList> allMyProjects(Long userId){
 
@@ -89,4 +86,19 @@ public class ProjectService {
         return projectList;
     }
 
+    /**
+     * created  : 24-05
+     * param    :
+     * return   :
+     * explain  : 프로젝트 초대 수락(= 내 프로젝트 목록에 추가)
+     * */
+    public void acceptInvitation(ResponseInvitation newCrew){
+        // project id와 user id 받아서
+        // project member update
+        // ① nickname에 user name 입력
+        // ② position을 invitedAs값으로 변경
+        // ③ joinedAt에 날짜 입력
+        memberRepository.acceptInvitation(newCrew);
+
+    }
 }

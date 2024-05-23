@@ -27,10 +27,10 @@ public class ProjectList {
     private Long memberId;
     private String position; // 설정버튼, 초대수락버튼 출력여부 결정(creator/member/invited)
     private LocalDate invitedAt; // position이 invited일 경우, 초대받은 날짜
-
+    private String invitedAs;
 
     @Builder
-    public ProjectList(Long projectId, String projectType, String projectStatus, Long creatorId, String creatorName, String projectName, LocalDate projectDueDate, LocalDate createdAt, LocalDate updatedAt, Long memberId, String position, LocalDate invitedAt) {
+    public ProjectList(Long projectId, String projectType, String projectStatus, Long creatorId, String creatorName, String projectName, LocalDate projectDueDate, LocalDate createdAt, LocalDate updatedAt, Long memberId, String position, LocalDate invitedAt, String invitedAs) {
         this.projectId = projectId;
         this.projectType = projectType;
         this.projectStatus = projectStatus;
@@ -43,5 +43,6 @@ public class ProjectList {
         this.memberId = memberId;
         this.position = position;
         this.invitedAt = invitedAt;
+        this.invitedAs = invitedAs;
     }
 }

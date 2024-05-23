@@ -14,7 +14,9 @@ import me.jhchoi.ontrack.domain.TaskHistory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Data // Getter, Setter, ToString, EqualsAndHashCode, RequiredArgsConstructor
 @NoArgsConstructor
@@ -34,7 +36,7 @@ public class AddTaskRequest {
 
     // 담당자 배정
     private List<Long> memberId;
-    private List<Long> assigneesUserId;
+//    private List<Long> assigneesUserId;
     private List<String> nickname;
     
     // 파일 첨부
@@ -48,6 +50,16 @@ public class AddTaskRequest {
                 .taskStatus("not yet")
                 .taskDueDate(taskDueDate)
                 .build();
+    }
+
+    public List<TaskAssignment> dtoToEntityTaskAssignment(Long taskId){
+        List<TaskAssignment> ta = new ArrayList<>();
+        IntStream.range(0, memberId.size()).forEach(i -> ta.add(TaskAssignment.builder()
+                .projectId(projectId)
+                .taskId(taskId)
+                .memberId(memberId.get(i))
+                .nickname(nickname.get(i)).build()));
+        return ta;
     }
 
 }

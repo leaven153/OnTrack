@@ -21,6 +21,15 @@ public class TaskRepositoryTest {
 
     @Test
     void newTask(){
+        /**
+         * test용 더미: project id: 9, user id: 35(공지철), creator's member id:14, project name: By your side
+         * member(creator 1, member 5):
+         *  공지철(member id: 14, user id: 35, CREATOR)
+         *  Adele(member id: 4, user id: 45)
+         *  송혜교(member id: 26, user id: 61)
+         *  크러쉬(member id: 27, user id: 47)
+         *  스칼렛 요한슨(member id: 28, user id: 50)
+         * */
         OnTrackTask task = OnTrackTask.builder()
                 .projectId(1L)
                 .taskTitle("first task test")

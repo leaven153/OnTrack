@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>addTaskForm</title>
+    <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+</head>
+<body>
+  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(addTaskRequest)">
+  <!-- 새 할 일 추가 시작 -->
+  <div class="modal-center flex-col-start-nowrap">
+    <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
+      <div class="flex-row-justify-start-align-center modal-create-task-parent-title img-hidden">
+        <img src="/imgs/icon_blur_parentTask1817.png" alt="parentTask" class="">
+        <span class="font-blur ml-5">바다와 나비</span>
+      </div>
+      <span class="btn-close-modal-createTask cursorP font-24">&times;</span>
+    </div>
+    <form th:action="@{/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
+      <input type="hidden" th:field="${addTaskRequest.projectId}"><!--<input type="hidden" name="" value="1" id="test">-->
+      <input type="hidden" th:field="${addTaskRequest.taskAuthor}"><!--<input type="hidden" value="" id="taskAuthor" name="taskAuthor">-->
+      <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
+        <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
+        <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
+        <input type="text" class="modal-add-task" th:field="${addTaskRequest.taskTitle}" maxlength="20" placeholder="할 일을 입력하세요">
+      </div><!--/* 할일제목 끝 */-->
+
+      <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task">
+        <span class="font-18 c411">중요도</span>
+        <div class="">
+          <input type="radio" id="vip" th:field="${addTaskRequest.taskPriority}" value="vip" class="input-radio hide">
+          <input type="radio" id="ip" th:field="${addTaskRequest.taskPriority}" value="ip" class="input-radio hide">
+          <input type="radio" id="norm" th:field="${addTaskRequest.taskPriority}" value="norm" class="input-radio hide" checked="checked">
+          <div class="">
+            <label for="vip" class="btn-radio w100 radio-l">
+              <span class="font-15 vip">매우중요</span>
+            </label><label for="ip" class="btn-radio w100">
+            <span class="font-15 ip">중요</span>
+          </label><label for="norm" class="btn-radio w100 radio-r">
+            <span class="font-15 norm">일반</span>
+          </label>
+          </div>
+        </div>
+      </div><!--/* 할일중요도 끝 */-->
+
+      <div class="할일마감일 flex-row-justify-start-align-center mb-30 modal-add-task">
+        <span class="font-18 c411">마감일</span>
+        <div class="">
+          <div class="bottom-line200">
+            <input type="date" th:field="${addTaskRequest.taskDueDate}" class="altivo-light">
+          </div>
+        </div>
+      </div><!--/* 할일마감일 끝 */-->
+
+      <div class="담당자배정 flex-row-start-nowrap mb-30 modal-add-task">
+        <span class="font-18 c411 alignCenter" id="trytry">담당자</span>
+        <div class="vertical-ctrl01">
+          <div class="ul과checkbox로test bottom-line350">
+
+            <!-- 선택된 담당자가 담길 box -->
+            <div id="chosens-boxes" class="hide pd-b5">
+            </div>
+
+            <!-- 담당자 선택 전 -->
+            <div id="assignee-before-choose" class="assignee-display mb-5">
+              <span id="assign-indication" class="ml-3">담당자 배정하기(프로젝트 멤버 목록)</span>
+            </div>
+
+            <!-- 프로젝트 멤버 목록 -->
+            <div id="assignee-list-box" class="hide">
+              <input type="checkbox" class="hide" name="taskAssignee" value="아이언맨" id="assignee1"><label for="assignee1" class="display-block lists ">아이언맨</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="블랙위도우" id="assignee2"><label for="assignee2" class="display-block lists">블랙위도우</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="토르" id="assignee3"><label for="assignee3" class="display-block lists">토르</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="캡틴아메리카" id="assignee4"><label for="assignee4" class="display-block lists">캡틴아메리카</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="완다" id="assignee5"><label for="assignee5" class="display-block lists">완다</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="비전" id="assignee6"><label for="assignee6" class="display-block lists">비전</label>
+              <input type="checkbox" class="hide" name="taskAssignee" value="Beyonce" id="assignee7"><label for="assignee7" class="display-block lists">Beyonce</label>
+            </div>
+          </div>
+        </div>
+        <img src="/imgs/icon_down127.png" alt="show list" class="alignCenter cursorP" id="show-assignee-list">
+      </div><!-- 담당자배정 끝 -->
+
+      <div class="할일파일첨부 flex-row-justify-start-align-center">
+        <div class="filebox flex-row-justify-start-align-center">
+          <input type="file" id="create-task-attach-file" th:field="${addTaskRequest.taskFile}" class="opacity0 wh0" multiple>
+          <label for="create-task-attach-file" class="flex-row-justify-start-align-center btn-attach">
+            <img src="/imgs/icon_upload1519.png" alt="upload" class="">
+            <span class="ml-5">파일첨부</span>
+          </label>
+          <div id="create-task-files" class="flex-col-start-nowrap scroll modal-create-task-files-box">
+            <p id="no-file-placeholder" class="no-file vertical-ctrl032">첨부된 파일이 없습니다.</p>
+          </div>
+        </div>
+        <div class="btn-guide">?</div>
+      </div><!-- 파일첨부 끝 -->
+
+      <div class="확인(프로젝트생성버튼) flex-row-center-center-nowrap mt-60 mb-5">
+        <button class="btn-large-ok done font-white" form="form-create-task" id="create-task-submit" type="submit">할 일로 등록</button>
+      </div>
+    </form>
+  </div> <!-- 새 할 일 추가 끝 -->
+</div>
+</body>
+</html>
