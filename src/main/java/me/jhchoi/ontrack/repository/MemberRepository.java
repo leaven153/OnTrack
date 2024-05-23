@@ -1,8 +1,10 @@
 package me.jhchoi.ontrack.repository;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.ProjectMember;
+import me.jhchoi.ontrack.dto.ResponseInvitation;
 import me.jhchoi.ontrack.mapper.MemberMapper;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +27,6 @@ public class MemberRepository {
     public List<ProjectMember> findProjectsByUserId(Long userId) {
         return memberMapper.findProjectsByUserId(userId);
     }
-
+    public void acceptInvitation(ResponseInvitation newCrew) { memberMapper.acceptInvitation(newCrew); }
 
 }

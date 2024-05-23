@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.mapper;
 
 import me.jhchoi.ontrack.domain.ProjectMember;
+import me.jhchoi.ontrack.dto.ResponseInvitation;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -29,4 +30,5 @@ public interface MemberMapper {
     // 담당자 출력
     List<ProjectMember> findByTaskId();
 
+    void acceptInvitation(ResponseInvitation newCrew);
 }

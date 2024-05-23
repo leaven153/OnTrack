@@ -34,13 +34,13 @@ public class TaskRepository {
         taskMapper.assign(assignees);
     }
 
-    // 할 일 상세
+    // 할 일 상세 조회
     public Optional<OnTrackTask> findById(@Param("taskId") Long taskId){
         return taskMapper.findById(taskId);
     }
 
 
-    // 할 일 목록
+    // 할 일 목록 조회
     public List<TasksResponse> allTasksInProject(Long projectId){
         return taskMapper.findAll();
     }

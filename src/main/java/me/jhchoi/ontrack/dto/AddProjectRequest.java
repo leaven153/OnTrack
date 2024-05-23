@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// projectMember까지 같이 등록할 수 있는 dto
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,10 +26,10 @@ public class AddProjectRequest {
     private LocalDate updatedAt;
 
     // 프로젝트 멤버로 등록
-    private String nickname;
-    private String position;
-    private String capacity;
-    private LocalDate joinedAt;
+//    private String nickname;
+//    private String position;
+//    private String capacity;
+//    private LocalDate joinedAt;
 
 
     public OnTrackProject toProjectEntity() {
@@ -48,14 +47,27 @@ public class AddProjectRequest {
                 .build();
     }
 
-    public ProjectMember toPMEntity(){
+    public static ProjectMember creator(String userName){
         return ProjectMember.builder()
-                .projectId(null)
-                .userId(creator)
-                .nickname(nickname)
+                .nickname(userName)
                 .position("creator")
                 .capacity("PD")
                 .joinedAt(LocalDate.now())
                 .build();
     }
+
+
+    public static ProjectMember inviteUser(Long projectId, Long userId, String invitedAs){
+        // position을 invitedAs의 값으로 변경
+        // joinedAt에 날짜 입력
+        return ProjectMember.builder()
+                .projectId(projectId)
+                .userId(userId)
+                .position("invited")
+                .invitedAt(LocalDate.now())
+                .invitedAs(invitedAs)
+                .build();
+    }
+
+
 }

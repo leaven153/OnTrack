@@ -19,34 +19,38 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     /**
-     * created : 2024-05-14
-     * param   :
-     * return  :
-     * explain : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
+     * created  : 2024-05-14
+     * updated  : 2024-05-23
+     * param    :
+     * return   :
+     * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
     public void addTask(AddTaskRequest addTaskRequest) {
 
+        // 1. 새 할 일 정보 등록
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
         taskRepository.newTask(task);
 
-        // 담당자 유무 확인하여 담당자 객체(TaskAssignment) 생성 및 DB 저장
+        // 2. history 등록 - ①할 일 명,
+        TaskHistory logNewTask = TaskHistory.builder()
+                .taskId(task.getId())
+                .projectId(task.getProjectId())
+                .modItem("title")
+                .modType("register")
+                .modContent(task.getTaskTitle())
+                .updatedAt(task.getCreatedAt())
+                .updatedBy(task.getAuthor())
+                .build();
+        taskRepository.log(logNewTask);
+        
+        // 3. 담당자 유무 확인
         if (!addTaskRequest.getMemberId().isEmpty()) {
 
-            List<TaskAssignment> assignees = new ArrayList<>();
-//            IntStream.range(0, addTaskRequest.getMemberId().size()).forEach(i -> {
-//                TaskAssignment assignee = TaskAssignment.builder()
-//                        .projectId(addTaskRequest.getProjectId())
-//                        .taskId(task.getId())
-//                        .userId(addTaskRequest.getAssigneesUserId().get(i))
-//                        .memberId(addTaskRequest.getMemberId().get(i))
-//                        .nickname(addTaskRequest.getNickname().get(i))
-//                        .build();
-//                assignees.add(assignee);
-//            });
-
+            // 3-1. 담당자 객체(TaskAssignment) 생성 및 DB 저장
+            List<TaskAssignment> assignees = addTaskRequest.dtoToEntityTaskAssignment(task.getId());
             taskRepository.assign(assignees);
             
-            // 담당자 인원만큼 history 객체 생성하여 DB에 저장
+            // 3-2. history 등록 - 담당자 인원만큼 history 객체 생성 및 DB 저장
             IntStream.range(0, assignees.size()).forEach(i -> {
                 TaskHistory logAssign = TaskHistory.builder()
                         .taskId(assignees.get(i).getId())
@@ -58,20 +62,10 @@ public class TaskService {
             });
         }
 
-        // 추가요망: 파일첨부 여부 check
+        // 4. 파일첨부 여부 check 후 객체 생성 및 저장
         //taskRepository.attach();
 
-        // history 등록 - ①할 일 명, ②담당자 (추후 AOP로!)
-        TaskHistory logNewTask = TaskHistory.builder()
-                .taskId(task.getId())
-                .projectId(task.getProjectId())
-                .modItem("title")
-                .modType("register")
-                .modContent(task.getTaskTitle())
-                .updatedAt(task.getCreatedAt())
-                .updatedBy(task.getAuthor())
-                .build();
-        taskRepository.log(logNewTask);
+        
 
     }
 

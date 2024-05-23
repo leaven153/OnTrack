@@ -2,27 +2,27 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>modal - add project form</title>
+    <title>modal - create project form</title>
     <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
     <!-- 모달: 새프로젝트 추가 -->
     <!-- 모달 컨테이너 -->
-    <div id="modal-create-project" class="modal-container hide" th:fragment="addProjectForm(addProjectRequest)">
+    <div id="modal-create-project" class="modal-container hide" th:fragment="createProjectForm(createProjectRequest)">
         <!--/* 새프로젝트 추가 시작 */-->
         <div class="modal-center flex-col-start-nowrap">
             <div class="상단닫기버튼 flex-row-end-center-nowrap">
                 <button type="button" id="btn-close-modal-create-project" class="btn-close font-24">&times;</button>
             </div>
-            <form action="/project/addProject" th:action="@{/project/addProject}" th:object="${addProjectRequest}" method="POST" id="form-create-project">
+            <form action="/project/createProject" th:action="@{/project/createProject}" th:object="${createProjectRequest}" method="POST" id="form-create-project">
                 <div class="프로젝트제목입력 bottom-line mb-30 pd-b5 modal-create-proj-name">
-                    <input type="text" class="modal-create-proj-name" name="newProjectName" th:field="${addProjectRequest.newProjectName}" max="20" placeholder="새 프로젝트명을 입력하세요">
+                    <input type="text" class="modal-create-proj-name" name="newProjectName" th:field="${createProjectRequest.newProjectName}" max="20" placeholder="새 프로젝트명을 입력하세요">
                 </div>
                 <div class="프로젝트유형 flex-row-justify-start-align-center modal-create-proj-items mb-30">
                     <span class="font-18 c411">프로젝트 유형</span>
                     <div class="">
-                        <input type="radio" id="solo" th:field="${addProjectRequest.newProjectType}" value="solo" class="new-project-type input-radio-project-type hide">
-                        <input type="radio" id="team" th:field="${addProjectRequest.newProjectType}" value="team" class="new-project-type input-radio-project-type hide">
+                        <input type="radio" id="solo" th:field="${createProjectRequest.newProjectType}" value="solo" class="new-project-type input-radio-project-type hide">
+                        <input type="radio" id="team" th:field="${createProjectRequest.newProjectType}" value="team" class="new-project-type input-radio-project-type hide">
                         <div class="">
                             <label for="solo" class="btn-radio w100 radio-r">
                                 <img src="/imgs/icon_solo1315.png" alt="solo" class="vertical-ctrl015 hide">
@@ -40,7 +40,7 @@
                     <span class="font-18 c411">프로젝트 마감일</span>
                     <div class="modal-create-proj-dueDate">
                         <div class="bottom-line200">
-                            <input type="date" name="newProjectDueDate" th:field="${addProjectRequest.dueDate}" class="altivo-light">
+                            <input type="date" name="newProjectDueDate" th:field="${createProjectRequest.dueDate}" class="altivo-light">
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginUser {
     @NotEmpty
-    private String loginId;
+    private String loginId; // email
     @NotEmpty
     private String loginPw;
 
