@@ -16,14 +16,14 @@ public class TaskFile {
     private Long userId;
     private Long memberId;
     private String fileOrigName; // 업로드한 파일의 원래 이름
-    private UUID fileNewName; // 파일명 중복방지를 위해 새로운 이름 부여
+    private String fileNewName; // 파일명 중복방지를 위해 새로운 이름 부여
     private String fileType; // 파일유형...
     private Long fileSize;
     private String filePath;
     private LocalDateTime createdAt;
 
     @Builder
-    public TaskFile(Long projectId, Long userId, Long memberId, String fileOrigName, UUID fileNewName, String fileType, Long fileSize, String filePath, LocalDateTime createdAt) {
+    public TaskFile(Long projectId, Long userId, Long memberId, String fileOrigName, String fileNewName, String fileType, Long fileSize, String filePath, LocalDateTime createdAt) {
         this.projectId = projectId;
         this.userId = userId;
         this.memberId = memberId;

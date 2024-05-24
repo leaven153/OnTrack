@@ -1,5 +1,6 @@
-package me.jhchoi.ontrack.domain;
+package me.jhchoi.ontrack.repository;
 
+import me.jhchoi.ontrack.domain.OnTrackUser;
 import me.jhchoi.ontrack.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

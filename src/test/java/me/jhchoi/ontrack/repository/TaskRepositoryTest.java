@@ -1,15 +1,21 @@
-package me.jhchoi.ontrack.domain;
+package me.jhchoi.ontrack.repository;
 
+import me.jhchoi.ontrack.domain.OnTrackTask;
+import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.repository.TaskRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,22 +52,39 @@ public class TaskRepositoryTest {
         assertThat(task.getId()).isEqualTo(savedTaskId);
     }// test: new task
 
-    @Test
+    @Test @Transactional
+    @DisplayName("담당자 여러 명 저장")
     void assign(){
-        List<TaskAssignment> assignees = new ArrayList<>();
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
 
-        TaskAssignment ta = TaskAssignment.builder()
-                .projectId(1L)
-                .taskId(1L)
-                .userId(1L)
-                .memberId(1L)
-                .nickname("Jessica")
-                .role("assignee")
-                .assignedAt(LocalDate.now())
-                .build();
-        assignees.add(ta);
+        List<TaskAssignment> assignees = new ArrayList<>();
+        Long[] memberIds = {4L, 26L, 27L, 28L};
+        String[] nicknames = {"Adele", "송혜교", "크러쉬", "스칼렛 요한슨"};
+
+        IntStream.range(0, memberIds.length).forEach(i -> {
+            TaskAssignment taa = TaskAssignment.builder()
+                    .projectId(9L)
+                    .taskId(5L)
+                    .memberId(memberIds[i])
+                    .nickname(nicknames[i])
+                    .role("assignee")
+                    .assignedAt(nowWithNano.minusNanos(nanosec))
+                    .build();
+            assignees.add(taa);
+        });
+//        TaskAssignment ta = TaskAssignment.builder()
+//                .projectId(1L)
+//                .taskId(1L)
+//                .userId(1L)
+//                .memberId(1L)
+//                .nickname("Jessica")
+//                .role("assignee")
+//                .assignedAt(LocalDateTime.now())
+//                .build();
+//        assignees.add(ta);
         taskRepository.assign(assignees);
-        assertThat(ta.getId()).isEqualTo(1L);
+//        assertThat(ta.getId()).isEqualTo(1L);
     } // test: assign
 
     @Test

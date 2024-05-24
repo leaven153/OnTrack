@@ -23,7 +23,7 @@ public class HomeController {
         log.info("================from home to project directly====================");
         AddTaskRequest addTask = AddTaskRequest.builder()
                 .projectId(1L)
-                .taskAuthor(1L)
+                .taskAuthorMid(1L)
                 .build();
         model.addAttribute("addTaskRequest", addTask);
         return "project/project";

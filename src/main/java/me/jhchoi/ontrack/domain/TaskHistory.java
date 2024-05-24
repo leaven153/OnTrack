@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.IntStream;
 
 // 할 일의 변경사항 저장
 // 할 일 탭 중 '내역'에 출력
@@ -33,5 +36,30 @@ public class TaskHistory {
         this.modContent = modContent;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
+    }
+
+    // 할 일 명 등록
+    public static TaskHistory logNewTask(OnTrackTask newTask){
+        return TaskHistory.builder()
+                .projectId(newTask.getProjectId())
+                .taskId(newTask.getId())
+                .modItem("title")
+                .modType("register")
+                .modContent(newTask.getTaskTitle())
+                .updatedAt(newTask.getCreatedAt())
+                .updatedBy(newTask.getAuthor())
+                .build();
+    }
+
+    public static TaskHistory logAssignment(TaskAssignment assignees, Long authorId) {
+        return TaskHistory.builder()
+                .projectId(assignees.getProjectId())
+                .taskId(assignees.getTaskId())
+                .modItem("assignee")
+                .modType("register")
+                .modContent(assignees.getNickname())
+                .updatedAt(assignees.getAssignedAt())
+                .updatedBy(authorId)
+                .build();
     }
 }
