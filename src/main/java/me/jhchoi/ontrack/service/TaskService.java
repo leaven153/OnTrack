@@ -20,7 +20,7 @@ public class TaskService {
 
     /**
      * created  : 2024-05-14
-     * updated  : 2024-05-23
+     * updated  : 2024-05-23, 24
      * param    :
      * return   :
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
@@ -32,40 +32,21 @@ public class TaskService {
         taskRepository.newTask(task);
 
         // 2. history 등록 - ①할 일 명,
-        TaskHistory logNewTask = TaskHistory.builder()
-                .taskId(task.getId())
-                .projectId(task.getProjectId())
-                .modItem("title")
-                .modType("register")
-                .modContent(task.getTaskTitle())
-                .updatedAt(task.getCreatedAt())
-                .updatedBy(task.getAuthor())
-                .build();
-        taskRepository.log(logNewTask);
+        taskRepository.log(TaskHistory.logNewTask(task));
         
         // 3. 담당자 유무 확인
-        if (!addTaskRequest.getMemberId().isEmpty()) {
+        if (addTaskRequest.getAssigneesMid().length > 0) {
 
             // 3-1. 담당자 객체(TaskAssignment) 생성 및 DB 저장
-            List<TaskAssignment> assignees = addTaskRequest.dtoToEntityTaskAssignment(task.getId());
+            List<TaskAssignment> assignees = addTaskRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
             taskRepository.assign(assignees);
             
-            // 3-2. history 등록 - 담당자 인원만큼 history 객체 생성 및 DB 저장
-            IntStream.range(0, assignees.size()).forEach(i -> {
-                TaskHistory logAssign = TaskHistory.builder()
-                        .taskId(assignees.get(i).getId())
-                        .projectId(assignees.get(i).getProjectId())
-                        .modItem("assignee")
-                        .modType("register")
-                        .modContent(assignees.get(i).getNickname()).build();
-                taskRepository.log(logAssign);
-            });
+            // 3-2. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
+            IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), task.getAuthor())));
         }
 
         // 4. 파일첨부 여부 check 후 객체 생성 및 저장
         //taskRepository.attach();
-
-        
 
     }
 

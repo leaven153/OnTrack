@@ -23,7 +23,7 @@ public class TaskController {
         System.out.println("please");
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", addTaskRequest.getProjectId());
-        log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthor());
+        log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthorMid());
         log.info("할일 이름 = {}", addTaskRequest.getTaskTitle());
         log.info("전체 = {}", addTaskRequest.toString());
 //        taskService.addTask(addTaskRequest);
