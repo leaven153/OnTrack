@@ -61,9 +61,7 @@ class TaskServiceTest {
             taskRepository.assign(assignees);
 
             // 3-2. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
-            IntStream.range(0, assignees.size()).forEach(i -> {
-                taskRepository.log(TaskHistory.logAssignment(assignees.get(i), 14L));
-            });
+            IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), 14L)));
         }
     }
 
