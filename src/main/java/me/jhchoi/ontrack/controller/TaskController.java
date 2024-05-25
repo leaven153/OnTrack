@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
@@ -19,15 +20,18 @@ public class TaskController {
 
 
     @PostMapping("/addTask")
-    public void addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest){
+    public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, HttpSession session){
         System.out.println("please");
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", addTaskRequest.getProjectId());
         log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthorMid());
         log.info("할일 이름 = {}", addTaskRequest.getTaskTitle());
-        log.info("전체 = {}", addTaskRequest.toString());
+        log.info("전체 = {}", addTaskRequest);
+        //전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, taskTitle=할 일 추가 ing, taskPriority=vip, taskDueDate=2024-05-23, assigneesMid=null, nickname=null, taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1b6ce1b0])
 //        taskService.addTask(addTaskRequest);
-//        return null;
+        return """
+                redirect:/project/%s/%s
+                """.formatted(addTaskRequest.getProjectId(), addTaskRequest.getTaskAuthorMid());
     }
 
 }

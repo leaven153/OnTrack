@@ -12,33 +12,29 @@
   <script src="/js/main.js"></script>
  </head>
  <body>
-  <!----------------------->
-  <!----- Begin nav ----->
+
+  <!-----/* Begin nav */----->
   <nav>
     <th:block th:replace="~{/fragments/nav :: nav}"></th:block>
   </nav>
-  <!-- nav End -->
-  <!---------------------->
+  <!--/* nav End /*-->
 
-
-  <!---------------------------------------------------->
-  <!-------------- project 상단 고정 시작 ------------->
-  <!--(display name, title, view tab, search/create task)-->
+  <!--------------/* project 상단 고정 시작 */------------->
+  <!--/* (display name, title, view tab, search/create task) */-->
   <div class="상단고정래퍼 project-fixed-top flex-col-start-nowrap">
     <div class="wrapper flex-row-end-center-nowrap">
       <div class="nickname flex-row-justify-start-align-center">
         <img src="/imgs/pen.png" alt="" class="img-15 mr-5 btn-project-nickname">
-        <span class="font-18 bold nickname">제임스 서버</span>
+        <span class="font-18 bold nickname" th:text="${nickname}">제임스 서버</span>
       </div>
       <img src="/imgs/icon_leave.png" alt="" class="btn-project-out">
-    </div><!-- nickname 끝-->
+    </div><!--/* nickname 끝 */-->
     <div class="proj-title wrapper">
       <h1>올리 초이의 길</h1>
       <button type="button" class="btn-dDay altivo-bold">D-365</button>
       <div class="btn-open-settings flex-row-justify-start-align-center" data-id="projId01">
         <img src="/imgs/icon_blur_settings.png" alt="project settings" class="img-40">
-        <!-- ↓ 프로젝트 설정 버튼 클릭시 나타나는 창 -->
-        <!-- 인텔리제이가 button 안에는 div가 not allowed 란다...-->
+        <!--/* ↓ 프로젝트 설정 버튼 클릭시 나타나는 창 */-->
         <div class="click-proj-setting flex-col-start-nowrap img-hidden">
           <p class="flex-row-justify-start-align-center mb-5 btn-write-notice">
             <span class="ml-7 pd-tb5rl3 c9e3 bold">공지등록</span>
@@ -46,11 +42,12 @@
           <p class="flex-row-justify-start-align-center btn-open-configure-project">
             <span class="ml-7 pd-tb5rl3 c451 bold">프로젝트 설정</span>
           </p>
-        </div> <!-- 공지등록, 프로젝트 설정 hidden 끝-->
-      </div> <!-- 설정 버튼 끝-->
+        </div> <!--/* 공지등록, 프로젝트 설정 hidden 끝 */-->
+      </div> <!--/* 설정 버튼 끝 */-->
       
-    </div> <!-- 프로젝트 이름, 설정버튼 끝 -->
-    <!-- Begin tab -->
+    </div> <!--/* 프로젝트 이름, 설정버튼 끝 */-->
+
+    <!--/* Begin tab */-->
     <div class="tab wrapper bottom-line">
       <div class="view-box">
         <button type="button" id="btn-table-view" data-view="table-view" class="btn-view btn-view-choosen flex-row-justify-start-align-center"><img src="/imgs/icon_table.png" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
@@ -71,33 +68,24 @@
         <button type="button" id="btn-add-task" class="btn-add-task">+  할 일 추가</button>
       </div>
     </div> <!-- tab Ends -->
-  </div><!-- 상단고정래퍼 끝 -->
-  <!-------------- project 상단 고정 끝 ------------->
-  <!---------------------------->
+  </div><!--/* 상단고정래퍼 끝 */-->
+  <!--------------/* project 상단 고정 끝 */------------->
 
-  <!----------------------->
   <!--/* 하위task 불러올 때는 담당자별로 정렬될 수 있도록 하자... */-->
   <!--/* 테이블뷰 시작 Table View Starts */-->
   <th:block th:replace="~{/fragments/projectView :: tableView}"></th:block>
   <!---/* 테이블뷰 끝 Table View Ends */--->
-  <!----------------------->
 
-
-  <!------------------------->
   <!-- Status View Starts -->
   <th:block th:replace="~{/fragments/projectView :: statusView}"></th:block>
   <!-- Status View Ends -->
-  <!---------------------->
 
 
-  <!-------------------------->
   <!-- Assignee View Starts -->
   <th:block th:replace="~{/fragments/projectView :: assigneeView}"></th:block>
   <!-- Assignee View Ends -->
-  <!------------------------>
 
 
-  <!-------------------------->
   <!-- Modal Starts -->
 
   <!-- 모달: 프로젝트 나가기 시작 -->
@@ -426,7 +414,7 @@
   <!--/* 모달: 할 일 상세 끝 */-->
 
   <!--/* Modal Ends */-->
-  <!------------------------>
+
  </body>
 </html>
 

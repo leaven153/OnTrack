@@ -20,6 +20,6 @@ public interface ProjectMapper {
 
     MemberNickNames getNicknames(ReqProjectUser request);
 
-
+    OnTrackProject getProject(Long projectId);
 
 }
