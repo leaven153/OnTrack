@@ -54,6 +54,13 @@ public class ProjectRepository {
     }
 
     /**
+     * created  : 24-05-25
+     * param    : Long projectId
+     * return   :
+     * explain  : 새 프로젝트 저장/등록
+     * */
+
+    /**
      * created  : 24-05-22
      * param    : user id
      * return   : List<MemberNicknames>

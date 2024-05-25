@@ -49,7 +49,7 @@ public class ProjectService {
         // 2. 해당 프로젝트 생성자(들)의 id 목록
         List<Long> creators = projectList.stream().map(ProjectList::getCreatorId).toList();
 
-        // 3. 생성자 id의 각 idx 가져오기(map으로 생성자의 user id를 key으로 하여 index를 value로 매핑)
+        // 3. 생성자 id의 (project list 내에서의 )idx 가져오기(map으로 생성자의 user id를 key으로 하여 index를 value로 매핑)
         Map<Long, Integer> idxOfCreator = new HashMap<>();
         IntStream.range(0, projectList.size()).forEach(i -> {
             for (Long creator : creators) {

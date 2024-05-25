@@ -14,7 +14,7 @@
     </select>
 
     <select id="allMyProjects" resultType="ProjectList">
-        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, p.project_dueDate,p.createdAt, p.updatedAt, pm.id as memberId, pm.position, pm.invitedAt, pm.invitedAs
+        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, p.project_dueDate,p.createdAt, p.updatedAt, pm.id as memberId, pm.nickname, pm.position, pm.invitedAt, pm.invitedAs
         FROM ontrack_project p INNER JOIN project_member pm
         ON p.id = pm.project_id
         WHERE pm.user_id = #{id}
@@ -24,6 +24,17 @@
         SELECT id as memberId, user_id, project_id, nickname
         FROM project_member
         WHERE project_id = #{projectId}
-        AND user_id = #{userId}
+        <if test="userId != null">
+            AND user_id = #{userId}
+        </if>
+        <if test="memberId != null">
+            And member_id = #{memberId}
+        </if>
+    </select>
+
+    <select id="getProject" resultType="OnTrackProject">
+        SELECT creator, project_type, project_name, project_dueDate, project_status, createdAt
+        FROM ontrack_project
+        WHERE project_id = #{projectId}
     </select>
 </mapper>

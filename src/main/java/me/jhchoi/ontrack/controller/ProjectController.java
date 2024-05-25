@@ -29,21 +29,28 @@ public class ProjectController {
      * return   :
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
-    @GetMapping("/{projectId}/{memberId}")
-    public String eachProject(@PathVariable("projectId") Long projectId, @PathVariable("memberId") Long memberId, HttpSession session, Model model){
+    @GetMapping("/{projectId}/{memberId}/{nickname}")
+    public String eachProject(@PathVariable("projectId") Long projectId, @PathVariable("memberId") Long memberId, @PathVariable("nickname")String nickname, HttpSession session, Model model){
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("path variable project id: {}", projectId);
-        log.info("path variable member id: {}", memberId);
+        log.info("path variable member id: {}", memberId); // 추후 이것도 uuid 처리해야 할까?
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
 
-        // 할 일 추가 form 객체에 아래 정보 담아서 넘기기
-        // 해당 프로젝트의 project id, 
-        // author에는 member id
-        // 해당 프로젝트의 멤버들: MemberNickNames에 담아온다.
-        model.addAttribute("addTaskRequest", new AddTaskRequest());
+        // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
+        model.addAttribute("nickname", nickname);
 
-        return "/project/project"; // url - http://localhost:8080/project/9/14
+        // 2. project 정보
+
+
+        // 3. 할 일 목록 (projectId)
+        
+        // 4. 해당 프로젝트의 멤버들: MemberNickNames에 담아온다.
+        
+        // 5. 할일 추가 객체(AddTaskRequest) 넘기기
+        model.addAttribute("addTaskRequest", AddTaskRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
+
+        return "project/project"; // url - http://localhost:8080/project/9/14
     }
 
 
@@ -52,6 +59,8 @@ public class ProjectController {
      * param   :
      * return  :
      * explain : 프로젝트 생성(team)
+     * 프로젝트를 생성하는 것은 mypage에서만 가능하도록 수정하면
+     * modelAttribute어노테이션을 이용해 프로젝트 멤버를 항상 붙일 수 있을 듯? →
      * */
     @PostMapping("/createProject")
     public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, BindingResult bindingResult, HttpSession session){

@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class ReqProjectUser {
     private Long projectId;
     private Long userId;
+    private Long memberId;
 }

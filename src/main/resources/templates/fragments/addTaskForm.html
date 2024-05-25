@@ -17,8 +17,8 @@
       <span class="btn-close-modal-createTask cursorP font-24">&times;</span>
     </div>
     <form th:action="@{/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
-      <input type="hidden" th:field="${addTaskRequest.projectId}"><!--<input type="hidden" name="" value="1" id="test">-->
-      <input type="hidden" th:field="${addTaskRequest.taskAuthor}"><!--<input type="hidden" value="" id="taskAuthor" name="taskAuthor">-->
+      <input type="hidden" th:field="${addTaskRequest.projectId}">
+      <input type="hidden" th:field="${addTaskRequest.taskAuthorMid}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
         <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
         <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
