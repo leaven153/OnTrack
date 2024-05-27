@@ -40,7 +40,8 @@ public class ProjectController {
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
         model.addAttribute("nickname", nickname);
 
-        // 2. project 정보
+        // 2. project 정보: 화면에 출력되어야 하는 내용
+        // 프로젝트명, 생성자, 생성일, 유형, 마감일, 상태,
 
 
         // 3. 할 일 목록 (projectId)

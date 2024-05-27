@@ -16,7 +16,7 @@ public class ProjectList {
     private Long projectId;
     private String projectType;
     private String projectStatus;
-    private Long creatorId;
+    private Long creatorId; // user id
     private String creatorName;
     private String projectName;
     private LocalDate projectDueDate;

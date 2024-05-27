@@ -27,6 +27,11 @@ public class MemberRepository {
     public List<ProjectMember> findProjectsByUserId(Long userId) {
         return memberMapper.findProjectsByUserId(userId);
     }
+    
+    // 회원의 프로젝트 초대 수락/거절
     public void acceptInvitation(ResponseInvitation newCrew) { memberMapper.acceptInvitation(newCrew); }
+
+    // 프로젝트의 멤버 목록 조회
+
 
 }

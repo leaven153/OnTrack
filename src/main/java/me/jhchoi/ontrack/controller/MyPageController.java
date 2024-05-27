@@ -28,13 +28,16 @@ public class MyPageController {
 
         log.info("=================myProjects====================");
         log.info("session을 찾아라: {}", session.getAttribute("loginUser"));
+        // AddProjectRequest의 creator에 로그인한 유저의 id, nickname 담는 코드 추가요망
         model.addAttribute("createProjectRequest", new AddProjectRequest());
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
         Boolean noProject = projectList.size() <= 0; // Boolean noProject = projectList.size() <= 0 ? true: false;
+
 //        log.info("projectList가 0개라면 null인가?: {}", projectList); //projectList가 0개라면 null인가?: []
 //        log.info("projectList.size: {}", projectList.size()); // projectList.size: 2
 //        log.info("noProject: {}", noProject); // noProject: false
+
         model.addAttribute("noProject", noProject);
         model.addAttribute("projectList", projectList);
         model.addAttribute("loginUser", loginUser);

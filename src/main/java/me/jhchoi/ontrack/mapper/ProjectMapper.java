@@ -14,12 +14,11 @@ import java.util.Optional;
 public interface ProjectMapper {
     void save(OnTrackProject project);
 
-    Optional<OnTrackProject> findByProjectId(Long projectId);
+    OnTrackProject findByProjectId(Long projectId);
 
     List<ProjectList> allMyProjects(Long userId);
 
-    MemberNickNames getNicknames(ReqProjectUser request);
+    List<MemberNickNames> getNicknames(ReqProjectUser request);
 
-    OnTrackProject getProject(Long projectId);
 
 }

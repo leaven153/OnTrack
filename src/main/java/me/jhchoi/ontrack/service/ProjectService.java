@@ -46,7 +46,7 @@ public class ProjectService {
         // 1. 해당 유저가 속한 프로젝트 목록 
         List<ProjectList> projectList =projectRepository.allMyProjects(userId);
 
-        // 2. 해당 프로젝트 생성자(들)의 id 목록
+        // 2. 해당 프로젝트 생성자(들)의 user id 목록
         List<Long> creators = projectList.stream().map(ProjectList::getCreatorId).toList();
 
         // 3. 생성자 id의 (project list 내에서의 )idx 가져오기(map으로 생성자의 user id를 key으로 하여 index를 value로 매핑)
@@ -62,6 +62,9 @@ public class ProjectService {
         // 4. 생성자가 2개 이상의 프로젝트를 가지고 있고, 각각의 프로젝트에서 다른 nickname을 사용할 수 있으므로
         // 생성자의 user id와 project id가 일치하는 row의 nickname을 받아오기 위해
         // 전용 dto 생성
+        // (ontrack_project 테이블의 creator 컬럼에는 creator의 user id가 저장되어 있다.
+        // ∵ 프로젝트를 만들고 나서 project id를 가지고
+        // project member에 추가하기 때문에 member id가 들어갈 수 없다.)
         List<ReqProjectUser> reqList = new ArrayList<>();
         for (ProjectList list : projectList) {
             ReqProjectUser request = ReqProjectUser.builder()
@@ -73,7 +76,7 @@ public class ProjectService {
 
         // 5. data요청
         List<MemberNickNames> mnn = new ArrayList<>();
-        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getNickName(reqList.get(i))));
+        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
 
         // 6. 생성자의 이름을 project List에 매칭하여 저장
         IntStream.range(0, mnn.size()).forEach(i -> {
@@ -84,6 +87,20 @@ public class ProjectService {
         });
 
         return projectList;
+    }
+
+    /**
+     * created  : 24-05-27
+     * param    :
+     * return   :
+     * explain  : 프로젝트 상세(프로젝트 정보, 멤버목록, 할 일 목록)
+     * */
+    public ProjectResponse getProject(Long projectId){
+        ProjectResponse response = ProjectResponse.builder().build();
+        response.setProject(projectRepository.findByProjectId(projectId));
+        projectRepository.getNickNames(ReqProjectUser.builder().projectId(projectId).build());
+
+        return response;
     }
 
     /**
