@@ -42,16 +42,5 @@ public class OnTrackTask {
         this.updatedBy = updatedBy;
     }
 
-    public static String switchStatus(String dbStatus){
-        String switchedStatus = "";
-        System.out.println(dbStatus);
-        switch (dbStatus){
-            case "planning" -> switchedStatus = "계획중";
-            case "ing" -> switchedStatus = "진행중";
-            case "review" -> switchedStatus = "검토중";
-            case "done" -> switchedStatus = "완료";
-            default -> switchedStatus = "시작 안 함";
-        }
-        return switchedStatus;
-    }
+
 }

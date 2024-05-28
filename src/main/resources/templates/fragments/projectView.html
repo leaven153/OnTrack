@@ -93,13 +93,13 @@
 
     <!-- assignee -->
     <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
-      <span class="no-assignee hide">담당자 없음</span>
-      <span class="table-assignee-alone hide">서머싯 몸</span>
-      <div class="assignee-many"><span class="lastName">김</span></div>
-      <div class="assignee-many"><span class="lastName">이</span></div>
-      <div class="assignee-many"><span class="lastName">박</span></div>
-      <div class="assignee-many"><span class="lastName">최</span></div>
-      <div class="assignee-many"><span class="lastName">정</span></div>
+      <span class="no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+      <span class="table-assignee-alone" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span>
+      <th:block th:if="${task.getAssigneeNames().size() > 1}">
+        <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+          <div class="assignee-many"><span class="lastName" th:text="${assignee}">김</span></div>
+        </th:block>
+      </th:block>
     </div>
 
     <!-- status -->
@@ -141,7 +141,7 @@
     </div>
 
     <!-- author -->
-    <div class="tableview-column" >올리초이</div> <!-- vertical-ctrl01-->
+    <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div> <!-- vertical-ctrl01-->
   </div><!-- 테이블뷰: 할 일 목록Row 끝 Task List Contents Ends -->
   </th:block>
 

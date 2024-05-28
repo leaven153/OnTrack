@@ -119,14 +119,14 @@ public class ProjectService {
         // assingee 수 만큼 task list에 add한다.
         IntStream.range(0, response.getTaskList().size()).forEach(i -> {
           List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(response.getTaskList().get(i).getId());
-          for(int j = 0; j < assigneeList.size(); j++){
-              List<String> assigneeNames = new ArrayList<>();
-              assigneeNames.add(assigneeList.get(j).getNickname());
-              response.getTaskList().get(i).setAssigneeNames(assigneeNames);
-              List<Long> assigneeIds = new ArrayList<>();
-              assigneeIds.add(assigneeList.get(j).getMemberId());
-              response.getTaskList().get(i).setAssigneeMids(assigneeIds);
-          }
+            List<String> assigneeNames = new ArrayList<>();
+            List<Long> assigneeIds = new ArrayList<>();
+            for (TaskAssignment taskAssignment : assigneeList) {
+                assigneeNames.add(taskAssignment.getNickname());
+                assigneeIds.add(taskAssignment.getMemberId());
+            }
+            response.getTaskList().get(i).setAssigneeNames(assigneeNames);
+            response.getTaskList().get(i).setAssigneeMids(assigneeIds);
         });
 
         return response;

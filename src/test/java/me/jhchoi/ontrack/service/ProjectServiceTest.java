@@ -181,14 +181,40 @@ class ProjectServiceTest {
 
             List<String> assigneeNames = new ArrayList<>();
             List<Long> assigneeIds = new ArrayList<>();
-            for(int j = 0; j < assigneeList.size(); j++){
-                assigneeNames.add(assigneeList.get(j).getNickname());
-                assigneeIds.add(assigneeList.get(j).getMemberId());
+            for (TaskAssignment taskAssignment : assigneeList) {
+                assigneeNames.add(taskAssignment.getNickname());
+                assigneeIds.add(taskAssignment.getMemberId());
             }
             response.getTaskList().get(i).setAssigneeNames(assigneeNames);
             response.getTaskList().get(i).setAssigneeMids(assigneeIds);
         });
+
+        List<String> firstName = response.getTaskList().get(0).getAssigneeNames().stream().map(assignee -> assignee.substring(0, 1)).collect(Collectors.toList());
+        log.info("담당자 성만 따오기: {}", firstName);
         log.info("프로젝트 정보, 멤버 목록, 할 일 목록, 할일별 담당자목록: {}", response);
-        // 프로젝트 정보, 멤버 목록, 할 일 목록, 할일별 담당자목록: ProjectResponse(project=OnTrackProject(id=9, creator=35, projectType=team, projectName=By your side, projectUrl=0c49b029-56dc-40ff-bedc-6d25cb86fc36, projectStatus=activated, projectDueDate=null, createdAt=2024-05-22T11:19:10, updatedAt=2024-05-22T11:19:10), memberList=[MemberNickNames(userId=45, projectId=9, memberId=4, nickname=Adele), MemberNickNames(userId=35, projectId=9, memberId=14, nickname=공지철), MemberNickNames(userId=61, projectId=9, memberId=26, nickname=송혜교), MemberNickNames(userId=47, projectId=9, memberId=27, nickname=크러쉬), MemberNickNames(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)], taskList=[TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=null, taskPriority=norm, taskStatus=ing, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨]), TaskList(id=9, taskTitle=경복궁 야간개방, authorMid=14, authorName=null, taskPriority=norm, taskStatus=planning, taskDueDate=null, taskParentId=null, createdAt=2024-05-28T12:13:54, updatedAt=2024-05-28T12:13:54, updatedBy=14, assigneeMids=[26], assigneeNames=[송혜교]), TaskList(id=10, taskTitle=그 벌들은 다 어디로 갔을까, authorMid=4, authorName=null, taskPriority=norm, taskStatus=not-yet, taskDueDate=2024-05-31, taskParentId=null, createdAt=2024-05-28T12:17:53, updatedAt=2024-05-28T12:17:53, updatedBy=4, assigneeMids=[27], assigneeNames=[크러쉬])])
+        // 프로젝트 정보, 멤버 목록, 할 일 목록, 할일별 담당자목록:
+        // ProjectResponse(project=OnTrackProject(id=9, creator=35, projectType=team,
+        // projectName=By your side, projectUrl=0c49b029-56dc-40ff-bedc-6d25cb86fc36,
+        // projectStatus=activated, projectDueDate=null,
+        // createdAt=2024-05-22T11:19:10, updatedAt=2024-05-22T11:19:10),
+        //
+        // memberList=[MemberNickNames(userId=45, projectId=9, memberId=4, nickname=Adele),
+        // MemberNickNames(userId=35, projectId=9, memberId=14, nickname=공지철),
+        // MemberNickNames(userId=61, projectId=9, memberId=26, nickname=송혜교),
+        // MemberNickNames(userId=47, projectId=9, memberId=27, nickname=크러쉬),
+        // MemberNickNames(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
+
+        // taskList=[TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=null,
+        // taskPriority=norm, taskStatus=ing, taskDueDate=null, taskParentId=null,
+        // createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14,
+        // assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨]),
+        // TaskList(id=9, taskTitle=경복궁 야간개방, authorMid=14, authorName=null,
+        // taskPriority=norm, taskStatus=planning, taskDueDate=null, taskParentId=null,
+        // createdAt=2024-05-28T12:13:54, updatedAt=2024-05-28T12:13:54, updatedBy=14,
+        // assigneeMids=[26], assigneeNames=[송혜교]),
+        // TaskList(id=10, taskTitle=그 벌들은 다 어디로 갔을까, authorMid=4, authorName=null,
+        // taskPriority=norm, taskStatus=not-yet, taskDueDate=2024-05-31, taskParentId=null,
+        // createdAt=2024-05-28T12:17:53, updatedAt=2024-05-28T12:17:53, updatedBy=4,
+        // assigneeMids=[27], assigneeNames=[크러쉬])])
     }
 }
