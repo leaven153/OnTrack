@@ -1,7 +1,10 @@
 package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
+import me.jhchoi.ontrack.domain.ProjectMember;
+import me.jhchoi.ontrack.dto.MemberNickNames;
 import me.jhchoi.ontrack.dto.ProjectList;
+import me.jhchoi.ontrack.dto.ReqProjectUser;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +41,7 @@ public class ProjectRepositoryTest {
                 .updatedAt(now.minusNanos(nanosec)) //new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 .build();
         projectRepository.save(project);
-        OnTrackProject findProj = projectRepository.findByProjectId(project.getId()).get();
+        OnTrackProject findProj = projectRepository.findByProjectId(project.getId());
         assertThat(findProj).isEqualTo(project);
     }
 
@@ -78,5 +81,23 @@ public class ProjectRepositoryTest {
         log.info("projectList: {}", projectList);
 //        ProjectList pl = projectRepository.allMyProjects(8L);
 //        log.info("allMyporject: {}", pl);
+    }
+
+    @Test @DisplayName("프로젝트 정보 가져오기")
+    void findByProjectId(){
+        // getProject: creator, project_type, project_name, project_dueDate, project_status, createdAt
+        // findByProjectId: id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
+        Long projectId = 9L;
+        OnTrackProject project = projectRepository.findByProjectId(projectId);
+        log.info("optional로 불러온 project: {}", project);
+        //optional로 불러온 project: Optional[OnTrackProject(id=9, creator=35, projectType=team, projectName=By your side, projectUrl=0c49b029-56dc-40ff-bedc-6d25cb86fc36, projectStatus=activated, projectDueDate=null, createdAt=2024-05-22T11:19:10, updatedAt=2024-05-22T11:19:10)]
+
+    }
+
+    @Test @DisplayName("프로젝트 소속 멤버의 목록 조회")
+    void getNicknames(){
+        List<MemberNickNames> memberList = projectRepository.getNickNames(ReqProjectUser.builder().projectId(9L).build());
+
+        log.info("프로젝트 멤버 목록: {}", memberList);
     }
 }

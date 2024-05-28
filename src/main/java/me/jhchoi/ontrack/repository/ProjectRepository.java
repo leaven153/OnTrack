@@ -35,11 +35,11 @@ public class ProjectRepository {
 
     /**
      * created  : 24-05
-     * param    : project id
+     * param    : Long project id
      * return   : Optional<OnTrackProject>
-     * explain  : my page의 프로젝트 목록 ver.1(프로젝트 목록 조회)
+     * explain  : 프로젝트 정보: id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
      * */
-    public Optional<OnTrackProject> findByProjectId(Long projectId) {
+    public OnTrackProject findByProjectId(Long projectId) {
         return projectMapper.findByProjectId(projectId);
     }
 
@@ -66,7 +66,7 @@ public class ProjectRepository {
      * return   : List<MemberNicknames>
      * explain  : 프로젝트 멤버의 별명 목록
      * */
-    public MemberNickNames getNickName(ReqProjectUser request){
+    public List<MemberNickNames> getNickNames(ReqProjectUser request){
         return projectMapper.getNicknames(request);
     }
 

@@ -100,7 +100,7 @@ class ProjectServiceTest {
             }
         });
         log.info("생성자의 id와 그 id의 위치(index): {}", idxOfCreator);
-        // 생성자의 id와 그 id의 위치(index): {0=35, 1=42} >> {35=0, 42=1}
+        // 생성자의 user id와 그 id의 위치(index): {0=35, 1=42} >> {35=0, 42=1} user id: 35 = 공지철, user id: 42 = 크리스 에반스
 
 //        Map<Long, Long> creatorList = pl.stream().collect(toUnmodifiableMap(ProjectList::getProjectId, ProjectList::getCreatorId));
 //        log.info("Map이 됐나?: {}", creatorList); // Map이 됐나?: {16=42, 9=35} 프로젝트id=userId(creatorId)
@@ -116,10 +116,8 @@ class ProjectServiceTest {
         }
 
         // 3. 생성자의 이름 받아오기
-        List<MemberNickNames> mnn = IntStream.range(0, pl.size()).mapToObj(i -> projectRepository.getNickName(reqList.get(i))).collect(Collectors.toList());
-        log.info("생성자의 이름을 가져왔습니다: {}", mnn);
-        // 생성자의 이름을 가져왔습니다: [MemberNickNames(userId=35, projectId=9, memberId=14, nickname=공지철),
-        // MemberNickNames(userId=42, projectId=16, memberId=22, nickname=크리스 에반스)]
+        List<MemberNickNames> mnn = new ArrayList<>();
+        IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
 
         IntStream.range(0, mnn.size()).forEach(i -> {
             // 생성자 id가 키값인 map에서 해당 id의 인덱스를 가져온다.
