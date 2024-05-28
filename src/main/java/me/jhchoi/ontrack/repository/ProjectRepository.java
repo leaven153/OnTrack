@@ -3,10 +3,8 @@ package me.jhchoi.ontrack.repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
-import me.jhchoi.ontrack.dto.ResponseInvitation;
-import me.jhchoi.ontrack.dto.MemberNickNames;
-import me.jhchoi.ontrack.dto.ProjectList;
-import me.jhchoi.ontrack.dto.ReqProjectUser;
+import me.jhchoi.ontrack.domain.OnTrackTask;
+import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.mapper.MemberMapper;
 import me.jhchoi.ontrack.mapper.ProjectMapper;
 import org.springframework.stereotype.Repository;
@@ -70,6 +68,14 @@ public class ProjectRepository {
         return projectMapper.getNicknames(request);
     }
 
+    /**
+     * created  : 24-05-28
+     * param    : Long project id
+     * return   : List<OnTrackTask>
+     * explain  : 프로젝트 내 할 일 목록
+     * */
+    public List<TaskList> allTasksInProject(Long projectId){ return projectMapper.allTasksInProject(projectId); }
+    
     /**
      * created  : 24-05-23
      * param    : Long projectId, Long userId

@@ -39,7 +39,7 @@ public class TaskRepositoryTest {
         OnTrackTask task = OnTrackTask.builder()
                 .projectId(1L)
                 .taskTitle("first task test")
-                .author(1L)
+                .authorMid(1L)
                 .taskPriority("VIP")
                 .taskStatus("not yet")
                 .taskDueDate(null)
@@ -87,9 +87,9 @@ public class TaskRepositoryTest {
 //        assertThat(ta.getId()).isEqualTo(1L);
     } // test: assign
 
-    @Test
-    void log(){
+     @Test @DisplayName("각 할 일 담당자 목록: parameter List<Long>, return List<TaskAssignment>")
+     void getAssigneeList(){
 
-    }
+     }
 
 }

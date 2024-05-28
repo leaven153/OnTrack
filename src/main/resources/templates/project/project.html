@@ -8,8 +8,8 @@
 
   <title>MMOM - Project</title>
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/main.js"></script>
+  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <script src="/js/main.js" th:src="@{/js/main.js}"></script>
  </head>
  <body>
 
@@ -30,7 +30,7 @@
       <img src="/imgs/icon_leave.png" alt="" class="btn-project-out">
     </div><!--/* nickname 끝 */-->
     <div class="proj-title wrapper">
-      <h1>올리 초이의 길</h1>
+      <h1 th:text="${project.getProject().projectName}">올리 초이의 길</h1>
       <button type="button" class="btn-dDay altivo-bold">D-365</button>
       <div class="btn-open-settings flex-row-justify-start-align-center" data-id="projId01">
         <img src="/imgs/icon_blur_settings.png" alt="project settings" class="img-40">
@@ -73,7 +73,7 @@
 
   <!--/* 하위task 불러올 때는 담당자별로 정렬될 수 있도록 하자... */-->
   <!--/* 테이블뷰 시작 Table View Starts */-->
-  <th:block th:replace="~{/fragments/projectView :: tableView}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: tableView(tasks=${project.getTaskList()})}"></th:block>
   <!---/* 테이블뷰 끝 Table View Ends */--->
 
   <!-- Status View Starts -->
@@ -403,7 +403,7 @@
 
   <!--/* 모달: 새 할 일 추가 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(addTaskRequest=${addTaskRequest})}">
+  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(addTaskRequest, nickname)}">
   </th:block>
 
   <!--/* 모달: 새 할 일 추가 끝 */-->

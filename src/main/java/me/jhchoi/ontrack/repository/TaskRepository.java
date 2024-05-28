@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.TasksResponse;
 import me.jhchoi.ontrack.mapper.TaskMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -39,9 +38,9 @@ public class TaskRepository {
         return taskMapper.findById(taskId);
     }
 
+    // 각 할 일 담당자 목록
+    public List<TaskAssignment> getAssigneeList(Long taskId) { return taskMapper.getAssigneeList(taskId); }
 
-    // 할 일 목록 조회
-    public List<TasksResponse> allTasksInProject(Long projectId){
-        return taskMapper.findAll();
-    }
+    // 할 일 작성자 이름
+
 }

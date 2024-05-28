@@ -32,4 +32,10 @@
         </if>
     </select>
 
+    <select id="allTasksInProject" parameterType="Long" resultType="TaskList">
+        SELECT id, task_title, task_status, task_dueDate, task_priority, authorMid, authorName, createdAt, updatedAt, updatedBy
+        FROM ontrack_task
+        WHERE project_id = #{projectId}
+    </select>
+
 </mapper>

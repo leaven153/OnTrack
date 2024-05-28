@@ -3,7 +3,6 @@ package me.jhchoi.ontrack.mapper;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.TasksResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,8 +34,9 @@ public interface TaskMapper {
     // 할 일 상세
     Optional<OnTrackTask> findById(Long taskId);
 
-    // 할 일 목록
-    List<TasksResponse> findAll();
+    // 각 할 일 담당자 목록
+    List<TaskAssignment> getAssigneeList(Long taskId);
+
 
 
 }
