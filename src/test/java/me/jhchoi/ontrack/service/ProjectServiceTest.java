@@ -117,9 +117,7 @@ class ProjectServiceTest {
 
         // 3. 생성자의 이름 받아오기
         List<MemberNickNames> mnn = new ArrayList<>();
-        IntStream.range(0, pl.size()).forEach(i -> {
-            mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0));
-        });
+        IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
 
         IntStream.range(0, mnn.size()).forEach(i -> {
             // 생성자 id가 키값인 map에서 해당 id의 인덱스를 가져온다.
