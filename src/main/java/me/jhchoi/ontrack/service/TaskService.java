@@ -5,11 +5,9 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
-import me.jhchoi.ontrack.dto.TasksResponse;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -29,6 +27,7 @@ public class TaskService {
 
         // 1. 새 할 일 정보 등록
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
+        // 1-1. 작성자 이름 가져오기....
         taskRepository.newTask(task);
 
         // 2. history 등록 - ①할 일 명,
@@ -42,7 +41,7 @@ public class TaskService {
             taskRepository.assign(assignees);
             
             // 3-2. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
-            IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), task.getAuthor())));
+            IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), task.getAuthorMid())));
         }
 
         // 4. 파일첨부 여부 check 후 객체 생성 및 저장
@@ -98,18 +97,6 @@ public class TaskService {
      * return  :
      * explain : 할 일 상세
      * */
-
-    /*
-     * created : 2024-05-
-     * param   : Long projectId
-     * return  :
-     * explain : 할 일 목록
-     * */
-    public List<TasksResponse> findAll(Long projectId){
-        return taskRepository.allTasksInProject(projectId);
-    }
-
-
 
 
 }

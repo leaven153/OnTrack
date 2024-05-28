@@ -7,11 +7,14 @@ import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.AddProjectRequest;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
+import me.jhchoi.ontrack.dto.ProjectResponse;
 import me.jhchoi.ontrack.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Controller
@@ -40,15 +43,18 @@ public class ProjectController {
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
         model.addAttribute("nickname", nickname);
 
-        // 2. project 정보: 화면에 출력되어야 하는 내용
-        // 프로젝트명, 생성자, 생성일, 유형, 마감일, 상태,
+        // 2. project: 화면에 출력되어야 하는 내용
+        // 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
+        // 할 일 목록 - List<OnTrackTask>
+        // 해당 프로젝트의 멤버들: List<MemberNickNames>
+        ProjectResponse project = projectService.getProject(projectId);
+        model.addAttribute("project", project);
 
+        // 3. 마감일 D-Day 계산을 위한 오늘 날짜 넘기기
+        LocalDate today = LocalDate.now();
+        model.addAttribute("today", today);
 
-        // 3. 할 일 목록 (projectId)
-        
-        // 4. 해당 프로젝트의 멤버들: MemberNickNames에 담아온다.
-        
-        // 5. 할일 추가 객체(AddTaskRequest) 넘기기
+        // 4. 할일 추가 객체(AddTaskRequest) 넘기기
         model.addAttribute("addTaskRequest", AddTaskRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
 
         return "project/project"; // url - http://localhost:8080/project/9/14

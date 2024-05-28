@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.IntStream;
 
 // 할 일의 변경사항 저장
 // 할 일 탭 중 '내역'에 출력
@@ -47,7 +44,7 @@ public class TaskHistory {
                 .modType("register")
                 .modContent(newTask.getTaskTitle())
                 .updatedAt(newTask.getCreatedAt())
-                .updatedBy(newTask.getAuthor())
+                .updatedBy(newTask.getAuthorMid())
                 .build();
     }
 

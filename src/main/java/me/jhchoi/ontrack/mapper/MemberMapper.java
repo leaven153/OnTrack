@@ -10,7 +10,7 @@ import java.util.List;
 public interface MemberMapper {
 
     // my page의 프로젝트 목록 조회
-    List<ProjectMember> findProjectsByUserId(Long userId);
+//    List<ProjectMember> findProjectsByUserId(Long userId);
 
     // 프로젝트 초대
     void invite();

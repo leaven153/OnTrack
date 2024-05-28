@@ -47,7 +47,7 @@ public class AddTaskRequest {
 
         return OnTrackTask.builder()
                 .projectId(projectId)
-                .author(taskAuthorMid)
+                .authorMid(taskAuthorMid)
                 .taskTitle(taskTitle)
                 .taskPriority(taskPriority)
                 .taskStatus("not yet")

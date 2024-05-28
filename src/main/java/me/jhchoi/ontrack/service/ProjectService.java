@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.domain.ProjectMember;
+import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
+import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,6 +20,7 @@ import java.util.stream.IntStream;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final TaskRepository taskRepository;
 
 
     /**
@@ -90,15 +93,41 @@ public class ProjectService {
     }
 
     /**
-     * created  : 24-05-27
+     * started  : 24-05-27
+     * complete : 24-05-
      * param    :
      * return   :
      * explain  : 프로젝트 상세(프로젝트 정보, 멤버목록, 할 일 목록)
      * */
     public ProjectResponse getProject(Long projectId){
+
         ProjectResponse response = ProjectResponse.builder().build();
+        // 1. 프로젝트 정보
+        // id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
         response.setProject(projectRepository.findByProjectId(projectId));
-        projectRepository.getNickNames(ReqProjectUser.builder().projectId(projectId).build());
+
+        // 2. 프로젝트 소속 멤버 정보
+        // id as memberId, user_id, project_id, nickname
+        response.setMemberList(projectRepository.getNickNames(ReqProjectUser.builder().projectId(projectId).build()));
+
+        // 3. 프로젝트 내 할 일 목록
+        // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
+        response.setTaskList(projectRepository.allTasksInProject(projectId));
+
+        // 4. 할 일 별 담당자 목록, 할 일 별 작성자 닉네임
+        // task id로 assignee list를 가져온다.
+        // assingee 수 만큼 task list에 add한다.
+        IntStream.range(0, response.getTaskList().size()).forEach(i -> {
+          List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(response.getTaskList().get(i).getId());
+          for(int j = 0; j < assigneeList.size(); j++){
+              List<String> assigneeNames = new ArrayList<>();
+              assigneeNames.add(assigneeList.get(j).getNickname());
+              response.getTaskList().get(i).setAssigneeNames(assigneeNames);
+              List<Long> assigneeIds = new ArrayList<>();
+              assigneeIds.add(assigneeList.get(j).getMemberId());
+              response.getTaskList().get(i).setAssigneeMids(assigneeIds);
+          }
+        });
 
         return response;
     }

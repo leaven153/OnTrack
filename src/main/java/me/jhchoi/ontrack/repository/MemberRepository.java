@@ -24,10 +24,11 @@ public class MemberRepository {
     }
 
     // 유저가 소속된(멤버) 프로젝트 조회
+    /*
     public List<ProjectMember> findProjectsByUserId(Long userId) {
         return memberMapper.findProjectsByUserId(userId);
     }
-    
+    */
     // 회원의 프로젝트 초대 수락/거절
     public void acceptInvitation(ResponseInvitation newCrew) { memberMapper.acceptInvitation(newCrew); }
 

@@ -27,9 +27,10 @@
         WHERE id = #{id}
     </select>
 
-    <select id="allTasksInProject" parameterType="Long" resultType="TasksResponse">
-        SELECT task_title, task_status, task_dueDate, task_priority, author
-        FROM ontrack_task
-        WHERE project_id = #{projectId}
+    <select id="getAssigneeList" resultType="TaskAssignment">
+        SELECT task_id, nickname, member_id
+        FROM task_assignment
+        WHERE task_id = #{taskId}
     </select>
+
 </mapper>

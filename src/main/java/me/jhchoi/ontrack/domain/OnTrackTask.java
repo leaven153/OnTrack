@@ -1,11 +1,8 @@
 package me.jhchoi.ontrack.domain;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +17,8 @@ public class OnTrackTask {
     private Long id;
     private Long projectId;
     private String taskTitle;
-    private Long author;
+    private Long authorMid;
+    private String authorName;
     private String taskPriority;
     private String taskStatus;
     private LocalDate taskDueDate;
@@ -30,10 +28,11 @@ public class OnTrackTask {
     private Long updatedBy;
 
     @Builder
-    public OnTrackTask(Long projectId, String taskTitle, Long author, String taskPriority, String taskStatus, LocalDate taskDueDate, Long taskParentId, LocalDateTime createdAt, LocalDateTime updatedAt, Long updatedBy) {
+    public OnTrackTask(Long projectId, String taskTitle, Long authorMid, String authorName, String taskPriority, String taskStatus, LocalDate taskDueDate, Long taskParentId, LocalDateTime createdAt, LocalDateTime updatedAt, Long updatedBy) {
         this.projectId = projectId;
         this.taskTitle = taskTitle;
-        this.author = author;
+        this.authorMid = authorMid;
+        this.authorName = authorName;
         this.taskPriority = taskPriority;
         this.taskStatus = taskStatus;
         this.taskDueDate = taskDueDate;
@@ -41,5 +40,18 @@ public class OnTrackTask {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
+    }
+
+    public static String switchStatus(String dbStatus){
+        String switchedStatus = "";
+        System.out.println(dbStatus);
+        switch (dbStatus){
+            case "planning" -> switchedStatus = "계획중";
+            case "ing" -> switchedStatus = "진행중";
+            case "review" -> switchedStatus = "검토중";
+            case "done" -> switchedStatus = "완료";
+            default -> switchedStatus = "시작 안 함";
+        }
+        return switchedStatus;
     }
 }

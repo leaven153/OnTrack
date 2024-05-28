@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -35,16 +36,18 @@ class TaskServiceTest {
     @Test
     @DisplayName("새 할 일 등록: 담당자가 있고 파일 없는 버전")
     void addTask() {
-        Long[] memberIds = {4L, 26L, 27L, 28L};
-        String[] nicknames = {"Adele", "송혜교", "크러쉬", "스칼렛 요한슨"};
-        String[] titles = {"매일 두유", "Tigger can do everything", "경복궁 야간개방", "Deep Time"};
+
+        Long[] memberIds = {27L}; //4L, 26L, 27L, 28L
+        String[] nicknames = {"크러쉬"}; // "Adele", "송혜교", "크러쉬", "스칼렛 요한슨"
+        String[] titles = {"그 벌들을 다 어디로 갔을까", "Tigger can do everything", "경복궁 야간개방", "Deep Time"};
         AddTaskRequest addTaskRequest = AddTaskRequest.builder()
                 .projectId(9L)
-                .taskAuthorMid(14L)
-                .taskTitle(titles[1])
+                .taskAuthorMid(4L)
+                .taskTitle(titles[0])
                 .taskPriority("norm")
                 .assigneesMid(memberIds)
                 .nickname(nicknames)
+                .taskDueDate(LocalDate.now())
                 .build();
 
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
