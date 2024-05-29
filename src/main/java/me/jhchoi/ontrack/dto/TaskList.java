@@ -55,8 +55,8 @@ public class TaskList {
     public static Integer countStatus(List<TaskList> taskList, String status){
         Integer cnt = 0;
         log.info("status: {}", status);
-        for(int i = 0; i < taskList.size(); i++){
-            if(taskList.get(i).getTaskStatus().equals(status)){
+        for (TaskList list : taskList) {
+            if (list.getTaskStatus().equals(status)) {
                 cnt++;
             }
         }
