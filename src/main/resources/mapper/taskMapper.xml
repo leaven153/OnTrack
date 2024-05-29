@@ -4,8 +4,8 @@
 <mapper namespace="me.jhchoi.ontrack.mapper.TaskMapper" >
 
     <insert id="newTask" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ontrack_task(project_id, task_title, AUTHOR, task_priority, task_status, task_dueDate, task_parent_id, createdAt, updatedAt, updatedBy)
-        VALUES (#{projectId}, #{taskTitle}, #{author}, #{taskPriority}, #{taskStatus}, #{taskDueDate}, #{taskParentId}, #{createdAt}, #{updatedAt}, #{updatedBy})
+        INSERT INTO ontrack_task(project_id, task_title, authorMid, authorName, task_priority, task_status, task_dueDate, task_parent_id, createdAt, updatedAt, updatedBy)
+        VALUES (#{projectId}, #{taskTitle}, #{authorMid}, #{authorName}, #{taskPriority}, #{taskStatus}, #{taskDueDate}, #{taskParentId}, #{createdAt}, #{updatedAt}, #{updatedBy})
     </insert>
 
     <insert id="assign" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
@@ -21,7 +21,7 @@
         VALUES (#{projectId}, #{taskId}, #{modItem}, #{modType}, #{modContent}, #{updatedAt}, #{updatedBy})
     </insert>
 
-    <select id="findById" resultType="OnTrackTask">
+    <select id="findByTaskId" resultType="OnTrackTask">
         SELECT task_title, AUTHOR, task_status, createdAt
         FROM ontrack_task
         WHERE id = #{id}
@@ -33,4 +33,11 @@
         WHERE task_id = #{taskId}
     </select>
 
+    <select id="findByMemberId" resultType="AssignmentList">
+        SELECT t.id as taskId, t.task_title, t.task_status, ta.member_id as assigneeMid, ta.nickname as assigneeName
+        FROM task_assignment ta
+        INNER JOIN ontrack_task t
+        ON ta.task_id = t.id
+        WHERE member_id = #{memberId};
+    </select>
 </mapper>

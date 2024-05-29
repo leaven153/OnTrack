@@ -28,6 +28,7 @@ public class AddTaskRequest {
     private Long projectId;
     @NotNull
     private Long taskAuthorMid; // author의 member id
+    private String authorName;
     @NotEmpty @Size(max=20)
     private String taskTitle;
     private String taskPriority; // 매우중요vip, 중요ip, 일반norm
@@ -36,7 +37,7 @@ public class AddTaskRequest {
     // 담당자 배정
     private Long[] assigneesMid;
 //    private List<Long> assigneesUserId;
-    private String[] nickname;
+    private String[] assigneesNickname;
     
     // 파일 첨부
     private List<MultipartFile> taskFile; // TaskFile로 변환해야 하..겠지?
@@ -48,9 +49,10 @@ public class AddTaskRequest {
         return OnTrackTask.builder()
                 .projectId(projectId)
                 .authorMid(taskAuthorMid)
+                .authorName(authorName)
                 .taskTitle(taskTitle)
                 .taskPriority(taskPriority)
-                .taskStatus("not yet")
+                .taskStatus("not-yet")
                 .taskDueDate(taskDueDate)
                 .createdAt(nowWithNano.minusNanos(nanosec))
                 .updatedAt(nowWithNano.minusNanos(nanosec))
@@ -64,7 +66,7 @@ public class AddTaskRequest {
                 .projectId(projectId)
                 .taskId(taskId)
                 .memberId(assigneesMid[i])
-                .nickname(nickname[i])
+                .nickname(assigneesNickname[i])
                 .role("assignee")
                 .assignedAt(createdAt)
                 .build()));

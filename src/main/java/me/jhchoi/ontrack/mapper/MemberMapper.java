@@ -26,9 +26,6 @@ public interface MemberMapper {
     
     // 프로젝트 강퇴: project_excluded 저장
     void dropout();
-    
-    // 담당자 출력
-    List<ProjectMember> findByTaskId();
 
     void acceptInvitation(ResponseInvitation newCrew);
 }

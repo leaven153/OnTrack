@@ -77,12 +77,12 @@
   <!---/* 테이블뷰 끝 Table View Ends */--->
 
   <!-- Status View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: statusView}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getTaskList()})}"></th:block>
   <!-- Status View Ends -->
 
 
   <!-- Assignee View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: assigneeView}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: assigneeView(tasks=${project.getTaskList()})}"></th:block>
   <!-- Assignee View Ends -->
 
 
