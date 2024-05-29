@@ -7,12 +7,6 @@
         VALUES (#{projectId}, #{userId}, #{nickname}, #{position}, #{capacity}, #{joinedAt})
     </insert>
 
-<!--    <select id="findProjectsByUserId" resultType="ProjectMember">-->
-<!--        SELECT id, project_id, position, joinedAt, invitedAt-->
-<!--        FROM project_member-->
-<!--        WHERE user_id = #{userId}-->
-<!--    </select>-->
-
     <update id="acceptInvitation" parameterType="ResponseInvitation">
         UPDATE project_member
         SET nickname = #{userName}, position = #{invitedAs}, capacity = #{capacity}, joinedAt = #{joinedAt}

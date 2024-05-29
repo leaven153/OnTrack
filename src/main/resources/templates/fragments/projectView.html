@@ -7,147 +7,144 @@
 </head>
 <body>
   <div id="table-view" class="project-view" th:fragment="tableView(tasks)">
-  <!-- 테이블 컬럼명 시작 Begin Task List Column Name (table)-->
-  <div class="tableview-colName wrapper flex-row-justify-start-align-center bottom-line">
-    <div class="tableview-column content-chkbox"><input type="checkbox"></div><!-- 우선순위: 하하하하하하 마지막에 해라 -->
-    <div class="tableview-column"></div>
-    <div class="tableview-column">할 일</div>
-    <div class="tableview-column">담당자</div>
-    <div class="tableview-column">진행상태</div>
-    <div class="tableview-column">마감일</div>
-    <div class="tableview-column">파일</div>
-    <div class="tableview-column">작성자</div>
+    <!-- 테이블 컬럼명 시작 Begin Task List Column Name (table)-->
+    <div class="tableview-colName wrapper flex-row-justify-start-align-center bottom-line">
+      <div class="tableview-column content-chkbox"><input type="checkbox"></div><!-- 우선순위: 하하하하하하 마지막에 해라 -->
+      <div class="tableview-column"></div>
+      <div class="tableview-column">할 일</div>
+      <div class="tableview-column">담당자</div>
+      <div class="tableview-column">진행상태</div>
+      <div class="tableview-column">마감일</div>
+      <div class="tableview-column">파일</div>
+      <div class="tableview-column">작성자</div>
+    </div>
+    <!-- 테이블 컬럼명 끝 Task List Column Name (table) Ends-->
+
+    <!-- 테이블뷰: 공지row 시작 Begin Notice -->
+    <div class="tableview-notice bottom-line">
+      <div class="tableview-column content-chkbox"></div><!-- <input type="checkbox"> 추후 결정요망 -->
+
+      <div class="tableview-column flex-row-center-center-nowrap">
+        <img src="/imgs/icon_notice(pin).png" alt="notice" class="img-25">
+      </div>
+
+      <!-- 공지 제목 notice title -->
+      <div class="tableview-column flex-row-justify-start-align-center btn-open-notice" data-id="notice01">
+          <span class="table-notice cursorP">
+            <mark class="table-notice">달과 6펜스 공통 서식</mark>
+          </span>
+      </div>
+
+      <!-- 공지 담당자(=작성자) -->
+      <div class="tableview-column">
+        <span class="">나탈리 포트만</span>
+      </div>
+
+      <!-- 공지 확인cnt 시작 -->
+      <div class="tableview-column flex-row-center-center-nowrap">
+        <div class="flex-col-start-nowrap">
+          <div class="font-10 flex-row-justify-start-align-center">
+            <div class="status-sign done"></div>
+            <span class="status-remark ">확인</span>
+            <span class="chk-count altivo-regular ml-3"> 7</span>
+          </div><br/>
+          <div class="font-10 flex-row-justify-start-align-center">
+            <div class="status-sign not-yet"></div>
+            <span class="status-remark ">미확인</span>
+            <span class="unchk-count altivo-regular ml-3"> 8</span>
+          </div>
+        </div>
+      </div> <!-- 공지 확인cnt 끝 -->
+
+      <!-- due Date -->
+      <div class="tableview-column">
+      </div>
+
+      <!-- file -->
+      <div class="tableview-column flex-row-center-center-nowrap">
+        <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
+        <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
+      </div>
+
+      <!-- 공지 작성자 -->
+      <div class="tableview-column">나탈리 포트만</div>
+    </div>
+    <!-- 테이블뷰: 공지row 끝 Notice Contents Ends -->
+
+    <!-- 테이블뷰: 할 일 목록Row 시작 Begin Task List(table) Contents -->
+    <th:block th:each="task : ${tasks}">
+      <div class="tableview-taskrow bottom-line ">
+        <div class="tableview-column content-chkbox"><input type="checkbox"></div>
+
+        <!-- child mark: create or has-->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <img src="/imgs/icon_arrow_closed910.png" alt="has child task" class="ml-3 hide">
+          <img src="/imgs/icon_sub.png" alt="create child task" class="img-18 btn-create-child-task">
+          <span class="hover-tip-child">세부 항목으로 나누기</span>
+        </div>
+
+        <!-- task Name -->
+        <div class="tableview-column flex-row-justify-start-align-center table-task-title">
+          <span class="table-task-title btn-task-detail" th:text="${task.getTaskTitle()}" th:attr="id=${task.getId()}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
+          <img src="/imgs/icon_comment.png" class="comment img-20" alt="comment">
+          <img src="/imgs/icon_nocomment32.png" class="no-comment hide img-20" alt="no comment">
+        </div>
+
+        <!-- assignee -->
+        <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
+          <span class="no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+          <span class="table-assignee-alone" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span>
+          <th:block th:if="${task.getAssigneeNames().size() > 1}">
+            <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+              <div class="assignee-many"><span class="lastName" th:text="${assignee}">김</span></div>
+            </th:block>
+          </th:block>
+        </div>
+
+        <!-- status -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <div class="table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
+            <div class="status-sign" th:classappend="${task.getTaskStatus()}"></div> <!-- vertical-ctrl01 -->
+            <span class="status-remark" th:text="${task.switchStatus(task.getTaskStatus())}">진행중</span> <!-- vertical-ctrl01-->
+          </div>
+          <div class="table-status-sign-hasChild hide">
+            <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->
+              <span class="status-child-count altivo-regular">19</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox planning "><!-- vertical-ctrl01-->
+              <span class="status-child-count altivo-regular">2</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox ing "> <!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">4</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox review "><!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">5</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox done "><!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">3</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- due Date -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
+          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
+          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
+        </div>
+
+        <!-- file -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <button type="button" class="add-file flex-row-center-center-nowrap"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20 vertical-ctrl015"></button>
+        </div>
+
+        <!-- author -->
+        <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div> <!-- vertical-ctrl01-->
+      </div><!-- 테이블뷰: 할 일 목록Row 끝 Task List Contents Ends -->
+    </th:block>
   </div>
-  <!-- 테이블 컬럼명 끝 Task List Column Name (table) Ends-->
-
-  <!-- 테이블뷰: 공지row 시작 Begin Notice -->
-  <div class="tableview-notice bottom-line">
-    <div class="tableview-column content-chkbox"></div><!-- <input type="checkbox"> 추후 결정요망 -->
-
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <img src="/imgs/icon_notice(pin).png" alt="notice" class="img-25">
-    </div>
-
-    <!-- 공지 제목 notice title -->
-    <div class="tableview-column flex-row-justify-start-align-center btn-open-notice" data-id="notice01">
-        <span class="table-notice cursorP">
-          <mark class="table-notice">달과 6펜스 공통 서식</mark>
-        </span>
-    </div>
-
-    <!-- 공지 담당자(=작성자) -->
-    <div class="tableview-column">
-      <span class="">나탈리 포트만</span>
-    </div>
-
-    <!-- 공지 확인cnt 시작 -->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <div class="flex-col-start-nowrap">
-        <div class="font-10 flex-row-justify-start-align-center">
-          <div class="status-sign done"></div>
-          <span class="status-remark ">확인</span>
-          <span class="chk-count altivo-regular ml-3"> 7</span>
-        </div><br/>
-        <div class="font-10 flex-row-justify-start-align-center">
-          <div class="status-sign not-yet"></div>
-          <span class="status-remark ">미확인</span>
-          <span class="unchk-count altivo-regular ml-3"> 8</span>
-        </div>
-      </div>
-    </div> <!-- 공지 확인cnt 끝 -->
-
-    <!-- due Date -->
-    <div class="tableview-column">
-    </div>
-
-    <!-- file -->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
-      <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
-    </div>
-
-    <!-- 공지 작성자 -->
-    <div class="tableview-column">나탈리 포트만</div>
-  </div>
-  <!-- 테이블뷰: 공지row 끝 Notice Contents Ends -->
-
-  <!-- 테이블뷰: 할 일 목록Row 시작 Begin Task List(table) Contents -->
-  <th:block th:each="task : ${tasks}">
-    <div th:field="${task.getId()}" class="tableview-taskrow bottom-line ">
-
-    <div class="tableview-column content-chkbox"><input type="checkbox"></div>
-
-    <!-- child mark: create or has-->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <img src="/imgs/icon_arrow_closed910.png" alt="has child task" class="ml-3 hide">
-      <img src="/imgs/icon_sub.png" alt="create child task" class="img-18 btn-create-child-task">
-      <span class="hover-tip-child">세부 항목으로 나누기</span>
-    </div>
-
-    <!-- task Name -->
-    <div class="tableview-column flex-row-justify-start-align-center table-task-title">
-      <span class="table-task-title btn-task-detail" th:text="${task.getTaskTitle()}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
-      <img src="/imgs/icon_comment.png" class="comment img-20" alt="comment">
-      <img src="/imgs/icon_nocomment32.png" class="no-comment hide img-20" alt="no comment">
-    </div>
-
-    <!-- assignee -->
-    <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
-      <span class="no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
-      <span class="table-assignee-alone" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span>
-      <th:block th:if="${task.getAssigneeNames().size() > 1}">
-        <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
-          <div class="assignee-many"><span class="lastName" th:text="${assignee}">김</span></div>
-        </th:block>
-      </th:block>
-    </div>
-
-    <!-- status -->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <div class="table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
-        <div class="status-sign" th:classappend="${task.getTaskStatus()}"></div> <!-- vertical-ctrl01 -->
-        <span class="status-remark" th:text="${task.switchStatus(task.getTaskStatus())}">진행중</span> <!-- vertical-ctrl01-->
-      </div>
-      <div class="table-status-sign-hasChild hide">
-        <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->
-          <span class="status-child-count altivo-regular">19</span>
-        </div>
-        <div class="status-sign-hasChild-cntbox planning "><!-- vertical-ctrl01-->
-          <span class="status-child-count altivo-regular">2</span>
-        </div>
-        <div class="status-sign-hasChild-cntbox ing "> <!-- vertical-ctrl01-->
-          <span class="status-child-count font-white altivo-regular">4</span>
-        </div>
-        <div class="status-sign-hasChild-cntbox review "><!-- vertical-ctrl01-->
-          <span class="status-child-count font-white altivo-regular">5</span>
-        </div>
-        <div class="status-sign-hasChild-cntbox done "><!-- vertical-ctrl01-->
-          <span class="status-child-count font-white altivo-regular">3</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- due Date -->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
-      <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
-      <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
-    </div>
-
-    <!-- file -->
-    <div class="tableview-column flex-row-center-center-nowrap">
-      <button type="button" class="add-file flex-row-center-center-nowrap"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
-      <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20 vertical-ctrl015"></button>
-    </div>
-
-    <!-- author -->
-    <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div> <!-- vertical-ctrl01-->
-  </div><!-- 테이블뷰: 할 일 목록Row 끝 Task List Contents Ends -->
-  </th:block>
-
-
-</div>
-  <div id="status-view" class="project-view hide" th:fragment="statusView">
+  <div id="status-view" class="project-view hide" th:fragment="statusView(tasks)">
     <!-- status view: notice starts-->
     <div class="wrapper mb-20 flex-row-start-nowrap">
       <div class="statusview-notice btn-open-notice" data-id="notice01">
@@ -165,237 +162,81 @@
       <!-- status view: 각진행상태box가 다 담긴 컨테이너.. -->
       <div class="flex-row-start-nowrap ml-5">
 
-        <!-- status view: 보류/취소box start -->
-        <div class="statusview-type-box">
+        <!--/* status view: 보류/취소box start */-->
+        <th:block th:each="task : ${tasks}">
+          <div class="statusview-type-box" th:if="${task.getTaskStatus() == 'pause'}">
           <div class="statusview-type-header">
             <div class="bar pause "></div>
             <span class="statusview-type-name">보류/취소</span>
-            <span class="statusview-type-count altivo-regular">5</span>
+            <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'pause')}">5</span>
+
           </div>
           <div class="statusview-type-board pause-bg">
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box pause-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
+            <th:block th:each="task : ${tasks}">
+              <!-- statusview-task-box Start -->
+              <div class="statusview-task-box pause-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'pause'}">
+                <!-- status view: 할 일 명 -->
+                <div class="statusview-task">
+                  <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                </div>
+                <!-- status view: 마감일 -->
+                <div class="statusview-task">
+                  <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                  <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                  <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(월)</span>
+                </div>
+                <!-- status view: 담당자 -->
+                <div class="statusview-task">
+                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                  <th:block th:if="${task.getAssigneeMids().size() > 1}">
+                    <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+                      <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                    </th:block>
+                  </th:block>
+                </div>
+              </div> <!-- End of <div class="statusview-task-box"> -->
+            </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
+        </th:block>
 
         <!-- status view: 시작안함box start -->
-        <div class="statusview-type-box">
+        <div class="statusview-type-box" >
           <div class="statusview-type-header">
-            <div class="bar not-yet "></div>
-            <span class="statusview-type-name">시작 안 함</span>
-            <span class="statusview-type-count altivo-regular">5</span>
+              <div class="bar not-yet "></div>
+              <span class="statusview-type-name">시작 안 함</span>
+              <th:block th:each="task : ${tasks}">
+                <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'not-yet')}">5</span>
+              </th:block>
           </div>
           <div class="statusview-type-board notYet-bg20">
             <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box notYet-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-
-
+            <th:block th:each="task : ${tasks}">
+              <div class="statusview-task-box notYet-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'not-yet'}">
+                <!-- status view: 할 일 명 -->
+                <div class="statusview-task">
+                  <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                </div>
+                <!-- status view: 마감일 -->
+                <div class="statusview-task">
+                  <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                  <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                  <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(월)</span>
+                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                </div>
+                <!-- status view: 담당자 -->
+                <div class="statusview-task">
+                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                  <th:block th:if="${task.getAssigneeMids().size() > 1}">
+                    <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+                      <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                    </th:block>
+                  </th:block>
+                </div>
+              </div> <!-- End of <div class="statusview-task-box"> -->
+            </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
 
@@ -404,282 +245,157 @@
           <div class="statusview-type-header">
             <div class="bar planning "></div>
             <span class="statusview-type-name">계획중</span>
-            <span class="statusview-type-count altivo-regular">13</span>
+            <th:block th:each="task : ${tasks}">
+              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'planning')}">5</span>
+            </th:block>
           </div>
           <div class="statusview-type-board planning-bg008">
             <!-- statusview-task-box Start -->
-            <div class="statusview-task-box planning-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box planning-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box planning-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
+              <th:block th:each="task : ${tasks}">
+                <div class="statusview-task-box planning-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'planning'}">
+                  <!-- status view: 할 일 명 -->
+                  <div class="statusview-task">
+                    <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                  </div>
+                  <!-- status view: 마감일 -->
+                  <div class="statusview-task">
+                    <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                    <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                    <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(월)</span>
+                    <img src="/imgs/icon_overDue.png" alt="overdue" class="img-18" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                  </div>
+                  <!-- status view: 담당자 -->
+                  <div class="statusview-task">
+                    <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                    <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                    <th:block th:if="${task.getAssigneeMids().size() > 1}">
+                      <th:block th:each="assignee : ${task.manyAssingeeFirstName(task.getAssigneeNames())}">
+                        <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                      </th:block>
+                    </th:block>
+                  </div>
+                </div> <!-- End of <div class="statusview-task-box"> -->
+              </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
+
 
         <!-- status view: 진행중box start -->
         <div class="statusview-type-box">
           <div class="statusview-type-header">
             <div class="bar ing"></div>
             <span class="statusview-type-name">진행중</span>
-            <span class="statusview-type-count altivo-regular">11</span>
+            <th:block th:each="task : ${tasks}">
+              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'ing')}">5</span>
+            </th:block>
           </div>
           <div class="statusview-type-board ing-bg008">
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box ing-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular hide">03.29</span>
-                <span class="statusview-duedate-day hide">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
+            <th:block th:each="task : ${tasks}">
+              <!-- statusview-task-box Start -->
+              <div class="statusview-task-box ing-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'ing'}">
+                <!-- status view: 할 일 명 -->
+                <div class="statusview-task">
+                  <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                </div>
+                <!-- status view: 마감일 -->
+                <div class="statusview-task">
+                  <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                  <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                  <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())+')'}">(월)</span>
+                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                </div>
+                <!-- status view: 담당자 -->
+                <div class="statusview-task">
+                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                  <th:block th:if="${task.getAssigneeNames().size() > 1}">
+                    <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+                      <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                    </th:block>
+                  </th:block>
+                </div>
             </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box ing-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box ing-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
+            </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
+
 
         <!-- status view: 검토중box start -->
         <div class="statusview-type-box">
           <div class="statusview-type-header">
             <div class="bar review"></div>
             <span class="statusview-type-name">검토중</span>
-            <span class="statusview-type-count altivo-regular">10</span>
+            <th:block th:each="task : ${tasks}">
+              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'review')}">5</span>
+            </th:block>
           </div>
           <div class="statusview-type-board review-bg008">
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box review-border-shadow">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular hide">03.29</span>
-                <span class="statusview-duedate-day hide">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box review-border-shadow">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box review-border-shadow">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
+            <th:block th:each="task : ${tasks}">
+              <!-- statusview-task-box Start -->
+              <div class="statusview-task-box review-border-shadow" th:if="${task.getTaskStatus() == 'review'}">
+                <!-- status view: 할 일 명 -->
+                <div class="statusview-task">
+                  <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                </div>
+                <!-- status view: 마감일 -->
+                <div class="statusview-task">
+                  <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                  <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                  <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(월)</span>
+                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                </div>
+                <!-- status view: 담당자 -->
+                <div class="statusview-task">
+                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                  <th:block th:if="${task.getAssigneeMids().size() > 1}">
+                    <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+                      <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                    </th:block>
+                  </th:block>
+                </div>
+              </div> <!-- End of <div class="statusview-task-box"> -->
+            </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
+
 
         <!-- status view: 완료box start -->
         <div class="statusview-type-box">
           <div class="statusview-type-header">
             <div class="bar done"></div>
             <span class="statusview-type-name">완료</span>
-            <span class="statusview-type-count altivo-regular">9</span>
+            <th:block th:each="task : ${tasks}">
+              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'done')}">5</span>
+            </th:block>
           </div>
           <div class="statusview-type-board done-bg008">
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box done-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular hide">03.29</span>
-                <span class="statusview-duedate-day hide">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box done-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee">채규태</span>
-                <div class="assignee-many hide"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
-            <!-- statusview-task-box Start -->
-            <div class="statusview-task-box done-border-shadow btn-task-detail">
-              <!-- status view: 할 일 명 -->
-              <div class="statusview-task">
-                <span class="statusview-task-title">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
-              </div>
-              <!-- status view: 마감일 -->
-              <div class="statusview-task">
-                <span class="no-dueDate status-vt-control1 hide">마감일 없음</span>
-                <span class="statusview-dueDate altivo-regular">03.29</span>
-                <span class="statusview-duedate-day">(월)</span>
-                <img src="" alt="" class="">
-              </div>
-              <!-- status view: 담당자 -->
-              <div class="statusview-task">
-                <span class="status-assignee hide">채규태</span>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-                <div class="assignee-many"><span class="lastName">채</span></div>
-              </div>
-            </div> <!-- End of <div class="statusview-task-box"> -->
+            <th:block th:each="task : ${tasks}">
+              <!-- statusview-task-box Start -->
+              <div class="statusview-task-box done-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'done'}">
+                <!-- status view: 할 일 명 -->
+                <div class="statusview-task">
+                  <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
+                </div>
+                <!-- status view: 마감일 -->
+                <div class="statusview-task">
+                  <span class="no-dueDate status-vt-control1 font-12" th:if="${task.getTaskDueDate() == null}">마감일 없음</span>
+                  <span class="statusview-dueDate altivo-regular" th:text="${task.getTaskDueDate() != null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                  <span class="statusview-duedate-day" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(월)</span>
+                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                </div>
+                <!-- status view: 담당자 -->
+                <div class="statusview-task">
+                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
+                  <th:block th:if="${task.getAssigneeMids().size() > 1}">
+                    <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
+                      <div class="assignee-many"><span class="lastName" th:text="${assignee}">채</span></div>
+                    </th:block>
+                  </th:block>
+                </div>
+              </div> <!-- End of <div class="statusview-task-box"> -->
+            </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
 
@@ -687,7 +403,7 @@
       <!-- status view: content ends -->
     </div><!-- End of <div class="wrapper mb-20"> -->
   </div> <!-- End of #status-view div -->
-  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView">
+  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(tasks)">
     <div class="wrapper mb-20 flex-col-start-nowrap">
 
       <div class="flex-row-justify-start-align-center sort-box">
@@ -696,473 +412,478 @@
         <button type="button" class="btn-sort btn-blur ">할 일 개수</button>
         <button type="button" class="btn-sort btn-blur ">진행률</button>
       </div>
-      <!-- 담당자별box 컨테이너 시작 -->
+      <!--/* 담당자별box 컨테이너 시작 */-->
       <div class="flex-col-start-nowrap">
-        <!-- 담당자없는일 요약div 시작 -->
-        <div class="flex-row-between-nowrap assignee-box">
-          <div class="flex-col-justify-center assignee-name-n-status-cnt">
-            <span class="">담당자 없음</span><!-- vertical-ctrl02-->
-          </div>
-          <div class="flex-row-justify-start-align-center noassignee-state">
-            <div class="mr-15 ">
-              <span class="">시작 안 함</span>
-              <span class="altivo-regular">2</span>
-            </div>
-            <div class="mr-15 ">
-              <span class="">보류</span>
-              <span class="altivo-regular">10</span>
-            </div>
-            <div class="mr-15 ">
-              <span class="">취소</span>
-              <span class="altivo-regular">11</span>
-            </div>
-            <div class="mr-15">
-              <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" data-id="noassignee01">
-            </div>
-          </div> <!-- 각 진행상황별 개수 담는 div -->
-          <!-- 오른쪽 끝 진행상황별 일 개수 끝-->
-        </div> <!-- 첫째 줄: 담당자없는일 요약div 끝 -->
-        <!-- 담당자없는 상세컨테이너 시작 -->
-        <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" data-id="noassignee01">
-          <!-- 담당자 진행상태별box: 시작 안 함-->
-          <div class="flex-row-start-nowrap mt-14">
-            <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-              <div class="flex-row-between-nowrap mt-5">
-                <div class="flex-row-justify-start-align-center">
-                  <div class="assignee-bar not-yet"></div>
-                  <span class="ml-5 font-15">시작 안 함</span>
-                </div>
-                <div class="mr-9 altivo-regular">2</div>
+        <th:block th:each="task : ${tasks}">
+          <th:block th:if="${task.getAssigneeMids().size() == null}">
+            <!--/* 담당자없는일 요약div 시작 */-->
+            <div class="flex-row-between-nowrap assignee-box">
+              <div class="flex-col-justify-center assignee-name-n-status-cnt">
+                <span class="">담당자 없음</span><!-- vertical-ctrl02-->
               </div>
-            </div> <!-- 진행상황명·개수 끝 -->
-            <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container notYet-bg20">
-              <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후 할일상세버튼삽입</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+              <div class="flex-row-justify-start-align-center noassignee-state">
+                <div class="mr-15 ">
+                  <span class="">시작 안 함</span>
+                  <span class="altivo-regular">2</span>
                 </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                <div class="mr-15 ">
+                  <span class="">보류</span>
+                  <span class="altivo-regular">10</span>
                 </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                <div class="mr-15 ">
+                  <span class="">취소</span>
+                  <span class="altivo-regular">11</span>
                 </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                <div class="mr-15">
+                  <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" data-id="noassignee01">
                 </div>
-              </div> <!-- task box END-->
-            </div> <!-- 할일박스컨테이너 END -->
-          </div>
-          <!-- 담당자 진행상태별box: 시작 안 함 끝 -->
-
-          <!-- 담당자 진행상태별box: 보류 시작 -->
-          <div class="flex-row-start-nowrap mt-14">
-            <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-              <div class="flex-row-between-nowrap mt-5">
-                <div class="flex-row-justify-start-align-center">
-                  <div class="assignee-bar pause"></div>
-                  <span class="ml-5 font-15">보류</span>
-                </div>
-                <div class="mr-9 altivo-regular">4</div>
+              </div> <!-- 각 진행상황별 개수 담는 div -->
+              <!-- 오른쪽 끝 진행상황별 일 개수 끝-->
+            </div> <!--/* 첫째 줄: 담당자없는일 요약div 끝 */-->
+            <!--/* 담당자없는 상세컨테이너 시작 */-->
+            <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" data-id="noassignee01">
+              <!-- 담당자 진행상태별box: 시작 안 함-->
+              <div class="flex-row-start-nowrap mt-14">
+                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
+                  <div class="flex-row-between-nowrap mt-5">
+                    <div class="flex-row-justify-start-align-center">
+                      <div class="assignee-bar not-yet"></div>
+                      <span class="ml-5 font-15">시작 안 함</span>
+                    </div>
+                    <div class="mr-9 altivo-regular">2</div>
+                  </div>
+                </div> <!-- 진행상황명·개수 끝 -->
+                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container notYet-bg20">
+                  <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후 할일상세버튼삽입</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                </div> <!-- 할일박스컨테이너 END -->
               </div>
-            </div> <!-- 진행상황명·개수 끝 -->
-            <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-            </div> <!-- 할일박스컨테이너 END -->
-          </div>
-          <!-- 담당자 진행상태별box: 보류 끝 -->
+              <!-- 담당자 진행상태별box: 시작 안 함 끝 -->
 
-          <!-- 담당자 진행상태별box: 취소 시작 -->
-          <div class="flex-row-start-nowrap mt-14">
-            <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-              <div class="flex-row-between-nowrap mt-5">
-                <div class="flex-row-justify-start-align-center">
-                  <div class="assignee-bar pause"></div>
-                  <span class="ml-5 font-15">취소</span>
-                </div>
-                <div class="mr-9 altivo-regular">11</div>
+              <!-- 담당자 진행상태별box: 보류 시작 -->
+              <div class="flex-row-start-nowrap mt-14">
+                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
+                  <div class="flex-row-between-nowrap mt-5">
+                    <div class="flex-row-justify-start-align-center">
+                      <div class="assignee-bar pause"></div>
+                      <span class="ml-5 font-15">보류</span>
+                    </div>
+                    <div class="mr-9 altivo-regular">4</div>
+                  </div>
+                </div> <!-- 진행상황명·개수 끝 -->
+                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                </div> <!-- 할일박스컨테이너 END -->
               </div>
-            </div> <!-- 진행상황명·개수 끝 -->
-            <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-            </div> <!-- 할일박스컨테이너 END -->
-          </div>
-          <!-- 담당자 진행상태별box: 취소 끝 -->
-        </div>
-        <!-- 담당자없는 상세컨테이너 끝 -->
+              <!-- 담당자 진행상태별box: 보류 끝 -->
 
-        <!-- 담당자 있는 div(요약)시작 -->
-        <div class="flex-row-between-nowrap assignee-box">
-          <div class="flex-row-justify-start-align-center "><!--overflow-hidden-->
-            <div class="assignee-name-n-status-cnt flex-col-justify-center">
-              <span class="">라이언 고슬링</span>
+              <!-- 담당자 진행상태별box: 취소 시작 -->
+              <div class="flex-row-start-nowrap mt-14">
+                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
+                  <div class="flex-row-between-nowrap mt-5">
+                    <div class="flex-row-justify-start-align-center">
+                      <div class="assignee-bar pause"></div>
+                      <span class="ml-5 font-15">취소</span>
+                    </div>
+                    <div class="mr-9 altivo-regular">11</div>
+                  </div>
+                </div> <!-- 진행상황명·개수 끝 -->
+                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
+                    </div>
+                  </div> <!-- task box END-->
+                  <div class="태스크박스 btn-task-detail assignee-task-box">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title ">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="altivo-regular font-11 ">03.29</span>
+                      <span class="font-11">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
+                    </div>
+                  </div> <!-- task box END-->
+                </div> <!-- 할일박스컨테이너 END -->
+              </div>
+              <!-- 담당자 진행상태별box: 취소 끝 -->
             </div>
-            <!-- 2rows 담을 div: ①진행상황 그래프, ②개수 -->
-            <div class="flex-col-between-nowrap ml-5 overflow-hidden">
-              <div class="flex-row-start-nowrap">
-                <div class="status-graph not-yet"></div>
-                <div class="status-graph not-yet"></div>
-                <div class="status-graph not-yet"></div>
-                <div class="status-graph not-yet"></div>
-                <div class="status-graph not-yet"></div>
-                <div class="status-graph planning"></div>
-                <div class="status-graph planning"></div>
-                <div class="status-graph planning"></div>
-                <div class="status-graph planning"></div>
-                <div class="status-graph ing"></div><!--10-->
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div><!--20-->
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph ing"></div>
-                <div class="status-graph review"></div><!--30-->
-                <div class="status-graph review"></div>
-                <div class="status-graph done"></div>
-                <div class="status-graph done"></div>
-                <div class="status-graph done"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--40-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--50-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--60-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--70-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--80-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--90-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--100-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--110-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--120-->
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div>
-                <div class="status-graph novisible"></div><!--130-->
+            <!--/* 담당자없는 상세컨테이너 끝 */-->
+          </th:block>
+        </th:block>
 
+        <th:block th:each="task : ${tasks}">
+          <!--/* 담당자 있는 div(요약)시작 */-->
+          <div class="flex-row-between-nowrap assignee-box">
+            <div class="flex-row-justify-start-align-center "><!--overflow-hidden-->
+              <div class="assignee-name-n-status-cnt flex-col-justify-center">
+                <span class="" th:text="">라이언 고슬링</span>
               </div>
-              <div class="flex-row-between-nowrap assignee-state">
+              <!-- 2rows 담을 div: ①진행상황 그래프, ②개수 -->
+              <div class="flex-col-between-nowrap ml-5 overflow-hidden">
                 <div class="flex-row-start-nowrap">
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">시작 안 함</span>
-                    <span class="altivo-regular">5</span>
-                  </div>
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">계획중</span>
-                    <span class="altivo-regular">4</span>
-                  </div>
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">진행중</span>
-                    <span class="altivo-regular">20</span>
-                  </div>
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">검토중</span>
-                    <span class="altivo-regular">2</span>
-                  </div>
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">완료</span>
-                    <span class="altivo-regular">3</span>
-                  </div>
+                  <div class="status-graph not-yet"></div>
+                  <div class="status-graph not-yet"></div>
+                  <div class="status-graph not-yet"></div>
+                  <div class="status-graph not-yet"></div>
+                  <div class="status-graph not-yet"></div>
+                  <div class="status-graph planning"></div>
+                  <div class="status-graph planning"></div>
+                  <div class="status-graph planning"></div>
+                  <div class="status-graph planning"></div>
+                  <div class="status-graph ing"></div><!--10-->
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div><!--20-->
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph ing"></div>
+                  <div class="status-graph review"></div><!--30-->
+                  <div class="status-graph review"></div>
+                  <div class="status-graph done"></div>
+                  <div class="status-graph done"></div>
+                  <div class="status-graph done"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--40-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--50-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--60-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--70-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--80-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--90-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--100-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--110-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--120-->
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div>
+                  <div class="status-graph novisible"></div><!--130-->
+
                 </div>
+                <div class="flex-row-between-nowrap assignee-state">
+                  <div class="flex-row-start-nowrap">
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">시작 안 함</span>
+                      <span class="altivo-regular">5</span>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">계획중</span>
+                      <span class="altivo-regular">4</span>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">진행중</span>
+                      <span class="altivo-regular">20</span>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">검토중</span>
+                      <span class="altivo-regular">2</span>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">완료</span>
+                      <span class="altivo-regular">3</span>
+                    </div>
+                  </div>
 
-                <!-- <div class="flex-row-start-nowrap">
-                  <div class="mr-15 각 진행상황 div">
-                    <span class="">보류</span>
-                    <span class="altivo-regular">2</span>
-                  </div>
-                  <div class="각 진행상황 div">
-                    <span class="">취소</span>
-                    <span class="altivo-regular">0</span>
-                  </div>
-                </div> -->
+                  <!-- <div class="flex-row-start-nowrap">
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">보류</span>
+                      <span class="altivo-regular">2</span>
+                    </div>
+                    <div class="각 진행상황 div">
+                      <span class="">취소</span>
+                      <span class="altivo-regular">0</span>
+                    </div>
+                  </div> -->
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="mr-15 zIdx2 flex-row-center-center-nowrap">
-            <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" data-id="assignee01">
-          </div>
-        </div> <!-- 담당자 있는 div(요약) 끝 -->
 
-        <!-- 담당자별상세컨테이너 시작 -->
-        <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" data-id="assignee01">
+            </div>
+            <div class="mr-15 flex-row-end-center-nowrap"> <!--zIdx2 flex-row-center-center-nowrap -->
+              <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" data-id="assignee01">
+            </div>
+          </div> <!-- 담당자 있는 div(요약) 끝 -->
+          <!-- 담당자별상세컨테이너 시작 -->
+          <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" data-id="assignee01">
 
           <!-- 담당자 진행상태별box: 시작 안 함-->
           <div class="flex-row-start-nowrap mt-14">
@@ -1657,8 +1378,9 @@
           <!-- 담당자별 상세 div: 완료 끝 -->
 
         </div><!-- 담당자별상세컨테이너 끝 (for scrollY)-->
-      </div> <!-- 담당자별box 전체 컨테이너 끝 -->
-    </div> <!-- 정렬box와 담당자별box 컨테이너 끝 -->
+        </th:block>
+      </div> <!--/* 담당자별box 전체 컨테이너 끝 */-->
+    </div> <!--/* 정렬box와 담당자별box 컨테이너 끝 */-->
   </div>
 </body>
 </html>

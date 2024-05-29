@@ -23,14 +23,5 @@ public class ProjectResponse {
     // 3. 할 일 목록: id, project id, 할 일 명, 작성자mId, 중요도, 진행상태, 마감일, 종속id, 생성일, 최종수정일, 최종수정자mId
     private List<TaskList> taskList;
 
-    // 4. 할 일 별 담당자 목록
-//    private List<TaskAssignment> assigneeList;
-
-    // 5. 할 일 상세...
-    // TaskList에 TaskAssignment 합체
-    public List<TaskList> completeTaskList(){
-
-        return null;
-    }
 
 }

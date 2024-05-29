@@ -37,16 +37,17 @@ class TaskServiceTest {
     @DisplayName("새 할 일 등록: 담당자가 있고 파일 없는 버전")
     void addTask() {
 
-        Long[] memberIds = {27L}; //4L, 26L, 27L, 28L
-        String[] nicknames = {"크러쉬"}; // "Adele", "송혜교", "크러쉬", "스칼렛 요한슨"
-        String[] titles = {"그 벌들을 다 어디로 갔을까", "Tigger can do everything", "경복궁 야간개방", "Deep Time"};
+        Long[] memberIds = {14L, 26L}; //4L, 26L, 27L, 28L, 14L
+        String[] nicknames = {"공지철", "송혜교"}; // "Adele", "송혜교", "크러쉬", "스칼렛 요한슨", "공지철"
+        String[] titles = {"그 벌들은 다 어디로 갔을까", "Tigger can do everything", "경복궁 야간개방", "Deep Time", "2시탈출 컬투쇼", "인생의 베일", "우리 몸 안내서"};
         AddTaskRequest addTaskRequest = AddTaskRequest.builder()
                 .projectId(9L)
-                .taskAuthorMid(4L)
-                .taskTitle(titles[0])
-                .taskPriority("norm")
+                .taskAuthorMid(28L)
+                .authorName("스칼렛 요한슨")
+                .taskTitle(titles[5])
+                .taskPriority("ip")
                 .assigneesMid(memberIds)
-                .nickname(nicknames)
+                .assigneesNickname(nicknames)
                 .taskDueDate(LocalDate.now())
                 .build();
 
@@ -66,6 +67,11 @@ class TaskServiceTest {
             // 3-2. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
             IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), 14L)));
         }
+    }
+
+    @Test @DisplayName("담당자 없는 새 할일 등록 테스트")
+    void addTaskWithoutAssignee(){
+
     }
 
 }

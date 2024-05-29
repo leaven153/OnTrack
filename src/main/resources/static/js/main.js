@@ -187,9 +187,11 @@ window.onload = function(){
     const modalTaskDetailForm = document.querySelector("form#edit-task");
     btnOpenTaskDetail.forEach(function(chosenTask){
         chosenTask.addEventListener("click", ()=>{
-            // console.log(chosenTask.id); // id값 가져옴.
-            
-            // 추후 id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
+            // console.log(chosenTask.id); // id값 가져옴. 8
+            // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
+
+
+            // success일 경우 아래 실행
             // 1) 컨테이너 열고
             containerTaskDetail.classList.remove("hide");
             // 2) 전체 탭버튼에서 선택됨 뺐다가
@@ -203,7 +205,7 @@ window.onload = function(){
             modalTaskTabs.forEach(function(everyTabs){
                 everyTabs.classList.add("hide");
             });
-            // 5) 할 일 상세 탭에만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
+            // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
             modalTaskDetailForm.classList.remove("hide");
         });
     });

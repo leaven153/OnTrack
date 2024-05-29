@@ -34,13 +34,13 @@ public class TaskRepository {
     }
 
     // 할 일 상세 조회
-    public Optional<OnTrackTask> findById(@Param("taskId") Long taskId){
-        return taskMapper.findById(taskId);
+    public Optional<OnTrackTask> findByTaskId(@Param("taskId") Long taskId){
+        return taskMapper.findByTaskId(taskId);
     }
 
     // 각 할 일 담당자 목록
     public List<TaskAssignment> getAssigneeList(Long taskId) { return taskMapper.getAssigneeList(taskId); }
 
-    // 할 일 작성자 이름
+    // 담당자 별 할 일 목록
 
 }

@@ -735,6 +735,7 @@ span.statusview-notice {
 .statusview-type-box {
     flex-basis: 275px;
     margin-right: 10px;
+    flex-shrink: 0;
 }
 
 .statusview-type-header{

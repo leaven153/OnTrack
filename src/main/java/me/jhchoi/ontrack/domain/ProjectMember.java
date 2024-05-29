@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.domain;
 
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 
 @Data @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class ProjectMember {
     private Long id;
     private Long projectId; // not null
@@ -23,17 +25,5 @@ public class ProjectMember {
     private LocalDate invitedAt;
     private String invitedAs;
 
-    @Builder
-    public ProjectMember(Long projectId, Long userId, String nickname, String position, String capacity, LocalDate joinedAt, LocalDate invitedAt, String invitedAs) {
-        this.projectId = projectId;
-        this.userId = userId;
-        this.nickname = nickname;
-        this.position = position;
-        this.capacity = capacity;
-        this.joinedAt = joinedAt;
-        this.invitedAt = invitedAt;
-        this.invitedAs = invitedAs;
-
-    }
 
 }

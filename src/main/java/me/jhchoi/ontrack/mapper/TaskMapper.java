@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.mapper;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.dto.AssignmentList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -32,11 +33,11 @@ public interface TaskMapper {
     void update(@Param("taskId") Long taskId, @Param("modTask")OnTrackTask task);
 
     // 할 일 상세
-    Optional<OnTrackTask> findById(Long taskId);
+    Optional<OnTrackTask> findByTaskId(Long taskId);
 
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
 
-
+    List<AssignmentList> findByMemberId(Long memberId);
 
 }

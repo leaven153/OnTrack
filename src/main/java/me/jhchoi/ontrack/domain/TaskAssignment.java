@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class TaskAssignment {
     private Long id;
     private Long projectId;
@@ -18,16 +20,4 @@ public class TaskAssignment {
     private String nickname;
     private String role;
     private LocalDateTime assignedAt;
-
-    @Builder
-    public TaskAssignment(Long projectId, Long taskId, Long userId, Long memberId, String nickname, String role, LocalDateTime assignedAt) {
-        this.projectId = projectId;
-        this.taskId = taskId;
-        this.userId = userId;
-        this.memberId = memberId;
-        this.nickname = nickname;
-        this.role = role;
-        this.assignedAt = assignedAt;
-    }
-
 }
