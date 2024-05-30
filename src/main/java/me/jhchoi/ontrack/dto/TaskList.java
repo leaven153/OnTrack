@@ -58,9 +58,10 @@ public class TaskList {
 //        log.info("status: {}", status);
         for (Object list : taskList) {
            if (list instanceof TaskList tl) {
-               if(tl.getTaskStatus() == status) cnt++;
+               if(Objects.equals(tl.getTaskStatus(), status)) cnt++;
            } else if (list instanceof  AssigneeTaskList atl) {
-               if(atl.getTaskStatus() == status) cnt++;
+               //경고:(62, 23) 조건 'list instanceof AssigneeTaskList atl'은(는) 항상 'false'입니다.
+               if(Objects.equals(atl.getTaskStatus(), status)) cnt++;
            }
         }
         return cnt == 0?null:cnt;
@@ -76,9 +77,9 @@ public class TaskList {
         // condition: team > 1, solo == 1
         Integer cnt = 0;
         log.info("넘어온 taskList는: {}", taskList instanceof AssigneeTaskList);
-        for(int i = 0; i < taskList.size(); i++){
-            if(taskList.get(i).taskStatus == status && type.equals("team") && taskList.get(i).assigneeNum > 1) cnt++;
-            if(taskList.get(i).taskStatus == status && type.equals("solo") && taskList.get(i).assigneeNum == 1) cnt++;
+        for (AssigneeTaskList assigneeTaskList : taskList) {
+            if (Objects.equals(assigneeTaskList.taskStatus, status) && type.equals("team") && assigneeTaskList.assigneeNum > 1) cnt++;
+            if (Objects.equals(assigneeTaskList.taskStatus, status) && type.equals("solo") && assigneeTaskList.assigneeNum == 1) cnt++;
         }
         return cnt == 0?null:cnt;
     }
