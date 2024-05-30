@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class ProjectList {
     // 프로젝트 정보 (from ontrack_project 테이블)
     private Long projectId;
@@ -30,21 +31,4 @@ public class ProjectList {
     private LocalDate invitedAt; // position이 invited일 경우, 초대받은 날짜
     private String invitedAs;
 
-    @Builder
-    public ProjectList(Long projectId, String projectType, String projectStatus, Long creatorId, String creatorName, String projectName, LocalDate projectDueDate, LocalDate createdAt, LocalDate updatedAt, Long memberId, String nickname, String position, LocalDate invitedAt, String invitedAs) {
-        this.projectId = projectId;
-        this.projectType = projectType;
-        this.projectStatus = projectStatus;
-        this.creatorId = creatorId;
-        this.creatorName = creatorName;
-        this.projectName = projectName;
-        this.projectDueDate = projectDueDate;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.memberId = memberId;
-        this.nickname = nickname;
-        this.position = position;
-        this.invitedAt = invitedAt;
-        this.invitedAs = invitedAs;
-    }
 }

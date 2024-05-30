@@ -164,17 +164,17 @@
 
         <!--/* status view: 보류/취소box start */-->
         <th:block th:each="task : ${tasks}">
-          <div class="statusview-type-box" th:if="${task.getTaskStatus() == 'pause'}">
+          <div class="statusview-type-box" th:if="${task.getTaskStatus() == 99}">
           <div class="statusview-type-header">
             <div class="bar pause "></div>
             <span class="statusview-type-name">보류/취소</span>
-            <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'pause')}">5</span>
+            <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 99)}?${task.countStatus(tasks, 99)}:'0'"></span>
 
           </div>
           <div class="statusview-type-board pause-bg">
             <th:block th:each="task : ${tasks}">
               <!-- statusview-task-box Start -->
-              <div class="statusview-task-box pause-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'pause'}">
+              <div class="statusview-task-box pause-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 99}">
                 <!-- status view: 할 일 명 -->
                 <div class="statusview-task">
                   <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -207,13 +207,13 @@
               <div class="bar not-yet "></div>
               <span class="statusview-type-name">시작 안 함</span>
               <th:block th:each="task : ${tasks}">
-                <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'not-yet')}">5</span>
+                <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 0)}?${task.countStatus(tasks, 0)}:'0'"></span>
               </th:block>
           </div>
           <div class="statusview-type-board notYet-bg20">
             <!-- statusview-task-box Start -->
             <th:block th:each="task : ${tasks}">
-              <div class="statusview-task-box notYet-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'not-yet'}">
+              <div class="statusview-task-box notYet-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 0}">
                 <!-- status view: 할 일 명 -->
                 <div class="statusview-task">
                   <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -246,13 +246,13 @@
             <div class="bar planning "></div>
             <span class="statusview-type-name">계획중</span>
             <th:block th:each="task : ${tasks}">
-              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'planning')}">5</span>
+              <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 1)}?${task.countStatus(tasks, 1)}:'0'"></span>
             </th:block>
           </div>
           <div class="statusview-type-board planning-bg008">
             <!-- statusview-task-box Start -->
               <th:block th:each="task : ${tasks}">
-                <div class="statusview-task-box planning-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'planning'}">
+                <div class="statusview-task-box planning-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 1}">
                   <!-- status view: 할 일 명 -->
                   <div class="statusview-task">
                     <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -286,13 +286,13 @@
             <div class="bar ing"></div>
             <span class="statusview-type-name">진행중</span>
             <th:block th:each="task : ${tasks}">
-              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'ing')}">5</span>
+              <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 2)}?${task.countStatus(tasks, 2)}:'0'"></span>
             </th:block>
           </div>
           <div class="statusview-type-board ing-bg008">
             <th:block th:each="task : ${tasks}">
               <!-- statusview-task-box Start -->
-              <div class="statusview-task-box ing-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'ing'}">
+              <div class="statusview-task-box ing-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 2}">
                 <!-- status view: 할 일 명 -->
                 <div class="statusview-task">
                   <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -326,13 +326,13 @@
             <div class="bar review"></div>
             <span class="statusview-type-name">검토중</span>
             <th:block th:each="task : ${tasks}">
-              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'review')}">5</span>
+              <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 3)}?${task.countStatus(tasks, 3)}:'0'">5</span>
             </th:block>
           </div>
           <div class="statusview-type-board review-bg008">
             <th:block th:each="task : ${tasks}">
               <!-- statusview-task-box Start -->
-              <div class="statusview-task-box review-border-shadow" th:if="${task.getTaskStatus() == 'review'}">
+              <div class="statusview-task-box review-border-shadow" th:if="${task.getTaskStatus() == 3}">
                 <!-- status view: 할 일 명 -->
                 <div class="statusview-task">
                   <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -366,13 +366,13 @@
             <div class="bar done"></div>
             <span class="statusview-type-name">완료</span>
             <th:block th:each="task : ${tasks}">
-              <span class="statusview-type-count altivo-regular" th:text="${taskStat.count == 1}?${task.countStatus(tasks, 'done')}">5</span>
+              <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 4)}?${task.countStatus(tasks, 4)}:'0'"></span>
             </th:block>
           </div>
           <div class="statusview-type-board done-bg008">
             <th:block th:each="task : ${tasks}">
               <!-- statusview-task-box Start -->
-              <div class="statusview-task-box done-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 'done'}">
+              <div class="statusview-task-box done-border-shadow btn-task-detail" th:if="${task.getTaskStatus() == 4}">
                 <!-- status view: 할 일 명 -->
                 <div class="statusview-task">
                   <span class="statusview-task-title" th:text="${task.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span>
@@ -403,7 +403,7 @@
       <!-- status view: content ends -->
     </div><!-- End of <div class="wrapper mb-20"> -->
   </div> <!-- End of #status-view div -->
-  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(tasks)">
+  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(assignees)">
     <div class="wrapper mb-20 flex-col-start-nowrap">
 
       <div class="flex-row-justify-start-align-center sort-box">
@@ -414,8 +414,8 @@
       </div>
       <!--/* 담당자별box 컨테이너 시작 */-->
       <div class="flex-col-start-nowrap">
-        <th:block th:each="task : ${tasks}">
-          <th:block th:if="${task.getAssigneeMids().size() == null}">
+<!--        <th:block th:each="assignee : ${assignees}">-->
+<!--          <th:block th:if="${assignee.getAssigneeMid().size() == null}">-->
             <!--/* 담당자없는일 요약div 시작 */-->
             <div class="flex-row-between-nowrap assignee-box">
               <div class="flex-col-justify-center assignee-name-n-status-cnt">
@@ -695,172 +695,61 @@
               <!-- 담당자 진행상태별box: 취소 끝 -->
             </div>
             <!--/* 담당자없는 상세컨테이너 끝 */-->
-          </th:block>
-        </th:block>
+<!--          </th:block>-->
+<!--        </th:block>-->
 
-        <th:block th:each="task : ${tasks}">
+        <th:block th:each="assignee : ${assignees}">
           <!--/* 담당자 있는 div(요약)시작 */-->
           <div class="flex-row-between-nowrap assignee-box">
             <div class="flex-row-justify-start-align-center "><!--overflow-hidden-->
               <div class="assignee-name-n-status-cnt flex-col-justify-center">
-                <span class="" th:text="">라이언 고슬링</span>
+                <span class="" th:text="${assignee.getAssigneeName()}">라이언 고슬링</span>
               </div>
               <!-- 2rows 담을 div: ①진행상황 그래프, ②개수 -->
               <div class="flex-col-between-nowrap ml-5 overflow-hidden">
                 <div class="flex-row-start-nowrap">
-                  <div class="status-graph not-yet"></div>
-                  <div class="status-graph not-yet"></div>
-                  <div class="status-graph not-yet"></div>
-                  <div class="status-graph not-yet"></div>
-                  <div class="status-graph not-yet"></div>
-                  <div class="status-graph planning"></div>
-                  <div class="status-graph planning"></div>
-                  <div class="status-graph planning"></div>
-                  <div class="status-graph planning"></div>
-                  <div class="status-graph ing"></div><!--10-->
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div><!--20-->
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph ing"></div>
-                  <div class="status-graph review"></div><!--30-->
-                  <div class="status-graph review"></div>
-                  <div class="status-graph done"></div>
-                  <div class="status-graph done"></div>
-                  <div class="status-graph done"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--40-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--50-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--60-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--70-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--80-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--90-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--100-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--110-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--120-->
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div>
-                  <div class="status-graph novisible"></div><!--130-->
+                  <th:block th:if="${assignee.getTList().size() != null}">
+                    <th:block th:each="task : ${assignee.getTList()}">
+                      <div class="status-graph not-yet" th:if="${task.getTaskStatus() == 0}"></div>
+                      <div class="status-graph planning" th:if="${task.getTaskStatus() == 1}"></div>
+                      <div class="status-graph ing" th:if="${task.getTaskStatus() == 2}"></div>
+                      <div class="status-graph review" th:if="${task.getTaskStatus() == 3}"></div>
+                      <div class="status-graph done" th:if="${task.getTaskStatus() == 4}"></div>
+                    </th:block>
+                  </th:block>
 
                 </div>
                 <div class="flex-row-between-nowrap assignee-state">
                   <div class="flex-row-start-nowrap">
                     <div class="mr-15 각 진행상황 div">
                       <span class="">시작 안 함</span>
-                      <span class="altivo-regular">5</span>
+                      <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}?${task.countStatus(assignee.getTList(), 0)}:'0'"></span>
+                      </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">계획중</span>
-                      <span class="altivo-regular">4</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}?${task.countStatus(assignee.getTList(), 1)}:'0'"></span>
+                      </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">진행중</span>
-                      <span class="altivo-regular">20</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}?${task.countStatus(assignee.getTList(), 2)}:'0'"></span>
+                      </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">검토중</span>
-                      <span class="altivo-regular">2</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}?${task.countStatus(assignee.getTList(), 3)}:'0'"></span>
+                      </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">완료</span>
-                      <span class="altivo-regular">3</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}?${task.countStatus(assignee.getTList(), 4)}:'0'"></span>
+                      </th:block>
                     </div>
                   </div>
 
@@ -893,42 +782,42 @@
                   <div class="assignee-bar not-yet"></div>
                   <span class="ml-5 font-15">시작 안 함</span>
                 </div>
-                <div class="mr-9 altivo-regular">5</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-9 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}?${task.countStatus(assignee.getTList(), 0)}:'0'"></div>
+                </th:block>
               </div>
               <div class="공동작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">공동작업</span>
-                <div class="mr-10 altivo-regular">2</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0)}:'0'">-</div>
+                </th:block>
               </div>
               <div class="개인작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">개인작업</span>
-                <div class="mr-10 altivo-regular">3</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0)}:'0'"></div>
+                </th:block>
               </div>
             </div> <!-- 진행상황명·개수 끝 -->
             <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container notYet-bg20">
-              <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후 할일상세버튼삽입</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
+              <th:block th:each="task : ${assignee.getTList()}">
+                <th:block th:if="${task.getTaskStatus() == 0}">
+                  <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow" th:attr="id=${task.getId()}">
+                  <div class="flex-row-between-nowrap mb-5">
+                    <div class="assignee-task-title" th:text="${task.getTaskTitle()}">인라인블록뺀 후 할일상세버튼삽입</div>
+                    <img src="/imgs/icon_group.png" alt="group work" class="icon-group23" th:if="${task.getAssigneeNum() > 1}">
+                  </div>
+                  <div class="마감일 flex-row-justify-start-align-center">
+                    <span class="font-11">마감일&nbsp;</span>
+                    <span class="font-11" th:text="${task.getTaskDueDate() == null}?'없음'"></span>
+                    <span class="altivo-regular font-11" th:text="${task.getTaskDueDate() !=null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                    <span class="font-11" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">&nbsp;(일)</span>
+                    <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                  </div>
+                </div> <!-- task box END-->
+                </th:block>
+              </th:block>
+
             </div> <!-- 할일박스컨테이너 END -->
           </div>
           <!-- 담당자 진행상태별box: 시작 안 함 끝 -->
@@ -1013,258 +902,41 @@
                   <div class="assignee-bar ing"></div>
                   <span class="ml-5 font-15">진행중</span>
                 </div>
-                <div class="mr-9 altivo-regular">20</div>
+                <th:block th:each="task: ${assignee.getTList()}">
+                  <div class="mr-9 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}?${task.countStatus(assignee.getTList(), 2)}:'0'"></div>
+                </th:block>
               </div>
               <div class="공동작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">공동작업</span>
-                <div class="mr-10 altivo-regular">9</div>
+                <th:block th:each="task: ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 2} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2)}:'0'"></div>
+                </th:block>
               </div>
               <div class="개인작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">개인작업</span>
-                <div class="mr-10 altivo-regular">11</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 2} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2)}:'0'">11</div>
+                </th:block>
               </div>
             </div> <!-- 진행상황명·개수 끝 -->
             <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container ing-bg008">
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
+              <th:block th:each="task : ${assignee.getTList()}">
+                <th:block th:if="${task.getTaskStatus() == 2}">
+                  <div class="태스크박스 btn-task-detail assignee-task-box ing-border-shadow">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title" th:text="${task.getTaskTitle()}">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23" th:if="${task.getAssigneeNum() > 1}">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="font-11" th:if="${task.getTaskDueDate() == null}">없음</span>
+                      <span class="altivo-regular font-11" th:if="${task.getTaskDueDate() != null}" th:text="${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                      <span class="font-11" th:if="${task.getTaskDueDate() != null}" th:text="'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                    </div>
+                  </div> <!-- task box END-->
+                </th:block>
+              </th:block>
             </div> <!-- 할일박스컨테이너 END -->
           </div>
           <!-- 담당자 진행상태별box: 진행중 끝 -->

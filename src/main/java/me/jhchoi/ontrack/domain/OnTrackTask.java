@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,34 +14,18 @@ import java.time.LocalDateTime;
 //
 @Data
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class OnTrackTask {
     private Long id;
     private Long projectId;
     private String taskTitle;
     private Long authorMid;
     private String authorName;
-    private String taskPriority;
-    private String taskStatus;
+    private Integer taskPriority; // vip: 0, ip: 1, norm: 2
+    private Integer taskStatus; // not-yet: 0, planning: 1, ing: 2, review: 3, done: 4
     private LocalDate taskDueDate;
     private Long taskParentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long updatedBy;
-
-    @Builder
-    public OnTrackTask(Long projectId, String taskTitle, Long authorMid, String authorName, String taskPriority, String taskStatus, LocalDate taskDueDate, Long taskParentId, LocalDateTime createdAt, LocalDateTime updatedAt, Long updatedBy) {
-        this.projectId = projectId;
-        this.taskTitle = taskTitle;
-        this.authorMid = authorMid;
-        this.authorName = authorName;
-        this.taskPriority = taskPriority;
-        this.taskStatus = taskStatus;
-        this.taskDueDate = taskDueDate;
-        this.taskParentId = taskParentId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.updatedBy = updatedBy;
-    }
-
-
 }

@@ -110,11 +110,11 @@ public class ProjectService {
         // id as memberId, user_id, project_id, nickname
         project.setMemberList(projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(projectId).build()));
 
-        // 3. 프로젝트 내 할 일 목록 (from ontrack_task) → TaskList
+        // 3-1. 프로젝트 내 할 일 목록 (from ontrack_task) → TaskList
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
         project.setTaskList(projectRepository.allTasksInProject(projectId));
 
-        // 4. 할 일 별 담당자 목록 (from task_assignment) → TaskList
+        // 3-2. 할 일 별 담당자 목록 (from task_assignment) → TaskList
         // task id로 assignee list를 가져온다.
         // assingee 수 만큼 task list에 add한다.
         IntStream.range(0, project.getTaskList().size()).forEach(i -> {
@@ -128,6 +128,19 @@ public class ProjectService {
             project.getTaskList().get(i).setAssigneeNames(assigneeNames);
             project.getTaskList().get(i).setAssigneeMids(assigneeIds);
         });
+
+        // 4. 프로젝트 멤버별 할 일 목록
+        // 4-1. 공동task 여부 확인
+        List<AssignmentList> aList = new ArrayList<>();
+        IntStream.range(0, project.getMemberList().size()).forEach(i -> {
+            AssignmentList assignment = AssignmentList.builder()
+                    .assigneeMid(project.getMemberList().get(i).getMemberId())
+                    .assigneeName(project.getMemberList().get(i).getNickname())
+                    .tList(taskRepository.getAssigneeView(project.getMemberList().get(i).getMemberId()))
+                    .build();
+            aList.add(assignment);
+        });
+        project.setAssignmentList(aList);
 
 
         return project;

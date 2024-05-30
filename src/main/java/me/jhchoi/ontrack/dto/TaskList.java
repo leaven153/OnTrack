@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -18,8 +19,8 @@ public class TaskList {
     private String taskTitle;
     private Long authorMid; // OnTrackTask - author
     private String authorName;
-    private String taskPriority;
-    private String taskStatus;
+    private Integer taskPriority; // vip: 0, ip: 1, norm: 2
+    private Integer taskStatus;
     private LocalDate taskDueDate;
     private Long taskParentId;
     private LocalDateTime createdAt;
@@ -38,29 +39,49 @@ public class TaskList {
     }
     
     // 진행상태 한글로 전환 (projectView.html에서 직접 호출)
-    public static String switchStatus(String dbStatus){
+    public static String switchStatus(int dbStatus){
         String switchedStatus;
         switch (dbStatus){
-            case "pause" -> switchedStatus = "보류";
-            case "planning" -> switchedStatus = "계획중";
-            case "ing" -> switchedStatus = "진행중";
-            case "review" -> switchedStatus = "검토중";
-            case "done" -> switchedStatus = "완료";
-            default -> switchedStatus = "시작 안 함";
+            case 99 -> switchedStatus = "보류"; // pause = 99
+            case 1 -> switchedStatus = "계획중"; // planning = 1
+            case 2 -> switchedStatus = "진행중"; // ing = 2
+            case 3 -> switchedStatus = "검토중"; // review = 3
+            case 4 -> switchedStatus = "완료"; // done = 4
+            default -> switchedStatus = "시작 안 함"; // not-yet = 0
         }
         return switchedStatus;
     }
 
-    // 진행상태별 할 일 개수
-    public static Integer countStatus(List<TaskList> taskList, String status){
+    // 진행상태별 할 일 개수 (projectView.html에서 직접 호출)
+    public static Integer countStatus(List<?> taskList, Integer status){
         Integer cnt = 0;
-        log.info("status: {}", status);
-        for (TaskList list : taskList) {
-            if (list.getTaskStatus().equals(status)) {
-                cnt++;
-            }
+//        log.info("status: {}", status);
+        for (Object list : taskList) {
+           if (list instanceof TaskList tl) {
+               if(Objects.equals(tl.getTaskStatus(), status)) cnt++;
+           } else if (list instanceof  AssigneeTaskList atl) {
+               //경고:(62, 23) 조건 'list instanceof AssigneeTaskList atl'은(는) 항상 'false'입니다.
+               if(Objects.equals(atl.getTaskStatus(), status)) cnt++;
+           }
         }
-        return cnt;
+        return cnt == 0?null:cnt;
+    }
+
+    // 각 할 일의 공동작업 여부
+    public static boolean teamTask(TaskList task){
+        return task.assigneeMids.size() > 1;
+    }
+
+    // 공동작업 개수, 개인작업 개수
+    public static Integer cntTeamOrSoloTask(List<AssigneeTaskList> taskList, String type, Integer status){
+        // condition: team > 1, solo == 1
+        Integer cnt = 0;
+        log.info("넘어온 taskList는: {}", taskList instanceof AssigneeTaskList);
+        for (AssigneeTaskList assigneeTaskList : taskList) {
+            if (Objects.equals(assigneeTaskList.taskStatus, status) && type.equals("team") && assigneeTaskList.assigneeNum > 1) cnt++;
+            if (Objects.equals(assigneeTaskList.taskStatus, status) && type.equals("solo") && assigneeTaskList.assigneeNum == 1) cnt++;
+        }
+        return cnt == 0?null:cnt;
     }
 
     // 소통하기

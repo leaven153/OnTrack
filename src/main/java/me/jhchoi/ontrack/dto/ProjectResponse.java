@@ -24,8 +24,6 @@ public class ProjectResponse {
     private List<TaskList> taskList;
 
     // 4. 담당자별 할 일
-
-
-
+    private List<AssignmentList> assignmentList;
 
 }

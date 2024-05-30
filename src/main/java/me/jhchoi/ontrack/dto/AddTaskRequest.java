@@ -31,7 +31,7 @@ public class AddTaskRequest {
     private String authorName;
     @NotEmpty @Size(max=20)
     private String taskTitle;
-    private String taskPriority; // 매우중요vip, 중요ip, 일반norm
+    private Integer taskPriority; // 매우중요vip, 중요ip, 일반norm
     private LocalDate taskDueDate;
 
     // 담당자 배정
@@ -52,7 +52,7 @@ public class AddTaskRequest {
                 .authorName(authorName)
                 .taskTitle(taskTitle)
                 .taskPriority(taskPriority)
-                .taskStatus("not-yet")
+                .taskStatus(0)
                 .taskDueDate(taskDueDate)
                 .createdAt(nowWithNano.minusNanos(nanosec))
                 .updatedAt(nowWithNano.minusNanos(nanosec))

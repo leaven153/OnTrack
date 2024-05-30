@@ -29,9 +29,9 @@
       <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task">
         <span class="font-18 c411">중요도</span>
         <div class="">
-          <input type="radio" id="vip" th:field="${addTaskRequest.taskPriority}" value="vip" class="input-radio hide">
-          <input type="radio" id="ip" th:field="${addTaskRequest.taskPriority}" value="ip" class="input-radio hide">
-          <input type="radio" id="norm" th:field="${addTaskRequest.taskPriority}" value="norm" class="input-radio hide" checked="checked">
+          <input type="radio" id="vip" th:field="${addTaskRequest.taskPriority}" value="0" class="input-radio hide">
+          <input type="radio" id="ip" th:field="${addTaskRequest.taskPriority}" value="1" class="input-radio hide">
+          <input type="radio" id="norm" th:field="${addTaskRequest.taskPriority}" value="2" class="input-radio hide" checked="checked">
           <div class="">
             <label for="vip" class="btn-radio w100 radio-l">
               <span class="font-15 vip">매우중요</span>

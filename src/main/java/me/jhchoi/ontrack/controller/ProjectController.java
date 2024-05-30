@@ -50,6 +50,7 @@ public class ProjectController {
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
         // 2-2. 해당 프로젝트의 멤버들: List<MemberList>
         // 2-3. 할 일 목록 - List<TaskList>
+        // 2-4. 담당자별 할 일 목록 - List<AssignmentList>
         ProjectResponse project = projectService.getProject(projectId);
         model.addAttribute("project", project);
 

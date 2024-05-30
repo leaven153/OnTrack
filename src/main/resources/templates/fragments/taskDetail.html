@@ -32,9 +32,9 @@
         <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672 hide">
           <span class="font-15 c411">중요도</span>
           <div class="">
-            <input type="radio" id="edit-vip" name="task_priority" value="vip" class="input-radio hide">
-            <input type="radio" id="edit-ip" name="task_priority" value="ip" class="input-radio hide">
-            <input type="radio" id="edit-norm" name="task_priority" value="norm" class="input-radio hide" checked="checked">
+            <input type="radio" id="edit-vip" name="task_priority" value="0" class="input-radio hide">
+            <input type="radio" id="edit-ip" name="task_priority" value="1" class="input-radio hide">
+            <input type="radio" id="edit-norm" name="task_priority" value="2" class="input-radio hide" checked="checked">
             <div class="">
               <label for="edit-vip" class="btn-radio w100 radio-l">
                 <span class="font-15 vip">매우중요</span>
@@ -109,11 +109,11 @@
             <span class="font-15">세부 항목으로 나눠진 일은 진행상태가 표시되지 않습니다.</span>
           </div>
           <div class="noChild hide">
-            <input type="radio" id="task-status-notYet" name="task_status" value="not-yet" class="input-radio-status hide">
-            <input type="radio" id="task-status-planning" name="task_status" value="planning" class="input-radio-status hide">
-            <input type="radio" id="task-status-ing" name="task_status" value="ing" class="input-radio-status hide">
-            <input type="radio" id="task-status-review" name="task_status" value="review" class="input-radio-status hide">
-            <input type="radio" id="task-status-done" name="task_status" value="done" class="input-radio-status hide">
+            <input type="radio" id="task-status-notYet" name="task_status" value="0" class="input-radio-status hide">
+            <input type="radio" id="task-status-planning" name="task_status" value="1" class="input-radio-status hide">
+            <input type="radio" id="task-status-ing" name="task_status" value="2" class="input-radio-status hide">
+            <input type="radio" id="task-status-review" name="task_status" value="3" class="input-radio-status hide">
+            <input type="radio" id="task-status-done" name="task_status" value="4" class="input-radio-status hide">
             <div class="">
               <label for="task-status-notYet" class="btn-radio btn-edit-status radio-l">
                 <span class="font-11">시작 안 함</span>

@@ -33,11 +33,21 @@
         WHERE task_id = #{taskId}
     </select>
 
-    <select id="findByMemberId" resultType="AssignmentList">
-        SELECT t.id as taskId, t.task_title, t.task_status, ta.member_id as assigneeMid, ta.nickname as assigneeName
+    <select id="findByMemberId" resultType="TaskList">
+        SELECT t.id, t.task_title, t.task_status, t.task_dueDate
+        FROM ontrack_task t
+        INNER JOIN task_assignment ta
+        ON ta.task_id = t.id
+        WHERE member_id = #{memberId};
+    </select>
+
+    <select id="getAssigneeView" resultType="AssigneeTaskList">
+        SELECT t.id, t.task_title, t.task_status, t.task_dueDate, count(task_id) assigneeNum
         FROM task_assignment ta
         INNER JOIN ontrack_task t
         ON ta.task_id = t.id
-        WHERE member_id = #{memberId};
+        WHERE ta.task_id in (SELECT task_id FROM task_assignment WHERE member_id = #{memberId})
+        GROUP BY t.id
+        ORDER BY t.task_status;
     </select>
 </mapper>
