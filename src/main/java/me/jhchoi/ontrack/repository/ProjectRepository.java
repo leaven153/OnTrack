@@ -57,9 +57,10 @@ public class ProjectRepository {
 
     /**
      * created  : 24-05-22
-     * param    : user id
-     * return   : List<MemberNicknames>
-     * explain  : 프로젝트 멤버의 별명 목록
+     * updated  : 24-05-30
+     * param    : GetMemberRequest (projectId, userId(nullable), memberId(nullable))
+     * return   : List<MemberList>
+     * explain  : 프로젝트 멤버 목록
      * */
     public List<MemberList> getNickNames(GetMemberNameRequest request){
         return projectMapper.getNicknames(request);

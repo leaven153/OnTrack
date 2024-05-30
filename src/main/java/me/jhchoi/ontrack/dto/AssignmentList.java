@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.jhchoi.ontrack.domain.OnTrackTask;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,7 +16,8 @@ import java.util.List;
 public class AssignmentList {
     private Long assigneeMid;
     private String assigneeName;
-    private Long taskId;
-    private String taskTitle;
-    private String taskStatus;
+    private List<AssigneeTaskList> tList;
+
+
+
 }
