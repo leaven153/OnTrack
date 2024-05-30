@@ -1,12 +1,11 @@
 package me.jhchoi.ontrack.service;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.dto.MemberNickNames;
+import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.ProjectList;
 import me.jhchoi.ontrack.dto.ProjectResponse;
-import me.jhchoi.ontrack.dto.ReqProjectUser;
+import me.jhchoi.ontrack.dto.GetMemberNameRequest;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toUnmodifiableMap;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -110,10 +108,10 @@ class ProjectServiceTest {
 //        Map<Long, Long> creatorList = pl.stream().collect(toUnmodifiableMap(ProjectList::getProjectId, ProjectList::getCreatorId));
 //        log.info("Map이 됐나?: {}", creatorList); // Map이 됐나?: {16=42, 9=35} 프로젝트id=userId(creatorId)
 
-        List<ReqProjectUser> reqList = new ArrayList<>();
+        List<GetMemberNameRequest> reqList = new ArrayList<>();
 
         for (ProjectList projectList : pl) {
-            ReqProjectUser request = ReqProjectUser.builder()
+            GetMemberNameRequest request = GetMemberNameRequest.builder()
                     .projectId(projectList.getProjectId())
                     .userId(projectList.getCreatorId())
                     .build();
@@ -121,7 +119,7 @@ class ProjectServiceTest {
         }
 
         // 3. 생성자의 이름 받아오기
-        List<MemberNickNames> mnn = new ArrayList<>();
+        List<MemberList> mnn = new ArrayList<>();
         IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
 
         IntStream.range(0, mnn.size()).forEach(i -> {
@@ -149,7 +147,7 @@ class ProjectServiceTest {
 
         // 2. 프로젝트 소속 멤버 정보
         // id as memberId, user_id, project_id, nickname
-        response.setMemberList(projectRepository.getNickNames(ReqProjectUser.builder().projectId(projectId).build()));
+        response.setMemberList(projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(projectId).build()));
 
         // 3. 프로젝트 내 할 일 목록
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
@@ -198,11 +196,11 @@ class ProjectServiceTest {
         // projectStatus=activated, projectDueDate=null,
         // createdAt=2024-05-22T11:19:10, updatedAt=2024-05-22T11:19:10),
         //
-        // memberList=[MemberNickNames(userId=45, projectId=9, memberId=4, nickname=Adele),
-        // MemberNickNames(userId=35, projectId=9, memberId=14, nickname=공지철),
-        // MemberNickNames(userId=61, projectId=9, memberId=26, nickname=송혜교),
-        // MemberNickNames(userId=47, projectId=9, memberId=27, nickname=크러쉬),
-        // MemberNickNames(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
+        // memberList=[MemberList(userId=45, projectId=9, memberId=4, nickname=Adele),
+        // MemberList(userId=35, projectId=9, memberId=14, nickname=공지철),
+        // MemberList(userId=61, projectId=9, memberId=26, nickname=송혜교),
+        // MemberList(userId=47, projectId=9, memberId=27, nickname=크러쉬),
+        // MemberList(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
 
         // taskList=[TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=null,
         // taskPriority=norm, taskStatus=ing, taskDueDate=null, taskParentId=null,

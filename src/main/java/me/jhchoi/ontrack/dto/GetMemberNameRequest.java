@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class ReqProjectUser {
+public class GetMemberNameRequest {
     private Long projectId;
     private Long userId;
     private Long memberId;

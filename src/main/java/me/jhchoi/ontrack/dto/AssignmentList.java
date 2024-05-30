@@ -13,7 +13,7 @@ import java.util.List;
 public class AssignmentList {
     private Long assigneeMid;
     private String assigneeName;
-    private List<Long> taskId;
-    private List<String> taskTitle;
-    private List<String> taskStatus;
+    private Long taskId;
+    private String taskTitle;
+    private String taskStatus;
 }

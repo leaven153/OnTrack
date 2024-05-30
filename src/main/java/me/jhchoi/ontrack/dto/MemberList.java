@@ -10,7 +10,7 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberNickNames {
+public class MemberList {
     private Long userId;
     private Long projectId;
     private Long memberId;

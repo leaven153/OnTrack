@@ -18,7 +18,7 @@ window.onload = function(){
         const userInputLoginEmail = document.querySelector("input.input-login-id");
         const userInputLoginPw = document.querySelector("input.input-login-pw");
         userInputLoginEmail.value="";
-
+        userInputLoginEmail.focus();
 
         // 이메일 주소 입력 후 (입력하지 않고 눌러도)
         // '계속' 버튼 클릭했을 때(유효성 검사)

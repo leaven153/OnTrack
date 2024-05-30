@@ -39,13 +39,16 @@ public class ProjectController {
         log.info("path variable member id: {}", memberId); // 추후 이것도 uuid 처리해야 할까?
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null || loginUser.getUserId() == null) {
+            return "login/login";
+        }
 
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
         model.addAttribute("nickname", nickname);
 
         // 2. project
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
-        // 2-2. 해당 프로젝트의 멤버들: List<MemberNickNames>
+        // 2-2. 해당 프로젝트의 멤버들: List<MemberList>
         // 2-3. 할 일 목록 - List<TaskList>
         ProjectResponse project = projectService.getProject(projectId);
         model.addAttribute("project", project);

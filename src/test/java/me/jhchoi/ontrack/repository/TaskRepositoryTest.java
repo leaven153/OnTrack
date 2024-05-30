@@ -1,7 +1,9 @@
 package me.jhchoi.ontrack.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.dto.AssignmentList;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +21,7 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest @Slf4j
 public class TaskRepositoryTest {
 
     @Autowired
@@ -87,9 +89,15 @@ public class TaskRepositoryTest {
 //        assertThat(ta.getId()).isEqualTo(1L);
     } // test: assign
 
-     @Test @DisplayName("각 할 일 담당자 목록: parameter List<Long>, return List<TaskAssignment>")
+     @Test @DisplayName("담당자별 할 일 목록: parameter List<Long>, return List<AssignmentList>")
      void getAssigneeList(){
-
+        Long memberId = 26L;
+        List<AssignmentList> assignmentList = taskRepository.getAssginementList(memberId);
+        log.info("담당자별 할 일 목록: {}", assignmentList);
+        //담당자별 할 일 목록:
+         // [AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=8, taskTitle=Tigger can do everything, taskStatus=ing),
+         // AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=9, taskTitle=경복궁 야간개방, taskStatus=planning),
+         // AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=13, taskTitle=인생의 베일, taskStatus=done)]
      }
 
 }

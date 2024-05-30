@@ -20,7 +20,7 @@
         WHERE pm.user_id = #{id}
     </select>
 
-    <select id="getNicknames" parameterType="ReqProjectUser" resultType="MemberNickNames">
+    <select id="getNicknames" parameterType="GetMemberNameRequest" resultType="GetMemberNameRequest">
         SELECT id as memberId, user_id, project_id, nickname
         FROM project_member
         WHERE project_id = #{projectId}

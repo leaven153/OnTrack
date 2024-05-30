@@ -1,20 +1,15 @@
 package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
-import me.jhchoi.ontrack.domain.ProjectMember;
-import me.jhchoi.ontrack.dto.MemberNickNames;
+import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.ProjectList;
-import me.jhchoi.ontrack.dto.ReqProjectUser;
-import me.jhchoi.ontrack.repository.ProjectRepository;
+import me.jhchoi.ontrack.dto.GetMemberNameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cglib.core.Local;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -96,12 +91,12 @@ public class ProjectRepositoryTest {
 
     @Test @DisplayName("프로젝트 소속 멤버의 목록 조회")
     void getNicknames(){
-        List<MemberNickNames> memberList = projectRepository.getNickNames(ReqProjectUser.builder().projectId(9L).build());
+        List<MemberList> memberList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(9L).build());
         log.info("프로젝트 멤버 목록: {}", memberList);
-        // 프로젝트 멤버 목록: [MemberNickNames(userId=45, projectId=9, memberId=4, nickname=Adele),
-        // MemberNickNames(userId=35, projectId=9, memberId=14, nickname=공지철),
-        // MemberNickNames(userId=61, projectId=9, memberId=26, nickname=송혜교),
-        // MemberNickNames(userId=47, projectId=9, memberId=27, nickname=크러쉬),
-        // MemberNickNames(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)]
+        // 프로젝트 멤버 목록: [MemberList(userId=45, projectId=9, memberId=4, nickname=Adele),
+        // MemberList(userId=35, projectId=9, memberId=14, nickname=공지철),
+        // MemberList(userId=61, projectId=9, memberId=26, nickname=송혜교),
+        // MemberList(userId=47, projectId=9, memberId=27, nickname=크러쉬),
+        // MemberList(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)]
     }
 }

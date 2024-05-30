@@ -68,17 +68,17 @@ public class ProjectService {
         // (ontrack_project 테이블의 creator 컬럼에는 creator의 user id가 저장되어 있다.
         // ∵ 프로젝트를 만들고 나서 project id를 가지고
         // project member에 추가하기 때문에 member id가 들어갈 수 없다.)
-        List<ReqProjectUser> reqList = new ArrayList<>();
+        List<GetMemberNameRequest> reqList = new ArrayList<>();
         for (ProjectList list : projectList) {
-            ReqProjectUser request = ReqProjectUser.builder()
+            GetMemberNameRequest request = GetMemberNameRequest.builder()
                     .projectId(list.getProjectId())
                     .userId(list.getCreatorId())
                     .build();
             reqList.add(request);
         }
 
-        // 5. data요청
-        List<MemberNickNames> mnn = new ArrayList<>();
+        // 5. 생성자 이름 data요청
+        List<MemberList> mnn = new ArrayList<>();
         IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
 
         // 6. 생성자의 이름을 project List에 매칭하여 저장
@@ -101,36 +101,36 @@ public class ProjectService {
      * */
     public ProjectResponse getProject(Long projectId){
 
-        ProjectResponse response = ProjectResponse.builder().build();
+        ProjectResponse project = ProjectResponse.builder().build();
         // 1. 프로젝트 정보
         // id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
-        response.setProject(projectRepository.findByProjectId(projectId));
+        project.setProject(projectRepository.findByProjectId(projectId));
 
-        // 2. 프로젝트 소속 멤버 정보
+        // 2. 프로젝트 소속 멤버 정보  → MemberList
         // id as memberId, user_id, project_id, nickname
-        response.setMemberList(projectRepository.getNickNames(ReqProjectUser.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(projectId).build()));
 
-        // 3. 프로젝트 내 할 일 목록
+        // 3. 프로젝트 내 할 일 목록 (from ontrack_task) → TaskList
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
-        response.setTaskList(projectRepository.allTasksInProject(projectId));
+        project.setTaskList(projectRepository.allTasksInProject(projectId));
 
-        // 4. 할 일 별 담당자 목록, 할 일 별 작성자 닉네임
+        // 4. 할 일 별 담당자 목록 (from task_assignment) → TaskList
         // task id로 assignee list를 가져온다.
         // assingee 수 만큼 task list에 add한다.
-        IntStream.range(0, response.getTaskList().size()).forEach(i -> {
-          List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(response.getTaskList().get(i).getId());
+        IntStream.range(0, project.getTaskList().size()).forEach(i -> {
+          List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(project.getTaskList().get(i).getId());
             List<String> assigneeNames = new ArrayList<>();
             List<Long> assigneeIds = new ArrayList<>();
             for (TaskAssignment taskAssignment : assigneeList) {
                 assigneeNames.add(taskAssignment.getNickname());
                 assigneeIds.add(taskAssignment.getMemberId());
             }
-            response.getTaskList().get(i).setAssigneeNames(assigneeNames);
-            response.getTaskList().get(i).setAssigneeMids(assigneeIds);
+            project.getTaskList().get(i).setAssigneeNames(assigneeNames);
+            project.getTaskList().get(i).setAssigneeMids(assigneeIds);
         });
 
 
-        return response;
+        return project;
     }
 
     /**

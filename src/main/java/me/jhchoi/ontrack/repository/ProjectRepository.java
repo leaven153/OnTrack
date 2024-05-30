@@ -3,14 +3,11 @@ package me.jhchoi.ontrack.repository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
-import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.dto.*;
-import me.jhchoi.ontrack.mapper.MemberMapper;
 import me.jhchoi.ontrack.mapper.ProjectMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -64,7 +61,7 @@ public class ProjectRepository {
      * return   : List<MemberNicknames>
      * explain  : 프로젝트 멤버의 별명 목록
      * */
-    public List<MemberNickNames> getNickNames(ReqProjectUser request){
+    public List<MemberList> getNickNames(GetMemberNameRequest request){
         return projectMapper.getNicknames(request);
     }
 
