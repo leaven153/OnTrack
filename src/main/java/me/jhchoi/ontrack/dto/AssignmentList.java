@@ -17,7 +17,4 @@ public class AssignmentList {
     private Long assigneeMid;
     private String assigneeName;
     private List<AssigneeTaskList> tList;
-
-
-
 }

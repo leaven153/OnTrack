@@ -440,12 +440,13 @@ window.onload = function(){
             chosensBoxes.classList.remove("hide");
 
             // 하나의 일에 최대 배정되는 담당자 제한(6명), 이미 배정된 담당자는 또 클릭해도 무동작
-            if (cntChoosenAssignee < 6 && !chosenAssigneeList.has(chosenName.value)) {
+            if (cntChoosenAssignee < 6 && !chosenAssigneeList.has(chosenName.dataset.nickname)) {
 
                 // 클릭될 때 마다 div 요소 생성
-                chosensBoxes.appendChild(chosenAssigneeBox(chosenName.value));
+                chosensBoxes.appendChild(chosenAssigneeBox(chosenName.dataset.nickname));
+                console.log(`선택된 담당자들: ${chosenName.dataset.nickname}`);
 
-                chosenAssigneeList.add(chosenName.value); // 중복 방지를 위한 set
+                chosenAssigneeList.add(chosenName.dataset.nickname); // 중복 방지를 위한 set
 
                 cntChoosenAssignee++;
             }
@@ -792,8 +793,7 @@ window.onload = function(){
     onEvtListener(document, "click", ".btn-assignee-del", function(){
         // 중복 확인을 위한 set에서 담당자 이름 삭제
         edit_chosenAssigneeList.delete([...this.parentElement.children].filter((child) => child !== this)[0].innerText);
-        console.log(`edit_chosenAssigneeList:`); // set 확인
-        console.log(edit_chosenAssigneeList); // set 확인
+        console.log(`할일 상세의 담당자 목록(추후 할일생성과 구분요망!): ${edit_chosenAssigneeList}`); // set 확인
 
         // 배정 해제된 담당자 box 삭제
         this.parentElement.remove();

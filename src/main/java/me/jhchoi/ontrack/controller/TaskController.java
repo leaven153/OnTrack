@@ -7,6 +7,7 @@ import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class TaskController {
 
 
     @PostMapping("/addTask")
-    public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, HttpSession session){
+    public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, BindingResult bindingResult, HttpSession session){
         System.out.println("please");
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", addTaskRequest.getProjectId());

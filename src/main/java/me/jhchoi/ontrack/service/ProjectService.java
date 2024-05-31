@@ -86,7 +86,7 @@ public class ProjectService {
             // 생성자 id가 키값(mnn.get(i).getUserId())인 map(idxOfCreator)에서
             // value를 가져오면 그것은 생성자의 이름이 들어갈 위치!
             // 해당 인덱스에 생성자의 이름을 넣는다.
-            projectList.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickname());
+            projectList.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickName());
         });
 
         return projectList;
@@ -135,7 +135,7 @@ public class ProjectService {
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
                     .assigneeMid(project.getMemberList().get(i).getMemberId())
-                    .assigneeName(project.getMemberList().get(i).getNickname())
+                    .assigneeName(project.getMemberList().get(i).getNickName())
                     .tList(taskRepository.getAssigneeView(project.getMemberList().get(i).getMemberId()))
                     .build();
             aList.add(assignment);
@@ -143,6 +143,7 @@ public class ProjectService {
         project.setAssignmentList(aList);
 
 
+        log.info("불려온 project: {}", project);
         return project;
     }
 

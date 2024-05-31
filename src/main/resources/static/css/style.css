@@ -877,6 +877,7 @@ div.noassignee-state span:nth-child(2) {
 .assignee-taskbox-container {
     width: 90%;
     flex-shrink: 0;
+    min-height: 55px;
     max-height: 116px;
     overflow-y: auto;
     scrollbar-width: none;
