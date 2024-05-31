@@ -29,13 +29,13 @@ public class ProjectController {
 
 
     @ModelAttribute("statusList")
-    public Map<Integer, String> taskStatusModel(){
-        Map<Integer, String> statusList = new LinkedHashMap<>();
-        statusList.put(0, "시작 안 함");
-        statusList.put(1, "계획중");
-        statusList.put(2, "진행중");
-        statusList.put(3, "검토중");
-        statusList.put(4, "완료");
+    public Map<Integer, String[]> taskStatusModel(){
+        Map<Integer, String[]> statusList = new LinkedHashMap<>();
+        statusList.put(0, new String[]{"시작 안 함", "not-yet", "notYet-bg20", "notYet-border-shadow"});
+        statusList.put(1, new String[]{"계획중", "planning", "planning-bg008", "planning-border-shadow"});
+        statusList.put(2, new String[]{"진행중", "ing", "ing-bg008", "ing-border-shadow"});
+        statusList.put(3, new String[]{"검토중", "review", "review-bg008", "review-border-shadow"});
+        statusList.put(4, new String[]{"완료", "done", "done-bg008", "done-border-shadow"});
         return statusList;
     }
 
