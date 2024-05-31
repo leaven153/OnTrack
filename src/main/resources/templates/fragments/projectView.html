@@ -788,14 +788,16 @@
               </div>
               <div class="공동작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">공동작업</span>
-                <th:block th:each="task : ${assignee.getTList()}">
-                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0)}:'0'">-</div>
+                <th:block th:each="task : ${assignee.getTList()}" th:with="cond=${task.countStatus(assignee.getTList(), 0)}">
+                  <div class="mr-10 altivo-regular" th:if="${cond == null} and ${taskStat.count == 1}">-</div>
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 0, assignee.getAssigneeName())}:'0'"></div>
                 </th:block>
               </div>
               <div class="개인작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">개인작업</span>
-                <th:block th:each="task : ${assignee.getTList()}">
-                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0)}:'0'"></div>
+                <th:block th:each="task : ${assignee.getTList()}" th:with="cond=${task.countStatus(assignee.getTList(), 0)}">
+                  <div class="mr-10 altivo-regular" th:if="${cond == null} and ${taskStat.count == 1}">-</div>
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 0} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 0, assignee.getAssigneeName())}:'0'"></div>
                 </th:block>
               </div>
             </div> <!-- 진행상황명·개수 끝 -->
@@ -830,66 +832,43 @@
                   <div class="assignee-bar planning"></div>
                   <span class="ml-5 font-15">계획중</span>
                 </div>
-                <div class="mr-9 altivo-regular">4</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-9 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}?${task.countStatus(assignee.getTList(), 1)}:'0'"></div>
+                </th:block>
               </div>
               <div class="공동작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">공동작업</span>
-                <div class="mr-10 altivo-regular">2</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="not ${task.getTaskStatus() == 1} and ${taskStat.count == 1}">-</div>
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 1} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 1, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 1, assignee.getAssigneeName())}:'0'"></div>
+                </th:block>
               </div>
               <div class="개인작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">개인작업</span>
-                <div class="mr-10 altivo-regular">2</div>
+                <th:block th:each="task : ${assignee.getTList()}">
+                  <div class="mr-10 altivo-regular" th:if="not ${task.getTaskStatus() == 1} and ${taskStat.count == 1}">-</div>
+                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 1} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 1, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 1, assignee.getAssigneeName())}:'0'"></div>
+                </th:block>
               </div>
             </div> <!-- 진행상황명·개수 끝 -->
             <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container planning-bg008">
-              <div class="태스크박스 btn-task-detail assignee-task-box planning-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box planning-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box planning-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                </div>
-              </div> <!-- task box END-->
-              <div class="태스크박스 btn-task-detail assignee-task-box planning-border-shadow">
-                <div class="flex-row-between-nowrap mb-5">
-                  <div class="assignee-task-title ">인라인블록뺀 후</div>
-                  <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                </div>
-                <div class="마감일 flex-row-justify-start-align-center">
-                  <span class="font-11">마감일&nbsp;</span>
-                  <span class="altivo-regular font-11 ">03.29</span>
-                  <span class="font-11">&nbsp;(일)</span>
-                  <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                </div>
-              </div> <!-- task box END-->
+              <th:block th:each="task : ${assignee.getTList()}">
+                <th:block th:if="${task.getTaskStatus() == 1}">
+                  <div class="태스크박스 btn-task-detail assignee-task-box planning-border-shadow" th:attr="id=${task.getId()}">
+                    <div class="flex-row-between-nowrap mb-5">
+                      <div class="assignee-task-title" th:text="${task.getTaskTitle()}">인라인블록뺀 후</div>
+                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23" th:if="${task.getAssigneeNum() > 1}">
+                    </div>
+                    <div class="마감일 flex-row-justify-start-align-center">
+                      <span class="font-11">마감일&nbsp;</span>
+                      <span class="font-11" th:text="${task.getTaskDueDate() == null}?'없음'"></span>
+                      <span class="altivo-regular font-11" th:text="${task.getTaskDueDate() !=null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                      <span class="font-11" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">&nbsp;(일)</span>
+                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                    </div>
+                  </div> <!-- task box END-->
+                </th:block>
+              </th:block>
             </div> <!-- 할일박스컨테이너 END -->
           </div>
           <!-- 담당자 진행상태별box: 계획중 끝 -->
@@ -908,14 +887,16 @@
               </div>
               <div class="공동작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">공동작업</span>
-                <th:block th:each="task: ${assignee.getTList()}">
-                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 2} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2)}:'0'"></div>
+                <th:block th:each="task: ${assignee.getTList()}" th:with="cond=${task.countStatus(assignee.getTList(), 2)}">
+<!--                  <div class="mr-10 altivo-regular" th:if="${cond == null} and ${taskStat.count == 1}">-</div>-->
+                  <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', 2, assignee.getAssigneeName())}:'0'"></div> <!-- ${task.getTaskStatus() == 2} and  -->
                 </th:block>
               </div>
               <div class="개인작업 flex-row-between-nowrap font-11">
                 <span class="ml-15">개인작업</span>
                 <th:block th:each="task : ${assignee.getTList()}">
-                  <div class="mr-10 altivo-regular" th:if="${task.getTaskStatus() == 2} and ${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2)}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2)}:'0'">11</div>
+<!--                  <div class="mr-10 altivo-regular" th:unless="${task.countStatus(assignee.getTList(), 2)}">-</div>-->
+                  <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', 2, assignee.getAssigneeName())}:'0'"></div>
                 </th:block>
               </div>
             </div> <!-- 진행상황명·개수 끝 -->

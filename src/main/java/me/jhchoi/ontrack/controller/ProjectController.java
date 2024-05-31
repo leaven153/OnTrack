@@ -15,6 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -24,6 +27,17 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+
+    @ModelAttribute("statusList")
+    public Map<Integer, String> taskStatusModel(){
+        Map<Integer, String> statusList = new LinkedHashMap<>();
+        statusList.put(0, "시작 안 함");
+        statusList.put(1, "계획중");
+        statusList.put(2, "진행중");
+        statusList.put(3, "검토중");
+        statusList.put(4, "완료");
+        return statusList;
+    }
 
     /**
      * created  : 2024-05-
