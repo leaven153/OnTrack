@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@Data // Getter, Setter, ToString, EqualsAndHashCode, RequiredArgsConstructor
+@Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
 public class AddTaskRequest {
@@ -38,7 +38,7 @@ public class AddTaskRequest {
     private Long[] assigneesMid;
 //    private List<Long> assigneesUserId;
     private String[] assigneesNickname;
-    
+    private List<MemberList> mList;
     // 파일 첨부
     private List<MultipartFile> taskFile; // TaskFile로 변환해야 하..겠지?
 

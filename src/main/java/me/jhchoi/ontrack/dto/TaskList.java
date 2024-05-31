@@ -56,7 +56,7 @@ public class TaskList {
     public static Integer countStatus(List<?> taskList, Integer status){
         Integer cnt = 0;
 //        log.info("진행상태 별 할 일 개수 함수에 들어온 taskList의 instanceOf가 AssigneeTaskList인가?: {}", taskList instanceof AssigneeTaskList); // 늘 false뿐
-        log.info("countStatus에 들어온 taskList: {}", taskList);
+//        log.info("countStatus에 들어온 taskList: {}", taskList);
         for (Object list : taskList) {
            if (list instanceof TaskList tl) {
                if(Objects.equals(tl.getTaskStatus(), status)) cnt++;
@@ -70,7 +70,7 @@ public class TaskList {
     }
 
 
-    // 공동작업 개수, 개인작업 개수
+    // 공동작업 개수, 개인작업 개수 (projectView.html에서 직접 호출)
     public static Integer cntTeamOrSoloTask(List<AssigneeTaskList> tList, String type, Integer status, String assigneName){
         // condition: team > 1, solo == 1
         Integer cnt = 0;
@@ -79,11 +79,11 @@ public class TaskList {
             if (Objects.equals(assigneeTaskList.getTaskStatus(), status) && type.equals("team") && assigneeTaskList.getAssigneeNum() > 1) cnt++;
             if (Objects.equals(assigneeTaskList.getTaskStatus(), status) && type.equals("solo") && assigneeTaskList.getAssigneeNum() == 1) cnt++;
         }
-        log.info("cntTeamOrSolo로 들어온 assinge 이름: {}", assigneName);
-        log.info("cntTeamOrSolo로 들어온 tList: {}", tList);
-        log.info("cntTeamOrSolo로 들어온 type: {}", type);
-        log.info("cntTeamOrSolo로 들어온 status: {}", status);
-        log.info("공동작업/개인작업 개수: {}",cnt);
+//        log.info("cntTeamOrSolo로 들어온 assinge 이름: {}", assigneName);
+//        log.info("cntTeamOrSolo로 들어온 tList: {}", tList);
+//        log.info("cntTeamOrSolo로 들어온 type: {}", type);
+//        log.info("cntTeamOrSolo로 들어온 status: {}", status);
+//        log.info("공동작업/개인작업 개수: {}",cnt);
         return cnt == 0?null:cnt;
     }
 
