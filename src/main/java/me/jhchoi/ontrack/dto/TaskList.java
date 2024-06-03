@@ -2,6 +2,7 @@ package me.jhchoi.ontrack.dto;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.TaskFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,6 +31,9 @@ public class TaskList {
     // 할 일의 담당자 목록
     private List<Long> assigneeMids;
     private List<String> assigneeNames;
+
+    //  할 일의 파일
+    private List<TaskFile> taskFiles;
     
     // 담당자 여러 명일 때, 성만 출력되도록 한다. (projectView.html에서 직접 호출)
     public static List<String> manyAssigneeFirstName(List<String> assigneeNames){

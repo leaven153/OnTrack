@@ -16,6 +16,9 @@ window.onload = function(){
      * 그 때의 최선은 지금 여기 없습니다. 최선 씨, 어디갔나요. 여긴 엉망진창이에요.
     */
 
+    // try1. redirect로 페이지 로드 됐을 때 할 일 추가 모달 닫기
+    // loadReset();
+
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
 
@@ -653,35 +656,70 @@ window.onload = function(){
 
     /*---- ▼ Modal(Create Task;할 일 추가): submit 시작 ▼ ----*/
     const modalCreateTask = document.querySelector("#container-create-task");
-    const formCreateTask = document.querySelector("#form-create-task");
+    const addTaskForm = document.querySelector("#form-create-task");
     const btnCreateTaskSubmit = document.querySelector("#create-task-submit"); // button
-
+    // const COMMON_URL = 'http://localhost:8080/';
     let createTaskFileDelCnt = 0;
+    // 배정된 담당자
+    let chosenAssignees = [];
+
 
     btnCreateTaskSubmit.addEventListener("click", (e)=>{
-        // e.preventDefault();
+        e.preventDefault();
+        const addTaskData = new FormData();
 
         /* form submit 하고 전송되는 값 확인 */
-        console.log(formCreateTask.elements.projectId.value); // project01
-        console.log(formCreateTask.elements.taskAuthor.value); // taskAuthor01
-        console.log(formCreateTask.elements.taskTitle.value); // test
-        console.log(formCreateTask.elements.taskPriority.value); // ip
-        console.log(formCreateTask.elements.taskDueDate.value); // 2024-04-17
-        console.log(formCreateTask.elements.taskAssignee); // RadioNodeList { 0: input#assignee1.hide.chosen, 1: input#assignee2.hide.chosen, 2: input#assignee3.hide.chosen, 3: input#assignee4.hide.chosen, 4: input#assignee5.hide, 5: input#assignee6.hide, 6: input#assignee7.hide, value: "", length: 7 }
-        formCreateTask.elements.taskAssignee.forEach(function(eachOne){
+        console.log(addTaskForm.elements.projectId.value); // 9
+        console.log(addTaskForm.elements.taskAuthorMid.value); // 14
+        console.log(addTaskForm.elements.taskTitle.value); // 할 일 추가중
+        console.log(addTaskForm.elements.taskPriority.value); // 1
+        console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
+        console.log(addTaskForm.elements.taskAssignee); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
+        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
-                console.log(eachOne.id); // assignee1 assignee2 assignee5
+                console.log(eachOne.id); // 4 14 26
+                chosenAssignees.push(eachOne.id);
             }
         });
         // 부분 삭제가 이뤄졌을 때만 새로운 array가 가고 아닐 경우, 기존의 fileList가 전송된다.
         if (createTaskFileDelCnt > 0) {
             console.log(`부분 삭제 후: `);
             console.log(rewriteCreateTaskFileList);
+            for(let i = 0; i < rewriteCreateTaskFileList.length; i++) {
+                addTaskData.append("taskFile", rewriteCreateTaskFileList[i]);
+            }
+
         } else {
-            console.log(formCreateTask.elements.taskFile.files); // .files: FileList [ File, File ] // .value: C:\fakepath\100자.txt
+            console.log(addTaskForm.elements.taskFile.files);
+            const files = addTaskForm.elements.taskFile.files;
+            for(let i = 0; i < files.length; i++){
+                addTaskData.append("taskFile", files[i]);
+            }
+            // FileList [ File ] 줄바꿈
+            //   0: File { name: "100자.txt", lastModified: 1712675372978, size: 250, … }
+            //      lastModified: 1712675372978
+            //      name: "100자.txt"
+            //      size: 250
+            //      type: "text/plain"
+            //      webkitRelativePath: ""
+            //   length: 1
         }
 
+        addTaskData.append("projectId", addTaskForm.elements.projectId.value);
+        addTaskData.append("taskAuthorMid", addTaskForm.elements.taskAuthorMid.value);
+        addTaskData.append("authorName", addTaskForm.elements.authorName.value);
+        addTaskData.append("taskTitle", addTaskForm.elements.taskTitle.value);
+        addTaskData.append("taskPriority", addTaskForm.elements.taskPriority.value);
+        addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
+        addTaskData.append("assigneesMid", chosenAssignees);
 
+        console.log(`------- addTaskData -------`);
+        console.log(addTaskData);
+        fetch('http://localhost:8080/task/addTask', {
+            method:'POST',
+            headers: {},
+            body: addTaskData
+        });
 
     });
     /*---- ▲ Modal(Create task;할 일 추가): submit 끝 ▲ ----*/
@@ -694,10 +732,10 @@ window.onload = function(){
     
     btnCloseModalCreateTask.addEventListener("click", ()=>{
 
-        formCreateTask.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
+        addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        formCreateTask.elements.taskAssignee.forEach(function(eachOne){
+        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
@@ -722,7 +760,37 @@ window.onload = function(){
         // 모달 닫기
         modalCreateTask.classList.add("hide");
     });
-    
+
+    // redirect로 페이지 진입 시, 할 일 추가 창 reset되도록 함수화
+    const loadReset = () => {
+        addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
+
+        // 선택했던 담당자 input 모두 해제
+        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
+            eachOne.classList.remove("chosen");
+        });
+
+        // 선택된 담당자들이 담기는 box hide
+        chosensBoxes.classList.remove("assignee-display");
+        chosensBoxes.classList.add("hide");
+
+        //담당자 배정하기 문구 출력
+        assigneeBeforeChoose.classList.add("assignee-display");
+        assigneeBeforeChoose.classList.remove("hide");
+
+        // 첨부된 파일 화면(div)에서 삭제
+        for(const div of createTaskFiles.querySelectorAll("div")) {
+            div.remove();
+        }
+        createTasknofile.classList.remove("hide");
+
+        // 첨부된 파일 fileList array 비우기
+        createTaskFileDelCnt = 0;
+        rewriteCreateTaskFileList = [];
+
+        // 모달 닫기
+        modalCreateTask.classList.add("hide");
+    }
 
 
     /*---- ▼ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 시작 ▼ ----*/

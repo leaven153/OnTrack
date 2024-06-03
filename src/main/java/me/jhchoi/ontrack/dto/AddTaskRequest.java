@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
-import me.jhchoi.ontrack.domain.TaskHistory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -38,9 +36,12 @@ public class AddTaskRequest {
     private Long[] assigneesMid;
 //    private List<Long> assigneesUserId;
     private String[] assigneesNickname;
+    
+    // 어디서 쓰는지 확인요망
     private List<MemberList> mList;
+    
     // 파일 첨부
-    private List<MultipartFile> taskFile; // TaskFile로 변환해야 하..겠지?
+    private MultipartFile[] taskFile; // TaskFile로 변환해야 하..겠지?
 
     public OnTrackTask dtoToEntityTask(){
         LocalDateTime nowWithNano = LocalDateTime.now();

@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class TaskFile {
     private Long id;
     private Long projectId;
@@ -21,17 +23,4 @@ public class TaskFile {
     private Long fileSize;
     private String filePath;
     private LocalDateTime createdAt;
-
-    @Builder
-    public TaskFile(Long projectId, Long userId, Long memberId, String fileOrigName, String fileNewName, String fileType, Long fileSize, String filePath, LocalDateTime createdAt) {
-        this.projectId = projectId;
-        this.userId = userId;
-        this.memberId = memberId;
-        this.fileOrigName = fileOrigName;
-        this.fileNewName = fileNewName;
-        this.fileType = fileType;
-        this.fileSize = fileSize;
-        this.filePath = filePath;
-        this.createdAt = createdAt;
-    }
 }
