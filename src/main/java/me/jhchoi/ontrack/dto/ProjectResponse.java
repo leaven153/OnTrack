@@ -21,6 +21,7 @@ public class ProjectResponse {
     // 3. 할 일 목록:
     // id, project id, 할 일 명, 작성자mId, 작성자닉네임, 중요도, 진행상태, 마감일, 종속id, 생성일, 최종수정일, 최종수정자mId
     // 할 일 별 담당자 목록(mId, nickname)
+    // 할 일의 파일들 추가 요망
     private List<TaskList> taskList;
 
     // 4. 담당자별 할 일

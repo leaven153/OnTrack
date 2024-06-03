@@ -19,7 +19,7 @@
     <form th:action="@{/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
       <input type="hidden" th:field="${addTaskRequest.projectId}">
       <input type="hidden" th:field="${addTaskRequest.taskAuthorMid}">
-      <input type="hidden" th:value="${nickname}">
+      <input type="hidden" name="authorName" th:value="${nickname}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
         <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
         <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
@@ -70,14 +70,7 @@
             <!-- 프로젝트 멤버 목록 -->
             <div id="assignee-list-box" class="hide" > <!--/* th:each="member : ${memberList}" */-->
               <th:block th:each="member : ${memberList}">
-<!--              <span th:text="${member.getNickName()}"></span><span th:text="${memberStat.size}"></span>-->
-              <input type="checkbox" class="hide" name="taskAssignee" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickName()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickName()}"></label>
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="블랙위도우" id="assignee2"><label for="assignee2" class="display-block lists">블랙위도우</label>-->
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="토르" id="assignee3"><label for="assignee3" class="display-block lists">토르</label>-->
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="캡틴아메리카" id="assignee4"><label for="assignee4" class="display-block lists">캡틴아메리카</label>-->
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="완다" id="assignee5"><label for="assignee5" class="display-block lists">완다</label>-->
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="비전" id="assignee6"><label for="assignee6" class="display-block lists">비전</label>-->
-<!--              <input type="checkbox" class="hide" name="taskAssignee" value="Beyonce" id="assignee7"><label for="assignee7" class="display-block lists">Beyonce</label>-->
+                <input type="checkbox" class="hide" name="taskAssignee" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickName()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickName()}"></label>
               </th:block>
             </div>
           </div>
