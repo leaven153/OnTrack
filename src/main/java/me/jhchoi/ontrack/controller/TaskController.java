@@ -36,8 +36,6 @@ public class TaskController {
         //전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, taskTitle=할 일 추가 ing, taskPriority=vip, taskDueDate=2024-05-23, assigneesMid=null, nickname=null, taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1b6ce1b0])
 //        taskService.addTask(addTaskRequest);
 
-
-        // encode가 throw를 던진다. 추후 처리 요망.
         String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), StandardCharsets.UTF_8);
 
         return """
