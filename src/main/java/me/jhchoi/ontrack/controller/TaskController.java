@@ -24,7 +24,7 @@ public class TaskController {
 
 
     @PostMapping("/addTask")
-    public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, BindingResult bindingResult, HttpSession session) throws UnsupportedEncodingException {
+    public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, BindingResult bindingResult, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", addTaskRequest.getProjectId());
