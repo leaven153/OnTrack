@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Controller
@@ -37,7 +38,7 @@ public class TaskController {
 
 
         // encode가 throw를 던진다. 추후 처리 요망.
-        String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), "UTF-8");
+        String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), StandardCharsets.UTF_8);
 
         return """
                 redirect:/project/%s/%s/%s
