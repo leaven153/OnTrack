@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.domain;
 
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 // 할 일 탭 중 '내역'에 출력
 @Data
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class TaskHistory {
     private Long id;
     private Long taskId;
@@ -24,16 +26,7 @@ public class TaskHistory {
     private LocalDateTime updatedAt;
     private Long updatedBy; // member id
 
-    @Builder
-    public TaskHistory(Long taskId, Long projectId, String modItem, String modType, String modContent, LocalDateTime updatedAt, Long updatedBy) {
-        this.taskId = taskId;
-        this.projectId = projectId;
-        this.modItem = modItem;
-        this.modType = modType;
-        this.modContent = modContent;
-        this.updatedAt = updatedAt;
-        this.updatedBy = updatedBy;
-    }
+
 
     // 할 일 명 등록
     public static TaskHistory logNewTask(OnTrackTask newTask){
