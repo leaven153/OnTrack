@@ -32,13 +32,9 @@ public class AddTaskRequest {
     private Integer taskPriority; // 매우중요vip, 중요ip, 일반norm
     private LocalDate taskDueDate;
 
-    // 담당자 배정
+    // 배정된 담당자
     private Long[] assigneesMid;
-//    private List<Long> assigneesUserId;
-    private String[] assigneesNickname;
-    
-    // 어디서 쓰는지 확인요망
-    private List<MemberList> mList;
+    private String[] assigneeNames;
     
     // 파일 첨부
     private MultipartFile[] taskFile; // TaskFile로 변환해야 하..겠지?
@@ -67,7 +63,7 @@ public class AddTaskRequest {
                 .projectId(projectId)
                 .taskId(taskId)
                 .memberId(assigneesMid[i])
-                .nickname(assigneesNickname[i])
+                .nickname(assigneeNames[i])
                 .role("assignee")
                 .assignedAt(createdAt)
                 .build()));

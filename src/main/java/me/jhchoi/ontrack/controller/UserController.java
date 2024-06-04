@@ -45,11 +45,12 @@ public class UserController {
 
         if(bindingResult.hasErrors()) {
             log.info("error={}", bindingResult);
-
             return "redirect:login/login";
         }
         LoginUser loginUser = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
-
+        if(loginUser == null) {
+            return "redirect:login/login";
+        }
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", loginUser);
         log.info("session 생성: {}", session.getAttribute("loginUser"));

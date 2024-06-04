@@ -27,10 +27,14 @@ public class MyPageController {
     public String myProjects(HttpSession session, Model model){
 
         log.info("=================myProjects====================");
+
         log.info("session을 찾아라: {}", session.getAttribute("loginUser"));
         // AddProjectRequest의 creator에 로그인한 유저의 id, nickname 담는 코드 추가요망
         model.addAttribute("createProjectRequest", new AddProjectRequest());
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            return "redirect:/login/login";
+        }
         List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
         Boolean noProject = projectList.size() <= 0; // Boolean noProject = projectList.size() <= 0 ? true: false;
 
@@ -42,6 +46,7 @@ public class MyPageController {
         model.addAttribute("projectList", projectList);
         model.addAttribute("loginUser", loginUser);
         log.info("컨트롤러가 화면으로 넘기는 project list: {}", projectList);
+        // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:24:33.630980400
         return "mypage/myProjects";
     }
 

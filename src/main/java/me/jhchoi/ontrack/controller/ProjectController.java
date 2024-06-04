@@ -53,7 +53,7 @@ public class ProjectController {
         log.info("path variable member id: {}", memberId); // 추후 이것도 uuid 처리해야 할까?
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        if (loginUser == null || loginUser.getUserId() == null) {
+        if (loginUser == null) {
             return "login/login";
         }
 

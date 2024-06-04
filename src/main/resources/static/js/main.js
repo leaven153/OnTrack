@@ -395,18 +395,22 @@ window.onload = function(){
     const btnShowAssigneeList = document.querySelector("#show-assignee-list");
 
     const assigneeList = document.querySelector("#assignee-list-box"); // div
-    const assigneesName = document.querySelectorAll("#assignee-list-box > input");
+    if(elExists(document.querySelectorAll("#assignee-list-box input"))) {
+        console.log(`thymeleaf로 생성한 input 있음`);
+        console.log(document.querySelectorAll("#assignee-list-box input")[0].value);
+    }
+    const assigneesName = document.querySelectorAll("#assignee-list-box input");
     
     const chosensBoxes = document.querySelector("#chosens-boxes");
-    
-    let cntChoosenAssignee = 0; // 하나의 일에 배정되는 담당자의 수를 세기 위한 변수
+
+    const chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
 
     // 프로젝트 멤버 목록 나타내기
      btnShowAssigneeList.addEventListener("click", ()=>{
 
         // 담당자가 아직 배정되지 않았다면 '담당자 배정하기' 글씨는 출력, 
         // 선택된 담당자 이름이 출력될 div는 미출력 (목록 나타내기 클릭할 때마다 체크)
-        if (cntChoosenAssignee === 0) {
+        if (chosenAssigneeList.size === 0) {
             chosensBoxes.classList.remove("assignee-display");
             chosensBoxes.classList.add("hide");
             assigneeBeforeChoose.classList.add("assignee-display");
@@ -423,7 +427,6 @@ window.onload = function(){
 
 
     
-    const chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
 
     // 프로젝트 멤버 목록에서 담당자 선택
     assigneesName.forEach(function(chosenName){
@@ -443,7 +446,7 @@ window.onload = function(){
             chosensBoxes.classList.remove("hide");
 
             // 하나의 일에 최대 배정되는 담당자 제한(6명), 이미 배정된 담당자는 또 클릭해도 무동작
-            if (cntChoosenAssignee < 6 && !chosenAssigneeList.has(chosenName.dataset.nickname)) {
+            if (chosenAssigneeList.size < 6 && !chosenAssigneeList.has(chosenName.dataset.nickname)) {
 
                 // 클릭될 때 마다 div 요소 생성
                 chosensBoxes.appendChild(chosenAssigneeBox(chosenName.dataset.nickname));
@@ -451,7 +454,11 @@ window.onload = function(){
 
                 chosenAssigneeList.add(chosenName.dataset.nickname); // 중복 방지를 위한 set
 
-                cntChoosenAssignee++;
+                console.log("담당자 선택 후 set: ");
+                console.log(chosenAssigneeList);
+                console.log("담당자 선택 후 담당자 수: ");
+                console.log(chosenAssigneeList.size);
+
             }
         }); // chosenName.addEventListener(click) ends
     });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
@@ -463,23 +470,21 @@ window.onload = function(){
         const deletedAssignee = [...this.parentElement.children].filter((child) => child !== this)[0].innerText;
         // 해당 input에 선택해제
         assigneesName.forEach(function(eachOne){
-            if (eachOne.value === deletedAssignee) {
+            if (eachOne.dataset.nickname === deletedAssignee) {
                 eachOne.classList.remove("chosen");
+                console.log(`배정됐다 해제된 담당자: ${eachOne.value}`);
             }
         });
         // 중복 확인을 위한 set에서 담당자 이름 삭제
         chosenAssigneeList.delete([...this.parentElement.children].filter((child) => child !== this)[0].innerText);
+        console.log(`배정했던 담당자 1명 삭제 후 set: `);
         console.log(chosenAssigneeList); // set 확인
 
-        
         // 배정 해제된 담당자 box 삭제
         this.parentElement.remove();
 
-        // 배정된 담당자 수 변경
-        cntChoosenAssignee--;
-
         // 담당자가 0명이라면 '담당자 배정하기'가 출력되도록 한다.
-        if (cntChoosenAssignee === 0) {
+        if (chosenAssigneeList.size === 0) {
             chosensBoxes.classList.remove("assignee-display");
             chosensBoxes.classList.add("hide");
             assigneeBeforeChoose.classList.add("assignee-display");
@@ -658,11 +663,12 @@ window.onload = function(){
     const modalCreateTask = document.querySelector("#container-create-task");
     const addTaskForm = document.querySelector("#form-create-task");
     const btnCreateTaskSubmit = document.querySelector("#create-task-submit"); // button
-    // const COMMON_URL = 'http://localhost:8080/';
     let createTaskFileDelCnt = 0;
-    // 배정된 담당자
-    let chosenAssignees = [];
 
+    // 배정된 담당자 member Id array
+    let chosenAssigneesMid = [];
+    // 배정된 담당자 nick name array
+    let choosenAssigneesName = [];
 
     btnCreateTaskSubmit.addEventListener("click", (e)=>{
         e.preventDefault();
@@ -677,13 +683,14 @@ window.onload = function(){
         console.log(addTaskForm.elements.taskAssignee); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
         addTaskForm.elements.taskAssignee.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
-                console.log(eachOne.id); // 4 14 26
-                chosenAssignees.push(eachOne.id);
+                console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
+                chosenAssigneesMid.push(eachOne.id);
+                choosenAssigneesName.push(eachOne.dataset.nickname);
             }
         });
         // 부분 삭제가 이뤄졌을 때만 새로운 array가 가고 아닐 경우, 기존의 fileList가 전송된다.
         if (createTaskFileDelCnt > 0) {
-            console.log(`부분 삭제 후: `);
+            console.log(`파일 부분 삭제 후: `);
             console.log(rewriteCreateTaskFileList);
             for(let i = 0; i < rewriteCreateTaskFileList.length; i++) {
                 addTaskData.append("taskFile", rewriteCreateTaskFileList[i]);
@@ -711,7 +718,8 @@ window.onload = function(){
         addTaskData.append("taskTitle", addTaskForm.elements.taskTitle.value);
         addTaskData.append("taskPriority", addTaskForm.elements.taskPriority.value);
         addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
-        addTaskData.append("assigneesMid", chosenAssignees);
+        addTaskData.append("assigneesMid", chosenAssigneesMid);
+        addTaskData.append("assigneeNames", choosenAssigneesName);
 
         console.log(`------- addTaskData -------`);
         console.log(addTaskData);
@@ -719,19 +727,22 @@ window.onload = function(){
             method:'POST',
             headers: {},
             body: addTaskData
+        }).then(response => {
+            if (response.ok) {
+                afterAddTaskSubmit();
+                const chkTime = new Date();
+                console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+                // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
+            }
         });
+
 
     });
     /*---- ▲ Modal(Create task;할 일 추가): submit 끝 ▲ ----*/
 
 
-    /*---------- 2) ------------*/
-    /* 할 일 추가 모달 닫기 버튼 */
-    /*--- 닫기 전에 묻는 창 추가 요망? ---*/
-    const btnCloseModalCreateTask = document.querySelector(".btn-close-modal-createTask");
-    
-    btnCloseModalCreateTask.addEventListener("click", ()=>{
-
+    // 할 일 추가 모달 닫는 기능
+    function afterAddTaskSubmit(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
@@ -739,40 +750,26 @@ window.onload = function(){
             eachOne.classList.remove("chosen");
         });
 
-        // 선택된 담당자들이 담기는 box hide
-        chosensBoxes.classList.remove("assignee-display");
-        chosensBoxes.classList.add("hide");
+        // 담당자 담은 array clear (data to controller)
+        chosenAssigneesMid = [];
+        choosenAssigneesName = [];
 
-        //담당자 배정하기 문구 출력
-        assigneeBeforeChoose.classList.add("assignee-display");
-        assigneeBeforeChoose.classList.remove("hide");
+        // 담당자 담은 set clear (화면)
+        chosenAssigneeList.clear();
+        console.log(`모달 닫은 후에 set: `);
+        console.log(chosenAssigneeList);
 
-        // 첨부된 파일 화면(div)에서 삭제
-        for(const div of createTaskFiles.querySelectorAll("div")) {
-            div.remove();
+
+        // 선택된 담당자 이름이 출력된 div 삭제
+        if(elExists(document.querySelectorAll(".assignee-chosen-box"))){
+            const assigneeNamediv = document.querySelectorAll(".assignee-chosen-box");
+            for(const el of assigneeNamediv) el.remove();
         }
-        createTasknofile.classList.remove("hide");
-
-        // 첨부된 파일 fileList array 비우기
-        createTaskFileDelCnt = 0;
-        rewriteCreateTaskFileList = [];
-
-        // 모달 닫기
-        modalCreateTask.classList.add("hide");
-    });
-
-    // redirect로 페이지 진입 시, 할 일 추가 창 reset되도록 함수화
-    const loadReset = () => {
-        addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
-
-        // 선택했던 담당자 input 모두 해제
-        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
-            eachOne.classList.remove("chosen");
-        });
 
         // 선택된 담당자들이 담기는 box hide
         chosensBoxes.classList.remove("assignee-display");
         chosensBoxes.classList.add("hide");
+
 
         //담당자 배정하기 문구 출력
         assigneeBeforeChoose.classList.add("assignee-display");
@@ -791,6 +788,17 @@ window.onload = function(){
         // 모달 닫기
         modalCreateTask.classList.add("hide");
     }
+
+    /*---------- 2) ------------*/
+    /* 할 일 추가 모달 닫기 버튼 */
+    /*--- 닫기 전에 묻는 창 추가 요망? ---*/
+    const btnCloseModalCreateTask = document.querySelector(".btn-close-modal-createTask");
+    
+    btnCloseModalCreateTask.addEventListener("click", ()=>{
+
+        afterAddTaskSubmit();
+    });
+
 
 
     /*---- ▼ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 시작 ▼ ----*/
@@ -861,7 +869,8 @@ window.onload = function(){
     onEvtListener(document, "click", ".btn-assignee-del", function(){
         // 중복 확인을 위한 set에서 담당자 이름 삭제
         edit_chosenAssigneeList.delete([...this.parentElement.children].filter((child) => child !== this)[0].innerText);
-        console.log(`할일 상세의 담당자 목록(추후 할일생성과 구분요망!): ${edit_chosenAssigneeList}`); // set 확인
+        console.log(`할일 상세의 담당자 목록(추후 할일생성과 구분요망!):`); // set 확인
+        console.log(edit_chosenAssigneeList);
 
         // 배정 해제된 담당자 box 삭제
         this.parentElement.remove();

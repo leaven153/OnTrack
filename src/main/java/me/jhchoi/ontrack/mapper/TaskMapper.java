@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface TaskMapper {
     
     // 새 할 일 등록
-    void newTask(OnTrackTask task);
+    Long newTask(OnTrackTask task);
 
     // 기록(history): 새 할 일 등록(할일명), 담당자 배정,
     void log(TaskHistory taskHistory);
