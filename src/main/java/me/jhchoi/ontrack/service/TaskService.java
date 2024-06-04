@@ -27,7 +27,8 @@ public class TaskService {
 
         // 1. 새 할 일 정보 등록
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
-        // 1-1. 작성자 이름 가져오기....
+
+        // 1-1. 할 일 등록
         taskRepository.newTask(task);
 
         // 2. history 등록 - ①할 일 명,
