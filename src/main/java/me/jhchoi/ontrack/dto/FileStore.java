@@ -30,7 +30,7 @@ public class FileStore {
 
         //log.info("********폴더 생성(uploadFolderPath{})******", uploadFolderPath.getAbsolutePath()); // esourcesontrackUploadFile\9\18
 
-        if(uploadFolderPath.exists() == false) {
+        if(!uploadFolderPath.exists()) {
             uploadFolderPath.mkdirs();
             log.info("폴더생성? {}", uploadFolderPath.exists());
         }
