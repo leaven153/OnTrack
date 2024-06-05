@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.service.TaskService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,9 @@ import java.nio.charset.StandardCharsets;
 public class TaskController {
     private final TaskService taskService;
 
+
+    @Value("${file.dir}")
+    private String fileDir;
 
     @PostMapping("/addTask")
     public String addTaskSubmit(@ModelAttribute AddTaskRequest addTaskRequest, BindingResult bindingResult, HttpSession session) {
