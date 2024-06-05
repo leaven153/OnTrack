@@ -1,17 +1,21 @@
 package me.jhchoi.ontrack.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -24,7 +28,7 @@ public class TaskService {
      * return   :
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
-    public void addTask(AddTaskRequest addTaskRequest) {
+    public Long addTask(AddTaskRequest addTaskRequest) {
 
         // 1. 새 할 일 정보 등록
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
@@ -46,10 +50,21 @@ public class TaskService {
             IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), task.getAuthorMid())));
         }
 
-        // 4. 파일첨부 여부 check 후 객체 생성 및 저장
+        // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
-        //taskRepository.attach();
-
+        if (addTaskRequest.getTaskFile() != null) {
+            try {
+                List<TaskFile> fList = fileStore.storeFile(addTaskRequest.getTaskFile(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
+                taskRepository.attachFile(fList);
+            } catch (IOException e) {
+                log.info("파일 저장 에러: {}", e.getMessage());
+                // 파일 저장 에러: java.io.FileNotFoundException:
+                /**
+                 * C:\Users/user\AppData\Local\Temp\tomcat.8080.2139694289704046896\work\Tomcat\localhost\ROOT\9\14\9bba9073-0957-4dd9-acb4-0e3103105f27.txt (지정된 경로를 찾을 수 없습니다)
+                 * */
+            }
+        }
+        return task.getId();
     }
 
     /*

@@ -396,10 +396,10 @@ window.onload = function(){
 
     const assigneeList = document.querySelector("#assignee-list-box"); // div
     if(elExists(document.querySelectorAll("#assignee-list-box input"))) {
-        console.log(`thymeleaf로 생성한 input 있음`);
-        console.log(document.querySelectorAll("#assignee-list-box input")[0].value);
+        // console.log(`thymeleaf로 생성한 input 있음`);
+        // console.log(document.querySelectorAll("#assignee-list-box input")[0].value);
     }
-    const assigneesName = document.querySelectorAll("#assignee-list-box input");
+    const assigneesName = document.querySelectorAll("#assignee-list-box > input");
     
     const chosensBoxes = document.querySelector("#chosens-boxes");
 
@@ -431,7 +431,6 @@ window.onload = function(){
     // 프로젝트 멤버 목록에서 담당자 선택
     assigneesName.forEach(function(chosenName){
         chosenName.addEventListener("click", ()=>{
-
             // 해당 input에 선택됨 표시(class="chosen")
             // console.log(this); // html... 
             // console.log(chosenName); // <input id="assignee1" class="hide" type="checkbox" name="taskAssignee" value="박종건">
@@ -450,7 +449,7 @@ window.onload = function(){
 
                 // 클릭될 때 마다 div 요소 생성
                 chosensBoxes.appendChild(chosenAssigneeBox(chosenName.dataset.nickname));
-                console.log(`선택된 담당자들: ${chosenName.dataset.nickname}`);
+                console.log(`선택된 담당자: ${chosenName.dataset.nickname}`);
 
                 chosenAssigneeList.add(chosenName.dataset.nickname); // 중복 방지를 위한 set
 
@@ -727,14 +726,20 @@ window.onload = function(){
             method:'POST',
             headers: {},
             body: addTaskData
-        }).then(response => {
+        })/*
+            .then(response => {
             if (response.ok) {
-                afterAddTaskSubmit();
+
                 const chkTime = new Date();
                 console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
                 // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
             }
-        });
+        });*/
+        const chkTime = new Date();
+        console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+        // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
+        // response 없앤 후 → fetch 후 어떻게 되는가: 21:45:0:858 (컨트롤러보다 빠름)
+        afterAddTaskSubmit();
 
 
     });

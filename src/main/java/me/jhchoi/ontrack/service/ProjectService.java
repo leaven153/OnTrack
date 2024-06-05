@@ -143,7 +143,7 @@ public class ProjectService {
         project.setAssignmentList(aList);
 
 
-        log.info("불려온 project: {}", project);
+//        log.info("불려온 project: {}", project);
         return project;
     }
 
