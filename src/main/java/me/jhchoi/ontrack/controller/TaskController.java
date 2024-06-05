@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -35,15 +36,10 @@ public class TaskController {
         log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthorMid());
         log.info("할일 이름 = {}", addTaskRequest.getTaskTitle());
         log.info("전체 = {}", addTaskRequest);
-//        log.info("파일 = {}", addTaskRequest.getTaskFile()[0].getOriginalFilename()); // 파일 = 100자.txt
-//        log.info("파일 = {}", addTaskRequest.getTaskFile()[1].getOriginalFilename()); // 파일 = 200자.txt
+        log.info("파일 = {}", addTaskRequest.getTaskFile().get(0).getOriginalFilename());
 
-        // 전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, authorName=공지철,
-        // taskTitle=담당자 리스트 테스트, taskPriority=1, taskDueDate=2024-06-07,
-        // assigneesMid=[4, 26], assigneesNickname=null, mList=null,
-        // taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@15cfe1a0,
-        // org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@66eb1acc])
 
+        //전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, taskTitle=할 일 추가 ing, taskPriority=vip, taskDueDate=2024-05-23, assigneesMid=null, nickname=null, taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1b6ce1b0])
 //        taskService.addTask(addTaskRequest);
 
         String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), StandardCharsets.UTF_8);

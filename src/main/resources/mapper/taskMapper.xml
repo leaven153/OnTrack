@@ -16,6 +16,14 @@
         </foreach>
     </insert>
 
+    <insert id="attachFile" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_file(project_id, task_id, member_id, file_origName, file_newName, file_type, file_size, file_path, createdAt)
+        VALUES
+        <foreach collection="list" item="tf" separator=",">
+            (#{projectId}, #{taskId}, #{memberId}, #{fileOrigName}, #{fileNewName}, #{fileType}, #{fileSize}, #{filePath}, #{createdAt})
+        </foreach>
+    </insert>
+
     <insert id="log" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO task_history(project_id, task_id, modItem, modType, modContent, updatedAt, updatedBy)
         VALUES (#{projectId}, #{taskId}, #{modItem}, #{modType}, #{modContent}, #{updatedAt}, #{updatedBy})

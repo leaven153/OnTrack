@@ -5,6 +5,7 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
+import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-
+    private final FileStore fileStore;
     /**
      * created  : 2024-05-14
      * updated  : 2024-05-23, 24
@@ -46,6 +47,7 @@ public class TaskService {
         }
 
         // 4. 파일첨부 여부 check 후 객체 생성 및 저장
+        // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
         //taskRepository.attach();
 
     }

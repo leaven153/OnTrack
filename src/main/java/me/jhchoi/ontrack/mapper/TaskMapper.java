@@ -2,6 +2,7 @@ package me.jhchoi.ontrack.mapper;
 
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AssigneeTaskList;
 import me.jhchoi.ontrack.dto.AssignmentList;
@@ -28,6 +29,7 @@ public interface TaskMapper {
     void unassign(TaskAssignment taskAssignment);
 
     // 할 일: 파일 첨부
+    void attachFile(List<TaskFile> taskFile);
     
     // 할 일: 파일 삭제
 
@@ -42,6 +44,7 @@ public interface TaskMapper {
 
 //    List<TaskList> findByMemberId(Long memberId);
 
+    // Assignee view: 담당자별 할 일 목록
     List<AssigneeTaskList> getAssigneeView(Long memberId);
 
 }
