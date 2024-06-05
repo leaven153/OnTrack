@@ -24,19 +24,13 @@ public class FileStore {
     // 파일 저장할 폴더 생성 (프로젝트id/할일id)
     public String makeFolder(Long projectId, Long taskId){
         Path path = Paths.get(fileDir, String.valueOf(projectId), String.valueOf(taskId));
-//        log.info("프로퍼티에 설정한 dir: {}", fileDir.toString()); //esourcesontrackUploadFile
 
         File uploadFolderPath = new File(String.valueOf(path));
-
-        //log.info("********폴더 생성(uploadFolderPath{})******", uploadFolderPath.getAbsolutePath()); // esourcesontrackUploadFile\9\18
 
         if(!uploadFolderPath.exists()) {
             uploadFolderPath.mkdirs();
             log.info("폴더생성? {}", uploadFolderPath.exists());
         }
-//        log.info("path: {}", path.toString()); // path: 9\15
-        log.info("absolute path: {}", path.toAbsolutePath()); // absolute path: C:\IntelliJProject\OnTrack\9\15
-
         return path.toAbsolutePath().toString();
     }
 
