@@ -28,7 +28,7 @@ public class TaskService {
      * return   :
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
-    public void addTask(AddTaskRequest addTaskRequest) {
+    public Long addTask(AddTaskRequest addTaskRequest) {
 
         // 1. 새 할 일 정보 등록
         OnTrackTask task = addTaskRequest.dtoToEntityTask();
@@ -52,7 +52,7 @@ public class TaskService {
 
         // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
-        if (!addTaskRequest.getTaskFile().isEmpty()) {
+        if (addTaskRequest.getTaskFile() != null) {
             try {
                 List<TaskFile> fList = fileStore.storeFile(addTaskRequest.getTaskFile(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
                 taskRepository.attachFile(fList);
@@ -64,7 +64,7 @@ public class TaskService {
                  * */
             }
         }
-
+        return task.getId();
     }
 
     /*

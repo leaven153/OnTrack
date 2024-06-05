@@ -66,7 +66,9 @@ public class ProjectController {
         // 2-3. 할 일 목록 - List<TaskList>
         // 2-4. 담당자별 할 일 목록 - List<AssignmentList>
         ProjectResponse project = projectService.getProject(projectId);
+        log.info("프로젝트로 넘어가는 값 중 최신 task: {}", project.getTaskList().get(project.getTaskList().size()-1));
         model.addAttribute("project", project);
+
 
         // 3. 마감일 D-Day 계산을 위한 오늘 날짜
         LocalDate today = LocalDate.now();

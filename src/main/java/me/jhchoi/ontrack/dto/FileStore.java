@@ -34,7 +34,7 @@ public class FileStore {
             uploadFolderPath.mkdirs();
             log.info("폴더생성? {}", uploadFolderPath.exists());
         }
-        log.info("path: {}", path.toString()); // path: 9\15
+//        log.info("path: {}", path.toString()); // path: 9\15
         log.info("absolute path: {}", path.toAbsolutePath()); // absolute path: C:\IntelliJProject\OnTrack\9\15
 
         return path.toAbsolutePath().toString();

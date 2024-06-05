@@ -726,14 +726,20 @@ window.onload = function(){
             method:'POST',
             headers: {},
             body: addTaskData
-        }).then(response => {
+        })/*
+            .then(response => {
             if (response.ok) {
-                afterAddTaskSubmit();
+
                 const chkTime = new Date();
                 console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
                 // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
             }
-        });
+        });*/
+        const chkTime = new Date();
+        console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+        // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
+        // response 없앤 후 → fetch 후 어떻게 되는가: 21:45:0:858 (컨트롤러보다 빠름)
+        afterAddTaskSubmit();
 
 
     });
