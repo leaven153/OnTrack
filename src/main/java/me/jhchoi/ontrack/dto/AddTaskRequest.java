@@ -41,7 +41,7 @@ public class AddTaskRequest {
     private List<MemberList> mList;
     
     // 파일 첨부
-    private MultipartFile[] taskFile; // TaskFile로 변환해야 하..겠지?
+    private List<MultipartFile> taskFile;
 
     public OnTrackTask dtoToEntityTask(){
         LocalDateTime nowWithNano = LocalDateTime.now();

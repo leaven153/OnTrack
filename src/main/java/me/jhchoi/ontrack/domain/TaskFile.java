@@ -15,7 +15,7 @@ import java.util.UUID;
 public class TaskFile {
     private Long id;
     private Long projectId;
-    private Long userId;
+    private Long taskId;
     private Long memberId;
     private String fileOrigName; // 업로드한 파일의 원래 이름
     private String fileNewName; // 파일명 중복방지를 위해 새로운 이름 부여

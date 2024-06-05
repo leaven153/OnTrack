@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.repository;
 import lombok.RequiredArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AssigneeTaskList;
 import me.jhchoi.ontrack.dto.AssignmentList;
@@ -36,6 +37,9 @@ public class TaskRepository {
         taskMapper.assign(assignees);
     }
 
+    // 할 일 별 첨부파일 등록
+    public void attachFile(List<TaskFile> taskFile) { taskMapper.attachFile(taskFile); }
+
     // 할 일 상세 조회
     public Optional<OnTrackTask> findByTaskId(@Param("taskId") Long taskId){
         return taskMapper.findByTaskId(taskId);
@@ -44,9 +48,7 @@ public class TaskRepository {
     // 각 할 일 담당자 목록
     public List<TaskAssignment> getAssigneeList(Long taskId) { return taskMapper.getAssigneeList(taskId); }
 
-    // 담당자 별 할 일 목록
-//    public List<TaskList> getAssginementList(Long memberId) { return taskMapper.findByMemberId(memberId); }
-
+    // Assignee view: 담당자별 할 일 목록
     public List<AssigneeTaskList> getAssigneeView(Long memberId) { return taskMapper.getAssigneeView(memberId); }
 
 }
