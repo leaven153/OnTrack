@@ -36,11 +36,10 @@ public class TaskController {
         log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthorMid());
         log.info("할일 이름 = {}", addTaskRequest.getTaskTitle());
         log.info("전체 = {}", addTaskRequest);
-        log.info("파일 = {}", addTaskRequest.getTaskFile().get(0).getOriginalFilename());
-
+//        log.info("파일 = {}", addTaskRequest.getTaskFile().get(0).getOriginalFilename());
 
         //전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, taskTitle=할 일 추가 ing, taskPriority=vip, taskDueDate=2024-05-23, assigneesMid=null, nickname=null, taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1b6ce1b0])
-//        taskService.addTask(addTaskRequest);
+        taskService.addTask(addTaskRequest);
 
         String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), StandardCharsets.UTF_8);
         log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900

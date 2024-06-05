@@ -35,7 +35,7 @@ class TaskServiceTest {
      * */
     @Test
     @DisplayName("새 할 일 등록: 담당자가 있고 파일 없는 버전")
-    void addTask() {
+    void addTaskWithAssigneeNoFile() {
 
         Long[] memberIds = {14L, 26L}; //4L, 26L, 27L, 28L, 14L
         String[] nicknames = {"공지철", "송혜교"}; // "Adele", "송혜교", "크러쉬", "스칼렛 요한슨", "공지철"
@@ -45,9 +45,9 @@ class TaskServiceTest {
                 .taskAuthorMid(28L)
                 .authorName("스칼렛 요한슨")
                 .taskTitle(titles[5])
-                .taskPriority("ip")
+                .taskPriority(2)
                 .assigneesMid(memberIds)
-                .assigneesNickname(nicknames)
+                .assigneeNames(nicknames)
                 .taskDueDate(LocalDate.now())
                 .build();
 
@@ -69,8 +69,8 @@ class TaskServiceTest {
         }
     }
 
-    @Test @DisplayName("담당자 없는 새 할일 등록 테스트")
-    void addTaskWithoutAssignee(){
+    @Test @DisplayName("담당자와 파일 모두 있는 버전")
+    void addTask(){
 
     }
 

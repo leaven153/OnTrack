@@ -20,7 +20,7 @@
         INSERT INTO task_file(project_id, task_id, member_id, file_origName, file_newName, file_type, file_size, file_path, createdAt)
         VALUES
         <foreach collection="list" item="tf" separator=",">
-            (#{projectId}, #{taskId}, #{memberId}, #{fileOrigName}, #{fileNewName}, #{fileType}, #{fileSize}, #{filePath}, #{createdAt})
+            (#{tf.projectId}, #{tf.taskId}, #{tf.memberId}, #{tf.fileOrigName}, #{tf.fileNewName}, #{tf.fileType}, #{tf.fileSize}, #{tf.filePath}, #{tf.createdAt})
         </foreach>
     </insert>
 
