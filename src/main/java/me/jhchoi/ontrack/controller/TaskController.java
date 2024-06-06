@@ -61,12 +61,5 @@ public class TaskController {
 //                """.formatted(addTaskRequest.getProjectId(), addTaskRequest.getTaskAuthorMid(), encodedName);
     }
 
-    @GetMapping("/test")
-    public String prgTest(@RequestParam("projectId") Long pId, @RequestParam("memberId") Long mId, @RequestParam("nickname") String nickname){
-        log.info("prgTest 진입");
-        String encodedName = URLEncoder.encode(nickname, StandardCharsets.UTF_8);
-        return """
-                redirect:/project/%s/%s/%s""".formatted(pId, mId, encodedName);
-    }
 
 }

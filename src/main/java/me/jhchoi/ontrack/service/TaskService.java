@@ -66,11 +66,11 @@ public class TaskService {
         // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
 
-        if (addTaskRequest.getTaskFile() != null && addTaskRequest.getTaskFile().size() > 0) {
+        if (addTaskRequest.getTaskFile() != null && !addTaskRequest.getTaskFile().isEmpty()) {
             try {
                 List<TaskFile> fList = fileStore.storeFile(addTaskRequest.getTaskFile(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
                 log.info("task service에서 file list: {}", fList);
-                if(fList != null && fList.size() > 0) taskRepository.attachFile(fList);
+                if(fList != null && !fList.isEmpty()) taskRepository.attachFile(fList);
             } catch (IOException e) {
                 log.info("파일 저장 에러: {}", e.getMessage());
                 // 파일 저장 에러: java.io.FileNotFoundException:

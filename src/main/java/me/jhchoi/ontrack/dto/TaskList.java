@@ -56,6 +56,7 @@ public class TaskList {
         return switchedStatus;
     }
 
+    // 진행상태 영어로 전환 for CSS (projectView.html에서 직접 호출)
     public static String switchStatusToEng(int dbStatus){
         String switchedStatus;
         switch (dbStatus){
