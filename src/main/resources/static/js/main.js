@@ -192,6 +192,7 @@ window.onload = function(){
         chosenTask.addEventListener("click", ()=>{
             // console.log(chosenTask.id); // id값 가져옴. 8
             // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
+            console.log(chosenTask.dataset.id);
 
 
             // success일 경우 아래 실행
