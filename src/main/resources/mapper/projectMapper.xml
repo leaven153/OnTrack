@@ -28,7 +28,7 @@
             AND user_id = #{userId}
         </if>
         <if test="memberId != null">
-            And member_id = #{memberId}
+            And id = #{memberId}
         </if>
     </select>
 

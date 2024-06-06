@@ -8,10 +8,14 @@ import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.AddTaskRequest;
 import me.jhchoi.ontrack.dto.FileStore;
+import me.jhchoi.ontrack.dto.GetMemberNameRequest;
+import me.jhchoi.ontrack.dto.MemberList;
+import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -20,6 +24,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
     private final FileStore fileStore;
     /**
      * created  : 2024-05-14
@@ -40,22 +45,32 @@ public class TaskService {
         taskRepository.log(TaskHistory.logNewTask(task));
         
         // 3. 담당자 유무 확인
-        if (addTaskRequest.getAssigneesMid().length > 0) {
+        if (addTaskRequest.getAssigneesMid() !=null && addTaskRequest.getAssigneesMid().size() > 0) {
 
-            // 3-1. 담당자 객체(TaskAssignment) 생성 및 DB 저장
+//            addTaskRequest.setAssigneeNames(new ArrayList<>());
+            // 3-1. 담당자 nickname 가져오기
+//            for(int i= 0; i < addTaskRequest.getAssigneesMid().size(); i++){
+//                log.info("task service에서 멤버 id: {}", addTaskRequest.getAssigneesMid().get(i));
+//                List<MemberList> mList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(addTaskRequest.getProjectId()).memberId(addTaskRequest.getAssigneesMid().get(i)).build());
+//                addTaskRequest.getAssigneeNames().add(mList.get(0).getNickName());
+//            }
+
+            // 3-2. 담당자 객체(TaskAssignment) 생성 및 DB 저장
             List<TaskAssignment> assignees = addTaskRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
             taskRepository.assign(assignees);
             
-            // 3-2. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
+            // 3-3. history 등록 - ② 담당자 인원만큼 history 객체 생성 및 DB 저장
             IntStream.range(0, assignees.size()).forEach(i -> taskRepository.log(TaskHistory.logAssignment(assignees.get(i), task.getAuthorMid())));
         }
 
         // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
-        if (addTaskRequest.getTaskFile() != null) {
+
+        if (addTaskRequest.getTaskFile() != null && addTaskRequest.getTaskFile().size() > 0) {
             try {
                 List<TaskFile> fList = fileStore.storeFile(addTaskRequest.getTaskFile(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
-                taskRepository.attachFile(fList);
+                log.info("task service에서 file list: {}", fList);
+                if(fList != null && fList.size() > 0) taskRepository.attachFile(fList);
             } catch (IOException e) {
                 log.info("파일 저장 에러: {}", e.getMessage());
                 // 파일 저장 에러: java.io.FileNotFoundException:

@@ -43,7 +43,7 @@ public class TaskList {
     }
     
     // 진행상태 한글로 전환 (projectView.html에서 직접 호출)
-    public static String switchStatus(int dbStatus){
+    public static String switchStatusToKor(int dbStatus){
         String switchedStatus;
         switch (dbStatus){
             case 99 -> switchedStatus = "보류"; // pause = 99
@@ -52,6 +52,19 @@ public class TaskList {
             case 3 -> switchedStatus = "검토중"; // review = 3
             case 4 -> switchedStatus = "완료"; // done = 4
             default -> switchedStatus = "시작 안 함"; // not-yet = 0
+        }
+        return switchedStatus;
+    }
+
+    public static String switchStatusToEng(int dbStatus){
+        String switchedStatus;
+        switch (dbStatus){
+            case 99 -> switchedStatus = "pause"; // pause = 99
+            case 1 -> switchedStatus = "planning"; // planning = 1
+            case 2 -> switchedStatus = "ing"; // ing = 2
+            case 3 -> switchedStatus = "review"; // review = 3
+            case 4 -> switchedStatus = "done"; // done = 4
+            default -> switchedStatus = "not-yet"; // not-yet = 0
         }
         return switchedStatus;
     }

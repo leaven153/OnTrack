@@ -37,6 +37,7 @@ public class TaskController {
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", addTaskRequest.getProjectId());
         log.info("작성자아이디 = {}", addTaskRequest.getTaskAuthorMid());
+        log.info("작성자 이름 = {}", addTaskRequest.getAuthorName());
         log.info("할일 이름 = {}", addTaskRequest.getTaskTitle());
         log.info("전체 = {}", addTaskRequest);
 //        log.info("파일 = {}", addTaskRequest.getTaskFile().get(0).getOriginalFilename());
@@ -51,13 +52,21 @@ public class TaskController {
         redirectAttributes.addAttribute("projectId", addTaskRequest.getProjectId());
         redirectAttributes.addAttribute("memberId", addTaskRequest.getTaskAuthorMid());
         redirectAttributes.addAttribute("nickname", addTaskRequest.getAuthorName());
-        redirectAttributes.addAttribute("newTask", newTaskId);
 
+//        return "redirect:/task/test";
         return new RedirectView("/project/{projectId}/{memberId}/{nickname}");
 
 //        return """
 //                redirect:/project/%s/%s/%s
 //                """.formatted(addTaskRequest.getProjectId(), addTaskRequest.getTaskAuthorMid(), encodedName);
+    }
+
+    @GetMapping("/test")
+    public String prgTest(@RequestParam("projectId") Long pId, @RequestParam("memberId") Long mId, @RequestParam("nickname") String nickname){
+        log.info("prgTest 진입");
+        String encodedName = URLEncoder.encode(nickname, StandardCharsets.UTF_8);
+        return """
+                redirect:/project/%s/%s/%s""".formatted(pId, mId, encodedName);
     }
 
 }

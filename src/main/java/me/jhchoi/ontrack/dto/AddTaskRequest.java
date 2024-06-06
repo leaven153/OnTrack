@@ -33,8 +33,8 @@ public class AddTaskRequest {
     private LocalDate taskDueDate;
 
     // 배정된 담당자
-    private Long[] assigneesMid;
-    private String[] assigneeNames;
+    private List<Long> assigneesMid;
+    private List<String> assigneeNames;
     
     // 파일 첨부
     private List<MultipartFile> taskFile;
@@ -59,11 +59,11 @@ public class AddTaskRequest {
 
     public List<TaskAssignment> dtoToEntityTaskAssignment(Long taskId, LocalDateTime createdAt){
         List<TaskAssignment> ta = new ArrayList<>();
-        IntStream.range(0, assigneesMid.length).forEach(i -> ta.add(TaskAssignment.builder()
+        IntStream.range(0, assigneesMid.size()).forEach(i -> ta.add(TaskAssignment.builder()
                 .projectId(projectId)
                 .taskId(taskId)
-                .memberId(assigneesMid[i])
-                .nickname(assigneeNames[i])
+                .memberId(assigneesMid.get(i))
+                .nickname(assigneeNames.get(i))
                 .role("assignee")
                 .assignedAt(createdAt)
                 .build()));

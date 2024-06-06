@@ -387,7 +387,7 @@ window.onload = function(){
          });
      });
 
-
+    const addTaskForm = document.querySelector("#form-create-task");
     /*---- ▼ Modal(Create Task;할일추가) 담당자 배정 시작 ▼ ----*/
 
     const assigneeBeforeChoose  = document.querySelector("#assignee-before-choose");
@@ -425,8 +425,10 @@ window.onload = function(){
         
     }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
 
-
-    
+    // 배정된 담당자 member Id array
+    let chosenAssigneesMid = [];
+    // 배정된 담당자 nick name array
+    let choosenAssigneesName = [];
 
     // 프로젝트 멤버 목록에서 담당자 선택
     assigneesName.forEach(function(chosenName){
@@ -660,27 +662,23 @@ window.onload = function(){
 
     /*---- ▼ Modal(Create Task;할 일 추가): submit 시작 ▼ ----*/
     const modalCreateTask = document.querySelector("#container-create-task");
-    const addTaskForm = document.querySelector("#form-create-task");
     const btnCreateTaskSubmit = document.querySelector("#create-task-submit"); // button
     let createTaskFileDelCnt = 0;
 
-    // 배정된 담당자 member Id array
-    let chosenAssigneesMid = [];
-    // 배정된 담당자 nick name array
-    let choosenAssigneesName = [];
 
     btnCreateTaskSubmit.addEventListener("click", (e)=>{
         e.preventDefault();
         const addTaskData = new FormData();
-
-        /* form submit 하고 전송되는 값 확인 */
-        console.log(addTaskForm.elements.projectId.value); // 9
-        console.log(addTaskForm.elements.taskAuthorMid.value); // 14
-        console.log(addTaskForm.elements.taskTitle.value); // 할 일 추가중
-        console.log(addTaskForm.elements.taskPriority.value); // 1
-        console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
-        console.log(addTaskForm.elements.taskAssignee); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
-        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
+        //
+        // // /* form submit 하고 전송되는 값 확인 */
+        // // console.log(addTaskForm.elements.projectId.value); // 9
+        // // console.log(addTaskForm.elements.taskAuthorMid.value); // 14
+        // // console.log(addTaskForm.elements.taskTitle.value); // 할 일 추가중
+        // // console.log(addTaskForm.elements.taskPriority.value); // 1
+        // // console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
+        // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
+        //
+        addTaskForm.elements.assigneesMid.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
                 chosenAssigneesMid.push(eachOne.id);
@@ -701,16 +699,16 @@ window.onload = function(){
             for(let i = 0; i < files.length; i++){
                 addTaskData.append("taskFile", files[i]);
             }
-            // FileList [ File ] 줄바꿈
-            //   0: File { name: "100자.txt", lastModified: 1712675372978, size: 250, … }
-            //      lastModified: 1712675372978
-            //      name: "100자.txt"
-            //      size: 250
-            //      type: "text/plain"
-            //      webkitRelativePath: ""
-            //   length: 1
+        // //     // FileList [ File ] 줄바꿈
+        // //     //   0: File { name: "100자.txt", lastModified: 1712675372978, size: 250, … }
+        // //     //      lastModified: 1712675372978
+        // //     //      name: "100자.txt"
+        // //     //      size: 250
+        // //     //      type: "text/plain"
+        // //     //      webkitRelativePath: ""
+        // //     //   length: 1
         }
-
+        // //
         addTaskData.append("projectId", addTaskForm.elements.projectId.value);
         addTaskData.append("taskAuthorMid", addTaskForm.elements.taskAuthorMid.value);
         addTaskData.append("authorName", addTaskForm.elements.authorName.value);
@@ -719,27 +717,23 @@ window.onload = function(){
         addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
         addTaskData.append("assigneesMid", chosenAssigneesMid);
         addTaskData.append("assigneeNames", choosenAssigneesName);
-
+        //
         console.log(`------- addTaskData -------`);
         console.log(addTaskData);
         fetch('http://localhost:8080/task/addTask', {
             method:'POST',
             headers: {},
             body: addTaskData
-        })/*
-            .then(response => {
+        }).then(response => {
+            afterAddTaskSubmit();
+            const chkTime = new Date();
+            console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
             if (response.ok) {
-
-                const chkTime = new Date();
-                console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
-                // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
+                location.reload();
             }
-        });*/
-        const chkTime = new Date();
-        console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
-        // fetch 후 어떻게 되는가: 17:50:39:612 (컨트롤러보다 늦음)
-        // response 없앤 후 → fetch 후 어떻게 되는가: 21:45:0:858 (컨트롤러보다 빠름)
-        afterAddTaskSubmit();
+        });
+
+
 
 
     });
@@ -751,7 +745,7 @@ window.onload = function(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        addTaskForm.elements.taskAssignee.forEach(function(eachOne){
+        addTaskForm.elements.assigneesMid.forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
@@ -787,6 +781,7 @@ window.onload = function(){
         createTasknofile.classList.remove("hide");
 
         // 첨부된 파일 fileList array 비우기
+        // addTaskForm.elements.taskFile.files = [];
         createTaskFileDelCnt = 0;
         rewriteCreateTaskFileList = [];
 
@@ -800,7 +795,6 @@ window.onload = function(){
     const btnCloseModalCreateTask = document.querySelector(".btn-close-modal-createTask");
     
     btnCloseModalCreateTask.addEventListener("click", ()=>{
-
         afterAddTaskSubmit();
     });
 

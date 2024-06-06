@@ -105,8 +105,8 @@
         <!-- status -->
         <div class="tableview-column flex-row-center-center-nowrap">
           <div class="table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
-            <div class="status-sign" th:classappend="${task.getTaskStatus()}"></div> <!-- vertical-ctrl01 -->
-            <span class="status-remark" th:text="${task.switchStatus(task.getTaskStatus())}">진행중</span> <!-- vertical-ctrl01-->
+            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}"></div> <!-- vertical-ctrl01 -->
+            <span class="status-remark" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span> <!-- vertical-ctrl01-->
           </div>
           <div class="table-status-sign-hasChild hide">
             <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->
