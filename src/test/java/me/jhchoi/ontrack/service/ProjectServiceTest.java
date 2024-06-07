@@ -169,7 +169,7 @@ class ProjectServiceTest {
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
                     .assigneeMid(project.getMemberList().get(i).getMemberId())
-                    .assigneeName(project.getMemberList().get(i).getNickname())
+                    .assigneeName(project.getMemberList().get(i).getNickName())
                     .tList(taskRepository.getAssigneeView(project.getMemberList().get(i).getMemberId()))
                     .build();
             aList.add(assignment);
