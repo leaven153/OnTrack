@@ -29,7 +29,7 @@
           <input type="text" class="modal-edit-task" name="" max="20" value="하면 돼 끝까지 해보자 해내자">
         </div><!-- 할일제목 끝 -->
 
-        <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672 hide">
+        <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672" th:classappend="${loginMember.position == 'member'}?'hide'">
           <span class="font-15 c411">중요도</span>
           <div class="">
             <input type="radio" id="edit-vip" name="task_priority" value="0" class="input-radio hide">

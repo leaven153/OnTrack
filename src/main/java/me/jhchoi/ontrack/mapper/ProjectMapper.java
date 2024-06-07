@@ -14,7 +14,7 @@ public interface ProjectMapper {
 
     List<ProjectList> allMyProjects(Long userId);
 
-    List<MemberList> getNicknames(GetMemberNameRequest request);
+    List<MemberList> getMemberList(GetMemberNameRequest request);
 
     List<TaskList> allTasksInProject(Long projectId);
 

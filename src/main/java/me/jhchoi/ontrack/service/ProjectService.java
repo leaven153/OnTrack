@@ -79,7 +79,7 @@ public class ProjectService {
 
         // 5. 생성자 이름 data요청
         List<MemberList> mnn = new ArrayList<>();
-        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getNickNames(reqList.get(i)).get(0)));
+        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
 
         // 6. 생성자의 이름을 project List에 매칭하여 저장
         IntStream.range(0, mnn.size()).forEach(i -> {
@@ -108,7 +108,7 @@ public class ProjectService {
 
         // 2. 프로젝트 소속 멤버 정보  → MemberList
         // id as memberId, user_id, project_id, nickname
-        project.setMemberList(projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(projectId).build()));
 
         // 3-1. 프로젝트 내 할 일 목록 (from ontrack_task) → TaskList
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt

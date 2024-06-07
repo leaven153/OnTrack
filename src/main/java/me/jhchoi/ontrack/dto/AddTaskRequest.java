@@ -29,7 +29,7 @@ public class AddTaskRequest {
     private String authorName;
     @NotEmpty @Size(max=20)
     private String taskTitle;
-    private Integer taskPriority; // 매우중요vip, 중요ip, 일반norm
+    private Integer taskPriority; // 0매우중요vip, 1중요ip, 2일반norm
     private LocalDate taskDueDate;
 
     // 배정된 담당자

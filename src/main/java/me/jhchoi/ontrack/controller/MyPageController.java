@@ -36,7 +36,7 @@ public class MyPageController {
             return "redirect:/login/login";
         }
         List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
-        Boolean noProject = projectList.size() <= 0; // Boolean noProject = projectList.size() <= 0 ? true: false;
+        Boolean noProject = projectList.size() == 0; // Boolean noProject = projectList.size() <= 0 ? true: false;
 
 //        log.info("projectList가 0개라면 null인가?: {}", projectList); //projectList가 0개라면 null인가?: []
 //        log.info("projectList.size: {}", projectList.size()); // projectList.size: 2

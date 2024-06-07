@@ -16,6 +16,7 @@ public class MemberList {
     private Long projectId;
     private Long memberId;
     private String nickName;
+    private String position;
 
 //    public Map<Long, String> memberList(){
 //        Map<Long, String> members = new LinkedHashMap<>();
