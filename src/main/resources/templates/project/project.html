@@ -403,13 +403,13 @@
 
   <!--/* 모달: 새 할 일 추가 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(addTaskRequest=${addTaskRequest}, nickname=${nickname}, memberList=${project.getMemberList()})}">
+  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(addTaskRequest=${addTaskRequest}, loginMember=${loginMember}, memberList=${project.getMemberList()})}">
   </th:block>
   <!--/* 모달: 새 할 일 추가 끝 */-->
 
 <!--/* 모달: 할 일 상세 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/taskDetail :: taskDetail}"></th:block>
+  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(loginMember=${loginMember})}"></th:block>
   <!--/* 모달: 할 일 상세 끝 */-->
 
   <!--/* Modal Ends */-->

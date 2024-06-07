@@ -91,7 +91,7 @@ public class ProjectRepositoryTest {
 
     @Test @DisplayName("프로젝트 소속 멤버의 목록 조회")
     void getNicknames(){
-        List<MemberList> memberList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(9L).build());
+        List<MemberList> memberList = projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(9L).build());
         log.info("프로젝트 멤버 목록: {}", memberList);
         // 프로젝트 멤버 목록: [MemberList(userId=45, projectId=9, memberId=4, nickname=Adele),
         // MemberList(userId=35, projectId=9, memberId=14, nickname=공지철),

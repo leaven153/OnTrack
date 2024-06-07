@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
-  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(addTaskRequest, nickname, memberList)">
+  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(addTaskRequest, loginMember, memberList)">
   <!-- 새 할 일 추가 시작 -->
   <div class="modal-center flex-col-start-nowrap">
     <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
@@ -19,14 +19,14 @@
     <form th:action="@{/task/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
       <input type="hidden" th:field="${addTaskRequest.projectId}">
       <input type="hidden" th:field="${addTaskRequest.taskAuthorMid}">
-      <input type="hidden" name="authorName" th:value="${nickname}">
+      <input type="hidden" name="authorName" th:value="${loginMember.nickName}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
         <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
         <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
         <input type="text" class="modal-add-task" name="taskTitle" maxlength="20" placeholder="할 일을 입력하세요">
       </div><!--/* 할일제목 끝 */-->
 
-      <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task">
+      <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task" th:classappend="${loginMember.position == 'member'}?'hide'">
         <span class="font-18 c411">중요도</span>
         <div class="">
           <input type="radio" id="vip" name="taskPriority" value="0" class="input-radio hide">

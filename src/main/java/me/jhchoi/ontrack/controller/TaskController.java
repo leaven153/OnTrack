@@ -42,7 +42,8 @@ public class TaskController {
         log.info("전체 = {}", addTaskRequest);
 //        log.info("파일 = {}", addTaskRequest.getTaskFile().get(0).getOriginalFilename());
 
-        //전체 = AddTaskRequest(projectId=9, taskAuthorMid=14, taskTitle=할 일 추가 ing, taskPriority=vip, taskDueDate=2024-05-23, assigneesMid=null, nickname=null, taskFile=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1b6ce1b0])
+        // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반으로 설정하여 service로 넘긴다.
+        if (addTaskRequest.getTaskPriority() == null) addTaskRequest.setTaskPriority(2);
         Long newTaskId = taskService.addTask(addTaskRequest);
 
         String encodedName = URLEncoder.encode(addTaskRequest.getAuthorName(), StandardCharsets.UTF_8);

@@ -20,8 +20,8 @@
         WHERE pm.user_id = #{id}
     </select>
 
-    <select id="getNicknames" parameterType="GetMemberNameRequest" resultType="MemberList">
-        SELECT id as memberId, user_id, project_id, nickname
+    <select id="getMemberList" parameterType="GetMemberNameRequest" resultType="MemberList">
+        SELECT id as memberId, user_id, project_id, nickname, position
         FROM project_member
         WHERE project_id = #{projectId}
         <if test="userId != null">
