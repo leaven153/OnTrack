@@ -11,10 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -74,8 +72,8 @@ public class ProjectController {
         LocalDate today = LocalDate.now();
         model.addAttribute("today", today);
 
-        // 4. 할일 추가 객체(AddTaskRequest)
-        model.addAttribute("addTaskRequest", AddTaskRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
+        // 4. 할일 추가 객체(TaskFormRequest)
+        model.addAttribute("addTaskRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
 
         return "project/project"; // url - http://localhost:8080/project/9/14
     }

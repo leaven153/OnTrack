@@ -4,13 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.AddTaskRequest;
+import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,27 +39,27 @@ class TaskServiceTest {
         Long[] memberIds = {14L, 26L}; //4L, 26L, 27L, 28L, 14L
         String[] nicknames = {"공지철", "송혜교"}; // "Adele", "송혜교", "크러쉬", "스칼렛 요한슨", "공지철"
         String[] titles = {"그 벌들은 다 어디로 갔을까", "Tigger can do everything", "경복궁 야간개방", "Deep Time", "2시탈출 컬투쇼", "인생의 베일", "우리 몸 안내서"};
-        AddTaskRequest addTaskRequest = AddTaskRequest.builder()
+        TaskFormRequest taskFormRequest = TaskFormRequest.builder()
                 .projectId(9L)
                 .taskAuthorMid(28L)
                 .authorName("스칼렛 요한슨")
                 .taskTitle(titles[5])
                 .taskPriority(2)
-                .assigneesMid(memberIds)
-                .assigneeNames(nicknames)
+                .assigneesMid(List.of(memberIds))
+                .assigneeNames(List.of(nicknames))
                 .taskDueDate(LocalDate.now())
                 .build();
 
-        OnTrackTask task = addTaskRequest.dtoToEntityTask();
+        OnTrackTask task = taskFormRequest.dtoToEntityTask();
 
         taskRepository.newTask(task);
 
         taskRepository.log(TaskHistory.logNewTask(task));
 
-        if (addTaskRequest.getAssigneesMid().length > 0) {
+        if (taskFormRequest.getAssigneesMid().size() > 0) {
 
             // 3-1. 담당자 객체(TaskAssignment) 생성 및 DB 저장
-            List<TaskAssignment> assignees = addTaskRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
+            List<TaskAssignment> assignees = taskFormRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
             log.info("assignees 만들어진 상태: {}", assignees);
             taskRepository.assign(assignees);
 
