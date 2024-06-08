@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class AddTaskRequest {
+public class TaskFormRequest {
 
     @NotNull
     private Long projectId;

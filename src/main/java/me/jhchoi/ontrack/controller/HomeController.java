@@ -1,7 +1,7 @@
 package me.jhchoi.ontrack.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.dto.AddTaskRequest;
+import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
 import org.springframework.stereotype.Controller;
 
@@ -21,7 +21,7 @@ public class HomeController {
 //    @GetMapping("/project")
     public String working(Model model){
         log.info("================from home to project directly====================");
-        AddTaskRequest addTask = AddTaskRequest.builder()
+        TaskFormRequest addTask = TaskFormRequest.builder()
                 .projectId(1L)
                 .taskAuthorMid(1L)
                 .build();

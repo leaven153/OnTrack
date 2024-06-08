@@ -6,7 +6,7 @@
     <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
-  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(addTaskRequest, loginMember, memberList)">
+  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(taskFormRequest, loginMember, memberList)">
   <!-- 새 할 일 추가 시작 -->
   <div class="modal-center flex-col-start-nowrap">
     <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
@@ -16,9 +16,9 @@
       </div>
       <span class="btn-close-modal-createTask cursorP font-24">&times;</span>
     </div>
-    <form th:action="@{/task/addTask}" th:object="${addTaskRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
-      <input type="hidden" th:field="${addTaskRequest.projectId}">
-      <input type="hidden" th:field="${addTaskRequest.taskAuthorMid}">
+    <form th:action="@{/task/addTask}" th:object="${taskFormRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
+      <input type="hidden" th:field="${taskFormRequest.projectId}">
+      <input type="hidden" th:field="${taskFormRequest.taskAuthorMid}">
       <input type="hidden" name="authorName" th:value="${loginMember.nickName}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
         <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
