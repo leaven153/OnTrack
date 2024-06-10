@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.service.TaskService;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -27,6 +29,7 @@ public class TaskController {
     @PostMapping("/addTask")
     public RedirectView addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        MemberList member = (MemberList) session.getAttribute("loginMember");
         if (loginUser == null) {
             return new RedirectView("login/login");
 //            return "redirect:/login/login";
@@ -50,9 +53,10 @@ public class TaskController {
         redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
         redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
         redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());
+        redirectAttributes.addAttribute("position", member.getPosition());
 
 //        return "redirect:/task/test";
-        return new RedirectView("/project/{projectId}/{memberId}/{nickname}");
+        return new RedirectView("/project/{projectId}/{memberId}/{nickname}/{position}");
 
 //        return """
 //                redirect:/project/%s/%s/%s
@@ -60,4 +64,19 @@ public class TaskController {
     }
 
 
+    @PostMapping("getTask/{taskId}/{memberId}")
+    public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId, @RequestBody MemberList loginMember, HttpSession session){
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if(loginUser == null) {
+            return "login/login";
+        }
+        log.info("======== getTask 컨트롤러 진입 ========");
+        log.info("taskId: {}", taskId);
+        log.info("memberId: {}", memberId);
+        log.info("RequestBody: {}", loginMember);
+        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
+//        return "/project/project";
+        return """
+                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+    }
 }

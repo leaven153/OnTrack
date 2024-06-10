@@ -20,7 +20,7 @@ public class TaskList {
     private String taskTitle;
     private Long authorMid; // OnTrackTask - author
     private String authorName;
-    private Integer taskPriority; // vip: 0, ip: 1, norm: 2
+    private Integer taskPriority; // vip: 1, ip: 2, norm: 3
     private Integer taskStatus;
     private LocalDate taskDueDate;
     private Long taskParentId;

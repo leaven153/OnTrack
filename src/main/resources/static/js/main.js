@@ -192,9 +192,31 @@ window.onload = function(){
         chosenTask.addEventListener("click", ()=>{
             // console.log(chosenTask.id); // id값 가져옴. 8
             // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
-            console.log(chosenTask.dataset.id);
+            console.log(`클릭한 할 일의 task Id: ${chosenTask.dataset.id}`);
+            console.log(`클릭한 멤버의 mId: ${chosenTask.dataset.clicker}`);
+            let taskIdAndMId = [];
+            taskIdAndMId.push(chosenTask.dataset.id);
+            taskIdAndMId.push(chosenTask.dataset.clicker);
+            console.log(taskIdAndMId);
+            const loginMember = {
+                userId: 14,
+                projectId: 9,
+                memberId: 14,
+                nickName: '공지철',
+                position: 'creator'
+            };
+            console.log(`loginMember: ${loginMember}`);
+            const url = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
+            console.log(`url: ${url}`);
+            fetch(url,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginMember)
+            }).then(response => {
 
-
+            });
             // success일 경우 아래 실행
             // 1) 컨테이너 열고
             containerTaskDetail.classList.remove("hide");

@@ -6,7 +6,7 @@
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
-  <div id="container-task-detail" class="modal-container hide" th:fragment="taskDetail">
+  <div id="container-task-detail" class="modal-container hide" th:fragment="taskDetail(loginMember)">
   <!-- 할 일 상세 시작 -->
   <div class="modal-Right flex-col-start-nowrap">
     <!-- sticky 시작-->
@@ -26,15 +26,15 @@
         <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
           <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-10 ">
           <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-10 hide">
-          <input type="text" class="modal-edit-task" name="" max="20" value="하면 돼 끝까지 해보자 해내자">
+          <input type="text" class="modal-edit-task" name="" max="20" value="해내보자">
         </div><!-- 할일제목 끝 -->
 
         <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672" th:classappend="${loginMember.position == 'member'}?'hide'">
           <span class="font-15 c411">중요도</span>
           <div class="">
-            <input type="radio" id="edit-vip" name="task_priority" value="0" class="input-radio hide">
-            <input type="radio" id="edit-ip" name="task_priority" value="1" class="input-radio hide">
-            <input type="radio" id="edit-norm" name="task_priority" value="2" class="input-radio hide" checked="checked">
+            <input type="radio" id="edit-vip" name="task_priority" value="1" class="input-radio hide">
+            <input type="radio" id="edit-ip" name="task_priority" value="2" class="input-radio hide">
+            <input type="radio" id="edit-norm" name="task_priority" value="3" class="input-radio hide" checked="checked">
             <div class="">
               <label for="edit-vip" class="btn-radio w100 radio-l">
                 <span class="font-15 vip">매우중요</span>
