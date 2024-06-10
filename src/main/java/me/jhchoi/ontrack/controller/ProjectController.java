@@ -73,7 +73,7 @@ public class ProjectController {
         model.addAttribute("today", today);
 
         // 4. 할일 추가 객체(TaskFormRequest)
-        model.addAttribute("addTaskRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
+        model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
 
         return "project/project"; // url - http://localhost:8080/project/9/14
     }
