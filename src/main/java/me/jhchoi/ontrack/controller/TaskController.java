@@ -75,7 +75,6 @@ public class TaskController {
         log.info("memberId: {}", memberId);
         log.info("RequestBody: {}", loginMember);
         String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-//        return "/project/project";
         return """
                 redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     }
