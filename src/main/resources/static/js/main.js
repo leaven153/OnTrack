@@ -192,47 +192,43 @@ window.onload = function(){
         chosenTask.addEventListener("click", ()=>{
             // console.log(chosenTask.id); // id값 가져옴. 8
             // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
-            console.log(`클릭한 할 일의 task Id: ${chosenTask.dataset.id}`);
-            console.log(`클릭한 멤버의 mId: ${chosenTask.dataset.clicker}`);
-            let taskIdAndMId = [];
-            taskIdAndMId.push(chosenTask.dataset.id);
-            taskIdAndMId.push(chosenTask.dataset.clicker);
-            console.log(taskIdAndMId);
+            let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
+            console.log(`currUrlSplit: ${currUrl}`);
             const loginMember = {
-                userId: 14,
-                projectId: 9,
-                memberId: 14,
-                nickName: '공지철',
-                position: 'creator'
+                projectId: currUrl[2],
+                memberId: currUrl[3],
+                nickName: currUrl[4],
+                position: currUrl[5]
             };
-            console.log(`loginMember: ${loginMember}`);
-            const url = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
-            console.log(`url: ${url}`);
-            fetch(url,{
+            console.log(loginMember);
+            const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
+            console.log(`url: ${getTaskUrl}`);
+            fetch(getTaskUrl,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(loginMember)
+                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
             }).then(response => {
+                // location.reload(); // 창이 열렸다가 바로 닫힌다.
+                // success일 경우 아래 실행
+                // 1) 컨테이너 열고
+                containerTaskDetail.classList.remove("hide");
+                // 2) 전체 탭버튼에서 선택됨 뺐다가
+                btnTaskTabs.forEach(function(btnTabs){
+                    btnTabs.classList.remove("task-tab-chosen");
+                });
+                // 3) 할 일 상세 탭버튼에만 선택됨 넣고
+                btnModalTaskDetailTab.classList.add("task-tab-chosen");
 
+                // 4) 모든 탭을 숨겼다가
+                modalTaskTabs.forEach(function(everyTabs){
+                    everyTabs.classList.add("hide");
+                });
+                // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
+                modalTaskDetailForm.classList.remove("hide");
             });
-            // success일 경우 아래 실행
-            // 1) 컨테이너 열고
-            containerTaskDetail.classList.remove("hide");
-            // 2) 전체 탭버튼에서 선택됨 뺐다가
-            btnTaskTabs.forEach(function(btnTabs){
-                btnTabs.classList.remove("task-tab-chosen");
-            });
-            // 3) 할 일 상세 탭버튼에만 선택됨 넣고
-            btnModalTaskDetailTab.classList.add("task-tab-chosen");
 
-            // 4) 모든 탭을 숨겼다가
-            modalTaskTabs.forEach(function(everyTabs){
-                everyTabs.classList.add("hide");
-            });
-            // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
-            modalTaskDetailForm.classList.remove("hide");
         });
     });
 

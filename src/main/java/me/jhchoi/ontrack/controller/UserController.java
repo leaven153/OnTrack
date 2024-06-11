@@ -36,10 +36,11 @@ public class UserController {
      * */
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginUser loginRequest, BindingResult bindingResult, HttpServletRequest request, Model model){
-        log.info("로그인 입력정보: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
+        LoginUser user = loginRequest != null?loginRequest:null;
+        log.info("로그인 입력정보: {}", user); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
         if(loginRequest == null) {
-            return "/login/login";
+            return "login/login";
         }
         if(Objects.equals(loginRequest.getLoginId(), "") || loginRequest.getLoginId() == null) {
             log.info("id 입력 안했을 때 if 들어옴");

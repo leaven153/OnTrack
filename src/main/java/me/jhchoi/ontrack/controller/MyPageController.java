@@ -27,14 +27,14 @@ public class MyPageController {
     public String myProjects(HttpSession session, Model model){
 
         log.info("=================myProjects====================");
-
-        log.info("session을 찾아라: {}", session.getAttribute("loginUser"));
         // AddProjectRequest의 creator에 로그인한 유저의 id, nickname 담는 코드 추가요망
         model.addAttribute("createProjectRequest", new AddProjectRequest());
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return "redirect:/login/login";
+            log.info("로그인 정보 없음");
+            return "redirect:../login";
         }
+        log.info("session: {}", loginUser);
         List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
         Boolean noProject = projectList.isEmpty(); // Boolean noProject = projectList.size() <= 0 ? true: false;
 

@@ -50,7 +50,7 @@ public class ProjectController {
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return "login/login";
+            return "redirect:/login";
         }
 
         // 1. 해당 프로젝트에 접근한 멤버의 정보
