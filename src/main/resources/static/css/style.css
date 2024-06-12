@@ -539,11 +539,16 @@ div.table-task-title {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
+img.btn-edit-task-title {
+    opacity: 0;
+    position: relative;
+}
 
 div.content-chkbox > input {
     opacity: 0;
 }
 
+img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
     transition-duration: 250ms;
     opacity: 1; 

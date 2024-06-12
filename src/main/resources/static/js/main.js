@@ -179,17 +179,33 @@ window.onload = function(){
         });
     });
 
+    /*---------- 5) ------------*/
+    /* 할 일 제목 수정 */
+    if(elExists(document.querySelector(".btn-edit-task-title"))){
+        const btnEditTaskTitle = document.querySelector(".btn-edit-task-title");
+        const inputEditTaskTitle = document.querySelector(".edit-task-title");
+        const tableTaskTitle = document.querySelector("span.table-task-title");
+        btnEditTaskTitle.addEventListener("click", ()=>{
+            inputEditTaskTitle.classList.remove("hide");
+            tableTaskTitle.classList.add("hide");
+            tableTaskTitle.classList.add("wh0");
+            console.log(`왜 하이드가 안되지?`);
+            console.log(`${tableTaskTitle.classList}`);
+        });
+    }
+
     /*---------- 4) ------------*/
     /* 할 일 상세 모달 열기 */
     const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
     const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
-
     const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
     const modalTaskCommonArea = document.querySelector("#task-detail-common");
     const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
     const modalTaskDetailForm = document.querySelector("form#edit-task");
+
     btnOpenTaskDetail.forEach(function(chosenTask){
         chosenTask.addEventListener("click", ()=>{
+
             // console.log(chosenTask.id); // id값 가져옴. 8
             // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
             let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
@@ -203,32 +219,35 @@ window.onload = function(){
             console.log(loginMember);
             const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
             console.log(`url: ${getTaskUrl}`);
+/*
             fetch(getTaskUrl,{
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
+                    // 'Accept-Language': 'ko-KR'
                 },
                 body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
             }).then(response => {
                 // location.reload(); // 창이 열렸다가 바로 닫힌다.
                 // success일 경우 아래 실행
-                // 1) 컨테이너 열고
-                containerTaskDetail.classList.remove("hide");
-                // 2) 전체 탭버튼에서 선택됨 뺐다가
-                btnTaskTabs.forEach(function(btnTabs){
-                    btnTabs.classList.remove("task-tab-chosen");
-                });
-                // 3) 할 일 상세 탭버튼에만 선택됨 넣고
-                btnModalTaskDetailTab.classList.add("task-tab-chosen");
 
-                // 4) 모든 탭을 숨겼다가
-                modalTaskTabs.forEach(function(everyTabs){
-                    everyTabs.classList.add("hide");
-                });
-                // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
-                modalTaskDetailForm.classList.remove("hide");
             });
+*/
+            // 1) 컨테이너 열고
+            containerTaskDetail.classList.remove("hide");
+            // 2) 전체 탭버튼에서 선택됨 뺐다가
+            btnTaskTabs.forEach(function(btnTabs){
+                btnTabs.classList.remove("task-tab-chosen");
+            });
+            // 3) 할 일 상세 탭버튼에만 선택됨 넣고
+            btnModalTaskDetailTab.classList.add("task-tab-chosen");
 
+            // 4) 모든 탭을 숨겼다가
+            modalTaskTabs.forEach(function(everyTabs){
+                everyTabs.classList.add("hide");
+            });
+            // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
+            modalTaskDetailForm.classList.remove("hide");
         });
     });
 

@@ -7,15 +7,21 @@ import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.service.TaskService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.Thymeleaf;
+import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
@@ -63,6 +69,18 @@ public class TaskController {
 //                """.formatted(taskFormRequest.getProjectId(), taskFormRequest.getTaskAuthorMid(), encodedName);
     }
 
+    // 할 일 상세 fragment만 rendering
+    @Bean(name="taskDetail")
+    @Scope("prototype")
+    public ThymeleafView taskDetailViewBean(HttpSession session){
+        ThymeleafView projectView = new ThymeleafView("taskDetail");
+        projectView.setMarkupSelector("#container-task-detail");
+        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
+        log.info("fragment안에서 session: {}", session.getServletContext());
+        // fragment안에서 session: session ☞ Current HttpSession
+        // session.getServletContext() ☞ org.apache.catalina.core.ApplicationContextFacade@c0ce5b6
+        return projectView;
+    }
 
     @PostMapping("getTask/{taskId}/{memberId}")
     public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId, @RequestBody MemberList loginMember, HttpSession session){
@@ -74,8 +92,10 @@ public class TaskController {
         log.info("taskId: {}", taskId);
         log.info("memberId: {}", memberId);
         log.info("RequestBody: {}", loginMember);
-        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-        return """
-                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+
+        return "taskDetail";
+//        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
+//        return """
+//                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     }
 }

@@ -85,7 +85,10 @@
 
         <!-- task Name -->
         <div class="tableview-column flex-row-justify-start-align-center table-task-title">
-          <span class="table-task-title btn-task-detail" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
+          <span class="table-task-title" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
+          <img src="/imgs/icon_write.png" class="img-20 btn-edit-task-title" alt="edit title">
+          <input type="text" th:value="${task.getTaskTitle()}" class="edit-task-title hide">
+
           <img src="/imgs/icon_comment.png" class="comment img-20" alt="comment">
           <img src="/imgs/icon_nocomment32.png" class="no-comment hide img-20" alt="no comment">
         </div>
