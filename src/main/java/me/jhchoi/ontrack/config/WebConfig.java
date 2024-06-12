@@ -14,7 +14,8 @@ import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.util.Locale;
 
-@Configuration @Slf4j
+//@Configuration
+ @Slf4j
 public class WebConfig implements WebMvcConfigurer {
 
     // 참고: https://www.baeldung.com/spring-boot-internationalization
