@@ -206,7 +206,8 @@ window.onload = function(){
             fetch(getTaskUrl,{
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept-Language': 'ko-KR'
                 },
                 body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
             }).then(response => {

@@ -69,6 +69,18 @@ public class TaskController {
 //                """.formatted(taskFormRequest.getProjectId(), taskFormRequest.getTaskAuthorMid(), encodedName);
     }
 
+    // 할 일 상세 fragment만 rendering
+    @Bean(name="taskDetail")
+    @Scope("prototype")
+    public ThymeleafView taskDetailViewBean(HttpSession session){
+        ThymeleafView projectView = new ThymeleafView("taskDetail");
+        projectView.setMarkupSelector("#container-task-detail");
+        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
+        log.info("fragment안에서 session: {}", session.getServletContext());
+        // fragment안에서 session: session ☞ Current HttpSession
+        // session.getServletContext() ☞ org.apache.catalina.core.ApplicationContextFacade@c0ce5b6
+        return projectView;
+    }
 
     @PostMapping("getTask/{taskId}/{memberId}")
     public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId, @RequestBody MemberList loginMember, HttpSession session){

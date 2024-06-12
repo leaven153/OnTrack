@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.config;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +14,7 @@ import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.util.Locale;
 
-@Configuration
+@Configuration @Slf4j
 public class WebConfig implements WebMvcConfigurer {
 
     // 참고: https://www.baeldung.com/spring-boot-internationalization
@@ -26,6 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 //        return clr;
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(Locale.KOREA);
+        log.info("이게 불려지나? === localeResolver"); // 안 불려짐
         return localeResolver;
     }
 
@@ -34,15 +36,8 @@ public class WebConfig implements WebMvcConfigurer {
     public LocaleChangeInterceptor localeChangeInterceptor(){
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
         lci.setParamName("lang");
+        log.info("이게 불려지나? === localeChangeInterceptor"); // 안 불려짐
         return lci;
     }
-    // 할 일 상세 fragment만 rendering
-    @Bean(name="taskDetail")
-    @Scope("prototype")
-    public ThymeleafView taskDetailViewBean(){
-        ThymeleafView projectView = new ThymeleafView("projectView");
-        projectView.setMarkupSelector("taskDetail");
 
-        return projectView;
-    }
 }
