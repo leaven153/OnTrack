@@ -6,7 +6,7 @@
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
-  <div id="container-task-detail" class="modal-container hide" th:fragment="taskDetail(loginMember, taskDetail)">
+  <div id="container-task-detail" class="modal-container hide" th:fragment="taskDetail(loginMember, taskDetail, test)">
   <!-- 할 일 상세 시작 -->
   <div class="modal-Right flex-col-start-nowrap">
     <!-- sticky 시작-->
@@ -22,16 +22,16 @@
       </div><!-- 할일상세탭메뉴 끝 -->
 
       <!-- 할 일 상세 수정 form 시작 -->
-      <form action="#" method="POST" id="edit-task" class="task-tab-info modal-task-tab" enctype="multipart/form-data" th:with="idx=0">
+      <form action="#" method="POST" id="edit-task" class="task-tab-info modal-task-tab" enctype="multipart/form-data" th:with="idx=0" th:fragment="editForm">
         <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
           <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-10">
           <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-10 hide">
 
-          <input type="text" class="modal-edit-task" name="" max="20" value="해내보자" th:value="${taskDetail.get(idx).getTaskTitle()}">
+          <input type="text" class="modal-edit-task" name="" max="20" value="해내보자" ><!--th:value="${taskDetail.get(idx).getTaskTitle()}" -->
 
         </div><!-- 할일제목 끝 -->
 
-        <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672" th:classappend="${loginMember.position == 'member'}?'hide'">
+        <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672" ><!--th:classappend="${loginMember.position == 'member'}?'hide'"-->
           <span class="font-15 c411">중요도</span>
           <div class="">
             <input type="radio" id="edit-vip" name="task_priority" value="1" class="input-radio hide">
@@ -52,15 +52,15 @@
         <div class="작성자 fb-1672 flex-row-justify-start-align-center mb-30">
           <span class="font-15 c411">작성자</span>
           <div class="">
-            <span class="font-18" th:text="${taskDetail.get(idx).getAuthorName()}">올리 초이</span>
+            <span class="font-18" >올리 초이</span><!--th:text="${taskDetail.get(idx).getAuthorName()}"-->
           </div>
         </div><!-- 작성자 끝 -->
 
         <div class="작성일 fb-1672 flex-row-justify-start-align-center mb-30">
           <span class="font-15 c411">작성일</span>
           <div class="">
-            <span class="font-18 altivo-regular" th:text="${#temporals.format(taskDetail.get(idx).getCreatedAt(), 'MM.dd ')}">24.04.08</span>
-            <span class="" th:text="${#temporals.dayOfWeekNameShort(taskDetail.get(idx).getCreatedAt())}">(월)</span>
+            <span class="font-18 altivo-regular" >24.04.08</span><!--th:text="${#temporals.format(taskDetail.get(idx).getCreatedAt(), 'MM.dd ')}"-->
+            <span class="" >(월)</span><!--th:text="${#temporals.dayOfWeekNameShort(taskDetail.get(idx).getCreatedAt())}"-->
           </div>
         </div> <!-- 작성일 끝 -->
 
@@ -86,7 +86,7 @@
                 2) 진행상태별 삭제버튼 출력 구별
                 3) 작성자/관리자/당사자별 삭제버튼 출력 구별 -->
               <div id="edit-assignee-list" class="hide">
-                <input type="checkbox" class="hide" name="" value="로스 겔러" id="edit-assignee1"><label for="edit-assignee1" class="display-block lists ">로스 겔러</label>
+                <input type="checkbox" class="hide" name="" value="로스 겔러" th:value="${test}" id="edit-assignee1"><label for="edit-assignee1" class="display-block lists ">로스 겔러</label>
                 <input type="checkbox" class="hide" name="" value="레이첼 그린" id="edit-assignee2"><label for="edit-assignee2" class="display-block lists">레이첼 그린</label>
                 <input type="checkbox" class="hide" name="" value="챈들러 빙" id="edit-assignee3"><label for="edit-assignee3" class="display-block lists">챈들러 빙</label>
                 <input type="checkbox" class="hide" name="" value="모니카 겔러" id="edit-assignee4"><label for="edit-assignee4" class="display-block lists">모니카 겔러</label>

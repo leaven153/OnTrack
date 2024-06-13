@@ -21,7 +21,7 @@ public class TaskList {
     private Long authorMid; // OnTrackTask - author
     private String authorName;
     private Integer taskPriority; // vip: 1, ip: 2, norm: 3
-    private Integer taskStatus;
+    private Integer taskStatus; // 시작 안 함: 0, 계획중: 1, 진행중: 2, 검토중: 3, 완료: 4
     private LocalDate taskDueDate;
     private Long taskParentId;
     private LocalDateTime createdAt;

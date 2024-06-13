@@ -179,20 +179,77 @@ window.onload = function(){
         });
     });
 
-    /*---------- 5) ------------*/
+    /*---------- 999) ------------*/
     /* 할 일 제목 수정 */
     if(elExists(document.querySelector(".btn-edit-task-title"))){
-        const btnEditTaskTitle = document.querySelector(".btn-edit-task-title");
-        const inputEditTaskTitle = document.querySelector(".edit-task-title");
-        const tableTaskTitle = document.querySelector("span.table-task-title");
-        btnEditTaskTitle.addEventListener("click", ()=>{
-            inputEditTaskTitle.classList.remove("hide");
-            tableTaskTitle.classList.add("hide");
-            tableTaskTitle.classList.add("wh0");
-            console.log(`왜 하이드가 안되지?`);
-            console.log(`${tableTaskTitle.classList}`);
+        const btnEditTaskTitle = document.querySelectorAll(".btn-edit-task-title");
+        btnEditTaskTitle.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", ()=>{
+
+                // 할 일 제목이 담긴 input 출력
+                const currInput = prev(chosenOne);
+                prev(chosenOne).classList.remove("hide");
+
+                // 기존 할 일 제목이 담긴 span 숨긴다. 추후 바뀐 제목을 담아 출력한다.
+                prev(currInput).classList.add("hide");
+
+                // 바뀐 할 일 제목을 서버에 반영할 엔터 모양 버튼(img)
+                next(chosenOne).classList.remove("hide");
+
+                // 수정 버튼(자기 자신) 숨긴다.
+                chosenOne.classList.add("hide");
+
+                // 엔터모양 버튼 클릭 이벤트도 추가 요망
+                currInput.addEventListener("blur", ()=>{
+                    console.log('blur 발생');
+                    console.log('2222');
+                    console.log(currInput.value);
+
+                    fetch('http://localhost:8080/task/editTask?item=title', {
+                        method: 'POST',
+                        headers: {},
+                        body: currInput.value
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+
+                        // input 숨기고
+                        currInput.classList.add("hide");
+
+                        // enter 버튼 숨기고
+                        next(chosenOne).classList.add("hide");
+
+                        // span에 새 제목 담고 출력
+                        prev(currInput).innerHTML = data;
+                        prev(currInput).classList.remove("hide");
+
+                        // edit 버튼 재 출력
+                        chosenOne.classList.remove("hide");
+                    }); // fetch ends
+
+                }); // currInput.addEventListener ends
+            });
+        });
+    } // edit task title ends
+
+    /*---------- 998) ------------*/
+    /* 할 일 담당자 (더보기) 수정 */
+    if(elExists(document.querySelector(".btn-more-assignInfo"))){
+        const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
+        btnOpenAssigneeList.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", ()=>{
+                if(next(chosenOne, ".assigneeList").classList.contains("img-hidden")){
+                    next(chosenOne, ".assigneeList").classList.remove("img-hidden");
+                } else {
+                    next(chosenOne, ".assigneeList").classList.add("img-hidden");
+                }
+
+            });
         });
     }
+    /* 할 일 진행상태 수정 */
+    /* 할 일 마감일 수정 */
 
     /*---------- 4) ------------*/
     /* 할 일 상세 모달 열기 */
@@ -219,7 +276,9 @@ window.onload = function(){
             console.log(loginMember);
             const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
             console.log(`url: ${getTaskUrl}`);
-/*
+            console.log(`--------outerHTML-----------`);
+            console.log(`${document.querySelector('form#edit-task').outerHTML}`);
+            /*
             fetch(getTaskUrl,{
                 method: 'POST',
                 headers: {
@@ -229,7 +288,12 @@ window.onload = function(){
                 body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
             }).then(response => {
                 // location.reload(); // 창이 열렸다가 바로 닫힌다.
-                // success일 경우 아래 실행
+                // location.replace("../../../../fragments/taskDetail");
+
+                console.log(response.text());
+
+                // modalTaskDetailForm.outerHTML = response.text();
+
 
             });
 */
@@ -248,6 +312,8 @@ window.onload = function(){
             });
             // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
             modalTaskDetailForm.classList.remove("hide");
+
+
         });
     });
 
@@ -1359,6 +1425,24 @@ window.onload = function(){
         
     });
     /*---- ▲ project별 사용자 이름(display name) 끝 ▲ ----*/
+
+    // next
+    function next(el, selector) {
+        const nextEl = el.nextElementSibling;
+        if(!selector || (nextEl && nextEl.matches(selector))) {
+            return nextEl;
+        }
+        return null;
+    }
+
+    // prev
+    function prev(el, selector){
+        const prevEl = el.previousElementSibling;
+        if(!selector || (prevEl && prevEl.matches(selector))){
+            return prevEl;
+        }
+        return null;
+    }
 
     // jQuery없이 on 사용할 때 ! ★★★
     function onEvtListener(el, eventName, selector, eventHandler){

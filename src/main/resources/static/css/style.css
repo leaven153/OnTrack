@@ -539,15 +539,36 @@ div.table-task-title {
     flex-wrap: nowrap;
     justify-content: space-between;
 }
-img.btn-edit-task-title {
-    opacity: 0;
+
+div.assigneeListBox {
     position: relative;
 }
+div.assigneeListBox div.assigneeList {
+    position: absolute;
+    border: 1px solid black;
+    z-index: 2;
+    padding: 5px 10px;
+    background-color: #fff;
+    width: 140px;
+    right: -200%;
+    margin-top: 10px;
+}
 
+.iconBox-30 {
+    border-radius: 50%;
+    background-color: #d1c9bb22;
+    width: 27px;
+    height: 27px;
+}
+
+span.btn-alone-assignee,
+img.btn-edit-task-title,
 div.content-chkbox > input {
     opacity: 0;
 }
 
+span.table-assignee-alone:hover + span.btn-alone-assignee,
+span.btn-alone-assignee:hover,
 img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
     transition-duration: 250ms;

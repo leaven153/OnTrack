@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
+import me.jhchoi.ontrack.dto.TaskList;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -83,19 +85,31 @@ public class TaskController {
     }
 
     @PostMapping("getTask/{taskId}/{memberId}")
-    public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId, @RequestBody MemberList loginMember, HttpSession session){
+    public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId,
+                            @RequestBody MemberList loginMember, HttpSession session, Model model){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
-            return "login/login";
+//            return "login/login";
         }
         log.info("======== getTask 컨트롤러 진입 ========");
         log.info("taskId: {}", taskId);
         log.info("memberId: {}", memberId);
         log.info("RequestBody: {}", loginMember);
-
-        return "taskDetail";
+        String test = "testString";
+        model.addAttribute("test", test);
+//        return TaskList.builder().authorName("testAuthor").build();
+        return "fragments/taskDetail :: editForm";
 //        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
 //        return """
 //                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+    } // getTask ends
+
+    @PostMapping("/editTask")
+    @ResponseBody
+    public String editTask(HttpSession session, @RequestParam(required = false)String item, @RequestBody String edit){
+        log.info("=================================editTask Controller 접근=================================");
+        log.info("어떤 항목을 바꿀 건가요? {}", item);
+        log.info("제목: {}", edit);
+        return edit;
     }
 }

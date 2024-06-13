@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>project - Table view</title>
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+  <script src="../../static/js/projectView.js" th:src="@{/js/projectView.js.js}"></script>
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
 </head>
 <body>
@@ -25,7 +27,7 @@
       <div class="tableview-column content-chkbox"></div><!-- <input type="checkbox"> 추후 결정요망 -->
 
       <div class="tableview-column flex-row-center-center-nowrap">
-        <img src="/imgs/icon_notice(pin).png" alt="notice" class="img-25">
+        <img src="../../static/imgs/icon_notice(pin).png" th:src="@{/imgs/icon_notice(pin).png}" alt="notice" class="img-25">
       </div>
 
       <!-- 공지 제목 notice title -->
@@ -62,8 +64,8 @@
 
       <!-- file -->
       <div class="tableview-column flex-row-center-center-nowrap">
-        <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
-        <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
+        <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
+        <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
       </div>
 
       <!-- 공지 작성자 -->
@@ -84,12 +86,15 @@
         </div>
 
         <!-- task Name -->
-        <div class="tableview-column flex-row-justify-start-align-center table-task-title">
-          <span class="table-task-title" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
-          <img src="/imgs/icon_write.png" class="img-20 btn-edit-task-title" alt="edit title">
-          <input type="text" th:value="${task.getTaskTitle()}" class="edit-task-title hide">
+        <div class="tableview-column table-task-title"><!--/* flex-row-justify-start-align-center */-->
+          <div class="flex-row-justify-start-align-center">
+            <span class="table-task-title" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
+            <input type="text" class="edit-task-title hide" th:value="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">
+            <img src="/imgs/icon_write.png" class="img-20 btn-edit-task-title" alt="edit title">
+            <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
+          </div>
 
-          <img src="/imgs/icon_comment.png" class="comment img-20" alt="comment">
+          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20" alt="comment">
           <img src="/imgs/icon_nocomment32.png" class="no-comment hide img-20" alt="no comment">
         </div>
 
@@ -97,10 +102,25 @@
         <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
           <span class="no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
           <span class="table-assignee-alone" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span>
+          <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 2}">
+            <span class="altivo-bold btn-alone-assignee cursorP font-16">+</span>
+          </th:block>
           <th:block th:if="${task.getAssigneeNames().size() > 1}">
             <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
               <div class="assignee-many"><span class="lastName" th:text="${assignee}">김</span></div>
             </th:block>
+            <div class="assigneeListBox">
+              <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
+              <div class="assigneeList img-hidden">
+                <div class="mb-7" th:each="assignee : ${task.getAssigneeNames()}"><span th:text="${assignee}">담당자1</span><span class="btn-dropOutSelf-task ml-3" th:if="${nickname == assignee}">x</span></div>
+                <!--/* 해당 일의 담당자가 아니고, 해당 일의 진행상태가 계획중일때까지만 참여가능 */-->
+                <div class="flex-row-center-center-nowrap cursorP mb-7" th:if="${assignee != nickname} and ${task.getTaskStatus() < 2}">
+                  <div class="iconBox-30"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
+                  <span>이 일에 참여하기</span></div>
+                <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 진행중일때까지만 추가가능 */-->
+                <div th:if="${task.getAuthorName() == nickname} and ${task.getTaskStatus() < 3}">담당자 추가하기</div>
+              </div>
+            </div>
           </th:block>
         </div>
 
@@ -131,15 +151,15 @@
 
         <!-- due Date -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <img src="/imgs/icon_overDue.png" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
+          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
           <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
           <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
         </div>
 
         <!-- file -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <button type="button" class="add-file flex-row-center-center-nowrap"><img src="/imgs/icon_upload(clip).png" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
-          <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="/imgs/icon_attachment.png" alt="more-file" class="img-20 vertical-ctrl015"></button>
+          <button type="button" class="add-file flex-row-center-center-nowrap"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
         </div>
 
         <!-- author -->

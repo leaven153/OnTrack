@@ -409,7 +409,7 @@
 
 <!--/* 모달: 할 일 상세 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(loginMember=${loginMember}, taskDetail=${project.getTaskList()})}"></th:block>
+  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(loginMember=${loginMember}, taskDetail=${project.getTaskList()}, test=${test})}"></th:block>
   <!--/* 모달: 할 일 상세 끝 */-->
 
   <!--/* Modal Ends */-->
