@@ -7,21 +7,11 @@ function elExists(el){
 
 window.onload = function(){
 
-    /*************************/
-    /***********************
-     * 1) 할 일 추가(생성): 열기, 담당자배정, 파일첨부, 새 할 일 정보 전송, 닫기,
-     * 2) 공지 등록(쓰기): 열기, 파일첨부, 새 공지 정보 전송, 닫기
-     * 3) 할 일 상세(읽기): 
-     * 4) view tab
-     * 그 때의 최선은 지금 여기 없습니다. 최선 씨, 어디갔나요. 여긴 엉망진창이에요.
-    */
 
-    // try1. redirect로 페이지 로드 됐을 때 할 일 추가 모달 닫기
-    // loadReset();
 
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
-
+    /*---------- 001 ------------*/
     /*** 프로젝트 나가기 ***/
     if(elExists(document.querySelector(".btn-project-out"))){
         document.querySelector(".btn-project-out").addEventListener("click", ()=>{
@@ -37,6 +27,8 @@ window.onload = function(){
         });
 
     }
+
+    /*---------- 002 ------------*/
     /*** 프로젝트 內 별명 설정 ***/
     if(elExists(document.querySelector("div.nickname")) && document.querySelector("span.nickname")){
         const btnChkNickname = document.querySelector(".btn-chk-nickname-double");
@@ -52,7 +44,7 @@ window.onload = function(){
         document.querySelector(".btn-close-modal-confiture-nickname").addEventListener("click", ()=>{
             document.querySelector("div#modal-configure-nickname").classList.add("hide");
         });
-        
+
         // 특수기호 불용(여백 허용)
         const regNonWord = /[{}\[\]()\/?,.'";:`~<>!@#$%^&*=-_+|]/g;
 
@@ -91,9 +83,9 @@ window.onload = function(){
             document.querySelector("span.nickname").innerText = newnickname;
         });
     } // if(elExists(document.querySelector("div.nickname"))) 끝
- 
-    
 
+
+   /*---------- 003 ------------*/
    /*---- ▼  Modal: 프로젝트 설정 탭버튼 시작 ▼ ----*/
    const btnConfigureProject = document.querySelectorAll(".btn-configure-project");
    const configureProjectTabTitle = document.querySelectorAll(".configure-project-tab-title");
@@ -119,8 +111,8 @@ window.onload = function(){
    /*---- ▲  Modal: 프로젝트 설정 탭버튼 끝 ▲ ----*/
     
 
-    /*---------- 0 ------------*/
-    /* 프로젝트 설정 목록(공지등록, 프로젝트설정) 열기 */
+    /*---------- 004 ------------*/
+    /* 프로젝트 설정 버튼: 목록 열기(공지등록, 프로젝트설정)  */
     const btnOpenProjSetting = document.querySelector(".btn-open-settings");
     const clickProjSetting = document.querySelector(".click-proj-setting");
     btnOpenProjSetting.addEventListener("click", ()=>{
@@ -128,7 +120,7 @@ window.onload = function(){
         clickProjSetting.classList.toggle("img-hidden");
     });
 
-    /*---------- 0 ------------*/
+    /*---------- 005 ------------*/
     /* 프로젝트 설정 모달 열기 */
     const btnOpenModalConfigureProject = document.querySelector(".btn-open-configure-project");
     const modalConfigureProject = document.querySelector("#configure-project");
@@ -149,7 +141,7 @@ window.onload = function(){
         });
 
     });
-    /*---------- 0 ------------*/
+    /*---------- 006 ------------*/
     /* 프로젝트 설정 모달 닫기 */
     const btnCloseModalConfigureProject = document.querySelector(".box-close-modal-configure-project");
     btnCloseModalConfigureProject.addEventListener("click", ()=>{
@@ -157,8 +149,8 @@ window.onload = function(){
     });
 
 
-    /*---------- 1) ------------*/
-    /* 할 일 추가 모달 열기 버튼 */
+    /*---------- 007 ------------*/
+    /* 할 일 추가 모달 열기 */
     const btnOpenModalAddTask = document.querySelector("#btn-add-task");
     const containerCreateTask = document.querySelector("#container-create-task");
 
@@ -169,7 +161,7 @@ window.onload = function(){
     });
 
 
-    /*---------- 3) ------------*/
+    /*---------- 008 ------------*/
     /* 할 일 상세 모달 닫기 버튼 */
     const btnCloseModalTaskDetail = document.querySelectorAll(".btn-close-modal-taskDetail");
     const containerTaskDetail = document.querySelector("#container-task-detail");
@@ -179,7 +171,7 @@ window.onload = function(){
         });
     });
 
-    /*---------- 999) ------------*/
+    /*---------- 009 ------------*/
     /* 할 일 제목 수정 */
     if(elExists(document.querySelector(".btn-edit-task-title"))){
         const btnEditTaskTitle = document.querySelectorAll(".btn-edit-task-title");
@@ -233,8 +225,8 @@ window.onload = function(){
         });
     } // edit task title ends
 
-    /*---------- 998) ------------*/
-    /* 할 일 담당자 (더보기) 수정 */
+    /*---------- 010 ------------*/
+    /* 할 일 담당자 더보기 및 수정 */
     if(elExists(document.querySelector(".btn-more-assignInfo"))){
         const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
         btnOpenAssigneeList.forEach(function(chosenOne){
@@ -251,7 +243,7 @@ window.onload = function(){
     /* 할 일 진행상태 수정 */
     /* 할 일 마감일 수정 */
 
-    /*---------- 4) ------------*/
+    /*---------- 011 ------------*/
     /* 할 일 상세 모달 열기 */
     const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
     const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
@@ -317,7 +309,7 @@ window.onload = function(){
         });
     });
 
-    /*---------- 5) ------------*/
+    /*---------- 012 ------------*/
     /* 할 일 상세 모달 탭버튼 클릭*/
     let modalTaskTabChosen;
     
@@ -344,8 +336,8 @@ window.onload = function(){
         });
     }); // 할 일 상세 모달 탭버튼 클릭 끝
 
-    /*---------- 6) ------------*/
-    /* 할 일 나누기 (세부항목/하위항목) create child task*/
+    /*---------- 013 ------------*/
+    /* 할 일 나누기(create child task) - 세부(하위)항목 */
     const btnOpenModalCreateChildTask = document.querySelectorAll(".btn-create-child-task");
     const modalCreateTaskParentTitle = document.querySelector(".modal-create-task-parent-title");
     const iconChildTaskTitle = document.querySelector(".icon-child-task");
@@ -360,7 +352,7 @@ window.onload = function(){
     });
 
 
-    /*---------- 7) ------------*/
+    /*---------- 014 ------------*/
     /* 공지읽기 열기 */
     const btnOpenModalNoticeRead = document.querySelectorAll(".btn-open-notice");
     const modalNotice = document.querySelector("#modal-notice-read");
@@ -374,7 +366,7 @@ window.onload = function(){
         });
     });
 
-    /*---------- 8) ------------*/
+    /*---------- 015 ------------*/
     /* 공지읽기 닫기 */
     const btnCloseModalNoticeRead = document.querySelectorAll(".btn-close-modal-notice-read");
     btnCloseModalNoticeRead.forEach(function(chosenBtn){
@@ -384,7 +376,7 @@ window.onload = function(){
     });
 
 
-    /*---------- 9) ------------*/
+    /*---------- 016 ------------*/
     /* 공지쓰기 열기 */
     
      const btnOpenWriteNotice = document.querySelector(".btn-write-notice");
@@ -392,13 +384,11 @@ window.onload = function(){
      btnOpenWriteNotice.addEventListener("click", ()=>{
         modalWriteNotice.classList.remove("hide");
      });
- 
-   
-
 
     /*---- ▲ 열고닫기 끝 ▲ ----*/
     /*************************/
 
+    /*---------- 017 ------------*/
     /*---- ▼  프로젝트 view tab 시작 ▼ ----*/
 
     const btnTabView = document.querySelectorAll(".btn-view");
@@ -421,7 +411,7 @@ window.onload = function(){
     });
     /*---- ▲  view tab 끝 ▲ ----*/
 
-
+    /*---------- 018 ------------*/
     /*---- ▼ 공지쓰기: 파일첨부 시작 ▼ ----*/
     /*****************
      * - set Attribute로 data-id되는지 확인!
@@ -454,7 +444,7 @@ window.onload = function(){
     });
     /*---- ▲ 공지쓰기: 파일첨부 끝 ▲ ----*/
 
-
+    /*---------- 019 ------------*/
     /*---- ▼ 공지쓰기: submit 시작 ▼ ----*/
     const btnSubmitWriteNotice = document.querySelector("a#notice-write-submit");
     const formWriteNotice = document.querySelector("form#form-write-notice");
@@ -474,7 +464,7 @@ window.onload = function(){
     });
     /*---- ▲ 공지쓰기: submit 끝 ▲ ----*/
 
-    /*---------- 10) ------------*/
+    /*---------- 020 ------------*/
      /* 공지쓰기 창 닫기 */
      const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
      btnCloseModalWriteNotice.forEach(function(chosenBtn){
@@ -491,8 +481,9 @@ window.onload = function(){
          });
      });
 
+    /*---------- 021 ------------*/
     const addTaskForm = document.querySelector("#form-create-task");
-    /*---- ▼ Modal(Create Task;할일추가) 담당자 배정 시작 ▼ ----*/
+    /*---- ▼ 할 일 추가 모달: 담당자 배정 ▼ ----*/
 
     const assigneeBeforeChoose  = document.querySelector("#assignee-before-choose");
     const assignIndication = document.querySelector("#assign-indication");
@@ -568,8 +559,9 @@ window.onload = function(){
         }); // chosenName.addEventListener(click) ends
     });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
 
-    
-    // 동적으로 생성된, (배정된)담당자를 삭제(배정해제) 할 때!
+
+    /*---------- 022 ------------*/
+    // 할 일 추가 모달: 배정했던 담당자 해제(삭제)
     onEvtListener(document, "click", ".btn-assignee-del", function(){
 
         const deletedAssignee = [...this.parentElement.children].filter((child) => child !== this)[0].innerText;
@@ -597,8 +589,8 @@ window.onload = function(){
         }
     });
 
-    
-    // 선택된 담당자 div 동적 생성. 
+    /*---------- 023 ------------*/
+    // 할 일 추가 모달: 담당자 배정 - 선택된 담당자 div 동적 생성.
     function chosenAssigneeBox(value) {
         let div = document.createElement("div");
         let span1 = document.createElement("span");
@@ -619,8 +611,9 @@ window.onload = function(){
     }
     /*---- ▲ Modal(Create Task;할일추가) 담당자 배정 끝 ▲ ----*/
 
-    
-    /*---- ▼ Modal(Create Task;할일추가) 파일첨부 시작 ▼ ----*/
+
+    /*---------- 024 ------------*/
+    /*---- ▼ 할 일 추가 모달: 파일첨부 ▼ ----*/
     /*******************************
      * 파일 업로드 규칙
      * 용량 - (무료버전) 파일당 5MB 이하 (단, 개수는 무관.)
@@ -661,8 +654,9 @@ window.onload = function(){
         }
     });
 
+    /*---------- 025 ------------*/
     // create task or notice
-    // 공지쓰기, 할 일 추가(생성): 첨부된 파일 정보담을 div 동적 생성. 
+    // 모달(공지, 할 일): 첨부 파일 정보담을 div 동적 생성
     function createAndAttachFileBox(name, type, size) {
         const div1 = document.createElement("div");
         const div2 = document.createElement("div");
@@ -698,7 +692,8 @@ window.onload = function(){
     } // function attahcedFileBox() 끝
 
 
-    // 공지쓰기, 할일추가(생성): 동적으로 생성된, (첨부된)파일 삭제할 때!
+    /*---------- 026 ------------*/
+    // 모달(공지, 할 일): 첨부했던 파일 삭제
     // createAndAttachFileBox 안의 btnDel을 클릭했을 때
     onEvtListener(document, "click", ".del-file", function(){
 
@@ -733,6 +728,7 @@ window.onload = function(){
         }
     });
 
+    /*---------- 027 ------------*/
     // 파일 사이즈 보기 좋게(KB, MB로 각각 적용)
     function returnFileSize(filesize){
         if (filesize < 1024) {
@@ -744,6 +740,7 @@ window.onload = function(){
         }
     }
 
+    /*---------- 028 ------------*/
     // 파일 유효성검사(파일명 공백, 특수문자 금지, 사이즈 5MB 이하, 첨부불가 유형 여부)
     function validateFile(fullfilename, filesize){
         // 파일명 안에 특수기호는 +, _, -, .만 허용
@@ -764,6 +761,7 @@ window.onload = function(){
 
     /*---- ▲ Modal(Create Task;할일추가) 파일첨부 끝 ▲ ----*/
 
+    /*---------- 029 ------------*/
     /*---- ▼ Modal(Create Task;할 일 추가): submit 시작 ▼ ----*/
     const modalCreateTask = document.querySelector("#container-create-task");
     const btnCreateTaskSubmit = document.querySelector("#create-task-submit"); // button
@@ -844,6 +842,7 @@ window.onload = function(){
     /*---- ▲ Modal(Create task;할 일 추가): submit 끝 ▲ ----*/
 
 
+    /*---------- 030 ------------*/
     // 할 일 추가 모달 닫는 기능
     function afterAddTaskSubmit(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
@@ -893,7 +892,7 @@ window.onload = function(){
         modalCreateTask.classList.add("hide");
     }
 
-    /*---------- 2) ------------*/
+    /*---------- 031 ------------*/
     /* 할 일 추가 모달 닫기 버튼 */
     /*--- 닫기 전에 묻는 창 추가 요망? ---*/
     const btnCloseModalCreateTask = document.querySelector(".btn-close-modal-createTask");
@@ -903,7 +902,7 @@ window.onload = function(){
     });
 
 
-
+    /*---------- 032 ------------*/
     /*---- ▼ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 시작 ▼ ----*/
 
     const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
@@ -938,7 +937,7 @@ window.onload = function(){
     }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
 
 
-    
+    /*---------- 033 ------------*/
     const edit_chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
 
     // 프로젝트 멤버 목록에서 담당자 선택
@@ -967,6 +966,7 @@ window.onload = function(){
         }); // chosenName.addEventListener(click) ends
     });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
 
+    /*---------- 034 ------------*/
     // 할 일 상세에서 담당자 삭제할 때와 할 일 추가(생성)할 때의 담당자 삭제 구분 요망!!!
     // 동적으로 생성된, (배정된)담당자를 삭제(배정해제) 할 때!
     onEvtListener(document, "click", ".btn-assignee-del", function(){
@@ -990,7 +990,7 @@ window.onload = function(){
         }
     });
 
-    
+    /*---------- 035 ------------*/
     // 선택된 담당자 div 동적 생성. 
     function edit_chosenAssigneeBox(value) {
         let div = document.createElement("div");
@@ -1013,6 +1013,7 @@ window.onload = function(){
     /*---- ▲ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 끝 ▲ ----*/
 
 
+    /*---------- 036 ------------*/
     /*---- ▼ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 시작 ▼ ----*/
     const btnShowChildTaskList = document.querySelector("#btn-show-childTasks");
     const childTaskList = document.querySelector("#childTask-list");
@@ -1022,8 +1023,9 @@ window.onload = function(){
     });
     /*---- ▲ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 끝 ▲ ----*/
 
-    
 
+
+    /*---------- 037 ------------*/
     /*---- ▼ Modal(Task comment)소통하기 - 글 등록 ▼ ----*/
     // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
     const commentNoticeBtn = document.querySelector("#task-comment-notice");
@@ -1042,6 +1044,7 @@ window.onload = function(){
         }
     });
 
+    /*---------- 038 ------------*/
     // 글 등록
     const newCommentContent = document.querySelector("#task-comment-write-content");
     btnSubmitComment.addEventListener("click", ()=>{
@@ -1052,6 +1055,7 @@ window.onload = function(){
         // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
     });
 
+    /*---------- 039 ------------*/
     // 작성한 소통하기 글 바로 출력할 때 사용할 function (쓰게 될까? 쓰게 되겠지...)
     function createCommentBox(writer, type, content, assigneeCnt) {
 
@@ -1121,7 +1125,8 @@ window.onload = function(){
     }
 
     /*---- ▲ Modal(Task comment)소통하기 - 글 등록 끝 ▲ ----*/
-    
+
+    /*---------- 040 ------------*/
     /*---- ▼ Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 ▼ ----*/
 
     // 소통하기 - (자신의 글)설정 버튼 눌렀을 때(수정하기/삭제하기 버튼 출력)
@@ -1135,6 +1140,7 @@ window.onload = function(){
         });
     });
 
+    /*---------- 041 ------------*/
     // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 
     const btnCommentEdit = document.querySelectorAll(".btn-comment-edit");
     btnCommentEdit.forEach(function(chosenBtn){
@@ -1182,6 +1188,7 @@ window.onload = function(){
         });
     });  // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 끝
 
+    /*---------- 042 ------------*/
     // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때
     const btnCommentDel = document.querySelectorAll(".btn-comment-del");
     btnCommentDel.forEach(function(chosenBtn){
@@ -1204,7 +1211,8 @@ window.onload = function(){
         });
     }); // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때 끝
     /*---- ▲  Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 끝 ▲ ----*/
-   
+
+    /*---------- 043 ------------*/
     /*---- ▼ Modal(File): 파일 시작 ▼ ----*/
 
     // 이미 생성된 할일의 파일 추가 1/2: input type="file" 
@@ -1226,6 +1234,7 @@ window.onload = function(){
                 
     });
 
+    /*---------- 044 ------------*/
     // 이미 생성된 할일의 파일 추가 2/2: Drag and Drop
     const ModalTaskFileDropZone = document.querySelector("#upload-drop-zone");
     ModalTaskFileDropZone.addEventListener("dragover", (evt)=>{
@@ -1259,7 +1268,8 @@ window.onload = function(){
             }
         }
     });
-    
+
+    /*---------- 045 ------------*/
     // 이미 생성된 할일의 파일 삭제
     onEvtListener(document, "click", ".modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
@@ -1283,6 +1293,7 @@ window.onload = function(){
     });
 
 
+    /*---------- 046 ------------*/
     // 업로드일시 생성 - YY.MM.DD (D) 24:00
     function returnDate(){
         const d = new Date();
@@ -1311,6 +1322,7 @@ window.onload = function(){
         return `${year}.${month}.${date} (${day}) ${hh}:${mm}`;
     }
 
+    /*---------- 047 ------------*/
     // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 파일내역Row 동적생성
     function fileHistoryRow(uploader, addFileBox){
@@ -1353,7 +1365,7 @@ window.onload = function(){
         return fileRow;
     }
 
-
+    /*---------- 048 ------------*/
     // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 첨부된 파일 정보담을 div 동적생성
     function addFileBox(name, type, size) {
@@ -1404,6 +1416,7 @@ window.onload = function(){
     /*---- ▲ Modal(File): 파일 끝 ▲ ----*/
 
 
+    /*---------- 049 ------------*/
     /*---- ▼  프로젝트뷰(assignee): 각 담당자의 진행상태별 task 목록 상세 열기 시작 ▼ ----*/
     const btnOpenAssigneeStatusBox = document.querySelectorAll(".btn-open-assignee-status-box");
     const boxAssigneeStatus = document.querySelectorAll(".assignee-status-box");
@@ -1419,13 +1432,8 @@ window.onload = function(){
     });
     /*---- ▲  프로젝트뷰(assignee): 각 담당자의 진행상태별 task 목록 상세 열기 끝 ▲ ----*/
 
-    /*---- ▼ project별 사용자 이름(display name) 시작 ▼ ----*/
-    const btnNickName = document.querySelector(".nickname");
-    btnNickName.addEventListener("click", ()=>{
-        
-    });
-    /*---- ▲ project별 사용자 이름(display name) 끝 ▲ ----*/
 
+    /*---------- 050 ------------*/
     // next
     function next(el, selector) {
         const nextEl = el.nextElementSibling;
@@ -1435,6 +1443,7 @@ window.onload = function(){
         return null;
     }
 
+    /*---------- 051 ------------*/
     // prev
     function prev(el, selector){
         const prevEl = el.previousElementSibling;
@@ -1444,6 +1453,7 @@ window.onload = function(){
         return null;
     }
 
+    /*---------- 052 ------------*/
     // jQuery없이 on 사용할 때 ! ★★★
     function onEvtListener(el, eventName, selector, eventHandler){
         if (selector) {

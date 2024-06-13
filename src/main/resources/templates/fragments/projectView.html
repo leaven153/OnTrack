@@ -112,7 +112,9 @@
             <div class="assigneeListBox">
               <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
               <div class="assigneeList img-hidden">
-                <div class="mb-7" th:each="assignee : ${task.getAssigneeNames()}"><span th:text="${assignee}">담당자1</span><span class="btn-dropOutSelf-task ml-3" th:if="${nickname == assignee}">x</span></div>
+                <div class="mb-7" th:each="assignee : ${task.getAssigneeNames()}">
+                  <span th:text="${assignee}">담당자1</span>
+                  <span class="btn-dropOutSelf-task ml-3" th:if="${nickname == assignee} and ${assignee == task.getAuthorName()}">x</span></div>
                 <!--/* 해당 일의 담당자가 아니고, 해당 일의 진행상태가 계획중일때까지만 참여가능 */-->
                 <div class="flex-row-center-center-nowrap cursorP mb-7" th:if="${assignee != nickname} and ${task.getTaskStatus() < 2}">
                   <div class="iconBox-30"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
