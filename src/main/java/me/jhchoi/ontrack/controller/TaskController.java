@@ -89,7 +89,7 @@ public class TaskController {
                             @RequestBody MemberList loginMember, HttpSession session, Model model){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
-//            return "login/login";
+            return "login/login";
         }
         log.info("======== getTask 컨트롤러 진입 ========");
         log.info("taskId: {}", taskId);
@@ -98,10 +98,10 @@ public class TaskController {
         String test = "testString";
         model.addAttribute("test", test);
 //        return TaskList.builder().authorName("testAuthor").build();
-        return "fragments/taskDetail :: editForm";
-//        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-//        return """
-//                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+//        return "fragments/taskDetail :: editForm";
+        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
+        return """
+                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     } // getTask ends
 
 
