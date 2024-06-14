@@ -89,7 +89,7 @@ public class TaskController {
                             @RequestBody MemberList loginMember, HttpSession session, Model model){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
-//            return "login/login";
+            return "login/login";
         }
         log.info("======== getTask 컨트롤러 진입 ========");
         log.info("taskId: {}", taskId);
@@ -98,12 +98,20 @@ public class TaskController {
         String test = "testString";
         model.addAttribute("test", test);
 //        return TaskList.builder().authorName("testAuthor").build();
-        return "fragments/taskDetail :: editForm";
-//        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-//        return """
-//                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+//        return "fragments/taskDetail :: editForm";
+        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
+        return """
+                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     } // getTask ends
 
+
+    /**
+     * 할 일의 내용 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate), 중요도(priority)
+     * 리퀘스트 파라미터로 어떤 항목(item)을 바꾸는지 받고
+     * 리퀘스트 바디로 해당 항목의 새 내용을 받는다.
+     * ontrack_task와 task_history 테이블에 해당 내용을 반영한 후, return 값으로 해당 내용을 보낸다.
+     * 담당자 배정/해제에 관한 변경사항은 별도의 컨트롤러에서 처리한다.(editAssignee)
+     * */
     @PostMapping("/editTask")
     @ResponseBody
     public String editTask(HttpSession session, @RequestParam(required = false)String item, @RequestBody String edit){
@@ -112,4 +120,20 @@ public class TaskController {
         log.info("제목: {}", edit);
         return edit;
     }
-}
+
+    @PostMapping("/editAssignee")
+    @ResponseBody
+    public String editAssignee(HttpSession session,@RequestParam(required = false) Long byWhom, @RequestParam(required = false)String addOrDel, @RequestBody Long mId) {
+        log.info("============= edit Assignee Controller 진입 =================");
+        log.info("누가 변경을 진행했나요: {}", byWhom);
+        log.info("삭제입니까 배정입니까: {}", addOrDel);
+        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mId);
+        
+        // task_assignment에 반영
+        
+        // task_history에 반영
+
+        return null;
+    }
+
+}// class TaskController ends

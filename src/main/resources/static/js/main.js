@@ -227,16 +227,101 @@ window.onload = function(){
 
     /*---------- 010 ------------*/
     /* 할 일 담당자 더보기 및 수정 */
+
+    // 클릭하면 나오는 담당자 info 박스 높이 담을 변수
+    let boxHeight = 0;
+
+    // 1. 해당 할 일의 담당자 목록 출력
     if(elExists(document.querySelector(".btn-more-assignInfo"))){
         const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
         btnOpenAssigneeList.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
-                if(next(chosenOne, ".assigneeList").classList.contains("img-hidden")){
-                    next(chosenOne, ".assigneeList").classList.remove("img-hidden");
+                // console.log(next(chosenOne)); // <div class="tableView-assignee-list img-hidden">
+                // console.log(next(chosenOne).offsetHeight);
+
+                // 클릭한 담당자 목록 높이 구해서 변수에 담는다. (아래 담당자 배정하기 위치에서 활용)
+                boxHeight = next(chosenOne).offsetHeight;
+
+                // 클릭한 task의 담당자 목록 toggle
+                if(next(chosenOne).classList.contains("img-hidden")){
+                    // 열려있던 다른 box 다 닫아야 한다.
+                    const allAssigneeListBox = document.querySelectorAll(".tableView-assignee-list");
+                    allAssigneeListBox.forEach(function(eachOne){
+                        eachOne.classList.add("img-hidden");
+                    });
+
+                    // 클릭한 task의 담당자 목록만 출력한다.
+                    next(chosenOne).classList.remove("img-hidden");
                 } else {
-                    next(chosenOne, ".assigneeList").classList.add("img-hidden");
+                    next(chosenOne).classList.add("img-hidden");
+                }
+                // if(!next(chosenOne).classList.contains("img-hidden"))
+                // if(tableViewAssigneeListBox.children[0].classList.contains("img-hidden")){
+                //     tableViewAssigneeListBox.children[0].classList.remove("img-hidden");
+                // } else {
+                //     tableViewAssigneeListBox.children[0].classList.add("img-hidden");
+                // }
+
+            });
+        });
+    }
+
+    // 2. 이 일에서 빠지기
+    // 해당 일의 담당자이거나 작성자인 멤버만, 계획중 일때까지만 담당해제 버튼(X)이 노출된다.
+    if(elExists(document.querySelector(".btn-dropOutSelf-task"))){
+        const btnDropOutSelfTask = document.querySelectorAll(".btn-dropOutSelf-task");
+        btnDropOutSelfTask.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", ()=>{
+                // console.log(chosenOne);
+                // console.log(chosenOne.dataset.assigneemid); // 대문자가 안 먹힌다!!
+                // console.log(chosenOne.dataset.executormid);
+                // 2-1. 서버로 정보(집행자id, 해제(del), 해당 담당자mid) 넘긴다.
+                //
+
+                // 2-2. 해당 담당자 이름 담긴 box를 삭제한다. (넣었다 뺐다 하려면??)
+            });
+        });
+    }
+
+    // 3. 이 일에 참여하기 (해당 일에 이미 배정된 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때까지만 출력된 버튼)
+
+    // 4. 새로운 담당자 배정하기(작성자만이 가능하며, 해당 일의 진행상태가 '진행중'일 때까지만 가능)
+    // 검색창에서 새로 배정할 사람을 입력한다.
+    // 이미 배정된 사람들은 선택해도 변동사항이 없다.
+    // 단, 해제한 사람도 다시 배정할 수 있어야 한다.
+    if(elExists(document.querySelector(".btn-find-member-assign"))){
+        const btnFindMemberToAssign = document.querySelectorAll(".btn-find-member-assign");
+        btnFindMemberToAssign.forEach(function(chosenOne){
+
+            chosenOne.addEventListener("click", ()=>{
+                console.log(next(chosenOne));
+                // <div class="추가할담당자검색box find-member-assign img-hidden" style="top: 123px;">
+
+                // 해당 프로젝트 멤버 목록 출력
+                let topValue = boxHeight - 40;
+                next(chosenOne).style.top = topValue + 'px';
+                if(next(chosenOne).classList.contains("img-hidden")){
+                    next(chosenOne).classList.remove("img-hidden");
+                } else {
+                    next(chosenOne).classList.add("img-hidden");
                 }
 
+                // 멤버 검색 버튼 눌렀을 때
+                // // btn-findByName-member-assign
+                console.log(next(chosenOne).children[0].children[1]);
+                const btnFindByNameMemberToAssign = next(chosenOne).children[0].children[1];
+                btnFindByNameMemberToAssign.addEventListener("click", ()=>{
+                    // console.log(btnFindByNameMemberToAssign.value); // th:value="${memberList}"를 button에 넣었을 때
+                    /**
+                     * [MemberList(userId=45, projectId=9, memberId=4, nickName=Adele, position=member),
+                     * MemberList(userId=35, projectId=9, memberId=14, nickName=공지철, position=creator),
+                     * MemberList(userId=61, projectId=9, memberId=26, nickName=송혜교, position=member),
+                     * MemberList(userId=47, projectId=9, memberId=27, nickName=크러쉬, position=member),
+                     * MemberList(userId=50, projectId=9, memberId=28, nickName=스칼렛 요한슨, position=member)] */
+
+                    // input에 입력된 값 받아온다
+                    console.log(prev(btnFindByNameMemberToAssign).value);
+                });
             });
         });
     }
@@ -903,7 +988,7 @@ window.onload = function(){
 
 
     /*---------- 032 ------------*/
-    /*---- ▼ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 시작 ▼ ----*/
+    /*---- ▼ 할일 수정(table view, status view): 담당자 배정·수정 시작 ▼ ----*/
 
     const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
     const edit_assignIndication = document.querySelector("#edit-assign-indication");

@@ -540,18 +540,41 @@ div.table-task-title {
     justify-content: space-between;
 }
 
-div.assigneeListBox {
+.table-assignee {
     position: relative;
 }
-div.assigneeListBox div.assigneeList {
+
+div.tableView-assignee-list {
     position: absolute;
-    border: 1px solid black;
+    border: 1px solid #b6b6b688;
     z-index: 2;
     padding: 5px 10px;
     background-color: #fff;
-    width: 140px;
-    right: -200%;
-    margin-top: 10px;
+    width: 130px;
+    left: -3%;
+    top: 100%;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+}
+
+.find-member-assign {
+    position: absolute;
+    border: 1px solid #b6b6b688;
+    z-index: 2;
+    padding: 4px 10px;
+    background-color: #fff;
+    right: -103%;
+    top: 72%;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+}
+
+.btn-add-assignee,
+.btn-findByName-member-assign {
+    border-radius: 3px;
+    padding: 3px;
+    color: #fff5ec;
+    background-color: #411c02;
 }
 
 .iconBox-30 {
@@ -561,14 +584,14 @@ div.assigneeListBox div.assigneeList {
     height: 27px;
 }
 
-span.btn-alone-assignee,
+
 img.btn-edit-task-title,
 div.content-chkbox > input {
     opacity: 0;
 }
 
-span.table-assignee-alone:hover + span.btn-alone-assignee,
-span.btn-alone-assignee:hover,
+span.table-assignee-alone:hover + span.transit-250,
+span.transit-250:hover,
 img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
     transition-duration: 250ms;
@@ -1318,6 +1341,10 @@ input[type=date] {
     padding-top: 7px;
 }
 
+.pd-t10 {
+    padding-top: 10px;
+}
+
 .pd-rl10 {
     padding: 0 10px 5px 10px;
 }
@@ -1415,6 +1442,10 @@ input[type=date] {
 }
 
 /******** line (+ border-radius) ********/
+.top-line {
+    border-top: 1px solid #b6b6b6;
+}
+
 .bottom-line {
     border-bottom: 1px solid #b6b6b6;
 }
@@ -2043,6 +2074,10 @@ span.status-child-count {
 
 .img-angle90 {
     transform: rotate(90deg);
+}
+
+.img-angle270 {
+    transform: rotate(270deg);
 }
 
 .img-angle180 {
