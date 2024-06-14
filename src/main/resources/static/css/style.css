@@ -544,7 +544,7 @@ div.table-task-title {
     position: relative;
 }
 
-div.tableView-assignee-list{
+div.tableView-assignee-list {
     position: absolute;
     border: 1px solid #b6b6b688;
     z-index: 2;
@@ -555,6 +555,26 @@ div.tableView-assignee-list{
     top: 100%;
     border-radius: 5px;
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+}
+
+.find-member-assign {
+    position: absolute;
+    border: 1px solid #b6b6b688;
+    z-index: 2;
+    padding: 4px 10px;
+    background-color: #fff;
+    right: -103%;
+    top: 72%;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+}
+
+.btn-add-assignee,
+.btn-findByName-member-assign {
+    border-radius: 3px;
+    padding: 3px;
+    color: #fff5ec;
+    background-color: #411c02;
 }
 
 .iconBox-30 {
@@ -1321,6 +1341,10 @@ input[type=date] {
     padding-top: 7px;
 }
 
+.pd-t10 {
+    padding-top: 10px;
+}
+
 .pd-rl10 {
     padding: 0 10px 5px 10px;
 }
@@ -2050,6 +2074,10 @@ span.status-child-count {
 
 .img-angle90 {
     transform: rotate(90deg);
+}
+
+.img-angle270 {
+    transform: rotate(270deg);
 }
 
 .img-angle180 {
