@@ -53,7 +53,7 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        // 1. 해당 프로젝트에 접근한 멤버의 정보
+        // 1. 해당 프로젝트에 접근한 멤버의 정보 → 추후 접근경로의 정보 정합성 여부 확인 추가 요망
         model.addAttribute("loginMember", MemberList.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
 //        model.addAttribute("nickname", nickname);

@@ -231,11 +231,20 @@ window.onload = function(){
         const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
         btnOpenAssigneeList.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
-                if(next(chosenOne, ".assigneeList").classList.contains("img-hidden")){
-                    next(chosenOne, ".assigneeList").classList.remove("img-hidden");
+                console.log(next(chosenOne)); // <div class="tableView-assignee-list-box">
+                const tableViewAssigneeListBox = next(chosenOne);
+                console.log(tableViewAssigneeListBox.children[0]);
+
+                if(next(chosenOne).classList.contains("img-hidden")){
+                    next(chosenOne).classList.remove("img-hidden");
                 } else {
-                    next(chosenOne, ".assigneeList").classList.add("img-hidden");
+                    next(chosenOne).classList.add("img-hidden");
                 }
+                // if(tableViewAssigneeListBox.children[0].classList.contains("img-hidden")){
+                //     tableViewAssigneeListBox.children[0].classList.remove("img-hidden");
+                // } else {
+                //     tableViewAssigneeListBox.children[0].classList.add("img-hidden");
+                // }
 
             });
         });
@@ -903,7 +912,7 @@ window.onload = function(){
 
 
     /*---------- 032 ------------*/
-    /*---- ▼ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 시작 ▼ ----*/
+    /*---- ▼ 할일 수정(table view, status view): 담당자 배정·수정 시작 ▼ ----*/
 
     const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
     const edit_assignIndication = document.querySelector("#edit-assign-indication");

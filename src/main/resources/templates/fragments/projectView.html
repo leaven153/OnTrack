@@ -103,27 +103,37 @@
           <span class="no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
           <span class="table-assignee-alone" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span>
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 2}">
-            <span class="altivo-bold btn-alone-assignee cursorP font-16">+</span>
+            <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
           </th:block>
           <th:block th:if="${task.getAssigneeNames().size() > 1}">
             <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
               <div class="assignee-many"><span class="lastName" th:text="${assignee}">김</span></div>
             </th:block>
-            <div class="assigneeListBox">
-              <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
-              <div class="assigneeList img-hidden">
-                <div class="mb-7" th:each="assignee : ${task.getAssigneeNames()}">
-                  <span th:text="${assignee}">담당자1</span>
-                  <span class="btn-dropOutSelf-task ml-3" th:if="${nickname == assignee} and ${assignee == task.getAuthorName()}">x</span></div>
-                <!--/* 해당 일의 담당자가 아니고, 해당 일의 진행상태가 계획중일때까지만 참여가능 */-->
-                <div class="flex-row-center-center-nowrap cursorP mb-7" th:if="${assignee != nickname} and ${task.getTaskStatus() < 2}">
-                  <div class="iconBox-30"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
-                  <span>이 일에 참여하기</span></div>
-                <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 진행중일때까지만 추가가능 */-->
-                <div th:if="${task.getAuthorName() == nickname} and ${task.getTaskStatus() < 3}">담당자 추가하기</div>
-              </div>
-            </div>
+            <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
           </th:block>
+<!--          <div class="tableView-assignee-list-box">-->
+            <div class="tableView-assignee-list img-hidden">
+              <div class="개별담당자box tableView-assignee-box mb-7" th:each="assignee : ${task.getAssigneeNames()}">
+                <p class="div-inline-block mb-5" th:text="${assignee}" th:classappend="${assigneeStat.count == 1}?'mt-5'">
+                  담당자1
+                  <!--/* 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
+                </p>
+                <span class="btn-dropOutSelf-task ml-3 cursorP" th:if="(${assignee == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 3}">x</span>
+              </div>
+              <!--/* 해당 일의 담당자가 아니고, 해당 일의 진행상태가 계획중일때까지만 참여가능 */-->
+              <th:block th:each="assignee : ${task.getAssigneeNames()}">
+                <div class="참여하기 flex-row-center-center-nowrap top-line cursorP mt-5 mb-5 pd-t5" th:if="${!#strings.equals(assignee, nickname)} and ${task.getTaskStatus() < 2} and ${assigneeStat.first}">
+                  <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
+                  <span>이 일에 참여하기</span>
+                </div>
+              </th:block>
+              <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 진행중일때까지만 추가가능 */-->
+              <div class="담당자추가 top-line mt-5 pd-t5" th:if="${task.getAuthorName() == nickname} and ${task.getTaskStatus() < 3}">담당자 추가하기</div>
+            </div>
+<!--          </div>-->
+<!--          <div class="assigneeListBox">&lt;!&ndash;/* assTaskForm에 id로 assignee-list-box 사용 중 */&ndash;&gt;-->
+<!--            -->
+<!--          </div>-->
         </div>
 
         <!-- status -->
