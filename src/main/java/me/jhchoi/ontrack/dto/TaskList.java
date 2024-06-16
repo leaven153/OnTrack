@@ -105,6 +105,12 @@ public class TaskList {
         return cnt == 0?null:cnt;
     }
 
+    // 멤버 목록 중 해당 task에 이미 배정된 멤버는 제외
+    public static Boolean assigned(String member, String assignee){
+
+        return null;
+    }
+
     // 소통하기
     
     // 진행내역
