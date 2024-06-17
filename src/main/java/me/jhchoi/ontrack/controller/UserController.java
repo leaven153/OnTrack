@@ -36,7 +36,7 @@ public class UserController {
      * */
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginUser loginRequest, BindingResult bindingResult, HttpServletRequest request, Model model){
-        LoginUser user = loginRequest != null?loginRequest:null;
+        LoginUser user = loginRequest;
         log.info("로그인 입력정보: {}", user); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
         if(loginRequest == null) {
