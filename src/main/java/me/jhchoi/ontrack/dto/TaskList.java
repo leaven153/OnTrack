@@ -6,9 +6,7 @@ import me.jhchoi.ontrack.domain.TaskFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,6 +29,7 @@ public class TaskList {
     // 할 일의 담당자 목록
     private List<Long> assigneeMids;
     private List<String> assigneeNames;
+    private Map<Long, String> assignees;
 
     //  할 일의 파일
     private List<TaskFile> taskFiles;
@@ -105,10 +104,15 @@ public class TaskList {
         return cnt == 0?null:cnt;
     }
 
-    // 멤버 목록 중 해당 task에 이미 배정된 멤버는 제외
-    public static Boolean assigned(String member, String assignee){
-
-        return null;
+    // 멤버 목록 중 해당 task에 이미 배정된 멤버는 제외 (projectView.html에서 직접 호출)
+    public static Map<Long, String> unassignedMember(List<MemberList> memberList, Map<Long, String> assigneeList){
+        Map<Long, String> unAssignedMember = new HashMap<>();
+        IntStream.range(0, memberList.size()).forEach(i -> {
+            if(!memberList.get(i).getNickName().equals(assigneeList.get(memberList.get(i).getMemberId()))){
+                unAssignedMember.put(memberList.get(i).getMemberId(), memberList.get(i).getNickName());
+            }
+        });
+        return unAssignedMember;
     }
 
     // 소통하기

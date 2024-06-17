@@ -250,6 +250,12 @@ window.onload = function(){
                         eachOne.classList.add("img-hidden");
                     });
 
+                    // 열려있던 담당자로 추가할 멤버찾기 div도 다 닫는다
+                    const allUnassignedMemberList = document.querySelectorAll(".find-member-to-assign");
+                    allUnassignedMemberList.forEach(function(eachOne){
+                        eachOne.classList.add("img-hidden");
+                    });
+
                     // 클릭한 task의 담당자 목록만 출력한다.
                     next(chosenOne).classList.remove("img-hidden");
                 } else {
@@ -266,14 +272,14 @@ window.onload = function(){
         });
     }
 
-    // 2. 이 일에서 빠지기
+    // 2-1. 이 일에서 빠지기
     // 해당 일의 담당자이거나 작성자인 멤버만, 계획중 일때까지만 담당해제 버튼(X)이 노출된다.
     if(elExists(document.querySelector(".btn-dropOutSelf-task"))){
         const btnDropOutSelfTask = document.querySelectorAll(".btn-dropOutSelf-task");
         btnDropOutSelfTask.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
-                // console.log(chosenOne);
-                // console.log(chosenOne.dataset.assigneemid); // 대문자가 안 먹힌다!!
+                console.log(chosenOne);
+                // console.log(chosenOne.dataset.assigneemid); // dataset의 항목들은 대문자가 안 먹힌다!!
                 // console.log(chosenOne.dataset.executormid);
                 // 2-1. 서버로 정보(집행자id, 해제(del), 해당 담당자mid) 넘긴다.
                 //
@@ -282,22 +288,32 @@ window.onload = function(){
             });
         });
     }
+    // 2-1. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)
+    onEvtListener(document, "click", ".btn-dropOutSelf-task", function(){
+        console.log(this);
+        // <span class="btn-dropOutSelf-task ml-3 cursorP" data-assigneemid="14">
+    });
 
     // 3. 이 일에 참여하기 (해당 일에 이미 배정된 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때까지만 출력된 버튼)
 
     // 4. 새로운 담당자 배정하기(작성자만이 가능하며, 해당 일의 진행상태가 '진행중'일 때까지만 가능)
     // 검색창에서 새로 배정할 사람을 입력한다.
     // 이미 배정된 사람들은 선택해도 변동사항이 없다.
-    // 단, 해제한 사람도 다시 배정할 수 있어야 한다.
-    if(elExists(document.querySelector(".btn-find-member-assign"))){
-        const btnFindMemberToAssign = document.querySelectorAll(".btn-find-member-assign");
+    // 해제한 사람도 다시 배정할 수 있어야 한다.
+    // 배정/해제를 진행하는 사람의 member Id와 nickname을 알아야 한다!
+
+    if(elExists(document.querySelector(".btn-find-member-to-assign"))){
+        const btnFindMemberToAssign = document.querySelectorAll(".btn-find-member-to-assign");
         btnFindMemberToAssign.forEach(function(chosenOne){
 
             chosenOne.addEventListener("click", ()=>{
                 console.log(next(chosenOne));
-                // <div class="추가할담당자검색box find-member-assign img-hidden" style="top: 123px;">
+                console.log(chosenOne.dataset.executor);
+                const executorMid = chosenOne.dataset.executor;
+                const thisTaskId = chosenOne.dataset.taskid;
+                // <div class="추가할담당자검색box find-member-to-assign img-hidden" style="top: 123px;">
 
-                // 해당 프로젝트 멤버 목록 출력
+                // 해당 프로젝트 멤버 목록 div 화면 노출(출력)
                 let topValue = boxHeight - 40;
                 next(chosenOne).style.top = topValue + 'px';
                 if(next(chosenOne).classList.contains("img-hidden")){
@@ -306,28 +322,81 @@ window.onload = function(){
                     next(chosenOne).classList.add("img-hidden");
                 }
 
-                // 멤버 검색 버튼 눌렀을 때
-                // // btn-findByName-member-assign
+                // 멤버 검색 버튼 클릭했을 때
+                // // btn-findByName-member-to-assign
                 console.log(next(chosenOne).children[0].children[1]);
                 const btnFindByNameMemberToAssign = next(chosenOne).children[0].children[1];
                 btnFindByNameMemberToAssign.addEventListener("click", ()=>{
-                    // console.log(btnFindByNameMemberToAssign.value); // th:value="${memberList}"를 button에 넣었을 때
-                    /**
-                     * [MemberList(userId=45, projectId=9, memberId=4, nickName=Adele, position=member),
-                     * MemberList(userId=35, projectId=9, memberId=14, nickName=공지철, position=creator),
-                     * MemberList(userId=61, projectId=9, memberId=26, nickName=송혜교, position=member),
-                     * MemberList(userId=47, projectId=9, memberId=27, nickName=크러쉬, position=member),
-                     * MemberList(userId=50, projectId=9, memberId=28, nickName=스칼렛 요한슨, position=member)] */
-
                     // input에 입력된 값 받아온다
                     console.log(prev(btnFindByNameMemberToAssign).value);
                 });
+
+                // 멤버 목록에서 '멤버 이름' 클릭했을 때
+                // 멤버 이름 = 담당자 추가하기(chosenOne)의 next의 children의 1안에 있는 p 목록 중 1
+                console.log(`===========next(chosenOne).children[1]===========`);
+                console.log(next(chosenOne).children[1].querySelectorAll(".unassigned-member"));
+                // NodeList(3) [ div.개별멤버box.unassigned-member, div.개별멤버box.unassigned-member, div.개별멤버box.unassigned-member ]
+                const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
+                unassignedMember.forEach(function(member){
+                    member.addEventListener("click", ()=>{
+                        console.log(`현재 담당자 추가를 실행한 자의 mId: ${executorMid}`);
+                        console.log(`담당자를 추가한 일의 id: ${thisTaskId}`);
+                        console.log(`새로 배정한 멤버의 이름: ${member.children[0].innerText}`);
+                        console.log(`새로 배정한 멤버의 id: ${member.children[0].dataset.mid}`);
+                        console.log(parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild); // <div class="담당자목록 task-assignee-list">
+                        // <div class="담당자목록 task-assignee-list">
+
+                        // 1) 서버에 전달: 해당 할 일의 (task) id, 추가한 담당자 member id, 추가한 담당자 이름, 추가한 사람의 member id
+                        fetch(`http://localhost:8080/task/editAssignee?taskId=${thisTaskId}&execMid=${executorMid}&addOrDel=add&mId=${member.children[0].dataset.mid}`, {
+                          method: 'POST',
+                          headers: {},
+                          body: member.children[0].innerText
+                        }).then(response => {
+                            // 2) 담당자 div에 이름 출력
+                            parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(member.children[0].innerText, member.children[0].dataset.mid, executorMid == member.children[0].dataset.mid));
+
+                            // 3) 멤버 목록에서 이름 빼기
+                            member.classList.add("hide");
+                            if(response.ok){
+
+                            }
+                        })
+
+                    });
+                });
+
+
+
+                // 새로 배정한 담당자를 해제했을 때
+                // 1) 담당자 div에서 빼기
+                // 2) 멤버 목록에 다시 추가하기
+                // 3) 서버에 전달
             });
         });
     }
+
     /* 할 일 진행상태 수정 */
     /* 할 일 마감일 수정 */
+    /*---------- 053 ------------*/
+    function newAssigneeElement(newAssigneeName, newAssigneeMid, btnDelX) {
+        const div = document.createElement("div");
+        const p = document.createElement("p");
+        const btnX = document.createElement("span");
 
+        div.classList.add("tableView-assignee-box", "mb-7");
+        p.classList.add("div-inline-block", "mb-5");
+        btnX.classList.add("btn-dropOutSelf-task", "ml-3", "cursorP");
+        btnX.setAttribute("data-assigneemid", newAssigneeMid);
+
+        p.innerText = newAssigneeName;
+        btnX.innerHTML = "&times;";
+        div.appendChild(p);
+        if(btnDelX) {
+            console.log(`why? ${btnDelX}`);
+            div.appendChild(btnX);
+        }
+        return div;
+    }
     /*---------- 011 ------------*/
     /* 할 일 상세 모달 열기 */
     const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
@@ -1561,6 +1630,14 @@ window.onload = function(){
 
     } // function onEvtListener Ends 
 
+    /*---------- 054 ------------*/
+    function parents(el, selector) {
+        const parents = [];
+        while((el = el.parentNode) && el !== document){
+            if(!selector || el.matches(selector)) parents.push(el);
+        }
+        return parents;
+    }
 }; // window.onload = function() ends
 
    /*---- ▼  시작 ▼ ----*/
