@@ -40,7 +40,8 @@ public class UserController {
         log.info("로그인 입력정보: {}", user); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
         if(loginRequest == null) {
-            return "login/login";
+            model.addAttribute("loginRequest", LoginUser.builder().build());
+            return "/login/login";
         }
         if(Objects.equals(loginRequest.getLoginId(), "") || loginRequest.getLoginId() == null) {
             log.info("id 입력 안했을 때 if 들어옴");
@@ -49,11 +50,13 @@ public class UserController {
 
         if(bindingResult.hasErrors()) {
             log.info("error={}", bindingResult);
-            return "redirect:login/login";
+            model.addAttribute("loginRequest", LoginUser.builder().build());
+            return "login/login";
         }
         LoginUser loginUser = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
         if(loginUser == null) {
-            return "redirect:login/login";
+            model.addAttribute("loginRequest", LoginUser.builder().build());
+            return "login/login";
         }
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", loginUser);

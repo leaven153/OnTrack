@@ -557,7 +557,7 @@ div.tableView-assignee-list {
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
 }
 
-.find-member-assign {
+.find-member-to-assign {
     position: absolute;
     border: 1px solid #b6b6b688;
     z-index: 2;

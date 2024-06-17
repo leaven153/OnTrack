@@ -121,12 +121,15 @@ public class ProjectService {
           List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(project.getTaskList().get(i).getId());
             List<String> assigneeNames = new ArrayList<>();
             List<Long> assigneeIds = new ArrayList<>();
+            Map<Long, String> assignees = new HashMap<>();
             for (TaskAssignment taskAssignment : assigneeList) {
                 assigneeNames.add(taskAssignment.getNickname());
                 assigneeIds.add(taskAssignment.getMemberId());
+                assignees.put(taskAssignment.getMemberId(), taskAssignment.getNickname());
             }
             project.getTaskList().get(i).setAssigneeNames(assigneeNames);
             project.getTaskList().get(i).setAssigneeMids(assigneeIds);
+            project.getTaskList().get(i).setAssignees(assignees);
         });
 
         // 4. 프로젝트 멤버별 할 일 목록

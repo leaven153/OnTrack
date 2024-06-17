@@ -123,11 +123,13 @@ public class TaskController {
 
     @PostMapping("/editAssignee")
     @ResponseBody
-    public String editAssignee(HttpSession session,@RequestParam(required = false) Long byWhom, @RequestParam(required = false)String addOrDel, @RequestBody Long mId) {
+    public String editAssignee(HttpSession session, @RequestParam(required = false) Long taskId, @RequestParam(required = false) Long execMid, @RequestParam(required = false)String addOrDel, @RequestParam(required = false) Long mId, @RequestBody String mName) {
         log.info("============= edit Assignee Controller 진입 =================");
-        log.info("누가 변경을 진행했나요: {}", byWhom);
+        log.info("which task?: {}", taskId);
+        log.info("누가 변경을 진행했나요: {}", execMid);
         log.info("삭제입니까 배정입니까: {}", addOrDel);
         log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mId);
+        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mName);
         
         // task_assignment에 반영
         
