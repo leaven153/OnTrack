@@ -11,8 +11,10 @@ import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -30,6 +32,7 @@ public class TaskService {
      * return   :
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
+    @Transactional
     public Long addTask(TaskFormRequest taskFormRequest) {
 
         // 1. 새 할 일 정보 등록
@@ -87,15 +90,23 @@ public class TaskService {
      * */
 
     /*
-     * created : 2024-05-
-     * param   :
+     * created : 2024-06-18
+     * param   : TaskAssignment, TaskHistory
      * return  :
      * explain : 할 일 수정: 담당자 추가
      * */
+    @Transactional
+    public void addAssignee(TaskAssignment ta, TaskHistory th){
+        List<TaskAssignment> taList = new ArrayList<>();
+        taList.add(ta);
+        taskRepository.assign(taList);
+        taskRepository.log(th);
+
+    }
 
     /*
      * created : 2024-05-
-     * param   :
+     * param   : Long memberId, Long execMid, String mName, Long
      * return  :
      * explain : 할 일 수정: 담당자 삭제
      * */

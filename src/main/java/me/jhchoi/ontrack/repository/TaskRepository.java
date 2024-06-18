@@ -26,14 +26,14 @@ public class TaskRepository {
         return taskMapper.newTask(task);
     }
 
-    // 기록(history): 새 할 일 등록
-    public void log(TaskHistory taskHistory){
-        taskMapper.log(taskHistory);
+    // 기록(history): 새 할 일 등록, 담당자 추가
+    public Long log(TaskHistory taskHistory){
+        return taskMapper.log(taskHistory);
     }
 
     // 할 일 담당자 등록
-    public void assign(List<TaskAssignment> assignees){
-        taskMapper.assign(assignees);
+    public Long assign(List<TaskAssignment> assignees){
+        return taskMapper.assign(assignees);
     }
 
     // 할 일 별 첨부파일 등록

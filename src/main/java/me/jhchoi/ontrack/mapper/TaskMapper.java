@@ -20,10 +20,10 @@ public interface TaskMapper {
     Long newTask(OnTrackTask task);
 
     // 기록(history): 새 할 일 등록(할일명), 담당자 배정,
-    void log(TaskHistory taskHistory);
+    Long log(TaskHistory taskHistory);
 
     // 담당자 배정
-    void assign(List<TaskAssignment> taskAssignment);
+    Long assign(List<TaskAssignment> taskAssignment);
 
     // 담당자 삭제
     void unassign(TaskAssignment taskAssignment);

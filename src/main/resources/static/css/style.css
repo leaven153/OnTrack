@@ -563,7 +563,9 @@ div.tableView-assignee-list {
     z-index: 2;
     padding: 4px 10px;
     background-color: #fff;
-    right: -103%;
+    max-height: 160px;
+    right: -100%;
+    /*left: 101%;*/
     top: 72%;
     border-radius: 5px;
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);

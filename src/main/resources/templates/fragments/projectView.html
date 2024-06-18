@@ -129,18 +129,18 @@
               </th:block>
 
               <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 진행중일때까지만 추가가능 */-->
-              <div class="담당자추가 btn-find-member-to-assign top-line pd-t10 pd-b5 cursorP" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 3}">
+              <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5 cursorP" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-assigneeCnt=${task.getAssigneeMids().size()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 3}">
                 <span>담당자 추가하기</span>
                 <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="img-angle270" alt="add assignee">
               </div>
               <div class="추가할담당자검색box find-member-to-assign img-hidden">
-                <div class="검색 bottom-line pd-b3 pd-t7"><!--/* bottom-line */-->
+                <div class="검색 bottom-line pd-b3 pd-t7 mb-10">
                   <input type="text" class="font-15 w100" placeholder="멤버검색" name="">
                   <button type="button" class="btn-findByName-member-to-assign" >검색</button> <!--/* th:value="${memberList}" */-->
                 </div>
                 <div class="배정안된멤버목록 unassigned-member-list scroll">
                   <div class="개별멤버box unassigned-member" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
-                    <p class="div-inline-block mb-10 cursorP" th:classappend="${unassingedMemberStat.first}?'mt-10'" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
+                    <p class="div-inline-block mb-10 cursorP" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
                   </div>
                 </div>
               </div>
