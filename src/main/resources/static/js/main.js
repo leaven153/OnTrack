@@ -368,7 +368,7 @@ window.onload = function(){
                             cntAddAssignee++;
                             console.log(`cntAddAssignee: ${cntAddAssignee}`);
                             // 1)-1 담당자 div에 이름 출력
-                            parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(member.children[0].innerText, member.children[0].dataset.mid, executorMid == member.children[0].dataset.mid));
+                            parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(member.children[0].innerText, member.children[0].dataset.mid, executorMid === member.children[0].dataset.mid));
 
                             // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
                             // console.log(parents(member, ".tableView-assignee-list"));
