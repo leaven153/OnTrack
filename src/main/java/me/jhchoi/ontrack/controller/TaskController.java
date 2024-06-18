@@ -3,6 +3,8 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.MemberList;
 import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
@@ -10,6 +12,8 @@ import me.jhchoi.ontrack.dto.TaskList;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -121,21 +125,40 @@ public class TaskController {
         return edit;
     }
 
-    @PostMapping("/editAssignee")
+    @PostMapping("/addAssignee")
     @ResponseBody
-    public String editAssignee(HttpSession session, @RequestParam(required = false) Long taskId, @RequestParam(required = false) Long execMid, @RequestParam(required = false)String addOrDel, @RequestParam(required = false) Long mId, @RequestBody String mName) {
+    public ResponseEntity addAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestBody TaskAssignment ta) {
         log.info("============= edit Assignee Controller 진입 =================");
-        log.info("which task?: {}", taskId);
-        log.info("누가 변경을 진행했나요: {}", execMid);
-        log.info("삭제입니까 배정입니까: {}", addOrDel);
-        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mId);
-        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mName);
-        
-        // task_assignment에 반영
-        
-        // task_history에 반영
 
-        return null;
+        log.info("누가 변경을 진행했나요: {}", execMid);
+        log.info("task assignment 객체: {}", ta);
+
+        // 배정한 시간
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+        ta.setAssignedAt(nowWithNano.minusNanos(nanosec));
+
+        // TaskHistory 객체 생성
+        TaskHistory th = TaskHistory.builder()
+                .projectId(ta.getProjectId())
+                .taskId(ta.getTaskId())
+                .modItem("assginee")
+                .modType("register")
+                .modContent(ta.getNickname())
+                .updatedAt(nowWithNano.minusNanos(nanosec))
+                .updatedBy(execMid)
+                .build();
+
+        // 추후 예외 처리 요망
+//        taskService.addAssignee(ta, th);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("delAssignee")
+    public ResponseEntity delAssignee(){
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }// class TaskController ends
