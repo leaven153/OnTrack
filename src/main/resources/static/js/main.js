@@ -294,6 +294,9 @@ window.onload = function(){
     onEvtListener(document, "click", ".btn-dropOutSelf-task", function(){
         console.log(this);
         // <span class="btn-dropOutSelf-task ml-3 cursorP" data-assigneemid="14">
+        // 1) 담당자 div에서 빼기
+        // 2) 멤버 목록에 다시 추가하기
+        // 3) 서버에 전달
 
         // boxHeight에서 21.6667 빼기
     });
@@ -338,11 +341,11 @@ window.onload = function(){
 
                 // 멤버 목록에서 '멤버 이름' 클릭했을 때
                 // 담당자는 6명을 초과할 수 없다.
-
                 let cntAddAssignee = 0;
                 const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
                 unassignedMember.forEach(function(member){
                     member.addEventListener("click", ()=>{
+
 
                         console.log(`현재 담당자 추가를 실행한 자의 mId: ${executorMid}`);
                         console.log(`담당자를 추가한 일의 id: ${thisTaskId}`);
@@ -364,23 +367,25 @@ window.onload = function(){
                         if(cntAssignee <= 6 && (cntAddAssignee+cntAssignee) <= 6){
                             cntAddAssignee++;
                             console.log(`cntAddAssignee: ${cntAddAssignee}`);
-                            // 1) 담당자 div에 이름 출력
+                            // 1)-1 담당자 div에 이름 출력
                             parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(member.children[0].innerText, member.children[0].dataset.mid, executorMid == member.children[0].dataset.mid));
 
-                            // + 담당자 div 높이(boxHeight)에 21.6667 더하기..?
-                            /*
-                            topValue = (boxHeight + 22) - 50;
+                            // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
+                            // console.log(parents(member, ".tableView-assignee-list"));
+                            // console.log(parents(member, ".tableView-assignee-list")[0].offsetHeight);
+
+                            topValue = (parents(member, ".tableView-assignee-list")[0].offsetHeight) - 40;
                             console.log(`topValue: ${topValue}`);
                             console.log(`====next(chosenOne)====`);
-                            console.log(next(chosenOne));
+                            // console.log(next(chosenOne));
                             next(chosenOne).style.top = topValue + 'px';
-                            console.log(next(chosenOne)); */
+
 
                             // 2) 멤버 목록에서 이름 빼기
                             member.classList.add("hide");
 
                             // 3) 서버에 전달: 해당 할 일의 (task) id, 추가한 담당자 member id, 추가한 담당자 이름, 추가한 사람의 member id
-                            fetch(`http://localhost:8080/task/editAssignee?execMid=${executorMid}&addOrDel=add`, {
+                            fetch(`http://localhost:8080/task/addAssignee?execMid=${executorMid}`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
@@ -391,19 +396,12 @@ window.onload = function(){
                                 if(response.ok){
                                     console.log(`ResponseEntity check`);
                                 }
-                            })
+                            });
                         }
-
 
                     });
                 });
 
-
-
-                // 새로 배정한 담당자를 해제했을 때
-                // 1) 담당자 div에서 빼기
-                // 2) 멤버 목록에 다시 추가하기
-                // 3) 서버에 전달
             });
         });
     }

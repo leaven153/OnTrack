@@ -125,13 +125,12 @@ public class TaskController {
         return edit;
     }
 
-    @PostMapping("/editAssignee")
+    @PostMapping("/addAssignee")
     @ResponseBody
-    public ResponseEntity editAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestParam(required = false)String addOrDel, @RequestBody TaskAssignment ta) {
+    public ResponseEntity addAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestBody TaskAssignment ta) {
         log.info("============= edit Assignee Controller 진입 =================");
 
         log.info("누가 변경을 진행했나요: {}", execMid);
-        log.info("삭제입니까 배정입니까: {}", addOrDel);
         log.info("task assignment 객체: {}", ta);
 
         // 배정한 시간
@@ -144,23 +143,20 @@ public class TaskController {
                 .projectId(ta.getProjectId())
                 .taskId(ta.getTaskId())
                 .modItem("assginee")
-                .modType(addOrDel.equals("add")?"register":"delete")
+                .modType("register")
                 .modContent(ta.getNickname())
                 .updatedAt(nowWithNano.minusNanos(nanosec))
                 .updatedBy(execMid)
                 .build();
 
-        taskService.addAssignee(ta, th);
+        // 추후 예외 처리 요망
+//        taskService.addAssignee(ta, th);
 
-        // task assignment 객체:
-        // TaskAssignment(id=null, projectId=9, taskId=22, userId=null, memberId=26,
-        // nickname=송혜교, role=assignee, assignedAt=null)
-//        log.info("which task?: {}", taskId);
-//        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mId);
-//        log.info("어떤 멤버를 배정 혹은 삭제합니까: {}", mName); // @RequestBody String mName,
-//        MemberList m = (MemberList) model.getAttribute("loginMember");
-//        log.info("member 정보가 있나?: {}", m); // 없음!
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
+    @PostMapping("delAssignee")
+    public ResponseEntity delAssignee(){
 
         return new ResponseEntity(HttpStatus.OK);
     }
