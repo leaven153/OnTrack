@@ -36,8 +36,7 @@ public class UserController {
      * */
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginUser loginRequest, BindingResult bindingResult, HttpServletRequest request, Model model){
-        LoginUser user = loginRequest;
-        log.info("로그인 입력정보: {}", user); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
+        log.info("로그인 입력정보: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
         if(loginRequest == null) {
             model.addAttribute("loginRequest", LoginUser.builder().build());
@@ -91,4 +90,15 @@ public class UserController {
         return "redirect:/mypage/myProjects";
     }
 
+    /**
+     * created : 2024-06-19
+     * param   : HttpSession
+     * return  : login
+     * explain : 로그아웃
+     * */
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
