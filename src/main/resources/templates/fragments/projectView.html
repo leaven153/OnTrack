@@ -113,16 +113,18 @@
           </th:block>
 
             <div class="tableView-assignee-list img-hidden">
-              <div class="담당자목록 task-assignee-list">
+
+              <div class="담당자목록 task-assignee-list pd-t10">
                 <div class="개별담당자box tableView-assignee-box mb-7" th:each="assignee : ${task.getAssignees()}">
                   <p class="div-inline-block mb-5" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                   <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
                   <span class="btn-dropOutSelf-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${memberId}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 3}">&times;</span>
                 </div>
               </div>
-              <!--/* 해당 일의 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능 */-->
-              <th:block th:each="assignee : ${task.getAssigneeNames()}">
-                <div class="참여하기 flex-row-center-center-nowrap top-line cursorP mt-5 mb-5 pd-t5" th:if="${!#strings.equals(assignee, nickname)} and ${task.getTaskStatus() < 2} and ${assigneeStat.first}">
+
+              <!--/* 해당 일의 작성자나 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능. (작성자는 담당자가 아니어도 '참여하기'가 아닌 담당자 추가로만 가능함.) */-->
+              <th:block th:each="assignee : ${task.getAssignees()}">
+                <div class="참여하기 flex-row-center-center-nowrap top-line cursorP mt-5 mb-5 pd-t5 btn-applySelf-task" th:if="${!#strings.equals(assignee.value, nickname)} and ${!#strings.equals(nickname, task.getAuthorName())} and ${task.getTaskStatus() < 2} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">
                   <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
                   <span>이 일에 참여하기</span>
                 </div>

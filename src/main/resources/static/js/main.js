@@ -288,6 +288,8 @@ window.onload = function(){
         btnDropOutSelfTask.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
                 console.log(chosenOne); // <span class="btn-dropOutSelf-task ml-3 cursorP" data-assigneemid="4" data-executormid="14">
+                // 해당 task의 row에서 담당자 이름 출력되는 요소
+                
                 console.log(parents(chosenOne)[0]); // 제거할 대상(자신포함): <div class="개별담당자box tableView-assignee-box mb-7">
                 console.log(parents(parents(chosenOne)[0], ".tableView-assignee-list")[0]); // 높이 계산할 대상
                 console.log(parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0]); // 높이(top) 반영할 대상
@@ -312,25 +314,13 @@ window.onload = function(){
 
                 console.log(taskHistory);
 
-                // 2-2. 멤버 목록에 해당 멤버를 출력하거나 '참여하기'버튼 출력한다.
+                // 2-2. 멤버 목록에 해당 멤버 출력
+                parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
+
                 /*
-                if(chosenOne.dataset.executormid === chosenOne.dataset.authormid && chosenOne.dataset.assigneemid == chosenOne.dataset.authormid){
-                    // 작성자가 담당자도 겸했던 경우 (참여하기 버튼 출력과 멤버목록에 해당 닉네임 출력)
-                    console.log(`작성자가 담당자를 겸했는데 자신을 해제한 경우`);
-                    parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
-                } else if(chosenOne.dataset.executormid === chosenOne.dataset.assigneemid){
-                    // 자신이 스스로 해제한 경우, ('계획중'인 경우까지만 )'참여하기' 버튼 출력
-                    console.log(`스스로 배정해제함`);
-                } else if(chosenOne.dataset.executormid === chosenOne.dataset.authormid){
-                    // 작성자(author)가 담당자 해제한 경우, ('완료'이전까지만 )담당자 목록에 이름 추가
-                    console.log(`작성자가 담당자 해제함`);
-                } else {
-                    
-                } */
                 if(chosenOne.dataset.executormid === chosenOne.dataset.authormid){
                     // 작성자(author)가 담당자 해제한 경우, ('완료'이전까지만 )담당자 목록에 이름 추가
                     console.log(`작성자가 담당자 해제함`);
-                    parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
                 } else {
                     // 참여하기 출력 및 멤버 목록에 이름 추가
                     // 작성자가 담당자도 겸하는 경우, 
@@ -338,7 +328,7 @@ window.onload = function(){
                     console.log(`작성자가 담당자도 겸한 상태에서 스스로 해제한 경우, 혹은 담당자 스스로 해제한 경우`);
                     parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
 
-                }
+                } */
 
                 // 2-3. 변경된 boxHeight를 멤버목록 top에 반영 (담당자목록높이-65px)
                 boxHeight = parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].offsetHeight;
@@ -347,8 +337,12 @@ window.onload = function(){
                 // 2-4. 해당 담당자 이름 담긴 box를 삭제한다.
                 parents(chosenOne)[0].remove();
 
-                // 2-5. 현재 담당자 수에서 1 차감한다.
+                // 2-5. 해당 task의 row에서 해당 담당자 이름 제거
+                // 먼저 빼기 전 상태로 요소 찾기: cntAss == 1, cntAss > 1
+                
+                // 2-6. 현재 담당자 수에서 1 차감한다.
                 cntAss--;
+                // 빼고 난 상태로 요소 출력하기
 
             });
         });
@@ -388,7 +382,7 @@ window.onload = function(){
                 const cntAssignee = parseInt(chosenOne.dataset.assigneecnt); // ★★★
 
 
-                // 해당 프로젝트 멤버 목록 div 화면 노출(출력)
+                // 1. 해당 프로젝트 멤버 목록 div 화면 노출(출력)
                 topValue = boxHeight - 40;
                 next(chosenOne).style.top = topValue + 'px';
                 if(next(chosenOne).classList.contains("img-hidden")){
@@ -398,7 +392,7 @@ window.onload = function(){
                 }
 
 
-                // 멤버 검색 버튼 클릭했을 때
+                // 2. 멤버 검색 버튼 클릭했을 때
                 // // btn-findByName-member-to-assign
                 console.log(next(chosenOne).children[0].children[1]);
                 const btnFindByNameMemberToAssign = next(chosenOne).children[0].children[1];
@@ -407,7 +401,7 @@ window.onload = function(){
                     console.log(prev(btnFindByNameMemberToAssign).value);
                 });
 
-                // 멤버 목록에서 '멤버 이름' 클릭했을 때
+                // 3. 멤버 목록에서 '멤버 이름' 클릭했을 때
                 // 담당자는 6명을 초과할 수 없다.
                 let cntAddAssignee = 0;
                 const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
