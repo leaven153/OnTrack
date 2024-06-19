@@ -28,6 +28,7 @@
     <div class="flex-row-end-center-nowrap wrapper">
       <div class="user-name flex-row-start-nowrap cursorP mb-20">
         <span class="font-18 bold" th:text="${loginUser.userName}">권지용</span>
+          <a href="/logout" th:href="@{/logout}"><img src="../../static/imgs/logout.png" th:src="@{/imgs/logout.png}" class="img-20 logout" alt="logout"></a>
       </div>
     </div> <!-- 사용자 이름 끝 -->
 

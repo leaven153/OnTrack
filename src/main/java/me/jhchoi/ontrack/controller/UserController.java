@@ -91,4 +91,15 @@ public class UserController {
         return "redirect:/mypage/myProjects";
     }
 
+    /**
+     * created : 2024-06-19
+     * param   : HttpSession
+     * return  : login
+     * explain : 로그아웃
+     * */
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model){
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
