@@ -334,15 +334,17 @@ window.onload = function(){
                 boxHeight = parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].offsetHeight;
                 parents(parents(chosenOne)[0], ".tableView-assignee-list")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0].style.top = (boxHeight - 65) + 'px';
 
-                // 2-4. 해당 담당자 이름 담긴 box를 삭제한다.
-                parents(chosenOne)[0].remove();
+                // 2-4. 해당 task의 row에서 해당 담당자 이름 제거
+                // 먼저 빼기 전 상태로 요소 찾기:
+                // div class="table-assignee"
+                // span class="no-assignee", "table-assignee-alone", "assignee-many"
 
-                // 2-5. 해당 task의 row에서 해당 담당자 이름 제거
-                // 먼저 빼기 전 상태로 요소 찾기: cntAss == 1, cntAss > 1
-                
-                // 2-6. 현재 담당자 수에서 1 차감한다.
+                // 2-5. 현재 담당자 수에서 1 차감한다 .
                 cntAss--;
-                // 빼고 난 상태로 요소 출력하기
+                // 빼고 난 상태에서 cntAss == 0 or null, cntAss == 1, cntAss > 1 확인 후 요소 출력
+
+                // 2-6. 해당 담당자 이름 담긴 box를 삭제한다.
+                parents(chosenOne)[0].remove();
 
             });
         });

@@ -236,7 +236,7 @@
                 </div>
                 <!-- status view: 담당자 -->
                 <div class="statusview-task">
-                  <span class="status-assignee font-blur" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
+                  <span class="status-assignee no-assignee" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
                   <span class="status-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">채규태</span>
                   <th:block th:if="${task.getAssigneeMids().size() > 1}">
                     <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
