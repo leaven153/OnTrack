@@ -540,6 +540,7 @@ div.table-task-title {
     justify-content: space-between;
 }
 
+.status-assignee,
 .table-assignee {
     position: relative;
 }
@@ -698,10 +699,10 @@ img.btn-create-child-task:hover ~ .hover-tip-child {
 
 /****** table: many assignees ******/
 
-.table-assignee {
-    display: flex;
-    justify-content: center;
-}
+/*.table-assignee {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
 
 .many-assignee {
     display: inline-block;
@@ -828,7 +829,11 @@ span.statusview-type-name {
 
 .statusview-task {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
 }
 
 .statusview-task:nth-child(2) {
@@ -845,15 +850,21 @@ span.statusview-type-name {
 
 .statusview-dueDate{
     font-size: 15px;
+    top: 0.05em;
+    position: relative;
 }
 
 .statusview-duedate-day {
     font-size: 12px;
     position: relative;
-    top: 0.35em;
+    /*top: 0.35em;*/
     padding-left: 3px;
 }
-
+.statusview-duedate-day + img{
+    position: relative;
+    top: -0.05em;
+    padding-left: 3px
+}
 span.status-assignee {
     font-size: 13px;
     margin-top: 2px;

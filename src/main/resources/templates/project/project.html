@@ -77,7 +77,7 @@
   <!---/* 테이블뷰 끝 Table View Ends */--->
 
   <!-- Status View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getTaskList()}, loginMember=${loginMember})}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()}, loginMember=${loginMember})}"></th:block>
   <!-- Status View Ends -->
 
   <!-- Assignee View Starts -->
