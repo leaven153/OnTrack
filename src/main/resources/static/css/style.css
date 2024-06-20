@@ -593,7 +593,8 @@ div.content-chkbox > input {
     opacity: 0;
 }
 
-span.table-assignee-alone:hover + span.transit-250,
+span[class*=task-title]:hover ~ img.btn-edit-task-title,
+span.one-assignee:hover + span.transit-250,
 span.transit-250:hover,
 img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
@@ -702,7 +703,7 @@ img.btn-create-child-task:hover ~ .hover-tip-child {
     justify-content: center;
 }
 
-.assignee-many {
+.many-assignee {
     display: inline-block;
     font-size: 12px;
     width: 16px;
@@ -836,7 +837,7 @@ span.statusview-type-name {
 
 .statusview-task-title {
     font-size: 14px;
-    width: 14rem;
+    width: 13rem;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -1146,6 +1147,9 @@ div.noassignee-state span:nth-child(2) {
     width: 90%;
 }
 
+.w200 {
+    width: 200px;
+}
 /******** input ********/
 input[type=date] {
     padding-left: 4px;

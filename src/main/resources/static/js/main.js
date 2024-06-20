@@ -172,15 +172,75 @@ window.onload = function(){
     });
 
     /*---------- 009 ------------*/
-    /* 할 일 제목 수정 */
-    if(elExists(document.querySelector(".btn-edit-task-title"))){
-        const btnEditTaskTitle = document.querySelectorAll(".btn-edit-task-title");
-        btnEditTaskTitle.forEach(function(chosenOne){
+    /* 할 일 제목 수정: span을 눌렀을 때 */
+    // fetch의 url이 같아서 인지, img에서 fetch 실행해도
+    // span의 response가 또 출력됨..
+    // 추후 span과 img를 통합하여 분기처리 해보기
+    if(elExists(document.querySelector("span.btn-edit-task-title"))){
+        const spanBtnEditTaskTitle = document.querySelectorAll("span.btn-edit-task-title");
+        spanBtnEditTaskTitle.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
 
+                console.log(`제목span누름`);
+
+                // 할 일 제목이 담긴 input 출력
+                const titleInput = next(chosenOne);
+                titleInput.classList.remove("hide");
+                titleInput.focus();
+
+                // 기존 할 일 제목이 담긴 span 숨긴다. 추후 바뀐 제목을 담아 출력한다.
+                chosenOne.classList.add("hide");
+
+                // 수정 버튼 숨긴다.
+                next(titleInput).classList.add("hide");
+
+                // 바뀐 할 일 제목을 서버에 반영할 엔터 모양 버튼(img) 출력
+                next(next(titleInput)).classList.remove("hide");
+
+                titleInput.addEventListener("blur", ()=>{
+                    console.log('blur 발생');
+                    console.log(titleInput.value);
+
+                    fetch('http://localhost:8080/task/editTask?item=title', {
+                        method: 'POST',
+                        headers: {},
+                        body: titleInput.value
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log(`span의 fetch 결과`);
+                            console.log(data);
+
+                            // input 숨기고
+                            titleInput.classList.add("hide");
+
+                            // enter 버튼 숨기고
+                            next(next(titleInput)).classList.add("hide");
+
+                            // span에 새 제목 담고 출력
+                            chosenOne.innerHTML = data;
+                            chosenOne.classList.remove("hide");
+
+                            // edit 버튼 재 출력
+                            next(titleInput).classList.remove("hide");
+                        }); // fetch ends
+
+                }); // titleInput.addEventListener ends
+            });
+        });
+    } // edit task title ends (span을 눌렀을 때)
+
+    /* 할 일 제목 수정: img를 눌렀을 때 */
+    /*
+    if(elExists(document.querySelector("img.btn-edit-task-title"))){
+        const btnEditTaskTitle = document.querySelectorAll("img.btn-edit-task-title");
+        btnEditTaskTitle.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", ()=>{
+                console.log(`img 누름`);
                 // 할 일 제목이 담긴 input 출력
                 const currInput = prev(chosenOne);
                 prev(chosenOne).classList.remove("hide");
+                currInput.focus();
 
                 // 기존 할 일 제목이 담긴 span 숨긴다. 추후 바뀐 제목을 담아 출력한다.
                 prev(currInput).classList.add("hide");
@@ -191,10 +251,9 @@ window.onload = function(){
                 // 수정 버튼(자기 자신) 숨긴다.
                 chosenOne.classList.add("hide");
 
-                // 엔터모양 버튼 클릭 이벤트도 추가 요망
+
                 currInput.addEventListener("blur", ()=>{
                     console.log('blur 발생');
-                    console.log('2222');
                     console.log(currInput.value);
 
                     fetch('http://localhost:8080/task/editTask?item=title', {
@@ -204,6 +263,7 @@ window.onload = function(){
                     })
                     .then(response => response.text())
                     .then(data => {
+                        console.log(`img의 fetch 결과`);
                         console.log(data);
 
                         // input 숨기고
@@ -220,11 +280,11 @@ window.onload = function(){
                         chosenOne.classList.remove("hide");
                     }); // fetch ends
 
-                }); // currInput.addEventListener ends
+                }); // currInput.addEventListener ends 
             });
         });
-    } // edit task title ends
-
+    } // edit task title ends (img를 눌렀을 때)
+*/
     /*---------- 010 ------------*/
     /* 할 일 담당자 더보기 및 수정 */
 
@@ -337,7 +397,7 @@ window.onload = function(){
                 // 2-4. 해당 task의 row에서 해당 담당자 이름 제거
                 // 먼저 빼기 전 상태로 요소 찾기:
                 // div class="table-assignee"
-                // span class="no-assignee", "table-assignee-alone", "assignee-many"
+                // span class="no-assignee", "one-assignee", "many-assignee"
 
                 // 2-5. 현재 담당자 수에서 1 차감한다 .
                 cntAss--;
@@ -379,6 +439,7 @@ window.onload = function(){
                 console.log(next(chosenOne)); // <div class="추가할담당자검색box find-member-to-assign img-hidden" style="top: 123px;">
                 console.log(chosenOne.dataset.executor);
                 const executorMid = chosenOne.dataset.executor;
+                const thisAuthorMid = chosenOne.dataset.authormid;
                 const thisTaskId = chosenOne.dataset.taskid;
                 const thisProjectId = chosenOne.dataset.projectid;
                 const cntAssignee = parseInt(chosenOne.dataset.assigneecnt); // ★★★
@@ -410,21 +471,22 @@ window.onload = function(){
                 unassignedMember.forEach(function(member){
                     member.addEventListener("click", ()=>{
 
-
+                        const newAssgineeName = member.children[0].innerText;
+                        const newAssigneeMid = member.children[0].dataset.mid;
                         console.log(`현재 담당자 추가를 실행한 자의 mId: ${executorMid}`);
                         console.log(`담당자를 추가한 일의 id: ${thisTaskId}`);
                         console.log(`이 일의 project id: ${thisProjectId}`);
                         console.log(`이 일에 이미 배정된 자들의 수: ${cntAssignee}`);
-                        console.log(`새로 배정한 멤버의 이름: ${member.children[0].innerText}`);
-                        console.log(`새로 배정한 멤버의 id: ${member.children[0].dataset.mid}`);
+                        console.log(`새로 배정한 멤버의 이름: ${newAssgineeName}`);
+                        console.log(`새로 배정한 멤버의 id: ${newAssigneeMid}`);
                         console.log(parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild); // <div class="담당자목록 task-assignee-list">
                         // <div class="담당자목록 task-assignee-list">
 
                         const taskAssignment = {
                             projectId: thisProjectId,
                             taskId: thisTaskId,
-                            memberId: member.children[0].dataset.mid,
-                            nickname: member.children[0].innerText,
+                            memberId: newAssigneeMid,
+                            nickname: newAssgineeName,
                             role: 'assignee'
                         }
                         console.log(taskAssignment);
@@ -432,7 +494,7 @@ window.onload = function(){
                             cntAddAssignee++;
                             console.log(`cntAddAssignee: ${cntAddAssignee}`);
                             // 1)-1 담당자 div에 이름 출력
-                            parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(member.children[0].innerText, member.children[0].dataset.mid, executorMid === member.children[0].dataset.mid));
+                            parents(chosenOne, ".tableView-assignee-list")[0].firstElementChild.append(newAssigneeElement(newAssgineeName, newAssigneeMid, executorMid, thisAuthorMid, thisTaskId, thisProjectId));
 
                             // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
                             // console.log(parents(member, ".tableView-assignee-list"));
@@ -472,8 +534,9 @@ window.onload = function(){
 
     /* 할 일 진행상태 수정 */
     /* 할 일 마감일 수정 */
+
     /*---------- 053 ------------*/
-    function newAssigneeElement(newAssigneeName, newAssigneeMid, btnDelX) {
+    function newAssigneeElement(newAssigneeName, newAssigneeMid, executorMid, authorMid, taskId, projectId) {
         const div = document.createElement("div");
         const p = document.createElement("p");
         const btnX = document.createElement("span");
@@ -482,12 +545,19 @@ window.onload = function(){
         p.classList.add("div-inline-block", "mb-5");
         btnX.classList.add("btn-dropOutSelf-task", "ml-3", "cursorP");
         btnX.setAttribute("data-assigneemid", newAssigneeMid);
+        btnX.setAttribute("data-executormid", executorMid);
+        btnX.setAttribute("data-authormid", authorMid);
+        btnX.setAttribute("data-taskid", taskId);
+        btnX.setAttribute("data-projectid", projectId);
 
         p.innerText = newAssigneeName;
         btnX.innerHTML = "&times;";
         div.appendChild(p);
-        if(btnDelX) {
-            console.log(`why? ${btnDelX}`);
+        console.log(executorMid);
+        console.log(newAssigneeMid);
+        console.log(authorMid);
+        if(executorMid == newAssigneeMid || authorMid == executorMid) {
+            // console.log(`why? ${btnDelX}`);
             div.appendChild(btnX);
         }
         return div;
