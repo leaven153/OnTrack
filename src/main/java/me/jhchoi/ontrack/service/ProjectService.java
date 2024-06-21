@@ -146,7 +146,14 @@ public class ProjectService {
 
         // 5. 진행상태별 할 일 목록
         LinkedHashMap<Integer, List<StatusTaskList>> stm = new LinkedHashMap<>();
-        IntStream.range(0, 5).forEach(i -> stm.put(i, taskRepository.getStatusView(new StatusViewRequest(projectId, i))));
+        IntStream.range(0, 5).forEach(i -> {
+            List<StatusTaskList> stl = taskRepository.getStatusView(new StatusViewRequest(projectId, i));
+            for(int j = 0; j < stl.size(); j++) {
+                stl.get(j).makeAssigneeMap();
+            }
+            stm.put(i, stl);
+        });
+
         project.setStatusTaskList(stm);
 
 
