@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Data
@@ -26,5 +27,8 @@ public class ProjectResponse {
 
     // 4. 담당자별 할 일
     private List<AssignmentList> assignmentList;
+
+    // 5. 진행상태별 할 일
+    private LinkedHashMap<Integer, List<StatusTaskList>> statusTaskList;
 
 }

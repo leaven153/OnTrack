@@ -94,7 +94,7 @@ public class ProjectService {
 
     /**
      * started  : 24-05-27
-     * complete : 24-05-
+     * updated  : 24-06-21
      * param    :
      * return   :
      * explain  : 프로젝트 상세(프로젝트 정보, 멤버목록, 할 일 목록)
@@ -110,7 +110,7 @@ public class ProjectService {
         // id as memberId, user_id, project_id, nickname
         project.setMemberList(projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(projectId).build()));
 
-        // 3-1. 프로젝트 내 할 일 목록 (from ontrack_task) → TaskList
+        // 3-1. 프로젝트 內 할 일 목록 (from ontrack_task) → TaskList
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
         project.setTaskList(projectRepository.allTasksInProject(projectId));
 
@@ -132,8 +132,7 @@ public class ProjectService {
             project.getTaskList().get(i).setAssignees(assignees);
         });
 
-        // 4. 프로젝트 멤버별 할 일 목록
-        // 4-1. 공동task 여부 확인
+        // 4. 멤버별 할 일 목록 → AssignmentList
         List<AssignmentList> aList = new ArrayList<>();
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
@@ -144,6 +143,13 @@ public class ProjectService {
             aList.add(assignment);
         });
         project.setAssignmentList(aList);
+
+        // 5. 진행상태별 할 일 목록
+        LinkedHashMap<Integer, List<StatusTaskList>> stm = new LinkedHashMap<>();
+        IntStream.range(0, 5).forEach(i -> {
+            stm.put(i, taskRepository.getStatusView(new StatusViewRequest(projectId, i)));
+        });
+        project.setStatusTaskList(stm);
 
 
 //        log.info("불려온 project: {}", project);

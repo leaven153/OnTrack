@@ -102,7 +102,7 @@
         <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
           <span class="no-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
           <span class="one-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
-          <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 2}">
+          <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">
             <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
           </th:block>
           <th:block th:if="${task.getAssigneeNames().size() > 1}">
@@ -117,20 +117,20 @@
                 <div class="개별담당자box tableView-assignee-box mb-7" th:each="assignee : ${task.getAssignees()}">
                   <p class="div-inline-block mb-5" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                   <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                  <span class="btn-dropOutSelf-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${memberId}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 3}">&times;</span>
+                  <span class="btn-dropOutSelf-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${memberId}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
                 </div>
               </div>
 
               <!--/* 해당 일의 작성자나 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능. (작성자는 담당자가 아니어도 '참여하기'가 아닌 담당자 추가로만 가능함.) */-->
             <th:block th:each="assignee : ${task.getAssignees()}">
-                <div class="참여하기 flex-row-center-center-nowrap top-line cursorP mt-5 mb-5 pd-t5 btn-applySelf-task" th:if="${!#strings.equals(assignee.value, nickname)} and ${!#strings.equals(nickname, task.getAuthorName())} and ${task.getTaskStatus() < 2} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">
+                <div class="참여하기 flex-row-center-center-nowrap top-line cursorP mt-5 mb-5 pd-t5 btn-applySelf-task" th:if="${!#strings.equals(assignee.value, nickname)} and ${!#strings.equals(nickname, task.getAuthorName())} and ${task.getTaskStatus() < 3} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">
                   <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
                   <span>이 일에 참여하기</span>
                 </div>
               </th:block>
 
               <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 추가가능 */-->
-            <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5 cursorP" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-assigneeCnt=${task.getAssigneeMids().size()}, data-authormid=${task.getAuthorMid()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 4}">
+            <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5 cursorP" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-assigneeCnt=${task.getAssigneeMids().size()}, data-authormid=${task.getAuthorMid()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 5}">
                 <span>담당자 추가하기</span>
                 <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="img-angle270" alt="add assignee">
               </div>
@@ -214,13 +214,12 @@
         <!--/* status view: 보류/취소box start */-->
         <th:block th:each="task : ${tasks}">
           <div class="statusview-type-box" th:if="${task.getTaskStatus() == 99}">
-          <div class="statusview-type-header">
+            <div class="statusview-type-header">
             <div class="bar pause "></div>
             <span class="statusview-type-name">보류/취소</span>
             <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(tasks, 99)}?${task.countStatus(tasks, 99)}:'0'"></span>
-
           </div>
-          <div class="statusview-type-board pause-bg">
+            <div class="statusview-type-board pause-bg">
             <th:block th:each="task : ${tasks}">
               <!-- statusview-task-box Start -->
               <div class="statusview-task-box pause-border-shadow" th:if="${task.getTaskStatus() == 99}"><!--/* btn-task-detail */-->
@@ -288,7 +287,7 @@
               </div> <!-- End of <div class="statusview-task-box"> -->
             </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
-        </div> <!-- End of <div class="statusview-type-box"> -->
+          </div> <!-- End of <div class="statusview-type-box"> -->
         </th:block>
 
         <!-- status view: 시작안함box start -->
@@ -412,7 +411,6 @@
               </th:block>
           </div> <!-- End of <div class="statusview-type-board"> -->
         </div> <!-- End of <div class="statusview-type-box"> -->
-
 
         <!-- status view: 진행중box start -->
         <div class="statusview-type-box">
@@ -546,6 +544,7 @@
       <!-- status view: content ends -->
     </div><!-- End of <div class="wrapper mb-20"> -->
   </div> <!-- End of #status-view div -->
+
   <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(assignees)">
     <div class="wrapper mb-20 flex-col-start-nowrap">
 
@@ -584,7 +583,7 @@
               <!-- 오른쪽 끝 진행상황별 일 개수 끝-->
             </div> <!--/* 첫째 줄: 담당자없는일 요약div 끝 */-->
             <!--/* 담당자없는 상세컨테이너 시작 */-->
-            <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" data-id="noassignee01">
+            <div class="담당자없는상세컨테이너 assignee-status-box mb-30 hide" data-id="noassignee01">
               <!-- 담당자 진행상태별box: 시작 안 함-->
               <div class="flex-row-start-nowrap mt-14">
                 <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
@@ -853,11 +852,11 @@
                 <div class="flex-row-start-nowrap">
                   <th:block th:if="${assignee.getTList().size() != null}">
                     <th:block th:each="task : ${assignee.getTList()}">
-                      <div class="status-graph not-yet" th:if="${task.getTaskStatus() == 0}"></div>
-                      <div class="status-graph planning" th:if="${task.getTaskStatus() == 1}"></div>
-                      <div class="status-graph ing" th:if="${task.getTaskStatus() == 2}"></div>
-                      <div class="status-graph review" th:if="${task.getTaskStatus() == 3}"></div>
-                      <div class="status-graph done" th:if="${task.getTaskStatus() == 4}"></div>
+                      <div class="status-graph not-yet" th:if="${task.getTaskStatus() == 1}"></div>
+                      <div class="status-graph planning" th:if="${task.getTaskStatus() == 2}"></div>
+                      <div class="status-graph ing" th:if="${task.getTaskStatus() == 3}"></div>
+                      <div class="status-graph review" th:if="${task.getTaskStatus() == 4}"></div>
+                      <div class="status-graph done" th:if="${task.getTaskStatus() == 5}"></div>
                     </th:block>
                   </th:block>
 
@@ -867,31 +866,31 @@
                     <div class="mr-15 각 진행상황 div">
                       <span class="">시작 안 함</span>
                       <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}?${task.countStatus(assignee.getTList(), 0)}:'0'"></span>
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}?${task.countStatus(assignee.getTList(), 1)}:'0'"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">계획중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}?${task.countStatus(assignee.getTList(), 1)}:'0'"></span>
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}?${task.countStatus(assignee.getTList(), 2)}:'0'"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">진행중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}?${task.countStatus(assignee.getTList(), 2)}:'0'"></span>
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}?${task.countStatus(assignee.getTList(), 3)}:'0'"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">검토중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}?${task.countStatus(assignee.getTList(), 3)}:'0'"></span>
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}?${task.countStatus(assignee.getTList(), 4)}:'0'"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">완료</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}?${task.countStatus(assignee.getTList(), 4)}:'0'"></span>
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 5)}?${task.countStatus(assignee.getTList(), 5)}:'0'"></span>
                       </th:block>
                     </div>
                   </div>
@@ -916,7 +915,7 @@
           </div> <!-- 담당자 있는 div(요약) 끝 -->
           <!-- 담당자별상세컨테이너 시작 -->
           <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" th:attr="data-id=${assignee.getAssigneeName()}">
-            <th:block th:each="tStatus : ${statusList}">
+            <th:block th:each="tStatus : ${statusMap}">
               <!--/* 담당자 진행상태별box 시작 */-->
               <div class="flex-row-start-nowrap mt-14">
                 <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">

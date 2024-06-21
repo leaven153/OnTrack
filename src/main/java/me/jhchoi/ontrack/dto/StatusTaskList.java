@@ -6,16 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class AssigneeTaskList extends TaskList{
-
+@AllArgsConstructor @Builder
+public class StatusTaskList {
     private Long id;
     private String taskTitle;
     private Integer taskStatus;
+    private Long authorMid;
+    private String authorName;
     private LocalDate taskDueDate;
-    private Integer assigneeNum;
-
+    private String assigneeMid;
+    private String assigneeName;
+    private Map<Long, String> assignees;
 }

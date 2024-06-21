@@ -3,8 +3,7 @@ package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.dto.AssignmentList;
-import me.jhchoi.ontrack.dto.TaskList;
+import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +24,8 @@ public class TaskRepositoryTest {
 
     @Autowired
     TaskRepository taskRepository;
+//    @Autowired
+//    FileStore fileStore;
 
     @Test
     void newTask(){
@@ -100,6 +99,31 @@ public class TaskRepositoryTest {
          // [AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=8, taskTitle=Tigger can do everything, taskStatus=ing),
          // AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=9, taskTitle=경복궁 야간개방, taskStatus=planning),
          // AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=13, taskTitle=인생의 베일, taskStatus=done)]
+     }
+
+     @Test @DisplayName("진행상태별 할 일 목록: parameter Map<Integer, Long>")
+    void getStatusView(){
+        //given
+         Long projectId = 9L;
+         Integer[] statusType = {0, 1, 2, 3, 4, 5};
+         ProjectResponse pr = new ProjectResponse();
+         LinkedHashMap<Integer, List<StatusTaskList>> m = new LinkedHashMap<>();
+         List<StatusTaskList> stl = new ArrayList<>();
+
+         for(int i = 0; i < statusType.length; i++){
+             StatusViewRequest svr = new StatusViewRequest(projectId, statusType[i]);
+//             stl = taskRepository.getStatusView(svr);
+             m.put(statusType[i], taskRepository.getStatusView(svr));
+         }
+         pr.setStatusTaskList(m);
+         log.info("상태별 할 일 목록: {}", pr.getStatusTaskList());
+
+//         StatusViewRequest svr2 = new StatusViewRequest(projectId, statusType[1]);
+//         List<StatusTaskList> stl2 = taskRepository.getStatusView(svr2);
+//         log.info("어떻게 담아야 할까: {}", stl2);
+//         StatusTaskList stl = taskRepository.getStatusView();
+
+
      }
 
 }

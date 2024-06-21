@@ -58,4 +58,16 @@
         GROUP BY t.id
         ORDER BY t.task_status;
     </select>
+
+    <select id="getStatusView" parameterType="StatusViewRequest" resultType="StatusTaskList">
+        SELECT t.id, t.task_title, t.authorMid, t.authorName, t.task_status, t.task_dueDate
+        , GROUP_CONCAT(ta.member_id ORDER BY ta.member_id SEPARATOR ', ') assigneeMid
+        , GROUP_CONCAT(ta.nickname ORDER BY ta.member_id SEPARATOR ', ') assigneeName
+        FROM ontrack_task t
+        INNER JOIN task_assignment ta
+        ON ta.task_id = t.id
+        WHERE t.task_status = #{status}
+        AND t.project_id = #{projectId}
+        GROUP BY t.id
+    </select>
 </mapper>

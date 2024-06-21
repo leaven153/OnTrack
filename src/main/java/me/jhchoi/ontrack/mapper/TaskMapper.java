@@ -4,13 +4,12 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.AssigneeTaskList;
-import me.jhchoi.ontrack.dto.AssignmentList;
-import me.jhchoi.ontrack.dto.TaskList;
+import me.jhchoi.ontrack.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -46,5 +45,8 @@ public interface TaskMapper {
 
     // Assignee view: 담당자별 할 일 목록
     List<AssigneeTaskList> getAssigneeView(Long memberId);
+
+    // Status view: 진행상태별 할 일 목록
+    List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest);
 
 }

@@ -19,7 +19,7 @@ public class TaskList {
     private Long authorMid; // OnTrackTask - author
     private String authorName;
     private Integer taskPriority; // vip: 1, ip: 2, norm: 3
-    private Integer taskStatus; // 시작 안 함: 0, 계획중: 1, 진행중: 2, 검토중: 3, 완료: 4
+    private Integer taskStatus; // 시작 안 함: 1, 계획중: 2, 진행중: 3, 검토중: 4, 완료: 5
     private LocalDate taskDueDate;
     private Long taskParentId;
     private LocalDateTime createdAt;
@@ -45,12 +45,12 @@ public class TaskList {
     public static String switchStatusToKor(int dbStatus){
         String switchedStatus;
         switch (dbStatus){
-            case 99 -> switchedStatus = "보류"; // pause = 99
-            case 1 -> switchedStatus = "계획중"; // planning = 1
-            case 2 -> switchedStatus = "진행중"; // ing = 2
-            case 3 -> switchedStatus = "검토중"; // review = 3
-            case 4 -> switchedStatus = "완료"; // done = 4
-            default -> switchedStatus = "시작 안 함"; // not-yet = 0
+            case 0 -> switchedStatus = "보류"; // pause = 0
+            case 2 -> switchedStatus = "계획중"; // planning = 2
+            case 3 -> switchedStatus = "진행중"; // ing = 3
+            case 4 -> switchedStatus = "검토중"; // review = 4
+            case 5 -> switchedStatus = "완료"; // done = 5
+            default -> switchedStatus = "시작 안 함"; // not-yet = 1
         }
         return switchedStatus;
     }
@@ -59,12 +59,12 @@ public class TaskList {
     public static String switchStatusToEng(int dbStatus){
         String switchedStatus;
         switch (dbStatus){
-            case 99 -> switchedStatus = "pause"; // pause = 99
-            case 1 -> switchedStatus = "planning"; // planning = 1
-            case 2 -> switchedStatus = "ing"; // ing = 2
-            case 3 -> switchedStatus = "review"; // review = 3
-            case 4 -> switchedStatus = "done"; // done = 4
-            default -> switchedStatus = "not-yet"; // not-yet = 0
+            case 0 -> switchedStatus = "pause"; // pause = 0
+            case 2 -> switchedStatus = "planning"; // planning = 2
+            case 3 -> switchedStatus = "ing"; // ing = 3
+            case 4 -> switchedStatus = "review"; // review = 4
+            case 5 -> switchedStatus = "done"; // done = 5
+            default -> switchedStatus = "not-yet"; // not-yet = 1
         }
         return switchedStatus;
     }

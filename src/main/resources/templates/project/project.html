@@ -77,11 +77,11 @@
   <!---/* 테이블뷰 끝 Table View Ends */--->
 
   <!-- Status View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()}, loginMember=${loginMember})}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getStatusTaskList()}, memberList=${project.getMemberList()})}"></th:block>
   <!-- Status View Ends -->
 
   <!-- Assignee View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, loginMember=${loginMember})}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()})}"></th:block> <!--, loginMember=${loginMember}-->
   <!-- Assignee View Ends -->
 
 
