@@ -37,7 +37,7 @@ public class StatusTaskList extends TaskList{
 
             String[] mid = this.assigneeMid.split(",");
             List<String> mids = Arrays.asList(mid);
-            this.assigneeMids = mids.stream().map(i -> parseLong(i)).collect(Collectors.toList());
+            this.assigneeMids = mids.stream().map(Long::parseLong).collect(Collectors.toList());
             String[] mName = this.assigneeName.split(",");
             this.assigneeNames = Arrays.asList(mName);
             for(int i = 0; i < mid.length; i++){

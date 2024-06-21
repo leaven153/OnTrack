@@ -133,9 +133,9 @@ public class TaskRepositoryTest {
          // taskTitle=경복궁 야간개방, taskStatus=2, authorMid=14, authorName=공지철,
          // taskDueDate=null, assigneeMid=26, assigneeName=송혜교, assignees=null)]
          List<StatusTaskList> tList = test.get(1);
-         log.info("StatusTaskList의 함수 사용-get(0): {}", (Object) tList.get(0).switchStatusToCss(1));
+         log.info("StatusTaskList의 함수 사용-get(0): {}", (Object) StatusTaskList.switchStatusToCss(1));
          log.info("StatusTaskList의 함수 사용-get(0): {}", StatusTaskList.switchStatusToCss(1)[1]);
-         log.info("StatusTaskList의 함수 사용-get(1): {}", StatusTaskList.switchStatusToCss(1));
+         log.info("StatusTaskList의 함수 사용-get(1): {}", (Object) StatusTaskList.switchStatusToCss(1));
          log.info("LinkedHashMap다루기 연습2: {}", tList.get(2));
          //LinkedHashMap다루기 연습2: StatusTaskList(id=10,
          // taskTitle=그 벌들은 다 어디로 갔을까, taskStatus=1, authorMid=4, authorName=Adele, taskDueDate=2024-05-31, assigneeMid=27, assigneeName=크러쉬, assignees=null)
