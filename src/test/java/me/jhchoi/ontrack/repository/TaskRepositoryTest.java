@@ -110,10 +110,10 @@ public class TaskRepositoryTest {
          LinkedHashMap<Integer, List<StatusTaskList>> m = new LinkedHashMap<>();
          List<StatusTaskList> stl = new ArrayList<>();
 
-         for(int i = 0; i < statusType.length; i++){
-             StatusViewRequest svr = new StatusViewRequest(projectId, statusType[i]);
+         for (Integer integer : statusType) {
+             StatusViewRequest svr = new StatusViewRequest(projectId, integer);
 //             stl = taskRepository.getStatusView(svr);
-             m.put(statusType[i], taskRepository.getStatusView(svr));
+             m.put(integer, taskRepository.getStatusView(svr));
          }
          pr.setStatusTaskList(m);
          log.info("상태별 할 일 목록: {}", pr.getStatusTaskList());
