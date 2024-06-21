@@ -115,16 +115,17 @@ public class TaskRepositoryTest {
          for (Integer integer : statusType) {
              StatusViewRequest svr = new StatusViewRequest(projectId, integer);
              List<StatusTaskList> ttt = taskRepository.getStatusView(svr);
-             for(int j = 0; j < ttt.size(); j++){
-                 ttt.get(j).makeAssigneeMap();
+             for (StatusTaskList statusTaskList : ttt) {
+                 statusTaskList.makeAssigneeMap();
              }
              m.put(integer, ttt);
          }
+         log.info("완료가 안 떠?: {}", m);
          pr.setStatusTaskList(m);
          //         log.info("상태별 할 일 목록: {}", pr.getStatusTaskList());
 
          LinkedHashMap<Integer, List<StatusTaskList>> test = pr.getStatusTaskList();
-         log.info("사이즈는 언제나 0~5이므로 6?: {}", test.size());
+         log.info("사이즈는 언제나 0~5이므로 6?: {}", test.size()); // 6 맞음
 
          // 보류: 0, 시작안함: 1, 계획중: 2, 진행중: 3, 검토중: 4, 완료: 5
          log.info("LinkedHashMap다루기 연습1: {}", test.get(2)); // 계획중인 task의 list(StatusTaskList)
@@ -132,9 +133,9 @@ public class TaskRepositoryTest {
          // taskTitle=경복궁 야간개방, taskStatus=2, authorMid=14, authorName=공지철,
          // taskDueDate=null, assigneeMid=26, assigneeName=송혜교, assignees=null)]
          List<StatusTaskList> tList = test.get(1);
-         log.info("StatusTaskList의 함수 사용-get(0): {}", tList.get(0).switchStatusToCss(1));
-         log.info("StatusTaskList의 함수 사용-get(0): {}", tList.get(0).switchStatusToCss(1)[1]);
-         log.info("StatusTaskList의 함수 사용-get(1): {}", tList.get(1).switchStatusToCss(1));
+         log.info("StatusTaskList의 함수 사용-get(0): {}", (Object) tList.get(0).switchStatusToCss(1));
+         log.info("StatusTaskList의 함수 사용-get(0): {}", StatusTaskList.switchStatusToCss(1)[1]);
+         log.info("StatusTaskList의 함수 사용-get(1): {}", StatusTaskList.switchStatusToCss(1));
          log.info("LinkedHashMap다루기 연습2: {}", tList.get(2));
          //LinkedHashMap다루기 연습2: StatusTaskList(id=10,
          // taskTitle=그 벌들은 다 어디로 갔을까, taskStatus=1, authorMid=4, authorName=Adele, taskDueDate=2024-05-31, assigneeMid=27, assigneeName=크러쉬, assignees=null)
