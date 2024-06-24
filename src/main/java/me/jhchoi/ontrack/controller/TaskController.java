@@ -158,4 +158,10 @@ public class TaskController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PostMapping("searchMemberToAssign")
+    public ResponseEntity searchMemberToAssign(@RequestBody GetMemberNameRequest searchCond){
+        log.info("검색할 이름: {}", searchCond);
+        return new ResponseEntity(searchCond.getNickname(), HttpStatus.OK);
+    }
+
 }// class TaskController ends
