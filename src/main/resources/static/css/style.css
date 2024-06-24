@@ -559,11 +559,31 @@ div.tableView-assignee-list {
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
 }
 
+div.statusView-assignee-list {
+    position: absolute;
+    border: 1px solid #b6b6b688;
+    z-index: 2;
+    padding: 8px 10px 5px 10px;
+    background-color: #fff;
+    width: 135px;
+    left: -4%; /* 1000px이하일 때 (897px 이상) */
+    /*right: 18%;*/ /* full화면일 때*/
+    top: 100%;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+    text-align: center;
+}
+div.statusView-assignee-list .unassigned-member-list {
+    border-top: 1px solid #b6b6b6;
+    padding-top: 10px;
+}
 .find-member-to-assign {
     position: absolute;
     border: 1px solid #b6b6b688;
     z-index: 2;
-    padding: 4px 10px;
+    padding-top: 11px;
+    padding-right: 7px;
+    padding-left: 7px;
     background-color: #fff;
     max-height: 160px;
     right: -100%;
@@ -574,7 +594,7 @@ div.tableView-assignee-list {
 }
 
 .btn-add-assignee,
-.btn-findByName-member-assign {
+.btn-findByName-member-to-assign {
     border-radius: 3px;
     padding: 3px;
     color: #fff5ec;

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @Builder
 public class GetMemberNameRequest {
     private Long projectId;
+    private Long taskId;
     private Long userId;
     private Long memberId;
+    private String nickname;
 }
