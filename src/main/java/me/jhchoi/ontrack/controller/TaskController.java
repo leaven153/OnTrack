@@ -124,7 +124,7 @@ public class TaskController {
 
     @PostMapping("/addAssignee")
     @ResponseBody
-    public ResponseEntity addAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestBody TaskAssignment ta) {
+    public ResponseEntity<?> addAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestBody TaskAssignment ta) {
         log.info("============= edit Assignee Controller 진입 =================");
 
         log.info("누가 변경을 진행했나요: {}", execMid);
@@ -149,19 +149,26 @@ public class TaskController {
         // 추후 예외 처리 요망
 //        taskService.addAssignee(ta, th);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("delAssignee")
-    public ResponseEntity delAssignee(){
+    @PostMapping("/delAssignee")
+    public ResponseEntity<?> delAssignee(){
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("searchMemberToAssign")
-    public ResponseEntity searchMemberToAssign(@RequestBody GetMemberNameRequest searchCond){
-        log.info("검색할 이름: {}", searchCond);
-        return new ResponseEntity(searchCond.getNickname(), HttpStatus.OK);
+    @PostMapping("/search")
+    public ResponseEntity<?> searchMemberToAssign(@RequestParam String object, @RequestParam(required = false) String purpose, @RequestBody GetMemberNameRequest searchCond){
+        log.info("무엇을 찾는가: {}", object); // 무엇을 찾는가: member
+        log.info("무엇을 위해 찾는가: {}", purpose); // 무엇을 위해 찾는가: toassign
+        log.info("검색할 이름: {}", searchCond); //검색할 이름: GetMemberNameRequest(projectId=9, taskId=14, userId=null, memberId=null, nickname=adele)
+
+        // 검색한 사람이 이미 담당자인 경우
+
+        // 검색한 사람이 없는 경우
+
+        return new ResponseEntity<>(searchCond.getNickname(), HttpStatus.OK);
     }
 
 }// class TaskController ends

@@ -99,12 +99,13 @@
         </div>
 
         <!-- assignee -->
-        <div class="tableview-column table-assignee flex-row-center-center-nowrap"> <!-- vertical-ctrl01 -->
-          <span class="no-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().size() == null}">담당자 없음</span>
-          <span class="one-assignee" th:text="${task.getAssigneeMids().size() == 1}?${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
+        <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
+          <span class="font-blur cursorP no-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+          <span class="cursorP one-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().size() == 1}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
+          <!--/*
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">
-            <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
-          </th:block>
+            <span class=" altivo-bold opacity0 transit-250 cursorP font-16 ml-3">+</span>
+          </th:block> */-->
           <th:block th:if="${task.getAssigneeNames().size() > 1}">
             <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssigneeNames())}">
               <div class="many-assignee"><span class="lastName" th:text="${assignee}">김</span></div>
@@ -114,12 +115,12 @@
 
           <div class="more-assignInfo tableView-assignee-list img-hidden">
             <div class="담당자풀네임목록 task-assignee-list pd-t10">
-                <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
-                  <p class="div-inline-block mb-5" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
-                  <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                  <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${memberId}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
-                </div>
+              <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
+                <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
+                <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
+                <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${memberId}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == nickname} or ${nickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
               </div>
+            </div>
 
               <!--/* 해당 일의 작성자나 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능. (작성자는 담당자가 아니어도 '참여하기'가 아닌 담당자 추가로만 가능함.) */-->
             <th:block th:each="assignee : ${task.getAssignees()}">
@@ -147,7 +148,6 @@
               <div class="배정안된멤버검색결과"></div>
             </div>
           </div>
-
         </div>
 
         <!-- status -->
@@ -242,7 +242,7 @@
                       <!-- status view: 담당자 -->
                       <div class="statusview-task status-assignee">
                         <span class="no-assignee" th:if="${t.getAssignees().size() == null}">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
-                        <span class=" one-assignee" th:text="${t.getAssignees().size() == 1}?${t.getAssigneeName()}">채규태</span>
+                        <span class=" one-assignee" th:if="${t.getAssignees().size() == 1}" th:text="${t.getAssigneeName()}">채규태</span>
                         <th:block th:if="${t.getAssignees().size() == 1} and ${t.getTaskStatus() < 3}">
                           <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
                         </th:block>
