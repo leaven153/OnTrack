@@ -107,7 +107,7 @@
             <span class=" altivo-bold opacity0 transit-250 cursorP font-16 ml-3">+</span>
           </th:block> */-->
           <th:block th:if="${task.getAssigneeNames().size() > 1}">
-            <th:block th:each="assignee : ${task.mAFN(task.getAssignees())}">
+            <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssignees())}">
               <div class="many-assignee"><span class="lastName" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">김</span></div>
             </th:block>
             <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
@@ -247,8 +247,8 @@
                           <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
                         </th:block>
                         <th:block th:if="${t.getAssignees().size() > 1}">
-                          <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssigneeNames())}">
-                            <div class="many-assignee"><span class="lastName" th:text="${assignee}">채</span></div>
+                          <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
+                            <div class="many-assignee"><span class="lastName" th:text="${assignee.value}">채</span></div>
                           </th:block>
                           <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo cursorP ml-3" alt="more assignment info">
                         </th:block>

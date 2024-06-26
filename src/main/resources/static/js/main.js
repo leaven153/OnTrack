@@ -314,7 +314,7 @@ window.onload = function(){
                 }
 
                 // 담당자가 없는 경우, 참여하기/담당차추가하기 div의 top-liner과 padding값을 뺀다.
-                if(elExists(next(chosenOne).children[1])) {
+                if(cntAssignee == 0 && elExists(next(chosenOne).children[1])) {
                     next(chosenOne).children[1].classList.remove("top-line", "pd-t10");
                 }
 
