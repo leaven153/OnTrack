@@ -1389,6 +1389,10 @@ input[type=date] {
 
 /******** button  ********/
 
+[class*=btn] {
+    cursor: pointer;
+}
+
 .btn-radio {
     display: inline-block;
     border: 1px solid #efe6d7;
