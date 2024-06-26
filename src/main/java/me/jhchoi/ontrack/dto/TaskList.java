@@ -40,6 +40,14 @@ public class TaskList {
             assignee.substring(0, 1)
         ).collect(Collectors.toList());
     }
+
+    public static LinkedHashMap<Long, String> mAFN(Map<Long, String> assignees){
+        LinkedHashMap<Long, String> result = new LinkedHashMap<>();
+        for(Long key: assignees.keySet()){
+            result.put(key, assignees.get(key).substring(0, 1));
+        }
+        return result;
+    }
     
     // 진행상태 한글로 전환 (projectView.html에서 직접 호출)
     public static String switchStatusToKor(int dbStatus){
