@@ -311,9 +311,9 @@ window.onload = function(){
                 // 클릭한 task의 담당자 수를 구해서 변수에 담는다.
                 cntAssignee = parseInt(next(chosenOne).children[0].children.length);
 
-                // 현재 배정되어 있는 담당자를 (full name list를 참조하여) map에 담는다.
+                // 현재 배정되어 있는 담당자를 (full name list를 참조하여) map에 담는다. (이 일에서 빼기/빠지기에서 활용된다.)
                 for(let i = 0; i < cntAssignee; i++) {
-                    currAssignees.set(next(chosenOne).children[0].children[i].children[0].dataset.mid ,next(chosenOne).children[0].children[i].children[0].innerHTML);
+                    currAssignees.set(next(chosenOne).children[0].children[i].children[0].dataset.mid, next(chosenOne).children[0].children[i].children[0].innerHTML);
                 }
 
                 // 담당자가 없는 경우, 참여하기/담당차추가하기 div의 top-liner과 padding값을 뺀다.
@@ -336,12 +336,13 @@ window.onload = function(){
                     // 열려있던 '담당자로 추가할 멤버찾기 div'도 다 닫는다
                     const allUnassignedMemberList = document.querySelectorAll("[class$=find-member-to-assign]");
                     allUnassignedMemberList.forEach(function(eachOne){
-                        console.log(eachOne.childNodes);
+                        //↓ NodeList(7) [ #text, div.검색.bottom-line.pd-b3, #text, div.배정안된멤버목록.unassigned-member-list.scroll, #text, div.배정안된멤버검색결과, #text ]
+                        // console.log(eachOne.childNodes);
                         // [...eachOne.childNodes].filter(el => console.log(el.localName));
                         eachOne.classList.add("img-hidden"); //el.attributes[0].type == "input" ).value = "";
                     });
 
-                    // 입력되었던 담당자 이름도 지운다.
+                    // (검색을 위해)입력 되었던 담당자 이름도 지운다.
                     if(elExists(document.querySelectorAll(".input-findByName-toAssign"))){
                         const inputFindByNameToAssign = document.querySelectorAll(".input-findByName-toAssign");
                         inputFindByNameToAssign.forEach(function(eachInput){
@@ -364,19 +365,67 @@ window.onload = function(){
         });
     } // 1. 담당자 목록 보기 ends
     
-    // 1-2. 동적으로 생성된 btn-more-assignInfo에도 기능구현!
-    onEvtListener(document, "click", ".btn-more-assignInfo-new", function(){
-        console.log(`동적으로 생성된 .btn-more-assignInfo-new 기능 구현필요(아래는 this)`);
-        // <img className="btn-more-assignInfo ml-3" src="/imgs/down.png" th:src="@{/imgs/down.png}" alt="more assignment info">
-        console.log(this);
-        console.log(next(this));
+    // 1-2. 동적으로 생성된 btn-more-assignInfo는 -new를 붙여서 구분
+    onEvtListener(document, "click", ".btn-more-assignInfo-new", function(evt){
+        //↓ <img className="btn-more-assignInfo ml-3" src="/imgs/down.png" th:src="@{/imgs/down.png}" alt="more assignment info">
+        // console.log(this);
+        //↓ <div class="more-assignInfo tableView-assignee-list">
+        // console.log(next(this));
+
+        evt.stopPropagation();
+
         // 버튼을 클릭했을 때 옆 요소(담당자 상세 div)가 열려있다면 닫고
         // 닫혀있다면 열어야 한다.
-        // 클릭한 task의 담당자 목록 toggle
         if(!next(this).classList.contains("img-hidden")) {
             next(this).classList.add("img-hidden");
+        } else {
+            // 담당자 정보 clear
+            currAssignees.clear();
+
+            // 클릭한 task의 현재 담당자 수
+            cntAssignee = next(this).children[0].children.length;
+
+            // 클릭한 task의 현재 담당자 정보(mid, name)를 담는다.
+            for(let i = 0; i < cntAssignee; i++){
+                console.log(`기배정담당자의 mid: ${next(this).children[0].children[i].children[0].dataset.mid}`);
+                currAssignees.set(next(this).children[0].children[i].children[0].dataset.mid, next(this).children[0].children[i].children[0].innerHTML);
+            }
+
+            // 현재 담당자 수에 따른 담당자 목록 높이를 담아둔다. (멤버목록 출력 시 활용)
+            boxHeight = next(this).offsetHeight;
+
+            // 멤버 검색에 입력되어 있던 내용 지운다.
+            if(elExists(document.querySelectorAll(".input-findByName-toAssign"))){
+                const inputFindByNameToAssign = document.querySelectorAll(".input-findByName-toAssign");
+                inputFindByNameToAssign.forEach(function(eachInput){
+                    eachInput.value = "";
+                });
+            }
+
+            // 열려있던 다른 담당자 상세보기 닫는다.
+            document.querySelectorAll(".more-assignInfo").forEach(function(eachOne){
+                eachOne.classList.add("img-hidden");
+            });
+
+            // 열려있던 다른 멤버목록 닫는다.
+            document.querySelectorAll("[class$=find-member-to-assign]").forEach(function(eachOne){
+                eachOne.classList.add("img-hidden");
+            });
+            
+            // 클릭한 task의 담당자 목록 출력
+            next(this).classList.remove("img-hidden");
         }
     });
+
+    // 해당 버튼 외 다른 곳을 클릭했을 때도 모달이 닫힐 수 있도록 시도중
+    // const testBtnBlur = document.querySelectorAll("[class^=btn]");
+    /*
+    testBtnBlur.forEach(function(btn){
+        btn.addEventListener("click", ()=>{
+            console.log(`어떤 버튼이든 click되었을 때`);
+        });
+    }); */
+
 
     // 2-1. 이 일에서 빠지기, 빼기
     // 해당 일의 담당자이거나 작성자인 멤버만, 진행중일때까지만 담당해제 버튼(X)이 노출된다.
@@ -390,27 +439,27 @@ window.onload = function(){
                 // let beforeAssigneeNum = parents(chosenOne, ".task-assignee-list")[0].children.length;
 
                 // X 버튼 (<span class="btn-dropOut-task ml-3 cursorP" data-assigneemid="4" data-executormid="14">)
-                console.log(chosenOne);
+                // console.log(chosenOne);
 
                 // 제거할 대상(자신포함): <div class="개별담당자box tableView-assignee-box mb-7">
-                console.log(parents(chosenOne)[0]);
+                // console.log(parents(chosenOne)[0]);
 
                 // 세로 길이 계산할 대상 (해당 담당자가 빠진 후의 담당자 div 높이)
-                console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0]);
+                // console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0]);
 
                 // 높이(top) 반영할 대상 (담당자로 추가할 멤버찾기 div)
-                console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0]);
+                // console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0]);
 
                 // 추가할 대상 (담당자가 아닌 멤버 목록)
-                console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0]);
+                // console.log(parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0]);
 
                 // 기 배정되어 있는 담당자 이름 출력되는 요소 (div: table-assignee or status-assignee)
                 // 와일드카드: 해당 요소의 모든 클래스 중 마지막 클래스가 -assignee로 끝나야 한다! (클래스 중에 -assignee로 끝나는 클래스를 포함한 요소를 찾아줘가 아니다!)
-                console.log(parents(chosenOne, "[class$=-assignee]"));
+                // console.log(parents(chosenOne, "[class$=-assignee]"));
 
                 // .className: no-assignee or one-assignee or many-assignee
                 // 이 일에서 빠지기, 빼기: one → no, many → one
-                console.log(parents(chosenOne, "[class$=-assignee]")[0].children[0]);
+                // console.log(parents(chosenOne, "[class$=-assignee]")[0].children[0]);
 
                 // 2-1. 서버로 정보 넘긴다.
                 // RequestParam에 taskId, assigneeMid 넘기고
@@ -424,7 +473,7 @@ window.onload = function(){
                     updatedBy: chosenOne.dataset.executormid,
                 }
 
-                console.log(taskHistory);
+                // console.log(taskHistory);
 
                 // 2-2. 멤버 목록에 (담당 해제된) 해당 멤버 출력 (append)
                 parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
@@ -442,7 +491,7 @@ window.onload = function(){
 
                 // 2-4. 해당 task의 row에서 해당 담당자 이름 제거
                 // 빼고 난 상태에서 cntAssignee == 0 or null, cntAssignee == 1, cntAssignee > 1 확인 후 요소 출력
-                if(cntAssignee == 0) {
+                if(cntAssignee === 0) {
                     // 현재 담당자 없음이 된 상태임
                     // parents(chosenOne, "[class$=-assignee]")
                     //
@@ -451,8 +500,11 @@ window.onload = function(){
                         // parents(chosenOne, "[class$=-assignee]")[0].prepend();
                     }
                     console.log(`one-assingee hide하고 div.table-assignee에 span.no-assignee prepend`);
-                } else if (cntAssignee == 1) {
+                } else if (cntAssignee === 1) {
                     console.log(`many-assignee를 모두 hide하고, div.table-assignee에 span.one-assignee prepend`);
+                    // many-assignee를 모두 hide
+                    // 더보기 버튼(img) hide or remove
+                    // div.table-assignee에 span.one-assignee prepend
                 } else {
                     // many에서 many 유지 (cntAssignee가 2이상인 경우)
                     // ★ 만약 6명이었는데 5명이 되었다면, 변화를 줘야 하는 요소가 있는지 확인! 없는 듯?
@@ -497,16 +549,20 @@ window.onload = function(){
     if(elExists(document.querySelector(".btn-add-member-to-assignee"))){
         const btnFindMemberToAssign = document.querySelectorAll(".btn-add-member-to-assignee");
         btnFindMemberToAssign.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", (evt)=>{
+                // console.log(next(chosenOne)); // <div class="추가할담당자검색box find-member-to-assign img-hidden" style="top: 123px;">
+                // console.log(chosenOne.dataset.executor);
+                evt.stopPropagation();
 
-            chosenOne.addEventListener("click", ()=>{
-                console.log(next(chosenOne)); // <div class="추가할담당자검색box find-member-to-assign img-hidden" style="top: 123px;">
-                console.log(chosenOne.dataset.executor);
+                console.log(`============== 담당자추가하기 클릭했을 때 담당자목록(currAssignees): =====================`);
+                console.log(currAssignees);
+                console.log(currAssignees.size);
+
                 const executorMid = chosenOne.dataset.executor;
                 const thisAuthorMid = chosenOne.dataset.authormid;
                 const thisTaskId = chosenOne.dataset.taskid;
                 const thisProjectId = chosenOne.dataset.projectid;
                 // const cntAssigneefromdb = parseInt(chosenOne.dataset.assigneecnt); // ★★★
-
 
                 // 1. 해당 프로젝트 멤버 목록 div 화면 노출(출력)
                 topValue = boxHeight - 40;
@@ -517,10 +573,9 @@ window.onload = function(){
                     next(chosenOne).classList.add("img-hidden");
                 }
 
-
                 // 2. 멤버 검색 버튼 클릭했을 때
                 // btn-findByName-member-to-assign
-                console.log(next(chosenOne).children[0].children[1]);
+                // console.log(next(chosenOne).children[0].children[1]);
                 const btnFindByNameMemberToAssign = next(chosenOne).children[0].children[1];
                 btnFindByNameMemberToAssign.addEventListener("click", ()=>{
                     // input에 입력된 값 받아온다
@@ -531,47 +586,79 @@ window.onload = function(){
                 // 담당자는 6명을 초과할 수 없다.
                 const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
                 unassignedMember.forEach(function(member){
-                    member.addEventListener("click", ()=>{
+                    member.addEventListener("click", (evt)=>{
+                        evt.stopImmediatePropagation();
 
-                        const newAssgineeName = member.children[0].innerText;
-                        const newAssigneeMid = member.children[0].dataset.mid;
-                        console.log(`현재 담당자 추가를 실행한 자의 mId: ${executorMid}`);
-                        console.log(`담당자를 추가한 일의 id: ${thisTaskId}`);
-                        console.log(`이 일의 project id: ${thisProjectId}`);
-                        console.log(`새로 배정한 멤버의 이름: ${newAssgineeName}`);
-                        console.log(`새로 배정한 멤버의 id: ${newAssigneeMid}`);
-                        console.log(parents(chosenOne, ".more-assignInfo")[0].firstElementChild); // <div class="담당자목록 task-assignee-list">
-                        // <div class="담당자목록 task-assignee-list">
+                        // this: Window http://localhost:8080/project/9/14/%EA%B3%B5%EC%A7%80%EC%B2%A0/creator
+                        // evt.target: <p class="div-inline-block cursorP" data-mid="26">
+                        // console.log(evt.target);
 
-                        const taskAssignment = {
-                            projectId: thisProjectId,
-                            taskId: thisTaskId,
-                            memberId: newAssigneeMid,
-                            nickname: newAssgineeName,
-                            role: 'assignee'
-                        }
-                        console.log(taskAssignment);
-                        if(cntAssignee < 6){
-                            // many → many 인지 one → many 인지 확인하기 위해 beforeCnt값 필요
-                            let beforeAssigneeNum = cntAssignee;
-                            // 0. 기 배정 목록 상태 확인 no-assignee / one-assignee / many-assignee
-                            // a) 요소 찾기
-                            cntAssignee++;
-                            console.log(`기배정담당자이름요소 찾는중***************`);
+                        console.log(`이미 배정된 담당자 수: ${cntAssignee}`);
+                        // many → many 인지 one → many 인지 확인하기 위해 beforeCnt값 필요
+                        let beforeAssigneeNum = cntAssignee;
+                        cntAssignee++;
 
-                            // ↓ <div class="flex-row-center-center-n…w-column table-assignee">
-                            console.log(parents(member, "[class$=-assignee]")[0]);
+                        if(cntAssignee <= 6){
 
+                            const newAssgineeName = member.children[0].innerText;
+                            const newAssigneeMid = member.children[0].dataset.mid;
+                            // console.log(`현재 담당자 추가를 실행한 자의 mId: ${executorMid}`);
+                            // console.log(`담당자를 추가한 일의 id: ${thisTaskId}`);
+                            // console.log(`이 일의 project id: ${thisProjectId}`);
+                            console.log(`새로 배정한 멤버의 이름: ${newAssgineeName}`);
+                            console.log(`새로 배정한 멤버의 id: ${newAssigneeMid}`);
+
+                            // ↓ <div class="담당자목록 task-assignee-list">
+                            // console.log(parents(chosenOne, ".more-assignInfo")[0].firstElementChild);
+
+                            const taskAssignment = {
+                                projectId: thisProjectId,
+                                taskId: thisTaskId,
+                                memberId: newAssigneeMid,
+                                nickname: newAssgineeName,
+                                role: 'assignee'
+                            }
+                            // console.log(taskAssignment);
+                            // 1)-1 담당자 풀네임(fullname) div에 이름 출력
+                            parents(chosenOne, ".more-assignInfo")[0].firstElementChild.append(newAssigneeElement(newAssgineeName, newAssigneeMid, executorMid, thisAuthorMid, thisTaskId, thisProjectId));
+
+                            // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
+                            // console.log(parents(member, ".more-assignInfo"));
+                            // console.log(parents(member, ".more-assignInfo")[0].offsetHeight);
+
+                            topValue = (parents(member, ".more-assignInfo")[0].offsetHeight) - 40;
+                            // console.log(`topValue: ${topValue}`);
+                            // console.log(`====next(chosenOne)====`);
+                            // console.log(next(chosenOne));
+                            next(chosenOne).style.top = topValue + 'px';
+
+
+                            // 2) 서버에 전달: 해당 할 일의 (task) id, 추가한 담당자 member id, 추가한 담당자 이름, 추가한 사람의 member id
+                            fetch(`http://localhost:8080/task/addAssignee?execMid=${executorMid}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(taskAssignment)
+                            }).then(response => {
+                                /*
+                                if(response.ok){
+                                    // console.log(`ResponseEntity check`);
+                                }*/
+                            });
+
+                            // 담당자 축약 목록에 출력
+                            // 멤버 추가 후 담당자가 1명이 된 상태 (이전에는 담당자가 없었던 상태)
                             if (cntAssignee === 1) {
-                                // 멤버 추가 후 담당자가 1명이 된 상태라면 (이전에는 담당자가 없었던 상태)
+
                                 // no-assignee를 일단 hide한 후에
                                 console.log(`기배정담당자인원: ${parents(member, "[class$=-assignee]")[0].children[0].className}`);
                                 parents(member, "[class$=-assignee]")[0].children[0].classList.add("hide");
 
                                 // (remove했던) 담당자 추가 div에 top-line과 pd-t10을 붙인다.
                                 // parents(member, "[class$=-assignee]")[0].children[1].children[1]의 classList에 top-line, pd-t10 add
-                                console.log(`top-line붙여야할 요소 ↓`);
-                                console.log(parents(member, "[class$=-assignee]")[0].children[1].children[1]);
+                                // console.log(`top-line붙여야할 요소 ↓`);
+                                // console.log(parents(member, "[class$=-assignee]")[0].children[1].children[1]);
                                 parents(member, "[class$=-assignee]")[0].children[1].children[1].classList.add("top-line", "pd-t10");
 
                                 // no-assignee를 삭제
@@ -580,10 +667,12 @@ window.onload = function(){
                                 // one-assignee를 parents(member, "[class$=-assignee]")[0]에 prepend (첫번째자식으로 붙는다.)
                                 parents(member, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(1, newAssigneeMid, newAssgineeName));
 
-                            } else if (beforeAssigneeNum === 1 && cntAssignee > 1) {
-                                // 멤버 추가 후에 one to many가 된 상태라면
-                                // 기존 배정된 담당자의 이름도 축약해서 출력해야 한다.★★★
-                                console.log(`div.many-assignee에 기존 담당자 이름첫글자와, 새로 배정된 담당자 이름 첫글자를 span.lastName append`);
+                            }
+
+                            // 멤버 추가 후에 one → many가 된 상태
+                            // 기존 배정된 담당자의 이름도 축약해서 출력해야 한다.★★★
+                            if (beforeAssigneeNum === 1 && cntAssignee > 1) {
+                                // console.log(`div.many-assignee에 기존 담당자 이름첫글자와, 새로 배정된 담당자 이름 첫글자를 span.lastName append`);
 
                                 // one-assignee는 hide가 아니라 remove해야 btn-more-assignInfo-new버튼이 작동할 수 있음.
                                 // parents(member, "[class$=-assignee]")[0].children[0].classList.add("hide");
@@ -602,7 +691,10 @@ window.onload = function(){
                                     parents(member, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(2, entry[0], entry[1]));
                                 }
 
-                            } else if (beforeAssigneeNum > 1) {
+                            }
+                            
+                            // many → many 인 상태
+                            if (beforeAssigneeNum > 1) {
                                 // ↓ <div class="flex-row-center-center-n…w-column table-assignee">
                                 // console.log(parents(member, "[class$=-assignee]")[0]);
 
@@ -622,40 +714,14 @@ window.onload = function(){
                             console.log(`담당자 추가 후 currAssignees: ↓`);
                             console.log(currAssignees);
 
-                            // 1)-1 담당자 풀네임(fullname) div에 이름 출력
-                            parents(chosenOne, ".more-assignInfo")[0].firstElementChild.append(newAssigneeElement(newAssgineeName, newAssigneeMid, executorMid, thisAuthorMid, thisTaskId, thisProjectId));
+                            // 3) 멤버 목록에서 이름 빼기
+                            member.remove();
 
-                            // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
-                            // console.log(parents(member, ".more-assignInfo"));
-                            // console.log(parents(member, ".more-assignInfo")[0].offsetHeight);
+                            // member.classList.add("hide");
 
-                            topValue = (parents(member, ".more-assignInfo")[0].offsetHeight) - 40;
-                            console.log(`topValue: ${topValue}`);
-                            console.log(`====next(chosenOne)====`);
-                            // console.log(next(chosenOne));
-                            next(chosenOne).style.top = topValue + 'px';
-
-
-                            // 2) 멤버 목록에서 이름 빼기
-                            member.classList.add("hide");
-
-                            // 3) 서버에 전달: 해당 할 일의 (task) id, 추가한 담당자 member id, 추가한 담당자 이름, 추가한 사람의 member id
-                            fetch(`http://localhost:8080/task/addAssignee?execMid=${executorMid}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(taskAssignment)
-                            }).then(response => {
-
-                                if(response.ok){
-                                    console.log(`ResponseEntity check`);
-                                }
-                            });
                         } else {
                             alert(`담당자는 6명을 초과할 수 없습니다.`);
                         }
-
                     });
                 });
 
@@ -704,6 +770,9 @@ window.onload = function(){
         div.classList.add("assignee-fullname-box", "mb-7");
         p.classList.add("div-inline-block", "mb-5");
         btnX.classList.add("btn-dropOut-task", "ml-3", "cursorP");
+
+        p.setAttribute("data-mid", newAssigneeMid);
+
         btnX.setAttribute("data-assigneemid", newAssigneeMid);
         btnX.setAttribute("data-executormid", executorMid);
         btnX.setAttribute("data-authormid", authorMid);
@@ -713,10 +782,10 @@ window.onload = function(){
         p.innerText = newAssigneeName;
         btnX.innerHTML = "&times;";
         div.appendChild(p);
-        console.log(executorMid);
-        console.log(newAssigneeMid);
-        console.log(authorMid);
-        if(executorMid == newAssigneeMid || authorMid == executorMid) {
+        // console.log(executorMid);
+        // console.log(newAssigneeMid);
+        // console.log(authorMid);
+        if(executorMid === newAssigneeMid || authorMid === executorMid) {
             // console.log(`why? ${btnDelX}`);
             div.appendChild(btnX);
         }
