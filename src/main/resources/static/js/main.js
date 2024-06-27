@@ -491,7 +491,7 @@ window.onload = function(){
 
                 // 2-4. 해당 task의 row에서 해당 담당자 이름 제거
                 // 빼고 난 상태에서 cntAssignee == 0 or null, cntAssignee == 1, cntAssignee > 1 확인 후 요소 출력
-                if(cntAssignee == 0) {
+                if(cntAssignee === 0) {
                     // 현재 담당자 없음이 된 상태임
                     // parents(chosenOne, "[class$=-assignee]")
                     //
@@ -500,7 +500,7 @@ window.onload = function(){
                         // parents(chosenOne, "[class$=-assignee]")[0].prepend();
                     }
                     console.log(`one-assingee hide하고 div.table-assignee에 span.no-assignee prepend`);
-                } else if (cntAssignee == 1) {
+                } else if (cntAssignee === 1) {
                     console.log(`many-assignee를 모두 hide하고, div.table-assignee에 span.one-assignee prepend`);
                     // many-assignee를 모두 hide
                     // 더보기 버튼(img) hide or remove
@@ -785,7 +785,7 @@ window.onload = function(){
         // console.log(executorMid);
         // console.log(newAssigneeMid);
         // console.log(authorMid);
-        if(executorMid == newAssigneeMid || authorMid == executorMid) {
+        if(executorMid === newAssigneeMid || authorMid === executorMid) {
             // console.log(`why? ${btnDelX}`);
             div.appendChild(btnX);
         }
