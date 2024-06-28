@@ -22,6 +22,7 @@ import org.thymeleaf.Thymeleaf;
 import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.awt.event.WindowFocusListener;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -116,27 +117,63 @@ public class TaskController {
      * */
     @PostMapping("/editTask")
     @ResponseBody
-    public String editTask(HttpSession session, @RequestParam(required = false)String item, @RequestBody String edit){
+    public ResponseEntity<?> editTask(HttpSession session, @RequestParam(required = false)String item, @RequestBody TaskHistory th){
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            URI location = URI.create("/login");
+            return ResponseEntity.created(location).build();
+        }
         log.info("=================================editTask Controller 접근=================================");
         log.info("어떤 항목을 바꿀 건가요? {}", item);
-        log.info("제목: {}", edit);
-        return edit;
+        log.info("task history: {}", th);
+
+        if (th.getModItem().equals("title")){
+            log.info("");
+        } else if (th.getModItem().equals("dueDate")) {
+            log.info("");
+        } else if (th.getModItem().equals("status")) {
+            log.info("");
+        }
+
+        return new ResponseEntity<>("결과스트링", HttpStatus.OK);
     }
 
-    @PostMapping("/addAssignee")
+    @PostMapping("/editAssignee")
     @ResponseBody
-    public ResponseEntity<?> addAssignee(HttpSession session, @RequestParam(required = false) Long execMid, @RequestBody TaskAssignment ta) {
+    public ResponseEntity<?> editAssignee(HttpSession session, @RequestParam Long mid, @RequestBody TaskHistory th) {
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            URI location = URI.create("/login");
+            return ResponseEntity.created(location).build();
+        }
         log.info("============= edit Assignee Controller 진입 =================");
-
-        log.info("누가 변경을 진행했나요: {}", execMid);
-        log.info("task assignment 객체: {}", ta);
+        log.info("member id?: {}", mid);
+        log.info("task history 객체: {}", th);
 
         // 배정한 시간
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
-        ta.setAssignedAt(nowWithNano.minusNanos(nanosec));
+        th.setUpdatedAt(nowWithNano.minusNanos(nanosec));
+
+        if (th.getModType().equals("register")){
+            log.info("담당자 추가");
+            // TaskAssignment 객체생성
+            TaskAssignment ta = TaskAssignment.builder()
+                    .projectId(th.getProjectId())
+                    .taskId(th.getTaskId())
+                    .memberId(mid)
+                    .nickname(th.getModContent())
+                    .role(th.getModItem())
+                    .assignedAt(nowWithNano.minusNanos(nanosec))
+                    .build();
+                    // 추후 예외 처리 요망
+                    taskService.addAssignee(ta, th);
+        } else if (th.getModType().equals("delete")){
+            log.info("담당자 삭제");
+        }
 
         // TaskHistory 객체 생성
+        /*
         TaskHistory th = TaskHistory.builder()
                 .projectId(ta.getProjectId())
                 .taskId(ta.getTaskId())
@@ -146,9 +183,8 @@ public class TaskController {
                 .updatedAt(nowWithNano.minusNanos(nanosec))
                 .updatedBy(execMid)
                 .build();
+*/
 
-        // 추후 예외 처리 요망
-//        taskService.addAssignee(ta, th);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

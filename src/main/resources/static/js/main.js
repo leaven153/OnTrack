@@ -453,7 +453,7 @@ window.onload = function(){
 
                 // console.log(taskHistory);
 
-                fetch(`http://localhost:8080/task/delAssignee?mid=${chosenOne.dataset.assigneemid}`, {
+                fetch(`http://localhost:8080/task/editAssignee?mid=${chosenOne.dataset.assigneemid}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -545,7 +545,7 @@ window.onload = function(){
           modContent: prev(this).innerHTML,
           updatedBy: this.dataset.executormid
         };
-        fetch(`http://localhost:8080/task/delAssignee?mid=${this.dataset.assigneemid}`, {
+        fetch(`http://localhost:8080/task/editAssignee?mid=${this.dataset.assigneemid}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -671,13 +671,13 @@ window.onload = function(){
                             const newAssgineeName = member.children[0].innerText;
                             const newAssigneeMid = member.children[0].dataset.mid;
 
-
-                            const taskAssignment = {
-                                projectId: thisProjectId,
+                            const taskHistory = {
                                 taskId: thisTaskId,
-                                memberId: newAssigneeMid,
-                                nickname: newAssgineeName,
-                                role: 'assignee'
+                                projectId: thisProjectId,
+                                modItem: "assignee",
+                                modType: "register",
+                                modContent: newAssgineeName,
+                                updatedBy: executorMid
                             }
                             // console.log(taskAssignment);
                             
@@ -689,13 +689,13 @@ window.onload = function(){
                             next(chosenOne).style.top = topValue + 'px';
                             console.log(`4A. 담당자 추가하기-멤버클릭했을 때 (table view)의 topValue: ${topValue}`)
 
-                            // 2) 서버에 전달: 해당 할 일의 (task) id, 추가한 담당자 member id, 추가한 담당자 이름, 추가한 사람의 member id
-                            fetch(`http://localhost:8080/task/addAssignee?execMid=${executorMid}`, {
+                            // 2) 서버에 전달
+                            fetch(`http://localhost:8080/task/editAssignee?mid=${newAssigneeMid}`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
-                                body: JSON.stringify(taskAssignment)
+                                body: JSON.stringify(taskHistory)
                             }).then(response => {
                                 if(response.ok){
                                     // 담당자 축약 목록에 출력
