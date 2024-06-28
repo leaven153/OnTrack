@@ -100,8 +100,8 @@
 
         <!-- assignee -->
         <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
-          <span class="font-blur cursorP no-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
-          <span class="cursorP one-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().size() == 1}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
+          <span class="font-blur no-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+          <span class="one-assignee btn-more-assignInfo" th:if="${task.getAssigneeMids().size() == 1}" th:attr="data-mid=${task.getAssigneeMids()[0]}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
           <!--/*
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">
             <span class=" altivo-bold opacity0 transit-250 cursorP font-16 ml-3">+</span>
@@ -131,7 +131,7 @@
               </th:block>
 
               <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 추가가능 */-->
-            <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5 cursorP" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-assigneeCnt=${task.getAssigneeMids().size()}, data-authormid=${task.getAuthorMid()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 5}">
+            <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5" th:attr="data-executor=${memberId}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-assigneeCnt=${task.getAssigneeMids().size()}, data-authormid=${task.getAuthorMid()}" th:if="${task.getAuthorMid() == memberId} and ${task.getTaskStatus() < 5}">
                 <span>담당자 추가하기</span>
                 <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="img-angle270" alt="add assignee">
             </div>
@@ -140,9 +140,9 @@
                 <input type="text" class="input-findByName-toAssign font-15 w100" placeholder="멤버검색" name="">
                 <button type="button" class="btn-findByName-member-to-assign" >검색</button> <!--/* th:value="${memberList}" */-->
               </div>
-              <div class="배정안된멤버목록 unassigned-member-list scroll">
-                <div class="개별멤버box unassigned-member mt-10 mb-10" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
-                  <p class="div-inline-block cursorP" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
+              <div class="배정안된멤버목록 unassigned-member-list">
+                <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
+                  <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
                 </div>
               </div>
               <div class="배정안된멤버검색결과"></div>
