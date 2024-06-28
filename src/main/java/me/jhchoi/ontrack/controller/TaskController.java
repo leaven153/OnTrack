@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.Thymeleaf;
 import org.thymeleaf.spring6.view.ThymeleafView;
 
+import java.awt.event.WindowFocusListener;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -153,8 +154,9 @@ public class TaskController {
     }
 
     @PostMapping("/delAssignee")
-    public ResponseEntity<?> delAssignee(){
-
+    public ResponseEntity<?> delAssignee(@RequestParam String mid, @RequestBody TaskHistory th){
+        log.info("누구를 삭제할 거임?: {}", mid);
+        log.info("기록에 남길 정보: {}", th);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
