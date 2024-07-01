@@ -43,7 +43,7 @@
       </div>
 
       <!-- 공지 확인cnt 시작 -->
-      <div class="tableview-column flex-row-center-center-nowrap">
+      <div class="tableview-column flex-row-center-center-nowrap"> <!--/* */-->
         <div class="flex-col-start-nowrap">
           <div class="font-10 flex-row-justify-start-align-center">
             <div class="status-sign done"></div>
@@ -152,9 +152,13 @@
 
         <!-- status -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <div class="table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
-            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}"></div> <!-- vertical-ctrl01 -->
-            <span class="status-remark" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span> <!-- vertical-ctrl01-->
+          <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
+          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild btn-open-task-status" th:if="${task.getTaskParentId() == null}">
+            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}"></div>
+            <span class="status-remark" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
+            <th:block th:each="assignee : ${task.getAssignees()}">
+              <span class="ml-5 opacity0 transit-250 font-12" th:if="(${#strings.equals(assignee.value, nickname)} or ${#strings.equals(nickname, task.getAuthorName())}) and ${task.getTaskStatus() < 5} and ${assigneeStat.first}">변경</span>
+            </th:block>
           </div>
           <div class="table-status-sign-hasChild hide">
             <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->
@@ -172,6 +176,7 @@
             <div class="status-sign-hasChild-cntbox done "><!-- vertical-ctrl01-->
               <span class="status-child-count font-white altivo-regular">3</span>
             </div>
+          </div>
           </div>
         </div>
 

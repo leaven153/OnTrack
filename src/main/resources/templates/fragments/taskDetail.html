@@ -15,201 +15,10 @@
         <span class="btn-close font-24 btn-close-modal-createTask mr-10 cursorP btn-close-modal-taskDetail">&times;</span>
       </div>
       <div class="할일상세탭메뉴 flex-row-justify-start-align-center mb-20 mt_10 bottom-line">
-        <div id="task-tab-info" class="btn-modal-task-tab"><span class="">할 일 상세</span></div><!--  task-tab-chosen-->
         <div id="task-tab-comment" class="btn-modal-task-tab "><span class="">소통하기</span></div>
         <div id="task-tab-history" class="btn-modal-task-tab"><span class="">진행내역</span></div>
         <div id="task-tab-file" class="btn-modal-task-tab"><span class="">파일</span></div>
       </div><!-- 할일상세탭메뉴 끝 -->
-
-      <!-- 할 일 상세 수정 form 시작 -->
-      <form action="#" method="POST" id="edit-task" class="task-tab-info modal-task-tab" enctype="multipart/form-data" th:with="idx=0" th:fragment="editForm">
-        <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
-          <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-10">
-          <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-10 hide">
-
-          <input type="text" class="modal-edit-task" name="" max="20" value="해내보자" ><!--th:value="${taskDetail.get(idx).getTaskTitle()}" -->
-
-        </div><!-- 할일제목 끝 -->
-
-        <div class="할일중요도 flex-row-justify-start-align-center mb-30 fb-1672" ><!--th:classappend="${loginMember.position == 'member'}?'hide'"-->
-          <span class="font-15 c411">중요도</span>
-          <div class="">
-            <input type="radio" id="edit-vip" name="task_priority" value="1" class="input-radio hide">
-            <input type="radio" id="edit-ip" name="task_priority" value="2" class="input-radio hide">
-            <input type="radio" id="edit-norm" name="task_priority" value="3" class="input-radio hide" checked="checked">
-            <div class="">
-              <label for="edit-vip" class="btn-radio w100 radio-l">
-                <span class="font-15 vip">매우중요</span>
-              </label><label for="edit-ip" class="btn-radio w100">
-              <span class="font-15 ip">중요</span>
-            </label><label for="edit-norm" class="btn-radio w100 radio-r">
-              <span class="font-15 norm">일반</span>
-            </label>
-            </div>
-          </div>
-        </div><!-- 할일중요도 끝 -->
-
-        <div class="작성자 fb-1672 flex-row-justify-start-align-center mb-30">
-          <span class="font-15 c411">작성자</span>
-          <div class="">
-            <span class="font-18" >올리 초이</span><!--th:text="${taskDetail.get(idx).getAuthorName()}"-->
-          </div>
-        </div><!-- 작성자 끝 -->
-
-        <div class="작성일 fb-1672 flex-row-justify-start-align-center mb-30">
-          <span class="font-15 c411">작성일</span>
-          <div class="">
-            <span class="font-18 altivo-regular" >24.04.08</span><!--th:text="${#temporals.format(taskDetail.get(idx).getCreatedAt(), 'MM.dd ')}"-->
-            <span class="" >(월)</span><!--th:text="${#temporals.dayOfWeekNameShort(taskDetail.get(idx).getCreatedAt())}"-->
-          </div>
-        </div> <!-- 작성일 끝 -->
-
-        <div class="담당자배정 flex-row-start-nowrap mb-30 fb-1672">
-          <span class="font-15 c411 alignCenter">담당자</span>
-          <div class="vertical-ctrl01">
-            <div class="ul과checkbox로test bottom-line350">
-
-              <!-- 선택된 담당자가 담길 box -->
-              <!-- edit: 선택된 담당자가 이미 있을 경우 추가 요망 -->
-              <div id="edit-chosens-boxes" class="hide pd-b5">
-              </div>
-
-              <!-- 담당자 선택 전 -->
-              <!-- edit: 선택된 담당자가 이미 있을 경우 추가 요망 -->
-              <div id="edit-assignee-before-choose" class="assignee-display mb-5">
-                <span id="edit-assign-indication" class="ml-3">담당자 배정하기(프로젝트 멤버 목록)</span>
-              </div>
-
-              <!-- 프로젝트 멤버 목록 -->
-              <!-- edit:
-                1) 이미 선택된 담당자 목록에서 제외
-                2) 진행상태별 삭제버튼 출력 구별
-                3) 작성자/관리자/당사자별 삭제버튼 출력 구별 -->
-              <div id="edit-assignee-list" class="hide">
-                <input type="checkbox" class="hide" name="" value="로스 겔러" th:value="${test}" id="edit-assignee1"><label for="edit-assignee1" class="display-block lists ">로스 겔러</label>
-                <input type="checkbox" class="hide" name="" value="레이첼 그린" id="edit-assignee2"><label for="edit-assignee2" class="display-block lists">레이첼 그린</label>
-                <input type="checkbox" class="hide" name="" value="챈들러 빙" id="edit-assignee3"><label for="edit-assignee3" class="display-block lists">챈들러 빙</label>
-                <input type="checkbox" class="hide" name="" value="모니카 겔러" id="edit-assignee4"><label for="edit-assignee4" class="display-block lists">모니카 겔러</label>
-                <input type="checkbox" class="hide" name="" value="피비 부페이" id="edit-assignee5"><label for="edit-assignee5" class="display-block lists">피비 부페이</label>
-                <input type="checkbox" class="hide" name="" value="조이 트리비아니" id="edit-assignee6"><label for="edit-assignee6" class="display-block lists">조이 트리비아니</label>
-                <input type="checkbox" class="hide" name="" value="Adele" id="edit-assignee7"><label for="edit-assignee7" class="display-block lists">Adele</label>
-              </div>
-            </div>
-          </div>
-          <img src="/imgs/icon_down127.png" id="edit-show-assignee-list" alt="show list" class="alignCenter cursorP">
-        </div><!-- 담당자배정 끝 -->
-
-        <!-- edit:
-            1) 세부항목 있을 경우, 진행상태 없음으로 출력
-            2) 세부항목 있을 경우, 세부항목 목록 출력
-            3) 세부항목 열었을 경우, 상위항목 출력...
-            - 상위 항목의 일시정지, 삭제는 세부항목에도 영향.
-        -->
-        <div class="진행상태 flex-row-justify-start-align-center mb-30 fb-1672">
-          <span class="font-15 c411">진행상태</span>
-          <div class="hasChild font-blur">
-            <span class="font-15">세부 항목으로 나눠진 일은 진행상태가 표시되지 않습니다.</span>
-          </div>
-          <div class="noChild hide">
-            <input type="radio" id="task-status-notYet" name="task_status" value="0" class="input-radio-status hide">
-            <input type="radio" id="task-status-planning" name="task_status" value="1" class="input-radio-status hide">
-            <input type="radio" id="task-status-ing" name="task_status" value="2" class="input-radio-status hide">
-            <input type="radio" id="task-status-review" name="task_status" value="3" class="input-radio-status hide">
-            <input type="radio" id="task-status-done" name="task_status" value="4" class="input-radio-status hide">
-            <div class="">
-              <label for="task-status-notYet" class="btn-radio btn-edit-status radio-l">
-                <span class="font-11">시작 안 함</span>
-              </label><label for="task-status-planning" class="btn-radio btn-edit-status">
-              <span class="font-11">계획중</span>
-            </label><label for="task-status-ing" class="btn-radio btn-edit-status">
-              <span class="font-11">진행중</span>
-            </label><label for="task-status-review" class="btn-radio btn-edit-status">
-              <span class="font-11">검토중</span>
-            </label><label for="task-status-done" class="btn-radio btn-edit-status radio-r">
-              <span class="font-11">완료</span>
-            </label>
-            </div>
-          </div>
-          <button type="button" class="btn-task-pause">
-            <span class="font-white pause-font">||</span>
-          </button>
-          <button type="button" class="border-dash-red hide"><img src="/imgs/icon_task_status_bin(red).png" alt="delete" class=""></button>
-        </div><!-- 진행상태 끝 -->
-
-        <div class="할일마감일 flex-row-justify-start-align-center mb-30 fb-1672">
-          <span class="font-15 c411">마감일</span>
-          <div class="">
-            <div class="bottom-line200">
-              <input type="date" id="task-dueDate" name="task-dueDate" class="altivo-light">
-            </div>
-          </div>
-        </div><!-- 할일마감일 끝 -->
-
-        <!-- A담당자가 할일상세/status view/assignee view 열람하는 중에
-          수정권한이 다른 담당자(B)가 세부항목을 추가했을 경우
-          >> status view는 세부항목만 출력(상위는 status를 잃으니까.)
-          >> assignee view도 크게 영향 없을 듯..?
-          table view에서 하위 task를 열면 담당자별로 정렬되도록 해야하는데, 하위task도 담당자가 여러명일 수 있잖아? -->
-        <!-- 세부항목으로 나누기 시작 -->
-        <div class="세부항목(childTask) flex-row-justify-start-align-center fb-1672 mb-30">
-          <span class="font-15 c411">세부항목</span>
-          <span class="font-15 c411 hide">상위항목</span>
-
-          <div class=""> <!-- 이 div가 사라지면 숨겨진 메뉴가 위치가 맞지 않음... -->
-            <div class="세부항목으로나누기버튼 hide">
-              <button type="button" id="btn-add-child-task" class="flex-row-center-center-nowrap btn-blur btn-divide-task">
-                <img src="/imgs/icon_divide_sub.png" alt="세부항목으로나누기" class="">
-                <span class="ml-7">세부 항목으로 나누기</span>
-              </button>
-            </div><!-- 세부항목으로나누기버튼 끝 -->
-
-            <div class="flex-row-justify-start-align-center"> <!--childTask-display 없어도 된..다? 왜? -->
-              <div class="flex-row-between-nowrap">
-                <span class="font-blur hide">세부 항목이 없습니다.</span>
-                <div class="flex-row-between-nowrap pd-b3 bottom-line350">
-                  <span class="세부항목할일명 childTask-title ml-5">아무리 생각해도 not null을 아무리 생각해도 NOT NULL을</span>
-                  <div class="세부항목진행상태div mr-5 pd-a3 childTask-status-box not-yet font-white flex-row-center-center-nowrap">
-                    <span class="진행상태명 font-11">시작안함</span>
-                  </div>
-                </div>
-              </div>
-              <img src="/imgs/icon_down127.png" alt="more" id="btn-show-childTasks" class="ml-7 cursorP">
-            </div><!-- 상위/세부항목목록출력창 끝 -->
-
-            <div id="childTask-list" class="hide">
-              <div class="flex-row-between-nowrap lists">
-                <span class="세부항목할일명 childTask-title">사랑이겠죠 또 다른 말로는 표현할 수가 없죠</span>
-                <div class="세부항목진행상태div mr-5 pd-a3 childTask-status-box not-yet flex-row-center-center-nowrap">
-                  <span class="진행상태명 font-11">시작안함</span>
-                </div>
-              </div>
-              <div class="flex-row-between-nowrap lists">
-                <span class="세부항목할일명 childTask-title">지금 곁에서 딴 생각에 잠겨 걷고 있는 그대</span>
-                <div class="세부항목진행상태div mr-5 pd-a3 childTask-status-box done font-white flex-row-center-center-nowrap">
-                  <span class="진행상태명 font-11">완료</span>
-                </div>
-              </div>
-              <div class="flex-row-between-nowrap lists">
-                <span class="세부항목할일명 childTask-title">tell me that you love me that I can not stand</span>
-                <div class="세부항목진행상태div mr-5 pd-a3 childTask-status-box planning flex-row-center-center-nowrap">
-                  <span class="진행상태명 font-11">계획중</span>
-                </div>
-              </div>
-              <div class="flex-row-between-nowrap lists">
-                <span class="세부항목할일명 childTask-title">언젠가 무지개 저 너머에 우리가 찾던 꿈 거기 없다 해도</span>
-                <div class="세부항목진행상태div mr-5 pd-a3 childTask-status-box ing font-white flex-row-center-center-nowrap">
-                  <span class="진행상태명 font-11">진행중</span>
-                </div>
-              </div>
-            </div><!-- 상위/세부항목목록 끝 -->
-          </div>
-        </div> <!-- 세부항목으로 나누기 끝 -->
-
-        <div class="확인(할일상세수정버튼) flex-row-center-center-nowrap mt-60 mb-5">
-          <button type="submit" form="edit-task" class="btn-large-ok done font-white">확인</button>
-          <button type="button" class="btn-large btn-blur btn-close-modal-taskDetail">닫기</button>
-        </div>
-      </form> <!-- 할 일 상세 수정 form 끝 -->
 
       <!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 시작 -->
       <!-- 나한테 parent-id에 값이 없다(있다면 나는 child)
@@ -245,6 +54,37 @@
         </div>
       </div><!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 끝 -->
 
+      <!-- 진행상태 변경 시작 -->
+      <div id="" class="진행상태 flex-row-justify-start-align-center mb-30 fb-1672 task-tab-history modal-task-tab hide">
+        <span class="font-15 c411">진행상태</span>
+        <div class="hasChild font-blur">
+          <span class="font-15">세부 항목으로 나눠진 일은 진행상태가 표시되지 않습니다.</span>
+        </div>
+        <div class="noChild hide">
+          <input type="radio" id="task-status-notYet" name="task_status" value="0" class="input-radio-status hide">
+          <input type="radio" id="task-status-planning" name="task_status" value="1" class="input-radio-status hide">
+          <input type="radio" id="task-status-ing" name="task_status" value="2" class="input-radio-status hide">
+          <input type="radio" id="task-status-review" name="task_status" value="3" class="input-radio-status hide">
+          <input type="radio" id="task-status-done" name="task_status" value="4" class="input-radio-status hide">
+          <div class="">
+            <label for="task-status-notYet" class="btn-radio btn-edit-status radio-l">
+              <span class="font-11">시작 안 함</span>
+            </label><label for="task-status-planning" class="btn-radio btn-edit-status">
+            <span class="font-11">계획중</span>
+          </label><label for="task-status-ing" class="btn-radio btn-edit-status">
+            <span class="font-11">진행중</span>
+          </label><label for="task-status-review" class="btn-radio btn-edit-status">
+            <span class="font-11">검토중</span>
+          </label><label for="task-status-done" class="btn-radio btn-edit-status radio-r">
+            <span class="font-11">완료</span>
+          </label>
+          </div>
+        </div>
+        <button type="button" class="btn-task-pause">
+          <span class="font-white pause-font">||</span>
+        </button>
+        <button type="button" class="border-dash-red hide"><img src="/imgs/icon_task_status_bin(red).png" alt="delete" class=""></button>
+      </div><!-- 진행상태 끝 -->
       <!-- 소통하기 시작 -->
       <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10 hide">
         <div class="modal-task-comment-write mb-20">
