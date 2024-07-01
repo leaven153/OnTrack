@@ -945,7 +945,7 @@ window.onload = function(){
             btnTaskTabs.forEach(function(btnTabs){
                 btnTabs.classList.remove("task-tab-chosen");
             });
-            // 3) 할 일 상세 탭버튼에만 선택됨 넣고
+            // 3) '진행내역'에만 선택됨 넣고
             btnModalTaskDetailTab.classList.add("task-tab-chosen");
 
             // 4) 모든 탭을 숨겼다가
@@ -975,7 +975,7 @@ window.onload = function(){
             // 2. 선택된 탭 표시 
             modalTaskTabs.forEach(function(eachtab){
                 eachtab.classList.add("hide");
-                if(eachtab.id === "task-tab-info"){
+                if(eachtab.id === "task-tab-info"){ // 상세 보기(수정)의 id → 수정요망...
                     eachtab.classList.remove("hide");
                     modalTaskCommonArea.classList.add("hide");
                 } else if (eachtab.classList.contains(modalTaskTabChosen)) {
@@ -1554,67 +1554,68 @@ window.onload = function(){
 
     /*---------- 032 ------------*/
     /*---- ▼ 할일 수정(table view, status view): 담당자 배정·수정 시작 ▼ ----*/
-
-    const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
-    const edit_assignIndication = document.querySelector("#edit-assign-indication");
-    const edit_btnShowAssigneeList = document.querySelector("#edit-show-assignee-list");
-
-    const edit_assigneeList = document.querySelector("#edit-assignee-list");
-    const edit_assigneesName = document.querySelectorAll("#edit-assignee-list > input");
-    
-    const edit_chosensBoxes = document.querySelector("#edit-chosens-boxes");
-    
-    let edit_cntChoosenAssignee = 0; // 하나의 일에 배정되는 담당자의 수를 세기 위한 변수
-
-    // 프로젝트 멤버 목록 나타내기
-     edit_btnShowAssigneeList.addEventListener("click", ()=>{
-
-        // 담당자가 아직 배정되지 않았다면 '담당자 배정하기' 글씨는 출력, 
-        // 선택된 담당자 이름이 출력될 div는 미출력 (목록 나타내기 클릭할 때마다 체크)
-        if (edit_cntChoosenAssignee === 0) {
-            edit_chosensBoxes.classList.remove("assignee-display");
-            edit_chosensBoxes.classList.add("hide");
-            edit_assigneeBeforeChoose.classList.add("assignee-display");
-            edit_assigneeBeforeChoose.classList.remove("hide");
-        }
-        // 1. 목록 보이기 버튼을 목록 숨기기(올리기) 버튼으로
-        edit_btnShowAssigneeList.classList.toggle("img-angle180");
-        // 1. 담당자 목록 출력
-        edit_assigneeList.classList.toggle("hide");
-        // 1. '담당자 배정하기' 글씨 흐리기
-        edit_assignIndication.classList.toggle("font-blur");
-        
-    }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
-
+    //
+    // const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
+    // const edit_assignIndication = document.querySelector("#edit-assign-indication");
+    // const edit_btnShowAssigneeList = document.querySelector("#edit-show-assignee-list");
+    //
+    // const edit_assigneeList = document.querySelector("#edit-assignee-list");
+    // const edit_assigneesName = document.querySelectorAll("#edit-assignee-list > input");
+    //
+    // const edit_chosensBoxes = document.querySelector("#edit-chosens-boxes");
+    //
+    // let edit_cntChoosenAssignee = 0; // 하나의 일에 배정되는 담당자의 수를 세기 위한 변수
+    //
+    // // 프로젝트 멤버 목록 나타내기
+    //  edit_btnShowAssigneeList.addEventListener("click", ()=>{
+    //
+    //     // 담당자가 아직 배정되지 않았다면 '담당자 배정하기' 글씨는 출력,
+    //     // 선택된 담당자 이름이 출력될 div는 미출력 (목록 나타내기 클릭할 때마다 체크)
+    //     if (edit_cntChoosenAssignee === 0) {
+    //         edit_chosensBoxes.classList.remove("assignee-display");
+    //         edit_chosensBoxes.classList.add("hide");
+    //         edit_assigneeBeforeChoose.classList.add("assignee-display");
+    //         edit_assigneeBeforeChoose.classList.remove("hide");
+    //     }
+    //     // 1. 목록 보이기 버튼을 목록 숨기기(올리기) 버튼으로
+    //     edit_btnShowAssigneeList.classList.toggle("img-angle180");
+    //     // 1. 담당자 목록 출력
+    //     edit_assigneeList.classList.toggle("hide");
+    //     // 1. '담당자 배정하기' 글씨 흐리기
+    //     edit_assignIndication.classList.toggle("font-blur");
+    //
+    // }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
+    //
 
     /*---------- 033 ------------*/
-    const edit_chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
-
-    // 프로젝트 멤버 목록에서 담당자 선택
-    edit_assigneesName.forEach(function(edit_chosenName){
-        edit_chosenName.addEventListener("click", ()=>{
-
-            console.log("clicked edit modal list");
-            // 2. '담당자 배정하기' 글씨 hide
-            edit_assigneeBeforeChoose.classList.remove("assignee-display");
-            edit_assigneeBeforeChoose.classList.add("hide");
-
-            // 3. 선택된 담당자 이름들이 담길 div의 hide 해제
-            edit_chosensBoxes.classList.add("assignee-display");
-            edit_chosensBoxes.classList.remove("hide");
-
-            // 하나의 일에 최대 배정되는 담당자 제한(6명), 이미 배정된 담당자는 또 클릭해도 무동작
-            if (edit_cntChoosenAssignee < 6 && !edit_chosenAssigneeList.has(edit_chosenName.value)) {
-
-                // 클릭될 때 마다 div 요소 생성
-                edit_chosensBoxes.appendChild(edit_chosenAssigneeBox(edit_chosenName.value));
-
-                edit_chosenAssigneeList.add(edit_chosenName.value); // 중복 방지를 위한 set
-
-                edit_cntChoosenAssignee++;
-            }
-        }); // chosenName.addEventListener(click) ends
-    });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
+    //
+    // const edit_chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
+    //
+    // // 프로젝트 멤버 목록에서 담당자 선택
+    // edit_assigneesName.forEach(function(edit_chosenName){
+    //     edit_chosenName.addEventListener("click", ()=>{
+    //
+    //         console.log("clicked edit modal list");
+    //         // 2. '담당자 배정하기' 글씨 hide
+    //         edit_assigneeBeforeChoose.classList.remove("assignee-display");
+    //         edit_assigneeBeforeChoose.classList.add("hide");
+    //
+    //         // 3. 선택된 담당자 이름들이 담길 div의 hide 해제
+    //         edit_chosensBoxes.classList.add("assignee-display");
+    //         edit_chosensBoxes.classList.remove("hide");
+    //
+    //         // 하나의 일에 최대 배정되는 담당자 제한(6명), 이미 배정된 담당자는 또 클릭해도 무동작
+    //         if (edit_cntChoosenAssignee < 6 && !edit_chosenAssigneeList.has(edit_chosenName.value)) {
+    //
+    //             // 클릭될 때 마다 div 요소 생성
+    //             edit_chosensBoxes.appendChild(edit_chosenAssigneeBox(edit_chosenName.value));
+    //
+    //             edit_chosenAssigneeList.add(edit_chosenName.value); // 중복 방지를 위한 set
+    //
+    //             edit_cntChoosenAssignee++;
+    //         }
+    //     }); // chosenName.addEventListener(click) ends
+    // });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
 
     /*---------- 034 ------------*/
     // 할 일 상세에서 담당자 삭제할 때와 할 일 추가(생성)할 때의 담당자 삭제 구분 요망!!!
@@ -1665,12 +1666,12 @@ window.onload = function(){
 
     /*---------- 036 ------------*/
     /*---- ▼ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 시작 ▼ ----*/
-    const btnShowChildTaskList = document.querySelector("#btn-show-childTasks");
-    const childTaskList = document.querySelector("#childTask-list");
-    btnShowChildTaskList.addEventListener("click", ()=>{
-        btnShowChildTaskList.classList.toggle("img-angle180");
-        childTaskList.classList.toggle("hide");
-    });
+    // const btnShowChildTaskList = document.querySelector("#btn-show-childTasks");
+    // const childTaskList = document.querySelector("#childTask-list");
+    // btnShowChildTaskList.addEventListener("click", ()=>{
+    //     btnShowChildTaskList.classList.toggle("img-angle180");
+    //     childTaskList.classList.toggle("hide");
+    // });
     /*---- ▲ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 끝 ▲ ----*/
 
 

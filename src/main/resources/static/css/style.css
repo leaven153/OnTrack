@@ -615,7 +615,7 @@ div.content-chkbox > input {
 }
 
 span[class*=task-title]:hover ~ img.btn-edit-task-title,
-span.one-assignee:hover + span.transit-250,
+span.status-remark:hover + span.transit-250,
 span.transit-250:hover,
 img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
@@ -694,7 +694,8 @@ img.btn-create-child-task:hover ~ .hover-tip-child {
 
 /* 진행상태 */
 .tableview-column:nth-child(5) {
-    flex-basis: 12%;
+    flex-basis: 10%;
+    min-width: 105px;
     flex-shrink: 0;
 }
 
@@ -1177,7 +1178,10 @@ div.noassignee-state span:nth-child(2) {
 .w90p {
     width: 90%;
 }
-
+.w70pMin105 {
+    width: 70%;
+    min-width: 105px;
+}
 .w200 {
     width: 200px;
 }
