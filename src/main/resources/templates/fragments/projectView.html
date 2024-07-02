@@ -322,7 +322,7 @@
     </div><!-- End of <div class="wrapper mb-20"> -->
   </div> <!-- End of #status-view div -->
 
-  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(assignees)">
+  <div id="assignee-view" class="project-view hide" th:fragment="assigneeView(assignees, taskList)">
     <div class="wrapper mb-20 flex-col-start-nowrap">
 
       <div class="flex-row-justify-start-align-center sort-box">
@@ -333,8 +333,8 @@
       </div>
       <!--/* 담당자별box 컨테이너 시작 */-->
       <div class="flex-col-start-nowrap">
-<!--        <th:block th:each="assignee : ${assignees}">-->
-<!--          <th:block th:if="${assignee.getAssigneeMid().size() == null}">-->
+        <th:block th:each="task : ${taskList}">
+          <th:block th:if="${task.getAssignees().size() == null}">
             <!--/* 담당자없는일 요약div 시작 */-->
             <div class="flex-row-between-nowrap assignee-box">
               <div class="flex-col-justify-center assignee-name-n-status-cnt">
@@ -343,7 +343,7 @@
               <div class="flex-row-justify-start-align-center noassignee-state">
                 <div class="mr-15 ">
                   <span class="">시작 안 함</span>
-                  <span class="altivo-regular">2</span>
+                  <span class="altivo-regular" th:text="">2</span>
                 </div>
                 <div class="mr-15 ">
                   <span class="">보류</span>
@@ -361,19 +361,19 @@
             </div> <!--/* 첫째 줄: 담당자없는일 요약div 끝 */-->
             <!--/* 담당자없는 상세컨테이너 시작 */-->
             <div class="담당자없는상세컨테이너 assignee-status-box mb-30 hide" data-id="noassignee01">
-              <!-- 담당자 진행상태별box: 시작 안 함-->
+              <!-- 담당자없는 진행상태box: 시작 안 함-->
               <div class="flex-row-start-nowrap mt-14">
                 <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
                   <div class="flex-row-between-nowrap mt-5">
                     <div class="flex-row-justify-start-align-center">
-                      <div class="assignee-bar not-yet"></div>
+                      <div class="assignee-bar not-yet"></div> <!--pause -->
                       <span class="ml-5 font-15">시작 안 함</span>
                     </div>
                     <div class="mr-9 altivo-regular">2</div>
                   </div>
                 </div> <!-- 진행상황명·개수 끝 -->
                 <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container notYet-bg20">
-                  <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
+                  <div class="태스크박스 assignee-task-box notYet-border-shadow"> <!-- /*btn-task-detail pause-border-shadow*/-->
                     <div class="flex-row-between-nowrap mb-5">
                       <div class="assignee-task-title ">인라인블록뺀 후 할일상세버튼삽입</div>
                       <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
@@ -385,237 +385,13 @@
                       <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
                     </div>
                   </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box notYet-border-shadow">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
                 </div> <!-- 할일박스컨테이너 END -->
               </div>
-              <!-- 담당자 진행상태별box: 시작 안 함 끝 -->
-
-              <!-- 담당자 진행상태별box: 보류 시작 -->
-              <div class="flex-row-start-nowrap mt-14">
-                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-                  <div class="flex-row-between-nowrap mt-5">
-                    <div class="flex-row-justify-start-align-center">
-                      <div class="assignee-bar pause"></div>
-                      <span class="ml-5 font-15">보류</span>
-                    </div>
-                    <div class="mr-9 altivo-regular">4</div>
-                  </div>
-                </div> <!-- 진행상황명·개수 끝 -->
-                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                </div> <!-- 할일박스컨테이너 END -->
-              </div>
-              <!-- 담당자 진행상태별box: 보류 끝 -->
-
-              <!-- 담당자 진행상태별box: 취소 시작 -->
-              <div class="flex-row-start-nowrap mt-14">
-                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-                  <div class="flex-row-between-nowrap mt-5">
-                    <div class="flex-row-justify-start-align-center">
-                      <div class="assignee-bar pause"></div>
-                      <span class="ml-5 font-15">취소</span>
-                    </div>
-                    <div class="mr-9 altivo-regular">11</div>
-                  </div>
-                </div> <!-- 진행상황명·개수 끝 -->
-                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container">
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 ">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3 img-hidden">
-                    </div>
-                  </div> <!-- task box END-->
-                  <div class="태스크박스 btn-task-detail assignee-task-box">
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title ">인라인블록뺀 후</div>
-                      <img src="/imgs/icon_group.png" alt="group work" class="icon-group23 img-hidden">
-                    </div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                </div> <!-- 할일박스컨테이너 END -->
-              </div>
-              <!-- 담당자 진행상태별box: 취소 끝 -->
+              <!-- 담당자없는 진행상태box: 시작 안 함 끝 -->
             </div>
             <!--/* 담당자없는 상세컨테이너 끝 */-->
-<!--          </th:block>-->
-<!--        </th:block>-->
+          </th:block>
+        </th:block>
 
         <th:block th:each="assignee : ${assignees}">
           <!--/* 담당자 있는 div(요약)시작 */-->
@@ -690,7 +466,7 @@
               <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" th:attr="data-id=${assignee.getAssigneeName()}">
             </div>
           </div> <!-- 담당자 있는 div(요약) 끝 -->
-          <!-- 담당자별상세컨테이너 시작 -->
+          <!-- 담당자별 상세컨테이너 시작 -->
           <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" th:attr="data-id=${assignee.getAssigneeName()}">
             <th:block th:each="tStatus : ${statusMap}">
               <!--/* 담당자 진행상태별box 시작 */-->

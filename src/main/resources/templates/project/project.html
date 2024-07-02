@@ -81,7 +81,7 @@
   <!-- Status View Ends -->
 
   <!-- Assignee View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()})}"></th:block> <!--, loginMember=${loginMember}-->
+  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, taskList=${project.getTaskList()})}"></th:block> <!--, loginMember=${loginMember}-->
   <!-- Assignee View Ends -->
 
 

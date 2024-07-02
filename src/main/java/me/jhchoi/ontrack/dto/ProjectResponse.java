@@ -31,4 +31,7 @@ public class ProjectResponse {
     // 5. 진행상태별 할 일
     private LinkedHashMap<Integer, List<StatusTaskList>> statusTaskList;
 
+    // 6. 담당자 없는 할 일 리스트
+    private List<NoAssigneeTask> noAssigneeTasks;
+
 }
