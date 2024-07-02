@@ -615,7 +615,7 @@ div.content-chkbox > input {
 }
 
 span[class*=task-title]:hover ~ img.btn-edit-task-title,
-span.status-remark:hover + span.transit-250,
+span.status-remark:hover ~ span.transit-250,
 span.transit-250:hover,
 img.btn-edit-task-title:hover,
 div.content-chkbox:hover > input {
@@ -1548,12 +1548,21 @@ input[type=date] {
     background: #807980;
 }
 /******** status sign, background-color ********/
+.notice-unchk-sign {
+    display:inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 7px;
+    border: 2px dotted #9e3f3b;
+}
+
 .status-sign {
     display: inline-block;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    margin-right: 3px;
+    margin-right: 7px;
 }
 
 .not-yet,

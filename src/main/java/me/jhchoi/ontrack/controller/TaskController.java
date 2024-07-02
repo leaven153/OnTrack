@@ -128,11 +128,11 @@ public class TaskController {
         log.info("task history: {}", th);
 
         if (th.getModItem().equals("title")){
-            log.info("");
+            log.info("할 일 제목 수정");
         } else if (th.getModItem().equals("dueDate")) {
-            log.info("");
+            log.info("할 일 마감일 수절");
         } else if (th.getModItem().equals("status")) {
-            log.info("");
+            log.info("할 일 진행상태 수정");
         }
 
         return new ResponseEntity<>("결과스트링", HttpStatus.OK);
