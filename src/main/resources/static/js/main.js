@@ -897,7 +897,7 @@ window.onload = function(){
     /* 할 일 상세 모달 열기 */
     const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
     const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
-    const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
+    // const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
     const modalTaskCommonArea = document.querySelector("#task-detail-common");
     const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
     const modalTaskDetailForm = document.querySelector("form#edit-task");
