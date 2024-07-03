@@ -912,7 +912,7 @@ window.onload = function(){
     // const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
     const modalTaskCommonArea = document.querySelector("#task-detail-common");
     const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
-    const modalTaskDetailForm = document.querySelector("form#edit-task");
+    // const modalTaskDetailForm = document.querySelector("form#edit-task");
 
     btnOpenTaskDetail.forEach(function(chosenTask){
         chosenTask.addEventListener("click", ()=>{
@@ -930,8 +930,8 @@ window.onload = function(){
             console.log(loginMember);
             const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
             console.log(`url: ${getTaskUrl}`);
-            console.log(`--------outerHTML-----------`);
-            console.log(`${document.querySelector('form#edit-task').outerHTML}`);
+            // console.log(`--------outerHTML-----------`);
+            // console.log(`${document.querySelector('form#edit-task').outerHTML}`);
             /*
             fetch(getTaskUrl,{
                 method: 'POST',
@@ -951,22 +951,31 @@ window.onload = function(){
 
             });
 */
+            // 어떤 탭 열어야 하는지 확인
+            const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
+            console.log(chosenTab);
+
             // 1) 컨테이너 열고
             containerTaskDetail.classList.remove("hide");
+
             // 2) 전체 탭버튼에서 선택됨 뺐다가
             btnTaskTabs.forEach(function(btnTabs){
                 btnTabs.classList.remove("task-tab-chosen");
             });
-            // 3) '진행내역'에만 선택됨 넣고
-            btnModalTaskDetailTab.classList.add("task-tab-chosen");
+
+            // 3) 선택된 탭버튼에 '선택됨' 넣고
+            [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
 
             // 4) 모든 탭을 숨겼다가
             modalTaskTabs.forEach(function(everyTabs){
                 everyTabs.classList.add("hide");
             });
-            // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
-            modalTaskDetailForm.classList.remove("hide");
 
+            // 5) 공통영역과 선택된 탭을 출력한다.
+            modalTaskCommonArea.classList.remove("hide");
+            [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
+                chosenArea.classList.remove("hide");
+            });
 
         });
     });

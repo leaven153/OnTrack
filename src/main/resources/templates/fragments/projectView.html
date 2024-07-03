@@ -96,8 +96,7 @@
             <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
           </div>
 
-          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20" alt="comment">
-          <img src="/imgs/icon_nocomment32.png" class="no-comment hide img-20" alt="no comment">
+          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment">
         </div>
 
         <!-- assignee -->
@@ -333,70 +332,6 @@
       </div>
       <!--/* 담당자별box 컨테이너 시작 */-->
       <div class="flex-col-start-nowrap">
-        <th:block th:each="task : ${noAssigneeTasks}">
-          <th:block th:if="${taskStat.count == 1}">
-            <!--/* 담당자없는일 요약div 시작 */-->
-            <div class="flex-row-between-nowrap assignee-box">
-              <div class="flex-col-justify-center assignee-name-n-status-cnt">
-                <span class="">담당자 없음</span><!-- vertical-ctrl02-->
-              </div>
-              <div class="flex-row-justify-start-align-center noassignee-state">
-                <div class="mr-15 ">
-                  <span class="">시작 안 함</span>
-                  <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(noAssigneeTasks, 1)}">2</span>
-                </div>
-                <div class="mr-15">
-                  <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" data-id="noassignee">
-                </div>
-                <!--
-                <div class="mr-15 ">
-                  <span class="">보류</span>
-                  <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(noAssigneeTasks, 0)}">10</span>
-                </div>
-                <div class="mr-15 ">
-                  <span class="">취소</span>
-                  <span class="altivo-regular">11</span>
-                </div>
-                 -->
-              </div> <!-- 각 진행상황별 개수 담는 div -->
-              <!-- 오른쪽 끝 진행상황별 일 개수 끝-->
-            </div> <!--/* 첫째 줄: 담당자없는일 요약div 끝 */-->
-            <!--/* 담당자없는 상세컨테이너 시작 */-->
-            <div class="담당자없는상세컨테이너 assignee-status-box mb-10 hide" data-id="noassignee">
-              <!-- 담당자없는 진행상태별 box 시작--><!--/* 담당자 없는 일은 시작 안 함만 있는 것으로.. */-->
-              <div class="flex-row-start-nowrap">
-                <!--
-                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
-                  <div class="flex-row-between-nowrap mt-5">
-                    <div class="flex-row-justify-start-align-center">
-                      <div class="assignee-bar not-yet"></div>
-                      <span class="ml-5 font-15" >시작 안 함</span>
-                    </div>
-                    <div class="mr-9 altivo-regular" th:text="${task.countStatus(noAssigneeTasks, 1)}">2</div>
-                  </div>
-                </div>
-                --> <!-- 진행상황명·개수 끝 -->
-                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap no-assignee-taskbox-container"> <!--/*notYet-bg20*/-->
-                  <div class="태스크박스 no-assignee-task-box notYet-border-shadow"> <!-- /*btn-task-detail pause-border-shadow*/-->
-                    <div class="flex-row-between-nowrap mb-5">
-                      <div class="assignee-task-title " th:text="${task.getTaskTitle()}">인라인블록뺀 후 할일상세버튼삽입</div>
-                    </div>
-                    <div class="작성자"></div>
-                    <div class="마감일 flex-row-justify-start-align-center">
-                      <span class="font-11">마감일&nbsp;</span>
-                      <span class="altivo-regular font-11 ">03.29</span>
-                      <span class="font-11">&nbsp;(일)</span>
-                      <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3">
-                    </div>
-                  </div> <!-- task box END-->
-                </div> <!-- 할일박스컨테이너 END -->
-              </div>
-              <!-- 담당자없는 진행상태별 box 끝 -->
-            </div>
-            <!--/* 담당자없는 상세컨테이너 끝 */-->
-          </th:block>
-        </th:block>
-
         <th:block th:each="assignee : ${assignees}">
           <!--/* 담당자 있는 div(요약)시작 */-->
           <div class="flex-row-between-nowrap assignee-box">

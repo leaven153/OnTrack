@@ -120,10 +120,10 @@ public class TaskList {
 
     // 해당 task의 수정권한 확인 (projectView.html에서 직접 호출)
     public boolean chkEditAuth(Long mId, TaskList task){
-        if (task.getAuthorMid() == mId) return true;
+        if (Objects.equals(task.getAuthorMid(), mId)) return true;
         Map<Long, String> assignees = task.getAssignees();
         for(Map.Entry<Long, String> entry: assignees.entrySet()){
-            if (entry.getKey() == mId) return true;
+            if (Objects.equals(entry.getKey(), mId)) return true;
         }
         return false;
     }
