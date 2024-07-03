@@ -81,7 +81,7 @@
   <!-- Status View Ends -->
 
   <!-- Assignee View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, taskList=${project.getTaskList()})}"></th:block> <!--, loginMember=${loginMember}-->
+  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, noAssigneeTasks=${project.getNoAssigneeTasks()})}"></th:block> <!--, loginMember=${loginMember}-->
   <!-- Assignee View Ends -->
 
 
@@ -277,127 +277,8 @@
   <!-- 모달: 공지쓰기 끝 -->
 
 <!-- 모달: 프로젝트 설정 시작 -->
-<div id="configure-project" class="modal-container hide">
-  <!-- 모달 컨테이너 -->
-  <div class="modal-center820 flex-col-start-nowrap">    
-    <div class="닫기버튼 box-close-modal-configure-project">&times; 닫기</div>
-    <div class="전체box modal-configure-project flex-row-start-nowrap">
-      <div class="왼쪽메뉴배경색을위한div configure-project-menu-box">
-        <div class="왼쪽메뉴 flex-col-start-nowrap ">
-          <div class="왼쪽메뉴타이틀 configure-project-menu-title mb-15">
-            <span class="font-22 bold">프로젝트 관리</span>
-          </div>
-          <div class="왼쪽메뉴목록 configure-project-menu-list flex-col-start-nowrap">
-            <div class="flex-row-justify-start-align-center configure-project-menu-btn-box btn-configure-project" data-id="configure-project-basic">
-              <a class="flex-row-justify-start-align-center">
-                <p class="flex-row-center-center-nowrap"><img src="/imgs/icon_settings6.png" alt="" class="img-20"></p>
-                <span class="">기본설정</span>
-              </a>
-            </div>
-            <div class="flex-row-justify-start-align-center configure-project-menu-btn-box btn-configure-project" data-id="configure-project-member">
-              <a class="flex-row-justify-start-align-center">
-                <p class="flex-row-center-center-nowrap"><img src="/imgs/group-chat.png" alt="" class="img-2em"></p>
-                <span class="">구성원</span>
-              </a>
-            </div>
-            <div class="flex-row-justify-start-align-center configure-project-menu-btn-box btn-configure-project" data-id="configure-project-file">
-              <a class="flex-row-justify-start-align-center">
-                <p class="flex-row-center-center-nowrap"><img src="/imgs/icon_attachment.png" alt="" class="img-18"></p>
-                <span class="">파일</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="오른쪽 width80p flex-col-start-nowrap configure-project-content-box">
-        <div class="오른쪽상단현메뉴타이틀 configure-project-menu-title mb-30 flex-row-justify-start-align-center">
-          <div class="상단타이틀(기본설정) flex-row-justify-start-align-center configure-project-tab-title hide" data-id="configure-project-basic">
-            <img src="/imgs/icon_settings6.png" alt="" class="img-30">
-            <span class="font-26 bold">기본설정</span>
-          </div>
-          <div class="상단타이틀(구성원) flex-row-justify-start-align-center configure-project-tab-title" data-id="configure-project-member">
-            <img src="/imgs/group-chat.png" alt="" class="img-40 mr-3">
-            <span class="font-26 bold">구성원</span>
-          </div>
-          <div class="상단타이틀(파일) flex-row-justify-start-align-center configure-project-tab-title hide" data-id="configure-project-file">
-            <img src="/imgs/icon_attachment.png" alt="" class="img-24 mr-5">
-            <span class="font-26 bold">파일</span>
-          </div>
-        </div>
-        <div class="오른쪽하단내용">
-          <div data-id="configure-project-basic" class="기본설정 flex-col-start-nowrap configure-project-tab hide">
-            <form id="configure-project-form" class="" method="POST">
-              <div class="각항목프로젝트명 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">프로젝트명</div>
-                <div class="항목내용"><input type="text" class="bg-5ec configure-project-name" value="세수하러 왔다가"></div>
-              </div>
-              <div class="각항목생성자 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">생성자</div>
-                <div class="항목내용 bold">올리 초이</div>
-              </div>
-              <div class="각항목생성일 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">생성일</div>
-                <div class="항목내용 altivo-regular">2023.12.23</div>
-              </div>
-              <div class="각항목유형 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">유형</div>
-                <div class="항목내용">
-                  <input type="radio" id="configure-project-solo" name="projectType" value="solo" class="input-radio-project-type hide">
-                  <input type="radio" id="configure-project-team" name="projectType" value="team" class="input-radio-project-type hide">
-                  <div class="">
-                    <label for="configure-project-solo" class="btn-radio w100 radio-r">
-                      <img src="/imgs/icon_solo1315.png" alt="solo" class="vertical-ctrl015">
-                      <img src="/imgs/icon_blur_solo1315.png" alt="solo" class="vertical-ctrl015 hide">
-                      <span class="">개인</span>
-                    </label><label for="configure-project-team" class="btn-radio w100 radio-l">
-                      <img src="/imgs/icon_group2215.png" alt="team" class="vertical-ctrl015 hide">
-                      <img src="/imgs/icon_blur_group2215.png" alt="team" class="vertical-ctrl015">
-                      <span class="font-blur">팀</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="각항목마감일 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">마감일</div>
-                <div class="항목내용"><input type="date" name="projectDueDate" class="altivo-regular" value=""></div>
-              </div>
-              <div class="각항목프로젝트진행상태 configure-project-basic-itemName flex-row-justify-start-align-center">
-                <div class="항목명">상태</div>
-                <div class="항목내용">
-                  <input type="radio" id="project-status-activated" name="projectStatus" value="activated" class="input-radio-project-status hide">
-                  <input type="radio" id="project-status-finished" name="projectStatus" value="finished" class="input-radio-project-status hide">
-                  <input type="radio" id="project-status-deactivate" name="projectStatus" value="deactivate" class="input-radio-project-status hide">
-                  <input type="radio" id="project-status-archive" name="projectStatus" value="archive" class="input-radio-project-status hide">
-                  <div class="">
-                    <label for="project-status-activated" class="btn-radio btn-project-status radio-l">
-                      <span class="">진행중</span>
-                    </label><label for="project-status-finished" class="btn-radio btn-project-status">
-                      <span class="">종료</span>
-                    </label><label for="project-status-deactivate" class="btn-radio btn-project-status">
-                      <span class="">삭제</span>
-                    </label><label for="project-status-archive" class="btn-radio btn-project-status radio-r">
-                      <span class="">보관</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="확인버튼div flex-row-center-center-nowrap">
-                <button type="submit" form="configure-project-form" id="btn-submit-configure-project" class="btn-submit-configure-project">변경하기</button>
-              </div>
-            </form>
-          </div><!-- 기본설정내용 끝 -->
-          <div data-id="configure-project-member" class="구성원 flex-col-start-nowrap configure-project-tab">
-            tab 클릭 테스트 확인을 위한 구성원내용
-          </div><!-- 구성원내용 끝 -->
-          <div data-id="configure-project-file" class="파일 flex-col-start-nowrap configure-project-tab hide">
-            tab 클릭 테스트 확인을 위한 파일내용
-          </div><!-- 파일내용 끝 -->
-        </div>
-      </div>
-    </div>
-  </div><!-- 모달 컨테이너 끝 -->
-</div>
+  <th:block th:replace="~{/fragments/configProject}"></th:block>
+
 <!-- 모달: 프로젝트 설정 끝 -->
 
   <!--/* 모달: 새 할 일 추가 */-->
@@ -408,7 +289,7 @@
 
 <!--/* 모달: 할 일 상세 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(loginMember=${loginMember}, taskDetail=${project.getTaskList()}, test=${test})}"></th:block>
+  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(loginMember=${loginMember}, taskDetail=${project.getTaskList()})}"></th:block>
   <!--/* 모달: 할 일 상세 끝 */-->
 
   <!--/* Modal Ends */-->

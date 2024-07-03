@@ -49,4 +49,5 @@ public interface TaskMapper {
     // Status view: 진행상태별 할 일 목록
     List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest);
 
+    List<NoAssigneeTask> getNoAssigneeTask(Long projectId);
 }

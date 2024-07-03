@@ -46,7 +46,7 @@
         FROM ontrack_task t
         INNER JOIN task_assignment ta
         ON ta.task_id = t.id
-        WHERE member_id = #{memberId};
+        WHERE member_id = #{memberId}
     </select>
 
     <select id="getAssigneeView" resultType="AssigneeTaskList">
@@ -56,7 +56,14 @@
         ON ta.task_id = t.id
         WHERE ta.task_id in (SELECT task_id FROM task_assignment WHERE member_id = #{memberId})
         GROUP BY t.id
-        ORDER BY t.task_status;
+        ORDER BY t.task_status
+    </select>
+
+    <select id="getNoAssigneeTask" resultType="NoAssigneeTask">
+        SELECT id, task_title, task_status, task_dueDate, authorMid, authorName, createdAt, task_priority
+        FROM ontrack_task
+        WHERE project_id = #{projectId}
+        AND id NOT IN (SELECT task_id FROM task_assignment WHERE project_id = #{projectId})
     </select>
 
     <select id="getStatusView" parameterType="StatusViewRequest" resultType="StatusTaskList">

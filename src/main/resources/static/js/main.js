@@ -181,6 +181,8 @@ window.onload = function(){
         spanBtnEditTaskTitle.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
 
+                // 현 url에서 projectId, taskId, memberId(updatedBy) 정보 추출
+                let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
                 console.log(`제목span누름`);
 
                 // 할 일 제목이 담긴 input 출력
@@ -200,11 +202,21 @@ window.onload = function(){
                 titleInput.addEventListener("blur", ()=>{
                     console.log('blur 발생');
                     console.log(titleInput.value);
+                    const taskHistory = {
+                        projectId: currUrl[2],
+                        taskId: titleInput.dataset.id,
+                        modItem: "title",
+                        modType: "update",
+                        modContent: titleInput.value,
+                        updatedBy: currUrl[3]
+                    }
                     // task id와 project id, 수정한 사람 mid, nickname(for history)도 보내야 한다.
                     fetch('http://localhost:8080/task/editTask?item=title', {
                         method: 'POST',
-                        headers: {},
-                        body: titleInput.value
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify(taskHistory)
                     })
                         .then(response => response.text())
                         .then(data => {
@@ -900,7 +912,7 @@ window.onload = function(){
     // const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
     const modalTaskCommonArea = document.querySelector("#task-detail-common");
     const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
-    const modalTaskDetailForm = document.querySelector("form#edit-task");
+    // const modalTaskDetailForm = document.querySelector("form#edit-task");
 
     btnOpenTaskDetail.forEach(function(chosenTask){
         chosenTask.addEventListener("click", ()=>{
@@ -916,45 +928,49 @@ window.onload = function(){
                 position: currUrl[5]
             };
             console.log(loginMember);
-            const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
+            const getTaskUrl = `http://localhost:8080/task/${chosenTask.dataset.taskid}`; // /${chosenTask.dataset.clicker}
             console.log(`url: ${getTaskUrl}`);
-            console.log(`--------outerHTML-----------`);
-            console.log(`${document.querySelector('form#edit-task').outerHTML}`);
-            /*
+            // console.log(`--------outerHTML-----------`);
+            // console.log(`${document.querySelector('form#edit-task').outerHTML}`);
+
             fetch(getTaskUrl,{
-                method: 'POST',
+                method: 'GET'/*,
                 headers: {
                     'Content-Type': 'application/json'
-                    // 'Accept-Language': 'ko-KR'
                 },
-                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
-            }).then(response => {
+                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]*/
+            }).then(response => response.text()
                 // location.reload(); // 창이 열렸다가 바로 닫힌다.
                 // location.replace("../../../../fragments/taskDetail");
-
-                console.log(response.text());
-
                 // modalTaskDetailForm.outerHTML = response.text();
+            ).then(data => console.log(data));
+            // ↑{"id":null,"taskId":null,"projectId":null,"modItem":null,"modType":null,"modContent":null,"updatedAt":null,"updatedBy":null}
 
+            // 어떤 탭 열어야 하는지 확인
+            const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
+            console.log(chosenTab);
 
-            });
-*/
             // 1) 컨테이너 열고
             containerTaskDetail.classList.remove("hide");
+
             // 2) 전체 탭버튼에서 선택됨 뺐다가
             btnTaskTabs.forEach(function(btnTabs){
                 btnTabs.classList.remove("task-tab-chosen");
             });
-            // 3) '진행내역'에만 선택됨 넣고
-            btnModalTaskDetailTab.classList.add("task-tab-chosen");
+
+            // 3) 선택된 탭버튼에 '선택됨' 넣고
+            [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
 
             // 4) 모든 탭을 숨겼다가
             modalTaskTabs.forEach(function(everyTabs){
                 everyTabs.classList.add("hide");
             });
-            // 5) 할 일 상세 탭만 출력한다. (추후 각 컬럼과 일치하는 id를 가진 탭을 출력 코드로 변경요망...? 휴..)
-            modalTaskDetailForm.classList.remove("hide");
 
+            // 5) 공통영역과 선택된 탭을 출력한다.
+            modalTaskCommonArea.classList.remove("hide");
+            [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
+                chosenArea.classList.remove("hide");
+            });
 
         });
     });

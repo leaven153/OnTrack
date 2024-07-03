@@ -86,7 +86,7 @@ public class TaskList {
 //               if(Objects.equals(atl.getTaskStatus(), status)) cnt++;
 //           }
         }
-        return cnt == 0?null:cnt;
+        return cnt;
     }
 
 
@@ -118,6 +118,15 @@ public class TaskList {
         return unAssignedMember;
     }
 
+    // 해당 task의 수정권한 확인 (projectView.html에서 직접 호출)
+    public boolean chkEditAuth(Long mId, TaskList task){
+        if (Objects.equals(task.getAuthorMid(), mId)) return true;
+        Map<Long, String> assignees = task.getAssignees();
+        for(Map.Entry<Long, String> entry: assignees.entrySet()){
+            if (Objects.equals(entry.getKey(), mId)) return true;
+        }
+        return false;
+    }
     // 소통하기
     
     // 진행내역

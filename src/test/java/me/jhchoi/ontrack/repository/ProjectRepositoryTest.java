@@ -2,6 +2,7 @@ package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.dto.MemberList;
+import me.jhchoi.ontrack.dto.NoAssigneeTask;
 import me.jhchoi.ontrack.dto.ProjectList;
 import me.jhchoi.ontrack.dto.GetMemberNameRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -99,4 +100,5 @@ public class ProjectRepositoryTest {
         // MemberList(userId=47, projectId=9, memberId=27, nickname=크러쉬),
         // MemberList(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)]
     }
+
 }

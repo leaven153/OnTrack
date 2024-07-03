@@ -49,6 +49,9 @@ public class TaskRepository {
     // Assignee view: 담당자별 할 일 목록
     public List<AssigneeTaskList> getAssigneeView(Long memberId) { return taskMapper.getAssigneeView(memberId); }
 
+    // Assignee view: 담당자 없는 할 일 목록
+    public List<NoAssigneeTask> getNoAssigneeTask(Long projectId) { return taskMapper.getNoAssigneeTask(projectId); }
+
     // Status view: 진행상태별 할 일 목록
     public List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest) { return taskMapper.getStatusView(statusViewRequest); }
 }
