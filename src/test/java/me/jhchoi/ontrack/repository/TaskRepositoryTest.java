@@ -150,4 +150,15 @@ public class TaskRepositoryTest {
 
      }
 
+    @Test @DisplayName("담당자 없는 할 일 목록 조회")
+    void getNoAssigneeTask(){
+        Long projectId = 9L;
+        List<NoAssigneeTask> nList = taskRepository.getNoAssigneeTask(projectId);
+        log.info("어떻게 나오는가: {}", nList);
+        /**
+         * 어떻게 나오는가:
+         * [NoAssigneeTask(id=30, taskTitle=그대 내 품에, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05),
+         * NoAssigneeTask(id=35, taskTitle=해내자, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05)]*/
+    }
+
 }

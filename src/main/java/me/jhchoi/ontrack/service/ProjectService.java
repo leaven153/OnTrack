@@ -132,7 +132,7 @@ public class ProjectService {
             project.getTaskList().get(i).setAssignees(assignees);
         });
 
-        // 4. 멤버별 할 일 목록 → AssignmentList
+        // 4-1. 담당자별 할 일 목록 → AssignmentList
         List<AssignmentList> aList = new ArrayList<>();
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
@@ -143,6 +143,9 @@ public class ProjectService {
             aList.add(assignment);
         });
         project.setAssignmentList(aList);
+        
+        // 4-2. 담당자 없는 할 일 목록
+        project.setNoAssigneeTasks(taskRepository.getNoAssigneeTask(projectId));
 
         // 5. 진행상태별 할 일 목록
         LinkedHashMap<Integer, List<StatusTaskList>> stm = new LinkedHashMap<>();

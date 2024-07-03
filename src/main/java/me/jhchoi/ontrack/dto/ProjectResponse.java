@@ -25,13 +25,15 @@ public class ProjectResponse {
     // 할 일의 파일들 추가 요망
     private List<TaskList> taskList;
 
-    // 4. 담당자별 할 일
+    // 4-1. 담당자별 할 일
     private List<AssignmentList> assignmentList;
+
+    // 4-2. 담당자 없는 할 일 목록
+    private List<NoAssigneeTask> noAssigneeTasks;
 
     // 5. 진행상태별 할 일
     private LinkedHashMap<Integer, List<StatusTaskList>> statusTaskList;
 
-    // 6. 담당자 없는 할 일 리스트
-    private List<NoAssigneeTask> noAssigneeTasks;
+
 
 }

@@ -181,6 +181,8 @@ window.onload = function(){
         spanBtnEditTaskTitle.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
 
+                // 현 url에서 projectId, taskId, memberId(updatedBy) 정보 추출
+                let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
                 console.log(`제목span누름`);
 
                 // 할 일 제목이 담긴 input 출력
@@ -200,11 +202,21 @@ window.onload = function(){
                 titleInput.addEventListener("blur", ()=>{
                     console.log('blur 발생');
                     console.log(titleInput.value);
+                    const taskHistory = {
+                        projectId: currUrl[2],
+                        taskId: titleInput.dataset.id,
+                        modItem: "title",
+                        modType: "update",
+                        modContent: titleInput.value,
+                        updatedBy: currUrl[3]
+                    }
                     // task id와 project id, 수정한 사람 mid, nickname(for history)도 보내야 한다.
                     fetch('http://localhost:8080/task/editTask?item=title', {
                         method: 'POST',
-                        headers: {},
-                        body: titleInput.value
+                        headers: {
+                            'Content-type': 'application/json'
+                        },
+                        body: JSON.stringify(taskHistory)
                     })
                         .then(response => response.text())
                         .then(data => {
