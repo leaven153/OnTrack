@@ -90,8 +90,8 @@
         <!-- task title -->
         <div class="tableview-column table-task-title"><!--/* flex-row-justify-start-align-center */-->
           <div class="flex-row-justify-start-align-center">
-            <span class="table-task-title" th:classappend="${task.chkEditAuth(memberId, task)}?'btn-edit-task-title'" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015 -->
-            <input type="text" class="edit-task-title hide" th:value="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-clicker=${memberId}, data-nickname=${nickname}" autofocus>
+            <span class="table-task-title" th:classappend="${task.chkEditAuth(memberId, task)}?'btn-edit-task-title'" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-nickname=${nickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015, data-clicker=${memberId} -->
+            <input type="text" class="edit-task-title hide" th:value="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-nickname=${nickname}" autofocus> <!--/*, data-clicker=${memberId} */-->
             <img src="/imgs/icon_write.png" class="img-20 opacity0" alt="edit title" th:classappend="${task.chkEditAuth(memberId, task)}?'btn-edit-task-title'">
             <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
           </div>
@@ -154,9 +154,9 @@
         <!-- status -->
         <div class="tableview-column flex-row-center-center-nowrap">
           <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
-          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild btn-open-task-status" th:if="${task.getTaskParentId() == null}">
+          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
             <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}"></div>
-            <span class="status-remark" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
+            <span class="status-remark btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
             <th:block th:each="assignee : ${task.getAssignees()}">
               <span class="ml-5 opacity0 transit-250 font-12" th:if="(${#strings.equals(assignee.value, nickname)} or ${#strings.equals(nickname, task.getAuthorName())}) and ${task.getTaskStatus() < 5} and ${assigneeStat.first}">변경</span>
             </th:block>
@@ -190,7 +190,7 @@
 
         <!-- file -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <button type="button" class="add-file flex-row-center-center-nowrap"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class="add-file flex-row-center-center-nowrap btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="file"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
           <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
         </div>
 
@@ -235,7 +235,7 @@
                       <!-- status view: 할 일 명 -->
                       <div class="statusview-task">
                         <span class="statusview-task-title" th:classappend="${t.chkEditAuth(memberId, t)}?'btn-edit-task-title'" th:text="${t.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span> <!--/* btn-edit-task-title */-->
-                        <input type="text" class="edit-task-title w200 hide" th:value="${t.getTaskTitle()}" th:attr="data-id=${t.getId()}, data-clicker=${memberId}, data-nickname=${nickname}" autofocus>
+                        <input type="text" class="edit-task-title w200 hide" th:value="${t.getTaskTitle()}" th:attr="data-id=${t.getId()}, data-nickname=${nickname}" autofocus> <!--/* , data-clicker=${memberId} */-->
                         <img src="/imgs/icon_write.png" class="img-20 opacity0" alt="edit title" th:classappend="${t.chkEditAuth(memberId, t)}?'btn-edit-task-title'">
                         <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
                       </div>

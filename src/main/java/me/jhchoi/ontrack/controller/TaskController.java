@@ -87,24 +87,25 @@ public class TaskController {
         return projectView;
     }
 
-    @PostMapping("getTask/{taskId}/{memberId}")
-    public String getTask(@PathVariable("taskId") Long taskId, @PathVariable("memberId") Long memberId,
-                            @RequestBody MemberList loginMember, HttpSession session, Model model){
+    @GetMapping("/{taskId}")
+    public ResponseEntity<?> getTask(@PathVariable("taskId") Long taskId, HttpSession session){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
-            return "login/login";
+            URI location = URI.create("/login");
+            return ResponseEntity.created(location).build();
+//            return "login/login";
         }
         log.info("======== getTask 컨트롤러 진입 ========");
         log.info("taskId: {}", taskId);
-        log.info("memberId: {}", memberId);
-        log.info("RequestBody: {}", loginMember);
-        String test = "testString";
-        model.addAttribute("test", test);
+
+        TaskHistory th = TaskHistory.builder().build();
+
+        return ResponseEntity.ok().body(th);
 //        return TaskList.builder().authorName("testAuthor").build();
 //        return "fragments/taskDetail :: editForm";
-        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-        return """
-                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
+//        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
+//        return """
+//                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     } // getTask ends
 
 

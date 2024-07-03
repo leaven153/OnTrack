@@ -928,29 +928,24 @@ window.onload = function(){
                 position: currUrl[5]
             };
             console.log(loginMember);
-            const getTaskUrl = `http://localhost:8080/task/getTask/${chosenTask.dataset.id}/${chosenTask.dataset.clicker}`;
+            const getTaskUrl = `http://localhost:8080/task/${chosenTask.dataset.taskid}`; // /${chosenTask.dataset.clicker}
             console.log(`url: ${getTaskUrl}`);
             // console.log(`--------outerHTML-----------`);
             // console.log(`${document.querySelector('form#edit-task').outerHTML}`);
-            /*
+
             fetch(getTaskUrl,{
-                method: 'POST',
+                method: 'GET'/*,
                 headers: {
                     'Content-Type': 'application/json'
-                    // 'Accept-Language': 'ko-KR'
                 },
-                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
-            }).then(response => {
+                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]*/
+            }).then(response => response.text()
                 // location.reload(); // 창이 열렸다가 바로 닫힌다.
                 // location.replace("../../../../fragments/taskDetail");
-
-                console.log(response.text());
-
                 // modalTaskDetailForm.outerHTML = response.text();
+            ).then(data => console.log(data));
+            // ↑{"id":null,"taskId":null,"projectId":null,"modItem":null,"modType":null,"modContent":null,"updatedAt":null,"updatedBy":null}
 
-
-            });
-*/
             // 어떤 탭 열어야 하는지 확인
             const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
             console.log(chosenTab);
