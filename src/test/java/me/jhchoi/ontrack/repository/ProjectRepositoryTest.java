@@ -1,9 +1,8 @@
 package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
-import me.jhchoi.ontrack.dto.MemberList;
-import me.jhchoi.ontrack.dto.NoAssigneeTask;
-import me.jhchoi.ontrack.dto.ProjectList;
+import me.jhchoi.ontrack.dto.MemberInfo;
+import me.jhchoi.ontrack.dto.MyProject;
 import me.jhchoi.ontrack.dto.GetMemberNameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,13 +68,13 @@ public class ProjectRepositoryTest {
     void allProjects() {
         Long[] projectsIds = {1L, 2L, 3L, 4L, 5L, 6L, 8L};
 
-        List<ProjectList> projectList = new ArrayList<>();
+        List<MyProject> projectList = new ArrayList<>();
 
         /*
-        * projectList: [ProjectList(projectId=1, projectType=team, projectStatus=activated, creatorId=1, creatorName=Jessica, projectName=first project test, createdAt=2024-05-10, updatedAt=2024-05-10, memberId=null, position=null), null, null, null, null, null, ProjectList(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
+        * projectList: [MyProject(projectId=1, projectType=team, projectStatus=activated, creatorId=1, creatorName=Jessica, projectName=first project test, createdAt=2024-05-10, updatedAt=2024-05-10, memberId=null, position=null), null, null, null, null, null, MyProject(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
         * */
         log.info("projectList: {}", projectList);
-//        ProjectList pl = projectRepository.allMyProjects(8L);
+//        MyProject pl = projectRepository.allMyProjects(8L);
 //        log.info("allMyporject: {}", pl);
     }
 
@@ -92,13 +91,13 @@ public class ProjectRepositoryTest {
 
     @Test @DisplayName("프로젝트 소속 멤버의 목록 조회")
     void getNicknames(){
-        List<MemberList> memberList = projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(9L).build());
-        log.info("프로젝트 멤버 목록: {}", memberList);
-        // 프로젝트 멤버 목록: [MemberList(userId=45, projectId=9, memberId=4, nickname=Adele),
-        // MemberList(userId=35, projectId=9, memberId=14, nickname=공지철),
-        // MemberList(userId=61, projectId=9, memberId=26, nickname=송혜교),
-        // MemberList(userId=47, projectId=9, memberId=27, nickname=크러쉬),
-        // MemberList(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)]
+        List<MemberInfo> memberInfo = projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(9L).build());
+        log.info("프로젝트 멤버 목록: {}", memberInfo);
+        // 프로젝트 멤버 목록: [MemberInfo(userId=45, projectId=9, memberId=4, nickname=Adele),
+        // MemberInfo(userId=35, projectId=9, memberId=14, nickname=공지철),
+        // MemberInfo(userId=61, projectId=9, memberId=26, nickname=송혜교),
+        // MemberInfo(userId=47, projectId=9, memberId=27, nickname=크러쉬),
+        // MemberInfo(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)]
     }
 
 }

@@ -6,16 +6,20 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.dto.TaskEditRequest;
 import me.jhchoi.ontrack.dto.TaskFormRequest;
 import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -51,7 +55,7 @@ public class TaskService {
             // 3-1. 담당자 nickname 가져오기
 //            for(int i= 0; i < taskFormRequest.getAssigneesMid().size(); i++){
 //                log.info("task service에서 멤버 id: {}", taskFormRequest.getAssigneesMid().get(i));
-//                List<MemberList> mList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneesMid().get(i)).build());
+//                List<MemberInfo> mList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneesMid().get(i)).build());
 //                taskFormRequest.getAssigneeNames().add(mList.get(0).getNickName());
 //            }
 
@@ -88,6 +92,24 @@ public class TaskService {
      * return  :
      * explain : 할 일 수정: 할일명, 중요도, 진행상태, 마감일
      * */
+    @Transactional
+    public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
+        Map<Integer, String[]> statusMap = new LinkedHashMap<>();
+        statusMap.put(0, new String[]{"보류", "pause"});
+        statusMap.put(1, new String[]{"시작 안 함", "not-yet"});
+        statusMap.put(2, new String[]{"계획중", "planning"});
+        statusMap.put(3, new String[]{"진행중", "ing"});
+        statusMap.put(4, new String[]{"검토중", "review"});
+        statusMap.put(5, new String[]{"완료", "done"});
+
+        taskRepository.log(th);
+        Integer result = taskRepository.editTaskStatus(ter);
+        if(result == 1) {
+            return ResponseEntity.ok().body(statusMap.get(ter.getStatus()));
+        } else {
+            return ResponseEntity.badRequest().body("진행상태 수정에 오류가 발생했습니다.");
+        }
+    }
 
     /*
      * created : 2024-06-18

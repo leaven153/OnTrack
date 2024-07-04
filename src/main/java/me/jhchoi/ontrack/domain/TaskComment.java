@@ -14,7 +14,7 @@ public class TaskComment {
     private Long taskId;
     private Long userId;
     private Long memberId;
-    private String type;
+    private String type; // 모두 확인요청, 일반
     private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

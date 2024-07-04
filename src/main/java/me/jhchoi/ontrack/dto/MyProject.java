@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.jhchoi.ontrack.domain.OnTrackProject;
-import me.jhchoi.ontrack.domain.ProjectMember;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class ProjectList {
+public class MyProject {
     // 프로젝트 정보 (from ontrack_project 테이블)
     private Long projectId;
     private String projectType;

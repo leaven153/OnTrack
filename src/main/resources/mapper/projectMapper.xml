@@ -13,14 +13,14 @@
         WHERE id = #{id}
     </select>
 
-    <select id="allMyProjects" resultType="ProjectList">
+    <select id="allMyProjects" resultType="MyProject">
         SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, p.project_dueDate,p.createdAt, p.updatedAt, pm.id as memberId, pm.nickname, pm.position, pm.invitedAt, pm.invitedAs
         FROM ontrack_project p INNER JOIN project_member pm
         ON p.id = pm.project_id
         WHERE pm.user_id = #{id}
     </select>
 
-    <select id="getMemberList" parameterType="GetMemberNameRequest" resultType="MemberList">
+    <select id="getMemberList" parameterType="GetMemberNameRequest" resultType="MemberInfo">
         SELECT id as memberId, user_id, project_id, nickname, position
         FROM project_member
         WHERE project_id = #{projectId}

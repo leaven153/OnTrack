@@ -12,22 +12,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import org.thymeleaf.Thymeleaf;
 import org.thymeleaf.spring6.view.ThymeleafView;
 
-import java.awt.event.WindowFocusListener;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Locale;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -40,7 +34,7 @@ public class TaskController {
     @PostMapping("/addTask")
     public RedirectView addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        MemberList member = (MemberList) session.getAttribute("loginMember");
+        MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
             return new RedirectView("login/login");
 //            return "redirect:/login/login";
@@ -53,7 +47,7 @@ public class TaskController {
         log.info("전체 = {}", taskFormRequest);
 //        log.info("파일 = {}", taskFormRequest.getTaskFile().get(0).getOriginalFilename());
 
-        // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반으로 설정하여 service로 넘긴다.
+        // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(2)으로 설정하여 service로 넘긴다.
         if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(2);
         Long newTaskId = taskService.addTask(taskFormRequest);
 
@@ -61,13 +55,13 @@ public class TaskController {
         log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
 
-        redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
-        redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
-        redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());
-        redirectAttributes.addAttribute("position", member.getPosition());
+//        redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
+//        redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
+//        redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());
+//        redirectAttributes.addAttribute("position", member.getPosition());
 
 //        return "redirect:/task/test";
-        return new RedirectView("/project/{projectId}/{memberId}/{nickname}/{position}");
+        return new RedirectView("/project"); // /{projectId}/{memberId}/{nickname}/{position}
 
 //        return """
 //                redirect:/project/%s/%s/%s
@@ -87,8 +81,8 @@ public class TaskController {
         return projectView;
     }
 
-    @GetMapping("/{taskId}")
-    public ResponseEntity<?> getTask(@PathVariable("taskId") Long taskId, HttpSession session){
+    @PostMapping("/detail")
+    public ResponseEntity<?> getTask(@RequestBody TaskDetailRequest taskDetailRequest, HttpSession session){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
             URI location = URI.create("/login");
@@ -96,7 +90,7 @@ public class TaskController {
 //            return "login/login";
         }
         log.info("======== getTask 컨트롤러 진입 ========");
-        log.info("taskId: {}", taskId);
+        log.info("taskId: {}", taskDetailRequest);
 
         TaskHistory th = TaskHistory.builder().build();
 
@@ -117,8 +111,7 @@ public class TaskController {
      * 담당자 배정/해제에 관한 변경사항은 별도의 컨트롤러에서 처리한다.(editAssignee)
      * */
     @PostMapping("/editTask")
-    @ResponseBody
-    public ResponseEntity<?> editTask(HttpSession session, @RequestParam(required = false)String item, @RequestBody TaskHistory th){
+    public ResponseEntity<?> editTask(HttpSession session, @RequestParam String item, @RequestParam(required = false) String statusNum, @RequestBody TaskHistory th){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
             URI location = URI.create("/login");
@@ -128,12 +121,29 @@ public class TaskController {
         log.info("어떤 항목을 바꿀 건가요? {}", item);
         log.info("task history: {}", th);
 
+        // 변경시간 입력
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+        th.setUpdatedAt(nowWithNano.minusNanos(nanosec));
+
         if (th.getModItem().equals("title")){
             log.info("할 일 제목 수정");
         } else if (th.getModItem().equals("dueDate")) {
-            log.info("할 일 마감일 수절");
+            log.info("할 일 마감일 수정");
         } else if (th.getModItem().equals("status")) {
             log.info("할 일 진행상태 수정");
+            log.info("변경된 진행상태: {}", statusNum);
+            TaskEditRequest ter = TaskEditRequest.builder()
+                    .taskId(th.getTaskId())
+                    .status(Integer.valueOf(statusNum))
+                    .updatedAt(th.getUpdatedAt())
+                    .updatedBy(th.getUpdatedBy())
+                    .build();
+
+            return taskService.editTaskStatus(th, ter);
+//            log.info("진행상태 한글로: {}", TaskList.switchStatusToKor(Integer.parseInt(th.getModContent())));
+
+
         }
 
         return new ResponseEntity<>("결과스트링", HttpStatus.OK);
@@ -190,12 +200,6 @@ public class TaskController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/delAssignee")
-    public ResponseEntity<?> delAssignee(@RequestParam String mid, @RequestBody TaskHistory th){
-        log.info("누구를 삭제할 거임?: {}", mid);
-        log.info("기록에 남길 정보: {}", th);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     @PostMapping("/search")
     public ResponseEntity<?> searchMemberToAssign(@RequestParam String object, @RequestParam(required = false) String purpose, @RequestBody GetMemberNameRequest searchCond){

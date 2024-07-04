@@ -54,4 +54,7 @@ public class TaskRepository {
 
     // Status view: 진행상태별 할 일 목록
     public List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest) { return taskMapper.getStatusView(statusViewRequest); }
+
+    // 할 일 수정: 진행상태
+    public Integer editTaskStatus(TaskEditRequest ter) { return taskMapper.editTaskStatus(ter); }
 }

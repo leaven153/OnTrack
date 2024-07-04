@@ -12,9 +12,9 @@ public interface ProjectMapper {
 
     OnTrackProject findByProjectId(Long projectId);
 
-    List<ProjectList> allMyProjects(Long userId);
+    List<MyProject> allMyProjects(Long userId);
 
-    List<MemberList> getMemberList(GetMemberNameRequest request);
+    List<MemberInfo> getMemberList(GetMemberNameRequest request);
 
     List<TaskList> allTasksInProject(Long projectId);
 

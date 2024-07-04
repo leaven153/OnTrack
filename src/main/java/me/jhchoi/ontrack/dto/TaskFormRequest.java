@@ -49,7 +49,7 @@ public class TaskFormRequest {
                 .authorName(authorName)
                 .taskTitle(taskTitle)
                 .taskPriority(taskPriority)
-                .taskStatus(0)
+                .taskStatus(1)
                 .taskDueDate(taskDueDate)
                 .createdAt(nowWithNano.minusNanos(nanosec))
                 .updatedAt(nowWithNano.minusNanos(nanosec))

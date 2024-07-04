@@ -41,10 +41,10 @@ public class ProjectRepository {
     /**
      * created  : 24-05
      * param    : project id
-     * return   : List<ProjectList>
+     * return   : List<MyProject>
      * explain  : my page의 프로젝트 목록 ver.2 (프로젝트 목록 조회)
      * */
-    public List<ProjectList> allMyProjects(Long userId){
+    public List<MyProject> allMyProjects(Long userId){
         return projectMapper.allMyProjects(userId);
     }
 
@@ -59,10 +59,10 @@ public class ProjectRepository {
      * created  : 24-05-22
      * updated  : 24-05-30
      * param    : GetMemberRequest (projectId, userId(nullable), memberId(nullable))
-     * return   : List<MemberList>
+     * return   : List<MemberInfo>
      * explain  : 프로젝트 멤버 목록
      * */
-    public List<MemberList> getMemberList(GetMemberNameRequest request){
+    public List<MemberInfo> getMemberList(GetMemberNameRequest request){
         return projectMapper.getMemberList(request);
     }
 
