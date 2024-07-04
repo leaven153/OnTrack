@@ -5,20 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class MemberList {
+public class MemberInfo {
     private Long userId;
     private Long projectId;
     private Long memberId;
     private String nickName;
     private String position;
 
-//    public Map<Long, String> memberList(){
+//    public Map<Long, String> memberInfo(){
 //        Map<Long, String> members = new LinkedHashMap<>();
 //        members.put(memberId, nickname);
 //        return members;

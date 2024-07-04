@@ -309,7 +309,7 @@ window.onload = function(){
     // 담당자 수 담을 변수
     let cntAssignee = 0;
 
-    // 1. 해당 할 일의 담당자 상세보기 열기 (담당자full name목록, 참여하기, 추가하기 포함됨)
+    // 10-1. 해당 할 일의 담당자 상세보기 열기 (담당자full name목록, 참여하기, 추가하기 포함됨)
     if(elExists(document.querySelector(".btn-more-assignInfo"))){
         const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
         btnOpenAssigneeList.forEach(function(chosenOne){
@@ -377,7 +377,7 @@ window.onload = function(){
         });
     } // 1. 담당자 목록 보기 ends
     
-    // 1-2. 동적으로 생성된 btn-more-assignInfo는 -new를 붙여서 구분
+    // 10-2. 동적으로 생성된 (여러)담당자 상세보기 (btn-more-assignInfo-new) (담당자가 0 혹은 1명이었다가 2명 이상이 되어 해당 버튼이 생긴 경우)
     onEvtListener(document, "click", ".btn-more-assignInfo-new", function(evt){
         //↓ <img className="btn-more-assignInfo ml-3" src="/imgs/down.png" th:src="@{/imgs/down.png}" alt="more assignment info">
         console.log(this);
@@ -434,7 +434,7 @@ window.onload = function(){
         }
     });
 
-    // 1-3.해당 버튼 외 다른 곳을 클릭했을 때도 모달이 닫힐 수 있도록 시도중 (blur, tabindex)
+    // 10-3.해당 버튼 외 다른 곳을 클릭했을 때도 모달이 닫힐 수 있도록 시도중 (blur, tabindex)
     // const testBtnBlur = document.querySelectorAll("[class^=btn]");
     /*
     testBtnBlur.forEach(function(btn){
@@ -444,14 +444,14 @@ window.onload = function(){
     }); */
 
 
-    // 2-1. 이 일에서 빠지기, 빼기
+    // 10-3. 이 일에서 빠지기, 빼기
     // 해당 일의 담당자이거나 작성자인 멤버만, 진행중일때까지만 담당해제 버튼(X)이 노출된다.
     if(elExists(document.querySelector(".btn-dropOut-task"))){
         const btnDropOutTask = document.querySelectorAll(".btn-dropOut-task");
         btnDropOutTask.forEach(function(chosenOne){
             chosenOne.addEventListener("click", (evt)=>{
                 console.log(chosenOne.dataset.assigneemid);
-                // 2-1. 서버로 정보 넘긴다.
+                // 1) 서버로 정보 넘긴다.
                 // RequestParam에 assigneeMid 넘기고
                 // task History를 객체로 넘긴다
                 const taskHistory = {
@@ -473,10 +473,10 @@ window.onload = function(){
                     body: JSON.stringify(taskHistory)
                 }).then(response => {
                     if(response.ok){
-                        // 2-2. 멤버 목록에 (담당 해제된) 해당 멤버 출력 (append)
+                        // 2) 멤버 목록에 (담당 해제된) 해당 멤버 출력 (append)
                         parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
 
-                        // 2-3. 변경된 boxHeight를 멤버목록 top에 반영
+                        // 3) 변경된 boxHeight를 멤버목록 top에 반영
                         // status에는 멤버목록이 없기 때문에(검색만 있다) 높이를 반영할 요소가 있는지 확인 후 진행한다.
                         boxHeight = parents(parents(chosenOne)[0], ".more-assignInfo")[0].offsetHeight;
                         if(parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0] !== null && parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0] !== undefined){
@@ -485,13 +485,13 @@ window.onload = function(){
                             parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0].style.top = topValue + 'px';
                         }
 
-                        // 2-4. 현재 담당자 수에서 1 차감한다.
+                        // 4) 현재 담당자 수에서 1 차감한다.
                         cntAssignee--;
 
-                        // 2-5. 현재 담당자 map에서 담당자 삭제한다.
+                        // 5) 현재 담당자 map에서 담당자 삭제한다.
                         currAssignees.delete(chosenOne.dataset.assigneemid);
 
-                        // 2-6. 담당자 요약 목록에서 해당 담당자 이름 제거
+                        // 6) 담당자 요약 목록에서 해당 담당자 이름 제거
                         if(cntAssignee === 0) {
                             // one → none
                             // one-assignee는 remove
@@ -533,7 +533,7 @@ window.onload = function(){
                             }
                         }
 
-                        // 2-7. 해당 담당자 이름 담긴 box를 (담당자 full name 목록에서) 삭제한다.
+                        // 7) 해당 담당자 이름 담긴 box를 (담당자 full name 목록에서) 삭제한다.
                         parents(chosenOne)[0].remove();
 
                     } // if(response.ok) ends
@@ -542,13 +542,13 @@ window.onload = function(){
         });
     }
 
-    // 2-2. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)
+    // 10-4. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)
     // 동적으로 생성된 해당 요소의 class 명은 btn-cancel-assign-task로 부여한다. (cf. btn-dropOut-task)
     onEvtListener(document, "click", ".btn-cancel-assign-task", function(){
         console.log(this);
         //↑ <span class="btn-cancel-assign-task ml-3 cursorP" data-assigneemid="14" data-executormid="14" data-authormid="14" data-taskid="8" data-projectid="9">
 
-        // 1. 서버에 전달
+        // 1) 서버에 전달
         const taskHistory = {
           taskId: this.dataset.taskid,
           projectId: this.dataset.projectid,
@@ -565,23 +565,23 @@ window.onload = function(){
             body: JSON.stringify(taskHistory)
         }).then(response => {
             if(response.ok){
-                // 2. 멤버 목록에 다시 추가하기
+                // 2) 멤버 목록에 다시 추가하기
                 parents(this, "[class^=more-]")[0].children[2].children[1].appendChild(unassingedMemberElement(this.dataset.assigneemid, prev(this).innerHTML));
 
-                // 3. boxHeight 조정
+                // 3) boxHeight 조정
                 boxHeight = parents(this, "[class^=more-]")[0].offsetHeight;
                 topValue = boxHeight - 75;
                 console.log(`2-2. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)의 topValue: ${topValue}`)
                 if(parents(this, "[class^=more-]")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0] !== null && parents(this, "[class^=more-]")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0] !== undefined){
                     parents(this, "[class^=more-]")[0].querySelectorAll(`:scope ${".find-member-to-assign"}`)[0].style.top = topValue + 'px';
                 }
-                // 4. 현재 담당자 수에서 1 차감
+                // 4) 현재 담당자 수에서 1 차감
                 cntAssignee--;
 
-                // 5. 현재 담당자목록 map에서 삭제
+                // 5) 현재 담당자목록 map에서 삭제
                 currAssignees.delete(this.dataset.assigneemid);
 
-                // 6-1. 담당자 요약 목록에서 빼기
+                // 6-1) 담당자 요약 목록에서 빼기
                 // one → none
                 if(cntAssignee === 0){
                     // one-assignee 제거
@@ -618,7 +618,7 @@ window.onload = function(){
                         }
                     }
                 }
-                // 6-2. 담당자 full name div에서 빼기
+                // 6-2) 담당자 full name div에서 빼기
                 parents(this)[0].remove();
             } else {
                 console.log(`2-2. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)의 fetch 결과 확인요망`);
@@ -627,13 +627,13 @@ window.onload = function(){
 
     });
 
-    // 2-3. 해제했던 담당자 다시 배정하기
+    // 10-5. 해제했던 담당자 다시 배정하기
     // 작성자의 경우, ('완료'이전까지만 )담당자 목록에 이름 추가
     // 담당자의 경우, ('계획중'인 경우까지만 )'참여하기' 버튼 출력
 
-    // 3. 이 일에 참여하기 (해당 일에 이미 배정된 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때까지만 출력된 버튼)
+    // 10-6. 이 일에 참여하기 (해당 일에 이미 배정된 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때까지만 출력된 버튼)
 
-    // 4A. 담당자 추가하기: 새로운 담당자 배정하기 (table view. ∵ 멤버목록 div가 담당자div의 우측으로 추가됨)
+    // 10-7A. 담당자 추가하기: 새로운 담당자 배정하기 (table view. ∵ 멤버목록 div가 담당자div의 우측으로 추가됨)
     // - 작성자만이 가능하며, 해당 일의 진행상태가 '검토중'일 때까지만 가능
     // - 검색창에서 새로 배정할 사람을 입력한다. (검색버튼(btn-findByName-member-to-assign)은 next에 의해 지정됨)
     // - 해제한 사람도 다시 배정할 수 있어야 한다.
@@ -789,9 +789,9 @@ window.onload = function(){
 
             });
         });
-    } // // 4A. 담당자 추가하기: 새로운 담당자 배정하기 끝
+    } // // 10-7A. 담당자 추가하기: 새로운 담당자 배정하기 끝
 
-    // 4B. 담당자 검색하여 추가하기 (status view. ∵ 멤버 목록이 우측으로 나올 경우, 다른 진행상태 div의 overflow를 수정해야 한다... z-index로 해결안됨)
+    // 10-7B. 담당자 검색하여 추가하기 (status view. ∵ 멤버 목록이 우측으로 나올 경우, 다른 진행상태 div의 overflow를 수정해야 한다... z-index로 해결안됨)
     if(elExists(document.querySelector(".btn-findByName-member-to-assign"))){
         const findMemberByNameToAssign = document.querySelectorAll(".btn-findByName-member-to-assign");
         findMemberByNameToAssign.forEach(function(statusviewSearchMemberToAssign){
@@ -818,9 +818,72 @@ window.onload = function(){
                     });
             });
         });
-    } // // 4B. 담당자 검색하여 추가하기 끝
+    } // // 10-7B. 담당자 검색하여 추가하기 끝
 
-    /* 할 일 진행상태 수정 */
+    /* 10-8. 할 일 진행상태 수정 */
+    if(elExists(document.querySelector(".btn-edit-task-status"))){
+        const btnEditTaskStatus = document.querySelectorAll(".btn-edit-task-status");
+        btnEditTaskStatus.forEach(function(chosenOne){
+            chosenOne.addEventListener("click", ()=>{
+                console.log(`진행상태 변경을 click`);
+                console.log(next(chosenOne));
+                // 진행상태 목록 toggle
+                if(next(chosenOne).classList.contains("img-hidden")) {
+                    // 열려 있던 다른 task의 진행상태 목록들 닫고
+                    document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
+                        everyList.classList.add("img-hidden");
+                    });
+                    // 선택된 목록만 연다
+                    next(chosenOne).classList.remove("img-hidden")
+                } else {
+                    next(chosenOne).classList.add("img-hidden")
+                }
+
+                // 변경하고자 하는 진행상태를 클릭했을 때
+                [...next(chosenOne).children].forEach(function(eachStatus){
+                    eachStatus.addEventListener("click", ()=>{
+                        console.log(eachStatus);
+                        console.log(eachStatus.dataset.projectid); // ontrack_task에서는 task id만으로 쿼리 가능, 단 task_history에 저장하기 위해서 필요!!
+                        console.log(eachStatus.dataset.taskid);
+                        console.log(eachStatus.dataset.status);
+                        console.log(eachStatus.dataset.updatedby);
+                        console.log(eachStatus.children[1].innerHTML);
+
+                        const taskHistory = {
+                            projectId: eachStatus.dataset.projectid,
+                            taskId: eachStatus.dataset.taskid,
+                            modItem: "status",
+                            modType: "update",
+                            modContent: eachStatus.children[1].innerHTML,
+                            updatedBy: eachStatus.dataset.updatedby
+                        };
+
+                        fetch(`http://localhost:8080/task/editTask?item=status&statusNum=${eachStatus.dataset.status}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json'
+                            },
+                            body: JSON.stringify(taskHistory)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                // console.log(data);
+                                // console.log(data[0])
+                                // console.log(prev(chosenOne)); // span
+                                // console.log(prev(prev(chosenOne))); // div.status-sign
+                                // console.log(prev(prev(chosenOne)).dataset.status);
+                                prev(chosenOne).innerText = data[0];
+                                prev(prev(chosenOne)).classList.remove(`${prev(prev(chosenOne)).dataset.status}`);
+                                prev(prev(chosenOne)).classList.add(data[1]);
+
+                                // 열려있던 진행상태 목록 닫기
+                                next(chosenOne).classList.add("img-hidden")
+                            });
+                    });
+                });
+            });
+        });
+    }
     /* 할 일 마감일 수정 */
 
     /*---------- 053 ------------*/
@@ -921,24 +984,26 @@ window.onload = function(){
             // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
             let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
             console.log(`currUrlSplit: ${currUrl}`);
-            const loginMember = {
+            const taskDetailRequest = {
                 projectId: currUrl[2],
-                memberId: currUrl[3],
-                nickName: currUrl[4],
-                position: currUrl[5]
+                // memberId: currUrl[3],
+                // nickName: currUrl[4],
+                // position: currUrl[5],
+                taskId: chosenTask.dataset.taskid,
+                item: chosenTask.dataset.tab
             };
-            console.log(loginMember);
-            const getTaskUrl = `http://localhost:8080/task/${chosenTask.dataset.taskid}`; // /${chosenTask.dataset.clicker}
+
+            const getTaskUrl = `http://localhost:8080/task/detail`; // /${chosenTask.dataset.clicker}
             console.log(`url: ${getTaskUrl}`);
             // console.log(`--------outerHTML-----------`);
             // console.log(`${document.querySelector('form#edit-task').outerHTML}`);
 
             fetch(getTaskUrl,{
-                method: 'GET'/*,
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(loginMember) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]*/
+                body: JSON.stringify(taskDetailRequest) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
             }).then(response => response.text()
                 // location.reload(); // 창이 열렸다가 바로 닫힌다.
                 // location.replace("../../../../fragments/taskDetail");

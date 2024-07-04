@@ -43,8 +43,12 @@ public class ProjectController {
      * return   :
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
-    @GetMapping("/{projectId}/{memberId}/{nickname}/{position}")
-    public String getProject(@PathVariable("projectId") Long projectId, @PathVariable("memberId") Long memberId, @PathVariable("nickname")String nickname, @PathVariable("position")String position, HttpSession session, Model model){
+    @GetMapping
+    public String getProject(@RequestParam(value = "pId", required = false) Long projectId,
+                             @RequestParam(value = "mId", required = false) Long memberId,
+                             @RequestParam(value = "nName", required = false) String nickname,
+                             @RequestParam(value = "position", required = false)String position,
+                             HttpSession session, Model model){
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("path variable project id: {}", projectId);
         log.info("path variable member id: {}", memberId); // 추후
@@ -55,13 +59,14 @@ public class ProjectController {
         }
 
         // 1. 해당 프로젝트에 접근한 멤버의 정보 → 추후 접근경로의 정보 정합성 여부 확인 추가 요망
-        model.addAttribute("loginMember", MemberList.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
+
+        model.addAttribute("loginMember", MemberInfo.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
 //        model.addAttribute("nickname", nickname);
 
         // 2. project
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
-        // 2-2. 해당 프로젝트의 멤버들: List<MemberList>
+        // 2-2. 해당 프로젝트의 멤버들: List<MemberInfo>
         // 2-3. 할 일 목록 - List<TaskList>
         // 2-4. 담당자별 할 일 목록 - List<AssignmentList>
         ProjectResponse project = projectService.getProject(projectId);

@@ -16,8 +16,8 @@ public class ProjectResponse {
     // 1. 해당 프로젝트 정보: 생성자, 프로젝트 타입(솔로/공유된솔로/팀), 프로젝트명, 마감일, 상태(활성화/비활성화/종료/보관), 생성일
     private OnTrackProject project;
 
-    // 2. 프로젝트 멤버 목록: MemberList - userId, projectId, memberId, nickname, Map<Long, String> memberList()
-    private List<MemberList> memberList;
+    // 2. 프로젝트 멤버 목록: MemberInfo - userId, projectId, memberId, nickname, Map<Long, String> memberInfo()
+    private List<MemberInfo> memberList;
 
     // 3. 할 일 목록:
     // id, project id, 할 일 명, 작성자mId, 작성자닉네임, 중요도, 진행상태, 마감일, 종속id, 생성일, 최종수정일, 최종수정자mId

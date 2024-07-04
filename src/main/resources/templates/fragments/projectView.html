@@ -44,7 +44,7 @@
 
       <!-- 공지 확인cnt 시작 -->
       <div class="tableview-column flex-row-center-center-nowrap">
-          <div class="flex-row-justify-start-align-center">
+          <div class="flex-row-justify-start-align-center wMin105">
             <div class="notice-unchk-sign"></div>
             <span class="status-remark ">미확인</span>
             <span class="unchk-count altivo-regular ml-5">8</span>
@@ -154,12 +154,17 @@
         <!-- status -->
         <div class="tableview-column flex-row-center-center-nowrap">
           <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
-          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild" th:if="${task.getTaskParentId() == null}">
-            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}"></div>
+          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
+            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
             <span class="status-remark btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
-            <th:block th:each="assignee : ${task.getAssignees()}">
-              <span class="ml-5 opacity0 transit-250 font-12" th:if="(${#strings.equals(assignee.value, nickname)} or ${#strings.equals(nickname, task.getAuthorName())}) and ${task.getTaskStatus() < 5} and ${assigneeStat.first}">변경</span>
-            </th:block>
+            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(memberId, task)} and ${task.getTaskStatus() < 5}">변경</span>
+            <div class="진행상태목록 tableView-status-list img-hidden">
+              <th:block th:each="tStatus: ${statusMap}">
+                <div class="status-each" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-status=${tStatus.key}, data-updatedby=${memberId}">
+                  <div class="status-sign" th:classappend="${tStatus.value[1]}"></div><p class="div-inline-block" th:text="${tStatus.value[0]}">시작 안 함</p><br/>
+                </div>
+              </th:block>
+            </div>
           </div>
           <div class="table-status-sign-hasChild hide">
             <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->

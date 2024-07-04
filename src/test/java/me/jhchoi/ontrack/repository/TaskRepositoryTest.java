@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.repository;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -159,6 +160,36 @@ public class TaskRepositoryTest {
          * 어떻게 나오는가:
          * [NoAssigneeTask(id=30, taskTitle=그대 내 품에, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05),
          * NoAssigneeTask(id=35, taskTitle=해내자, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05)]*/
+    }
+
+    @Test @DisplayName("진행상태 수정")
+    void editTaskStatus(){
+        // given
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+
+        TaskEditRequest ter = TaskEditRequest.builder()
+                .taskId(19L)
+                .status(2)
+                .updatedAt(nowWithNano.minusNanos(nanosec))
+                .updatedBy(14L)
+                .build();
+        TaskHistory th = TaskHistory.builder()
+                .projectId(9L)
+                .taskId(19L)
+                .modItem("status")
+                .modType("update")
+                .modContent("계획중")
+                .updatedBy(14L)
+                .updatedAt(nowWithNano.minusNanos(nanosec))
+                .build();
+
+        // when
+        taskRepository.log(th);
+        Integer result = taskRepository.editTaskStatus(ter);
+
+        // then
+        assertThat(result).isEqualTo(1);
     }
 
 }

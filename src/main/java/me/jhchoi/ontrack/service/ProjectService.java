@@ -40,23 +40,23 @@ public class ProjectService {
      * created  : 24-05-21
      * updated  : 24-05-22
      * param    : userId
-     * return   : List<ProjectList>
+     * return   : List<MyProject>
      * explain  : 내 모든 프로젝트 목록 조회(my page)
      * */
-    public List<ProjectList> allMyProjects(Long userId){
+    public List<MyProject> allMyProjects(Long userId){
 
         log.info("===============project 목록조회 service 접근===============");
         // 1. 해당 유저가 속한 프로젝트 목록 
-        List<ProjectList> projectList =projectRepository.allMyProjects(userId);
+        List<MyProject> myProjects =projectRepository.allMyProjects(userId);
 
         // 2. 해당 프로젝트 생성자(들)의 user id 목록
-        List<Long> creators = projectList.stream().map(ProjectList::getCreatorId).toList();
+        List<Long> creators = myProjects.stream().map(MyProject::getCreatorId).toList();
 
         // 3. 생성자 id의 (project list 내에서의 )idx 가져오기(map으로 생성자의 user id를 key으로 하여 index를 value로 매핑)
         Map<Long, Integer> idxOfCreator = new HashMap<>();
-        IntStream.range(0, projectList.size()).forEach(i -> {
+        IntStream.range(0, myProjects.size()).forEach(i -> {
             for (Long creator : creators) {
-                if (Objects.equals(projectList.get(i).getCreatorId(), creator)) {
+                if (Objects.equals(myProjects.get(i).getCreatorId(), creator)) {
                     idxOfCreator.put(creator, i);
                 }
             }
@@ -69,7 +69,7 @@ public class ProjectService {
         // ∵ 프로젝트를 만들고 나서 project id를 가지고
         // project member에 추가하기 때문에 member id가 들어갈 수 없다.)
         List<GetMemberNameRequest> reqList = new ArrayList<>();
-        for (ProjectList list : projectList) {
+        for (MyProject list : myProjects) {
             GetMemberNameRequest request = GetMemberNameRequest.builder()
                     .projectId(list.getProjectId())
                     .userId(list.getCreatorId())
@@ -78,18 +78,18 @@ public class ProjectService {
         }
 
         // 5. 생성자 이름 data요청
-        List<MemberList> mnn = new ArrayList<>();
-        IntStream.range(0,projectList.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
+        List<MemberInfo> mnn = new ArrayList<>();
+        IntStream.range(0,myProjects.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
 
         // 6. 생성자의 이름을 project List에 매칭하여 저장
         IntStream.range(0, mnn.size()).forEach(i -> {
             // 생성자 id가 키값(mnn.get(i).getUserId())인 map(idxOfCreator)에서
             // value를 가져오면 그것은 생성자의 이름이 들어갈 위치!
             // 해당 인덱스에 생성자의 이름을 넣는다.
-            projectList.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickName());
+            myProjects.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickName());
         });
 
-        return projectList;
+        return myProjects;
     }
 
     /**
@@ -106,7 +106,7 @@ public class ProjectService {
         // id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
         project.setProject(projectRepository.findByProjectId(projectId));
 
-        // 2. 프로젝트 소속 멤버 정보  → MemberList
+        // 2. 프로젝트 소속 멤버 정보  → MemberInfo
         // id as memberId, user_id, project_id, nickname
         project.setMemberList(projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(projectId).build()));
 

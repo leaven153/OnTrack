@@ -1,13 +1,11 @@
 package me.jhchoi.ontrack.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.dto.AddProjectRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
-import me.jhchoi.ontrack.dto.ProjectList;
+import me.jhchoi.ontrack.dto.MyProject;
 import me.jhchoi.ontrack.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,17 +33,17 @@ public class MyPageController {
             return "redirect:../login";
         }
         log.info("session: {}", loginUser);
-        List<ProjectList> projectList = projectService.allMyProjects(loginUser.getUserId());
-        Boolean noProject = projectList.isEmpty(); // Boolean noProject = projectList.size() <= 0 ? true: false;
+        List<MyProject> myProjects = projectService.allMyProjects(loginUser.getUserId());
+        Boolean noProject = myProjects.isEmpty(); // Boolean noProject = projectList.size() <= 0 ? true: false;
 
 //        log.info("projectList가 0개라면 null인가?: {}", projectList); //projectList가 0개라면 null인가?: []
 //        log.info("projectList.size: {}", projectList.size()); // projectList.size: 2
 //        log.info("noProject: {}", noProject); // noProject: false
 
         model.addAttribute("noProject", noProject);
-        model.addAttribute("projectList", projectList);
+        model.addAttribute("myProjects", myProjects);
         model.addAttribute("loginUser", loginUser);
-        log.info("컨트롤러가 화면으로 넘기는 project list: {}", projectList);
+        log.info("컨트롤러가 화면으로 넘기는 project list: {}", myProjects);
         // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:24:33.630980400
         return "mypage/myProjects";
     }

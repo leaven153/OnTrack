@@ -7,7 +7,6 @@ import me.jhchoi.ontrack.domain.TaskFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Data @Slf4j
@@ -108,11 +107,11 @@ public class TaskList {
     }
 
     // 멤버 목록 중 해당 task에 이미 배정된 멤버는 제외 (projectView.html에서 직접 호출)
-    public static Map<Long, String> unassignedMember(List<MemberList> memberList, Map<Long, String> assigneeList){
+    public static Map<Long, String> unassignedMember(List<MemberInfo> memberInfo, Map<Long, String> assigneeList){
         Map<Long, String> unAssignedMember = new HashMap<>();
-        IntStream.range(0, memberList.size()).forEach(i -> {
-            if(!memberList.get(i).getNickName().equals(assigneeList.get(memberList.get(i).getMemberId()))){
-                unAssignedMember.put(memberList.get(i).getMemberId(), memberList.get(i).getNickName());
+        IntStream.range(0, memberInfo.size()).forEach(i -> {
+            if(!memberInfo.get(i).getNickName().equals(assigneeList.get(memberInfo.get(i).getMemberId()))){
+                unAssignedMember.put(memberInfo.get(i).getMemberId(), memberInfo.get(i).getNickName());
             }
         });
         return unAssignedMember;

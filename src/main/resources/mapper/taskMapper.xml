@@ -77,4 +77,12 @@
         AND t.project_id = #{projectId}
         GROUP BY t.id
     </select>
+
+    <update id="editTaskStatus" parameterType="TaskEditRequest">
+        UPDATE ontrack_task
+        SET task_status = #{status}
+        , updatedAt = #{updatedAt}
+        , updatedBy = #{updatedBy}
+        WHERE id = #{taskId}
+    </update>
 </mapper>

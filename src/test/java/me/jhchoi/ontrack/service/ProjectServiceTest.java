@@ -37,11 +37,11 @@ class ProjectServiceTest {
         log.info("myProjects: {}", myProjects);
         // myProjects: [ProjectMember(id=2, projectId=8, userId=null, nickname=null, position=creator, capacity=null, joinedAt=2024-05-21)]
         // List 타입이 아닐 때
-//        List<ProjectList> test = myProjects.stream()
+//        List<MyProject> test = myProjects.stream()
 //                .map(p -> projectRepository.allMyProjects(p.getProjectId()))
 //                .collect(Collectors.toList());
 //        log.info("test: {}", test);
-        // test: [ProjectList(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
+        // test: [MyProject(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
         List<Long> projectsIds = myProjects.stream().map(ProjectMember::getProjectId).collect(Collectors.toList());
 
         log.info("projects ids: {}", projectsIds);
@@ -57,30 +57,30 @@ class ProjectServiceTest {
 
 
         // 2. 프로젝트를 목록에 담는다. ver.2.
-        List<ProjectList> projectList = new ArrayList<>();
+        List<MyProject> projectList = new ArrayList<>();
         for (Long projectsId : projectsIds) {
 //            projectList.add(projectRepository.allMyProjects(projectsId));
         }
         log.info("projectList: {}", projectList); */
-        // projectList: [ProjectList(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
+        // projectList: [MyProject(projectId=8, projectType=solo, projectStatus=activated, creatorId=36, creatorName=베토벤, projectName=베토벤의 첫 프로젝트, createdAt=2024-05-21, updatedAt=2024-05-21, memberId=null, position=null)]
     } // allMyProjects1() ends
     
     @Test @DisplayName("내 모든 프로젝트: 리스트로 먼저 뽑고, 생성자 별명 따로 뽑아오는 버전")
     void allMyProjects(){
-        List<ProjectList> pl = projectRepository.allMyProjects(35L);
+        List<MyProject> pl = projectRepository.allMyProjects(35L);
         log.info("list로 어떻게 나오나?: {}", pl);
         //list로 어떻게 나오나?:
-        // [ProjectList(projectId=9, projectType=team, projectStatus=activated, creatorId=35,
+        // [MyProject(projectId=9, projectType=team, projectStatus=activated, creatorId=35,
         // creatorName=null, projectName=By your side, projectDueDate=null, createdAt=2024-05-22,
         // updatedAt=2024-05-22, memberId=14, position=creator, invitedAt=null),
-        // ProjectList(projectId=16, projectType=team, projectStatus=activated, creatorId=42,
+        // MyProject(projectId=16, projectType=team, projectStatus=activated, creatorId=42,
         // creatorName=null, projectName=Shut down, projectDueDate=null, createdAt=2024-05-22,
         // updatedAt=2024-05-22, memberId=25, position=member, invitedAt=null)]
 
         // 생성자들(혹은 멤버들)의 이름 가져오기
 
         // 1. 생성자들 id 뽑아오기
-        List<Long> creators = pl.stream().map(ProjectList::getCreatorId).collect(Collectors.toList());
+        List<Long> creators = pl.stream().map(MyProject::getCreatorId).collect(Collectors.toList());
         log.info("creators: {}", creators); // creators: [35, 42]
 
         // 2. 생성자 id와 해당 인덱스를 map으로 뽑아온다. (추후 생성자 '이름' 넣기 쉽도록?)
@@ -102,12 +102,12 @@ class ProjectServiceTest {
         log.info("생성자의 id와 그 id의 위치(index): {}", idxOfCreator);
         // 생성자의 user id와 그 id의 위치(index): {0=35, 1=42} >> {35=0, 42=1} user id: 35 = 공지철, user id: 42 = 크리스 에반스
 
-//        Map<Long, Long> creatorList = pl.stream().collect(toUnmodifiableMap(ProjectList::getProjectId, ProjectList::getCreatorId));
+//        Map<Long, Long> creatorList = pl.stream().collect(toUnmodifiableMap(MyProject::getProjectId, MyProject::getCreatorId));
 //        log.info("Map이 됐나?: {}", creatorList); // Map이 됐나?: {16=42, 9=35} 프로젝트id=userId(creatorId)
 
         List<GetMemberNameRequest> reqList = new ArrayList<>();
 
-        for (ProjectList projectList : pl) {
+        for (MyProject projectList : pl) {
             GetMemberNameRequest request = GetMemberNameRequest.builder()
                     .projectId(projectList.getProjectId())
                     .userId(projectList.getCreatorId())
@@ -116,7 +116,7 @@ class ProjectServiceTest {
         }
 
         // 3. 생성자의 이름 받아오기
-        List<MemberList> mnn = new ArrayList<>();
+        List<MemberInfo> mnn = new ArrayList<>();
         IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
 
         IntStream.range(0, mnn.size()).forEach(i -> {
@@ -126,10 +126,10 @@ class ProjectServiceTest {
         });
 
         log.info("생성자 이름까지 완성된 projectList: {}", pl);
-        //[ProjectList(projectId=9, projectType=team, projectStatus=activated, creatorId=35, creatorName=공지철,
+        //[MyProject(projectId=9, projectType=team, projectStatus=activated, creatorId=35, creatorName=공지철,
         // projectName=By your side, projectDueDate=null, createdAt=2024-05-22, updatedAt=2024-05-22,
         // memberId=14, position=creator, invitedAt=null),
-        // ProjectList(projectId=16, projectType=team, projectStatus=activated, creatorId=42, creatorName=크리스 에반스,
+        // MyProject(projectId=16, projectType=team, projectStatus=activated, creatorId=42, creatorName=크리스 에반스,
         // projectName=Shut down, projectDueDate=null, createdAt=2024-05-22, updatedAt=2024-05-22,
         // memberId=25, position=member, invitedAt=null)]
     }
@@ -182,11 +182,11 @@ class ProjectServiceTest {
         // projectUrl=0c49b029-56dc-40ff-bedc-6d25cb86fc36, projectStatus=activated, projectDueDate=null,
         // createdAt=2024-05-22T11:19:10, updatedAt=2024-05-22T11:19:10),
         //
-        // memberList=[MemberList(userId=45, projectId=9, memberId=4, nickname=Adele),
-        // MemberList(userId=35, projectId=9, memberId=14, nickname=공지철),
-        // MemberList(userId=61, projectId=9, memberId=26, nickname=송혜교),
-        // MemberList(userId=47, projectId=9, memberId=27, nickname=크러쉬),
-        // MemberList(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
+        // memberInfo=[MemberInfo(userId=45, projectId=9, memberId=4, nickname=Adele),
+        // MemberInfo(userId=35, projectId=9, memberId=14, nickname=공지철),
+        // MemberInfo(userId=61, projectId=9, memberId=26, nickname=송혜교),
+        // MemberInfo(userId=47, projectId=9, memberId=27, nickname=크러쉬),
+        // MemberInfo(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
         //
         // taskList=[TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철,
         // taskPriority=norm, taskStatus=ing, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29,
