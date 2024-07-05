@@ -204,13 +204,13 @@ window.onload = function(){
                     console.log(titleInput.value);
                     const taskHistory = {
                         projectId: currUrl[2],
-                        taskId: titleInput.dataset.id,
+                        taskId: titleInput.dataset.taskid,
                         modItem: "title",
                         modType: "update",
                         modContent: titleInput.value,
-                        updatedBy: currUrl[3]
+                        updatedBy: titleInput.dataset.mid
                     }
-                    // task id와 project id, 수정한 사람 mid, nickname(for history)도 보내야 한다.
+
                     fetch('http://localhost:8080/task/editTask?item=title', {
                         method: 'POST',
                         headers: {
@@ -878,7 +878,11 @@ window.onload = function(){
 
                                 // 열려있던 진행상태 목록 닫기
                                 next(chosenOne).classList.add("img-hidden")
+                                // location.reload(); // 굉장히 눈에 띄게 바뀜..
                             });
+
+                        // 다른 view(status, assignee)에서 해당 task 변경 시도
+
                     });
                 });
             });
@@ -986,9 +990,6 @@ window.onload = function(){
             console.log(`currUrlSplit: ${currUrl}`);
             const taskDetailRequest = {
                 projectId: currUrl[2],
-                // memberId: currUrl[3],
-                // nickName: currUrl[4],
-                // position: currUrl[5],
                 taskId: chosenTask.dataset.taskid,
                 item: chosenTask.dataset.tab
             };
@@ -1121,11 +1122,20 @@ window.onload = function(){
 
     /*---------- 017 ------------*/
     /*---- ▼  프로젝트 view tab 시작 ▼ ----*/
-
+/*
     const btnTabView = document.querySelectorAll(".btn-view");
     const projectView = document.querySelectorAll(".project-view");
     btnTabView.forEach(function(chosenBtn){
         chosenBtn.addEventListener("click", ()=>{
+            console.log(projectId.value); // input의 name으로 인식한다!!
+            const url = `http://localhost:8080/project/${projectId.value}?view=status`
+            console.log(url);
+
+            fetch(url, {
+                method:'GET'
+            });
+                // .then(response => response.text())
+                // .then(data => console.log(data));
             btnTabView.forEach(function(allBtn){
                 allBtn.classList.remove("btn-view-choosen");
             });
@@ -1137,9 +1147,8 @@ window.onload = function(){
                     eachView.classList.remove("hide");
                 }
             });
-            
         });
-    });
+    }); */
     /*---- ▲  view tab 끝 ▲ ----*/
 
     /*---------- 018 ------------*/

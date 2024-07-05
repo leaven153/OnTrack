@@ -40,12 +40,13 @@ public class ProjectService {
      * created  : 24-05-21
      * updated  : 24-05-22
      * param    : userId
-     * return   : List<MyProject>
+     * return   : List<MyProject> 프로젝트명, 생성자명, 생성일, 최근수정일, 마감일, 해당 프로젝트 內 내 정보
      * explain  : 내 모든 프로젝트 목록 조회(my page)
      * */
     public List<MyProject> allMyProjects(Long userId){
 
-        log.info("===============project 목록조회 service 접근===============");
+        
+
         // 1. 해당 유저가 속한 프로젝트 목록 
         List<MyProject> myProjects =projectRepository.allMyProjects(userId);
 
@@ -66,8 +67,8 @@ public class ProjectService {
         // 생성자의 user id와 project id가 일치하는 row의 nickname을 받아오기 위해
         // 전용 dto 생성
         // (ontrack_project 테이블의 creator 컬럼에는 creator의 user id가 저장되어 있다.
-        // ∵ 프로젝트를 만들고 나서 project id를 가지고
-        // project member에 추가하기 때문에 member id가 들어갈 수 없다.)
+        // ∵ 프로젝트를 만든 '후'에 project id를 가지고
+        // project member 테이블에 멤버로서 추가되기 때문에 ontrack_project테이블에는 member id가 들어갈 수 없다.)
         List<GetMemberNameRequest> reqList = new ArrayList<>();
         for (MyProject list : myProjects) {
             GetMemberNameRequest request = GetMemberNameRequest.builder()
@@ -78,15 +79,15 @@ public class ProjectService {
         }
 
         // 5. 생성자 이름 data요청
-        List<MemberInfo> mnn = new ArrayList<>();
-        IntStream.range(0,myProjects.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
+        List<MemberInfo> creatorName = new ArrayList<>();
+        IntStream.range(0,myProjects.size()).forEach(i -> creatorName.add(projectRepository.getMemberInfo(reqList.get(i)).get(0)));
 
         // 6. 생성자의 이름을 project List에 매칭하여 저장
-        IntStream.range(0, mnn.size()).forEach(i -> {
+        IntStream.range(0, creatorName.size()).forEach(i -> {
             // 생성자 id가 키값(mnn.get(i).getUserId())인 map(idxOfCreator)에서
             // value를 가져오면 그것은 생성자의 이름이 들어갈 위치!
             // 해당 인덱스에 생성자의 이름을 넣는다.
-            myProjects.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickName());
+            myProjects.get(idxOfCreator.get(creatorName.get(i).getUserId())).setCreatorName(creatorName.get(i).getNickName());
         });
 
         return myProjects;
@@ -99,16 +100,22 @@ public class ProjectService {
      * return   :
      * explain  : 프로젝트 상세(프로젝트 정보, 멤버목록, 할 일 목록)
      * */
-    public ProjectResponse getProject(Long projectId){
+    public ProjectResponse getProject(Long projectId, Long userId){
 
         ProjectResponse project = ProjectResponse.builder().build();
-        // 1. 프로젝트 정보
+        // 1-1. 프로젝트 정보
         // id, CREATOR, project_name, project_type, project_status, project_url, project_dueDate, createdAt, updatedAt
         project.setProject(projectRepository.findByProjectId(projectId));
 
+        // 1-2. 프로젝트 內 내 정보(member id, 닉네임, 포지션)
+        List<MemberInfo> myMInfo = projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).userId(userId).build());
+        project.setMemberId(myMInfo.get(0).getMemberId());
+        project.setNickname(myMInfo.get(0).getNickName());
+        project.setPosition(myMInfo.get(0).getPosition());
+
         // 2. 프로젝트 소속 멤버 정보  → MemberInfo
         // id as memberId, user_id, project_id, nickname
-        project.setMemberList(projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).build()));
 
         // 3-1. 프로젝트 內 할 일 목록 (from ontrack_task) → TaskList
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
