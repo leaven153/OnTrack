@@ -6,13 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.ProjectService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring6.view.ThymeleafView;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Slf4j
@@ -36,6 +42,17 @@ public class ProjectController {
         return statusMap;
     }
 
+/*
+    // 할 일 상세 fragment만 rendering
+    @Bean(name="statusView")
+    @Scope("prototype")
+    public ThymeleafView statusViewBean(){
+        ThymeleafView statusView = new ThymeleafView("projectView");
+        statusView.setMarkupSelector("#status-view");
+        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
+        return statusView;
+    }
+*/
     /**
      * created  : 2024-05-
      * updated  : 2024-05-23
@@ -43,24 +60,22 @@ public class ProjectController {
      * return   :
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
-    @GetMapping
-    public String getProject(@RequestParam(value = "pId", required = false) Long projectId,
-                             @RequestParam(value = "mId", required = false) Long memberId,
-                             @RequestParam(value = "nName", required = false) String nickname,
-                             @RequestParam(value = "position", required = false)String position,
-                             HttpSession session, Model model){
+    @GetMapping("/{projectId}")
+    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, HttpSession session, Model model){
         log.info("==============================개별 프로젝트 controller 진입==============================");
-        log.info("path variable project id: {}", projectId);
-        log.info("path variable member id: {}", memberId); // 추후
+        log.info("project id: {}", projectId);
+        log.info("선택한 view: {}", view);
+//        log.info("path variable member id: {}", memberId); // 추후
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
+            URI location = URI.create("/login");
+//            return ResponseEntity.created(location).build();
             return "redirect:/login";
         }
 
         // 1. 해당 프로젝트에 접근한 멤버의 정보 → 추후 접근경로의 정보 정합성 여부 확인 추가 요망
-
-        model.addAttribute("loginMember", MemberInfo.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
+//        model.addAttribute("loginMember", MemberInfo.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
         // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
 //        model.addAttribute("nickname", nickname);
 
@@ -69,8 +84,7 @@ public class ProjectController {
         // 2-2. 해당 프로젝트의 멤버들: List<MemberInfo>
         // 2-3. 할 일 목록 - List<TaskList>
         // 2-4. 담당자별 할 일 목록 - List<AssignmentList>
-        ProjectResponse project = projectService.getProject(projectId);
-//        log.info("프로젝트로 넘어가는 값 중 최신 task: {}", project.getTaskList().get(project.getTaskList().size()-1));
+        ProjectResponse project = projectService.getProject(projectId, loginUser.getUserId());
         model.addAttribute("project", project);
 
 
@@ -79,9 +93,17 @@ public class ProjectController {
         model.addAttribute("today", today);
 
         // 4. 할일 추가 객체(TaskFormRequest)
-        model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(memberId).build());
+        model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(project.getMemberId()).build());
 
-        return "project/project"; // url - http://localhost:8080/project/9/14
+        URI projectLocation = URI.create("project/project");
+
+        if(view != null){
+            model.addAttribute("view", view);
+//            return ResponseEntity.created(projectLocation).body(view);
+        }
+
+//        return ResponseEntity.created(projectLocation).build();
+        return "project/project"; // url - http://localhost:8080/project/9
     }
 
 

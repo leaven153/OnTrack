@@ -74,7 +74,7 @@
     <div class="wrapper grid-c5 mt-20"><!--/* flex-row-justify-start-align-center-wrap */-->
       <th:block th:each="project : ${myProjects}">
         <div class="프로젝트카드 project-card" th:classappend="*{project.position == 'invited'} ? 'project-invitation'">
-        <a href="../project/project.html" th:href="@{/project(pId=*{project.projectId}, mId=*{project.memberId}, nName=*{project.nickname}, position=*{project.position})}" class="각프로젝트 aColor">
+        <a href="../project/project.html" th:href="@{|/project/*{project.projectId}|}" class="각프로젝트 aColor">
           <div class="알림닷 alarm-big right" th:classappend="*{project.position == 'invited'} ? 'sign-invitation'"></div> <!--sign-notice-->
           <div class="프로젝트명 project-card-title flex-row-between-nowrap pd-b5 mt-14">
             <div class="flex-row-justify-start-align-center">

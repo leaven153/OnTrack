@@ -32,12 +32,12 @@ public class TaskController {
 
 
     @PostMapping("/addTask")
-    public RedirectView addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
-            return new RedirectView("login/login");
-//            return "redirect:/login/login";
+//            return new RedirectView("login/login");
+            return "redirect:/login/login";
         }
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
@@ -49,20 +49,23 @@ public class TaskController {
 
         // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(2)으로 설정하여 service로 넘긴다.
         if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(2);
-        Long newTaskId = taskService.addTask(taskFormRequest);
+        taskService.addTask(taskFormRequest);
 
-        String encodedName = URLEncoder.encode(taskFormRequest.getAuthorName(), StandardCharsets.UTF_8);
+//        String encodedName = URLEncoder.encode(taskFormRequest.getAuthorName(), StandardCharsets.UTF_8);
         log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
-
+        String url = """
+                redirect:/project/%s
+                """.formatted(taskFormRequest.getProjectId());
+        return url;
 //        redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
 //        redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
 //        redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());
 //        redirectAttributes.addAttribute("position", member.getPosition());
 
-//        return "redirect:/task/test";
-        return new RedirectView("/project"); // /{projectId}/{memberId}/{nickname}/{position}
 
+//        return new RedirectView("/project/{taskFormRequest.getProjectId()}"); // /{projectId}/{memberId}/{nickname}/{position}
+//        return "redirect:/task/test";
 //        return """
 //                redirect:/project/%s/%s/%s
 //                """.formatted(taskFormRequest.getProjectId(), taskFormRequest.getTaskAuthorMid(), encodedName);
@@ -128,6 +131,7 @@ public class TaskController {
 
         if (th.getModItem().equals("title")){
             log.info("할 일 제목 수정");
+
         } else if (th.getModItem().equals("dueDate")) {
             log.info("할 일 마감일 수정");
         } else if (th.getModItem().equals("status")) {

@@ -25,7 +25,7 @@
     <div class="wrapper flex-row-end-center-nowrap">
       <div class="nickname flex-row-justify-start-align-center">
         <img src="/imgs/pen.png" alt="" class="img-15 mr-5 btn-project-nickname">
-        <span class="font-18 bold nickname" th:text="${loginMember.getNickName()}">제임스 서버</span>
+        <span class="font-18 bold nickname" th:text="${project.nickname}">제임스 서버</span>
       </div>
       <img src="/imgs/icon_leave.png" alt="" class="btn-project-out">
     </div><!--/* nickname 끝 */-->
@@ -50,9 +50,9 @@
     <!--/* Begin tab */-->
     <div class="tab wrapper bottom-line">
       <div class="view-box">
-        <button type="button" id="btn-table-view" data-view="table-view" class="btn-view btn-view-choosen flex-row-justify-start-align-center"><img src="/imgs/icon_table.png" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
-        <button type="button" id="btn-status-view" data-view="status-view" class="btn-view flex-row-justify-start-align-center"><img src="/imgs/icon_blur_status.png" alt="status" class="img-19 vertical-ctrl015"><span class="saffran-regular">Status</span></button>
-        <button type="button" id="btn-assignee-view" data-view="assignee-view" class="btn-view flex-row-justify-start-align-center"><img src="/imgs/icon_blur_assignee.png" alt="assignee" class="img-2418 "><span class="saffran-regular">Assignee</span></button>
+        <button type="button" th:onclick="'location.href=\'' + @{|/project/${project.getProject().getId()}?view=table|} + '\''" id="btn-table-view" data-view="table-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'table' or view == null}?'btn-view-choosen'"><img src="/imgs/icon_table.png" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
+        <button type="button" th:onclick="'location.href=\'' + @{|/project/${project.getProject().getId()}?view=status|} + '\''" id="btn-status-view" data-view="status-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'status'}?'btn-view-choosen'"><img src="/imgs/icon_blur_status.png" alt="status" class="img-19 vertical-ctrl015"><span class="saffran-regular">Status</span></button>
+        <button type="button" th:onclick="'location.href=\'' + @{|/project/${project.getProject().getId()}?view=assignee|} + '\''" id="btn-assignee-view" data-view="assignee-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'assignee'}?'btn-view-choosen'"><img src="/imgs/icon_blur_assignee.png" alt="assignee" class="img-2418 "><span class="saffran-regular">Assignee</span></button>
         <button type="button" class="hide">삭제</button> <!-- 우선순위: 하하하 마지막에 해라 -->
         <button type="button" class="hide">일괄변경</button> <!-- 우선순위: 하하하 마지막에 해라 -->
       </div>
@@ -73,15 +73,15 @@
 
   <!--/* 하위task 불러올 때는 담당자별로 정렬될 수 있도록 하자... */-->
   <!--/* 테이블뷰 시작 Table View Starts */-->
-  <th:block th:replace="~{/fragments/projectView :: tableView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()})}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: tableView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
   <!---/* 테이블뷰 끝 Table View Ends */--->
 
   <!-- Status View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getStatusTaskList()}, memberList=${project.getMemberList()})}"></th:block>
+  <th:block th:replace="~{/fragments/projectView :: statusView(tasks=${project.getStatusTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
   <!-- Status View Ends -->
 
   <!-- Assignee View Starts -->
-  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, noAssigneeTasks=${project.getNoAssigneeTasks()})}"></th:block> <!--, loginMember=${loginMember}-->
+  <th:block th:replace="~{/fragments/projectView :: assigneeView(assignees=${project.getAssignmentList()}, noAssigneeTasks=${project.getNoAssigneeTasks()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block> <!--, loginMember=${loginMember}-->
   <!-- Assignee View Ends -->
 
 
@@ -283,9 +283,10 @@
 
   <!--/* 모달: 새 할 일 추가 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(taskFormRequest=${taskFormRequest}, loginMember=${loginMember}, memberList=${project.getMemberList()})}">
+  <th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(taskFormRequest=${taskFormRequest}, myNickname=${project.nickname}, myMid=${project.memberId}, memberList=${project.getMemberList()}, myPosition=${project.position})}">
   </th:block>
   <!--/* 모달: 새 할 일 추가 끝 */-->
+
 
 <!--/* 모달: 할 일 상세 */-->
   <!--/* 모달 컨테이너 */-->

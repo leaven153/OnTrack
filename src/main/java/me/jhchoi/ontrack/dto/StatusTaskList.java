@@ -33,19 +33,24 @@ public class StatusTaskList extends TaskList{
 
     public void makeAssigneeMap(){
         this.assignees = new HashMap<>();
-        if(this.assigneeMid.contains(",")){
+        if(this.assigneeMid != null){
+            if(this.assigneeMid.contains(",")){
 
-            String[] mid = this.assigneeMid.split(",");
-            List<String> mids = Arrays.asList(mid);
-            this.assigneeMids = mids.stream().map(Long::parseLong).collect(Collectors.toList());
-            String[] mName = this.assigneeName.split(",");
-            this.assigneeNames = Arrays.asList(mName);
-            for(int i = 0; i < mid.length; i++){
-                this.assignees.put(parseLong(mid[i]), mName[i]);
+                String[] mid = this.assigneeMid.split(",");
+                List<String> mids = Arrays.asList(mid);
+                this.assigneeMids = mids.stream().map(Long::parseLong).collect(Collectors.toList());
+                String[] mName = this.assigneeName.split(",");
+                this.assigneeNames = Arrays.asList(mName);
+                for(int i = 0; i < mid.length; i++){
+                    this.assignees.put(parseLong(mid[i]), mName[i]);
+                }
+            } else {
+                this.assignees.put(parseLong(this.assigneeMid), this.assigneeName);
             }
         } else {
-            this.assignees.put(parseLong(this.assigneeMid), this.assigneeName);
+            this.assignees.put(0L, "noassignee");
         }
+
     }
 
 

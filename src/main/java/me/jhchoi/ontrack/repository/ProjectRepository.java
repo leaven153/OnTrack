@@ -62,8 +62,8 @@ public class ProjectRepository {
      * return   : List<MemberInfo>
      * explain  : 프로젝트 멤버 목록
      * */
-    public List<MemberInfo> getMemberList(GetMemberNameRequest request){
-        return projectMapper.getMemberList(request);
+    public List<MemberInfo> getMemberInfo(GetMemberNameRequest request){
+        return projectMapper.getMemberInfo(request);
     }
 
     /**
