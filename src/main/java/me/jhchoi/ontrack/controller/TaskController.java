@@ -54,9 +54,10 @@ public class TaskController {
 //        String encodedName = URLEncoder.encode(taskFormRequest.getAuthorName(), StandardCharsets.UTF_8);
         log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
-        return """
+        String url = """
                 redirect:/project/%s
                 """.formatted(taskFormRequest.getProjectId());
+        return url;
 //        redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
 //        redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
 //        redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());

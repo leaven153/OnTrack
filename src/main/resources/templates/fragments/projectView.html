@@ -252,11 +252,13 @@
                       </div>
                       <!-- status view: 담당자 -->
                       <div class="statusview-task status-assignee">
-                        <span class="no-assignee" th:if="${t.getAssignees().size() == null}">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
-                        <span class="font-14 one-assignee" th:if="${t.getAssignees().size() == 1}" th:text="${t.getAssigneeName()}">채규태</span>
-                        <th:block th:if="${t.getAssignees().size() == 1} and ${t.getTaskStatus() < 3}">
-                          <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span><!--/* btn-alone-assignee */-->
+                        <span class="font-14 btn-more-assignInfo no-assignee" th:if="${t.getAssignees().containsValue('noassignee') }">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
+                        <th:block th:each="assignee: ${t.getAssignees()}">
+                        <span class="font-14 btn-more-assignInfo one-assignee" th:attr="data-size=${t.getAssignees()}" th:if="${!t.getAssignees().containsValue('noassignee')} and ${t.getAssignees().size() == 1}" th:text="${assignee.value}">채규태</span> <!--/*t.getAssigneeName()*/-->
                         </th:block>
+<!--                        <th:block th:if="${!t.getAssignees().containsValue('noassignee')} and ${t.getTaskStatus() < 5} and ${!(t.getAssignees().size() > 1)}">-->
+<!--                          <span class="altivo-bold btn-more-assignInfo opacity0 transit-250 cursorP font-16 ml-3">+</span>&lt;!&ndash;/* btn-alone-assignee */&ndash;&gt;-->
+<!--                        </th:block>-->
                         <th:block th:if="${t.getAssignees().size() > 1}">
                           <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
                             <div class="many-assignee"><span class="lastName" th:text="${assignee.value}">채</span></div>
@@ -266,9 +268,9 @@
                         <div class="more-assignInfo statusView-assignee-list img-hidden">
                           <div class="담당자목록 task-assignee-list pd-t10">
                             <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${t.getAssignees()}">
-                              <p class="div-inline-block mb-5" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
-                              <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                              <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == t.getAuthorName()}) and ${t.getTaskStatus() < 4}">&times;</span>
+                              <p class="div-inline-block mb-5" th:if="${!t.getAssignees().containsValue('noassignee')}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
+                              <!--/* '완료'전까지 담당자 본인 혹은 작성자는 담당자를 해제할 수 있다 */-->
+                              <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
                             </div>
                           </div>
 
@@ -280,7 +282,7 @@
                             </div>
                           </th:block>
 
-                          <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 추가가능 */-->
+                          <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 담당자 추가가능 */-->
                           <!--/* btn-add-member-to-assignee */-->
                           <div class="검색(담당자로추가할멤버) top-line pd-t10 pd-b5 cursorP" th:if="${t.getAuthorMid() == myMid} and ${t.getTaskStatus() < 5}">
                             <div class="status-find-member-to-assign pd-b5">

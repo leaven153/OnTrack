@@ -71,7 +71,7 @@
         , GROUP_CONCAT(ta.member_id ORDER BY ta.member_id SEPARATOR ',') assigneeMid
         , GROUP_CONCAT(ta.nickname ORDER BY ta.member_id SEPARATOR ',') assigneeName
         FROM ontrack_task t
-        INNER JOIN task_assignment ta
+        LEFT OUTER JOIN task_assignment ta
         ON ta.task_id = t.id
         WHERE t.task_status = #{status}
         AND t.project_id = #{projectId}
