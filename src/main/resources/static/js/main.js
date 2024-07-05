@@ -633,7 +633,8 @@ window.onload = function(){
 
     // 10-6. 이 일에 참여하기 (해당 일에 이미 배정된 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때까지만 출력된 버튼)
 
-    // 10-7A. 담당자 추가하기: 새로운 담당자 배정하기 (table view. ∵ 멤버목록 div가 담당자div의 우측으로 추가됨)
+    // 10-7A. table view의 담당자 추가하기: 새로운 담당자 배정하기
+    //  (∵table view는 멤버목록 div가 담당자div의 우측으로 추가됨. cf. status view는 btn-more-assignInfo를 누르면 바로 담당자 목록이 뜸)
     // - 작성자만이 가능하며, 해당 일의 진행상태가 '검토중'일 때까지만 가능
     // - 검색창에서 새로 배정할 사람을 입력한다. (검색버튼(btn-findByName-member-to-assign)은 next에 의해 지정됨)
     // - 해제한 사람도 다시 배정할 수 있어야 한다.
@@ -791,7 +792,11 @@ window.onload = function(){
         });
     } // // 10-7A. 담당자 추가하기: 새로운 담당자 배정하기 끝
 
-    // 10-7B. 담당자 검색하여 추가하기 (status view. ∵ 멤버 목록이 우측으로 나올 경우, 다른 진행상태 div의 overflow를 수정해야 한다... z-index로 해결안됨)
+    // 10-7B. status view의 담당자 추가
+    //  (∵ status view는 btn-more-assignInfo를 누르면 바로 담당자 목록이 뜸. cf. table view는 멤버목록 div가 담당자div의 우측으로 추가됨.)
+
+
+    // 10-8. 담당자 검색하여 추가하기 (status view. ∵ 멤버 목록이 우측으로 나올 경우, 다른 진행상태 div의 overflow를 수정해야 한다... z-index로 해결안됨)
     if(elExists(document.querySelector(".btn-findByName-member-to-assign"))){
         const findMemberByNameToAssign = document.querySelectorAll(".btn-findByName-member-to-assign");
         findMemberByNameToAssign.forEach(function(statusviewSearchMemberToAssign){
@@ -820,7 +825,7 @@ window.onload = function(){
         });
     } // // 10-7B. 담당자 검색하여 추가하기 끝
 
-    /* 10-8. 할 일 진행상태 수정 */
+    /* 10-9. 할 일 진행상태 수정 */
     if(elExists(document.querySelector(".btn-edit-task-status"))){
         const btnEditTaskStatus = document.querySelectorAll(".btn-edit-task-status");
         btnEditTaskStatus.forEach(function(chosenOne){
