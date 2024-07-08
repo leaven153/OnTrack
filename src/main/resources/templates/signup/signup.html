@@ -22,28 +22,31 @@
                 <span class="font-30 extrabold mb-3">회원가입</span>
                 <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">1</span> of 4</span>
                 <!-- step 1. 이메일 입력 -->
-                <div class="flex-col-justify-center mb-20 signup-step-1">
-                    <span class="font-12 bold mb-20 valid-email-guide">이메일<span class="valid-email-guide cRed bold hide">이 유효하지 않습니다.</span></span>
-                    <input type="text" class="bg-5ec input-signup-email" placeholder="이메일 주소를 입력하세요">
+                <div class="flex-col-start-nowrap mb-20 signup-step-1"> <!--/*flex-col-justify-center*/-->
+                    <label for="userEmail" class="font-12 bold mb-20 valid-email-guide">이메일<span class="valid-email-guide cRed bold hide">이 유효하지 않습니다.</span></label>
+                    <input type="text" id="userEmail" name="userEmail" class="bg-5ec input-signup-email" placeholder="이메일 주소를 입력하세요">
                 </div>
+
+                <!-- step 3. 비밀번호 입력 -->
+<!--                <div class="flex-col-start-nowrap mb-20 signup-step-3 hide"> &lt;!&ndash;/*signup-step-3*/&ndash;&gt;-->
+<!--                    <label for="password" class="font-12 bold mb-20">비밀번호</label>-->
+<!--                    <input type="password" id="password" name="password" class="bg-5ec input-signup mb-7" placeholder="●●●●●●●●">-->
+<!--                    <span class="font-12 bold">9자 이상의 대·소문자+숫자+특수문자의 조합</span>&lt;!&ndash;/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/&ndash;&gt;-->
+<!--                </div>-->
+
+                <!-- step 1. 계속 버튼 -->
+                <button type="button" class="btn-signup-continue mt-14">계속</button>
+
                 <!-- step 2. 안내(인증메일발송) -->
                 <div class="flex-col-center mt_30 signup-step-2 hide">
                     <img src="/imgs/email.png" alt="" class="img-5em">
                     <!-- <p class="signup-step-2">입력하신 이메일로 인증링크가 발송되었습니다.<br/><mark class="bold font-18 c2d1">해당 링크를 통해 회원가입을 완료해주시기 바랍니다.</mark></p> -->
-                    <p class="signup-step-2">입력하신 이메일로(<span class="signup-email">그대가입력한@이메일.주소</span>)로<br/> 
-                        인증링크가 발송되었습니다. <mark class="bold font-18 c2d1">해당 링크를 통해<br/> 
-                            회원가입을 완료해주시기 바랍니다.</mark></p>
+                    <p class="signup-step-2">입력하신 이메일로(<span class="signup-email">그대가입력한@이메일.주소</span>)로<br/>
+                        인증코드가 발송되었습니다.<br/> <mark class="bold font-18 c2d1">메일을 확인해주시기 바랍니다.</mark></p>
+                    <label for="vCode"></label>
+                    <input type="text" name="vCode" id="vCode" class="bg-5ec signup-step-2" placeholder="인증코드를 입력해주세요">
+                    <button type="button" class="btn-signup-complete signup-step-2"></button>
                 </div>
-                <!-- step 3. 비밀번호 입력 -->
-                <!-- signup.html에 함께 있으나 컨트롤러 통해 인증링크가 맞으면 보이도록 한..다? -->
-                <div class="flex-col-justify-center mb-20 signup-step-3 hide">
-                    <span class="font-12 bold mb-20">비밀번호</span>
-                    <input type="password" class="bg-5ec input-signup mb-7" placeholder="●●●●●●●●">
-                    <span class="font-12 bold">8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요</span>
-                </div>
-                <!-- step 1, 3. 계속 버튼 -->
-                <button type="submit" class="btn-signup-continue mt-14">계속</button>
-
 
                 <!-- step 1. OAuth -->
                 <div class="mb-10 signup-step-1">
@@ -58,7 +61,7 @@
                             <span class="altivo-regular ls-5 ml-7">Google</span>
                         </a>
                         <a href="#" class="aColor flex-row-justify-start-align-center btn-trans">
-                            <svg width="18" height="18" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="18" height="18" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                                 <path fill="#319990" d="M9 32V480H181.366V255.862L331.358 480H504V32H331.358V255.862L181.366 32H9Z"></path></svg>
                             <span class="altivo-regular ls-5 ml-7">NAVER</span>
                         </a>

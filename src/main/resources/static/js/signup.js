@@ -15,7 +15,7 @@ window.onload = function(){
     
     const signUpStep1 = [];
     const signUpStep2 = [];
-    const signUpStep3 = [];
+    // const signUpStep3 = [];
     
     if(elExists(document.querySelectorAll(".signup-step-1"))) {
         document.querySelectorAll(".signup-step-1").forEach(function(item){
@@ -31,13 +31,13 @@ window.onload = function(){
         console.log(signUpStep2);
     }
 
-    if(elExists(document.querySelector(".signup-step-3"))){
-        signUpStep3.push(document.querySelector(".signup-step-3"));
-    }
+    // if(elExists(document.querySelector(".signup-step-3"))){
+    //     signUpStep3.push(document.querySelector(".signup-step-3"));
+    // }
 
-    // '계속' 버튼. 
-    // step 2로 넘어갈 때는 가려야 하고
-    // step1과 step3에서는 보여야 한다.
+    // '계속' 버튼.
+    // step1에서만 보여야 한다.
+    // step 2에서는 가려야 한다.
     if(elExists(document.querySelector(".btn-signup-continue"))) {
         signUpStep1.push(document.querySelector(".btn-signup-continue"));
         
@@ -45,36 +45,50 @@ window.onload = function(){
         // signUpStep3.push(document.querySelector(".btn-signup-continue"));
     }
 
-    /*---- ▼  이메일 유효성 검사 시작 ▼ ----*/
+    /*---- ▼  회원가입 정보 유효성 검사 시작 ▼ ----*/
+    // 1. 이메일
     if(elExists(document.querySelector("input.input-signup-email")) && elExists(document.querySelector(".btn-signup-continue"))){
         const userInputSignupEmail = document.querySelector("input.input-signup-email");
         userInputSignupEmail.value="";
 
-        // 이메일 주소 입력 후 (입력하지 않고 눌러도)
+        // 이메일 주소 입력 후
         // '계속' 버튼 클릭했을 때(유효성 검사)
         document.querySelector(".btn-signup-continue").addEventListener("click", ()=>{
             const signUpEmail= userInputSignupEmail.value;
             const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
+
             if((regEmail.test(signUpEmail))){
-                console.log(true);
-                console.log(signUpStep1);
+                // console.log(true);
+                // console.log(signUpStep1);
 
                 // 인증링크(메일) 전송 성공시 추후 컨트롤러 반응 아래로 이동 요망
                 signUpStep1.forEach(function(item){
                     item.classList.add("hide");
                 });
 
-                signUpStep3.forEach(function(item){
-                    item.classList.add("hide");
-                });
+                // signUpStep3.forEach(function(item){
+                //     item.classList.add("hide");
+                // });
 
-                signUpStep2.forEach(function(item){
-                    item.classList.remove("hide");
-                });
                 document.querySelector(".signup-email").innerText = signUpEmail;
                 document.querySelector(".signup-step-num").innerText = "2";
                 
-                // 컨트롤러 통해서 메일 전송, 
+                // 컨트롤러 통해서 메일 전송,
+                fetch(`http://localhost:8080/signup/step1`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(signUpEmail)
+                }).then(response => {
+                    if(response.ok){
+                        signUpStep2.forEach(function(item){
+                            item.classList.remove("hide");
+                        });
+                    } else {
+                        console.log(`something's wrong.. try again plz..`);
+                    }
+                } );
                 /* const response = await fetch("/url", {
                     method: 'POST',
                     headers: {
@@ -106,6 +120,12 @@ window.onload = function(){
         });
 
     } // input.input-signup-email과 btn-signup-continue에 대한 이벤트 끝
+
+    // 2. 비밀번호
+    if(elExists(document.querySelector(".btn-signup-complete")) && elExists(document.querySelector("input.password"))){
+        const userInputSignUpPw = document.querySelector("input.password");
+        const regPw = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()+=_/,.<>-])[A-Za-z\d~!@#$%^&*()+=_/,.<>-]{9,}$/;
+    }
 
     /*---- ▲  이메일 유효성 검사 끝 ▲ ----*/
     

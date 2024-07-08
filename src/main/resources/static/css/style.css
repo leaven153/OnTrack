@@ -2508,7 +2508,8 @@ input[type="password"]::placeholder {
 }
 
 .btn-login-submit,
-.btn-signup-continue {
+.btn-signup-continue,
+button[class*=btn-signup]{
     /*btn-large done font-white bold mb-30*/
     padding: 10px 40px;
     border-radius: 3px;    

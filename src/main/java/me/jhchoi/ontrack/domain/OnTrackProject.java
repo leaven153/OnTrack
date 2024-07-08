@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.UUID;
  ******************/
 @Data // Getter, Setter, ToString, EqualsAndHashCode, RequiredArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class OnTrackProject {
     private Long id;
     private Long creator; // 프로젝트 생성자
@@ -35,15 +37,5 @@ public class OnTrackProject {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt; // 프로젝트 정보(기준 성립 요망)가 업데이트 된 일자
 
-    @Builder
-    public OnTrackProject(Long creator, String projectType, String projectName, String projectUrl, String projectStatus, LocalDate projectDueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.creator = creator;
-        this.projectType = projectType;
-        this.projectName = projectName;
-        this.projectUrl = projectUrl;
-        this.projectStatus = projectStatus;
-        this.projectDueDate = projectDueDate;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+
 }

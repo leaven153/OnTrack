@@ -117,7 +117,7 @@ class ProjectServiceTest {
 
         // 3. 생성자의 이름 받아오기
         List<MemberInfo> mnn = new ArrayList<>();
-        IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getMemberList(reqList.get(i)).get(0)));
+        IntStream.range(0, pl.size()).forEach(i -> mnn.add(projectRepository.getMemberInfo(reqList.get(i)).get(0)));
 
         IntStream.range(0, mnn.size()).forEach(i -> {
             // 생성자 id가 키값인 map에서 해당 id의 인덱스를 가져온다.
@@ -144,7 +144,7 @@ class ProjectServiceTest {
 
         // 2. 프로젝트 소속 멤버 정보
         // id as memberId, user_id, project_id, nickname
-        project.setMemberList(projectRepository.getMemberList(GetMemberNameRequest.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).build()));
 
         // 3-1. 프로젝트 내 할 일 목록
         project.setTaskList(projectRepository.allTasksInProject(projectId));

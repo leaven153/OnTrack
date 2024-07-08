@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.dto.NewUser;
 import me.jhchoi.ontrack.dto.LoginUser;
 import org.springframework.stereotype.Controller;
 
@@ -22,6 +23,7 @@ public class HomeController {
     @GetMapping("/signup")
     public String signUp(){
         log.info("================go to sign up===================");
+//        model.addAttribute("addUser", new NewUser());
         return "signup/signup";
     }
 
