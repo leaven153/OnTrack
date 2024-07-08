@@ -5,17 +5,16 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.dto.NewUser;
 import me.jhchoi.ontrack.dto.ResponseInvitation;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -27,6 +26,38 @@ public class UserController {
 
     private final UserService userService;
     private final ProjectService projectService;
+
+    /**
+     * created  : 24-07-08
+     * param    :
+     * return   :
+     * explain  : 회원가입 절차 1/2(메일 인증)
+     * */
+    @PostMapping("/signup/step1")
+    public ResponseEntity<?> signupStep1(@RequestBody String email){
+        log.info("회원가입 신청(email): {}", email);
+//        return userService.signUp(email);
+        return null;
+    }
+
+    /**
+     * created  : 24-07-08
+     * param    :
+     * return   :
+     * explain  : 회원가입 절차 2/2(인증링크 접속, 비밀번호, 이름 입력)
+     * */
+    @GetMapping("/signup/step2")
+    public String signUpLink(@RequestParam String vCode, Model model){
+        // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5
+        log.info("메일의 링크를 통해 들어옴!: {}", vCode);
+
+        // vCode와 일치하는 user email 확인하여 값 넣는다.
+//        NewUser user = NewUser.builder().build();
+        // 링크
+//        model.addAttribute("newUser", user);
+
+        return "/signup/signup_step3";
+    }
 
     /**
      * created  : 24-05
