@@ -129,7 +129,7 @@ window.onload = function(){
             const validPwGuide = document.querySelectorAll(".valid-pw-guide");
             
             console.log(userInputSignUpPw.value);
-            if(userInputSignUpPw.value == ""){
+            if(userInputSignUpPw.value === ""){
                 document.querySelectorAll(".valid-pw-required").forEach(function(eachOne){
                     eachOne.classList.remove("hide");
                     eachOne.classList.add("cRed");

@@ -2545,6 +2545,12 @@ button.signup-step-2 {
 p.signup-step-2 {
     line-height: 2em;
 }
+label.signup-step-3 {
+    font-size: 12px;
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+    margin-bottom: 10px;
+    padding-left: 2px;
+}
 input.signup-step-3 {
     border: none;
     outline: none;
@@ -2557,10 +2563,9 @@ div.container-pw {
     border-bottom: 1px solid #807980;
     /*border-radius: 4px;*/
     width: 295px;
-    height: 35px;
+    height: 25px;
     margin-bottom: 4px;
     padding-left: 2px;
-    height: 25px;
     display: flex;
     flex-direction: row;
     align-items: center;
