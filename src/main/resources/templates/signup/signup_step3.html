@@ -22,12 +22,9 @@
                 <span class="font-30 extrabold mb-3">회원가입</span>
                 <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">3</span> of 4</span>
 
-<!--                <div class="flex-col-justify-center signup-step-3">-->
-<!--                    <label for="userName" class="font-12 bold mb-20">이름</label>-->
-<!--                    <input type="text" id="userName" name="userName" class="bg-5ec input-signup-name" placeholder="">-->
-<!--                </div>-->
                 <!-- step 3. 비밀번호 입력 -->
                 <div class="flex-col-start-nowrap mb-30 signup-step-3"> <!--/*signup-step-3*/-->
+                    <input type="hidden" name="newUserEmail" th:value="${newUser.getUserEmail()}">
                     <label for="signup-password" class="signup-step-3 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
                     <div class="signup-step-3 container-pw">
                         <input type="password" id="signup-password" name="signup-password" class="bg-5ec signup-step-3" placeholder="●●●●●●●●●" required><!--/*input-signup*/-->

@@ -2530,7 +2530,7 @@ input.signup-step-2 {
     border-radius: 4px;
     border: 2px solid #533e47;
     margin-bottom: 15px;
-    width: 250px;
+    width: 200px;
     height: 25px;
 }
 label.signup-step-2 {
@@ -2570,6 +2570,9 @@ div.container-pw {
     flex-direction: row;
     align-items: center;
     /*background: #fff;*/
+}
+div[class*=signup-no] {
+    text-align: center;
 }
 /******** Modal: 프로젝트 內 개인별명 설정 ********/
 

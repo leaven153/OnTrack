@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -31,34 +32,65 @@ public class UserController {
      * created  : 24-07-08
      * param    :
      * return   :
-     * explain  : 회원가입 절차 1/2(메일 인증)
+     * explain  : 회원가입 절차 1/3(인증코드 생성 후, 메일 전송)
      * */
     @PostMapping("/signup/step1")
-    public ResponseEntity<?> signupStep1(@RequestBody String email){
+    public ResponseEntity<?> signupSendMail(@RequestBody String email){
         log.info("회원가입 신청(email): {}", email);
-//        return userService.signUp(email);
-        return null;
+        return userService.sendVerificationMail(email);
+//        return null;
     }
 
     /**
      * created  : 24-07-08
      * param    :
      * return   :
-     * explain  : 회원가입 절차 2/2(인증링크 접속, 비밀번호, 이름 입력)
+     * explain  : 회원가입 절차 2/3(인증링크)
      * */
     @GetMapping("/signup/step2")
-    public String signUpLink(@RequestParam String vCode, Model model){
-        // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5
-        log.info("메일의 링크를 통해 들어옴!: {}", vCode);
+    public String signUpLinkVerify(@RequestParam(required = false) String vCode, Model model){
+        // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5 (메리포핀스: users1@abc.com, id=38)
+        log.info("인증 링크 통해 들어옴!: {}", vCode);
 
-        // vCode와 일치하는 user email 확인하여 값 넣는다.
-//        NewUser user = NewUser.builder().build();
-        // 링크
-//        model.addAttribute("newUser", user);
+        // vCode 없이 url 접근 시 에러페이지로 이동
+        if(vCode == null) {
+            return "/error/novcode";
+        }
+
+        // 해당 인증코드를 가진 유저가 없다면 에러 페이지로 이동
+        Optional<NewUser> nUser = userService.signUpVerifyLink(vCode);
+        if(nUser.isEmpty()){
+            return "/error/novcode";
+        }
+
+        // 이미 verified 되어 있다면 에러 페이지로 이동(login페이지 링크된 에러 페이지)
+        if(!nUser.get().getVerified()){
+            return "/error/alreadyverified";
+        }
+
+        model.addAttribute("newUser", nUser);
 
         return "/signup/signup_step3";
     }
 
+    /**
+     * created  : 24-07-09
+     * param    :
+     * return   :
+     * explain  : 회원가입 절차 3/3(비밀번호  입력)
+     * */
+    @PostMapping("/signup/step3")
+    public String signUpPw(@RequestBody NewUser newUser){
+        
+        log.info("가입 절차 마지막 단계: {}", newUser);
+
+        // 비밀번호 암호화하여 DB에 저장한 후,
+
+        // userEmail과 loginPw를 LoginUser객체에 담아 model에 add 후, login으로 넘긴다.
+
+        return "redirect:/login";
+    }
+    
     /**
      * created  : 24-05
      * param    :

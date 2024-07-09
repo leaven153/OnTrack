@@ -70,6 +70,7 @@ window.onload = function(){
                 document.querySelector(".signup-email").innerText = signUpEmail;
                 document.querySelector(".signup-step-num").innerText = "2";
 
+                /*
                 signUpStep2.forEach(function(item){
                     item.classList.remove("hide");
                     if(item.tagName === "INPUT") {
@@ -77,8 +78,10 @@ window.onload = function(){
                     }
                 });
 
+                 */
+
                 // 컨트롤러 통해서 메일 전송,
-                /*
+
                 fetch(`http://localhost:8080/signup/step1`, {
                     method: 'POST',
                     headers: {
@@ -90,13 +93,18 @@ window.onload = function(){
                         signUpStep2.forEach(function(item){
                             item.classList.remove("hide");
                             if(item.tagName === "INPUT") {
-                            item.value = "";
-                    }
+                                item.value = "";
+                            }
                         });
                     } else {
-                        console.log(`something's wrong.. try again plz..`);
+                        const data = response.text();
+                        data.then(value => {
+                            document.querySelector(".signup-step-out").classList.remove("hide");
+                            document.querySelector("span.signup-step-out").innerText = value;
+
+                        });
                     }
-                });*/
+                });
             } else {
                 document.querySelectorAll(".valid-email-guide").forEach(function(item){
                     item.classList.remove("hide");
@@ -126,15 +134,25 @@ window.onload = function(){
         const regPwLetterInRows = /(\w)\1\1/;
 
         document.querySelector(".btn-signup-complete").addEventListener("click", ()=>{
+            const newUserEmail = document.querySelector("input[name=newUserEmail]");
             const validPwGuide = document.querySelectorAll(".valid-pw-guide");
-            
-            console.log(userInputSignUpPw.value);
+
+            // 비밀번호 입력 안 했을 때 경고
             if(userInputSignUpPw.value === ""){
                 document.querySelectorAll(".valid-pw-required").forEach(function(eachOne){
                     eachOne.classList.remove("hide");
                     eachOne.classList.add("cRed");
                 });
-            };
+            }
+
+            // 위험: 9자 미만, 연속 3글자
+            if(userInputSignUpPw.value != "" && (regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value))){
+                console.log("dangerous");
+                validPwGuide[0].innerText = "위험"
+                validPwGuide[1].classList.remove("hide");
+            }
+
+            /*
             // 안전: 10자 이상, 대소문자숫자특수문자조합
             if(regPwStrong.test(userInputSignUpPw.value)){
                 console.log("안전");
@@ -142,15 +160,21 @@ window.onload = function(){
             // 보통: 9자 이상, not 연속 3글자
             if(regPwLetterCount.test(userInputSignUpPw.value) && !regPwLetterInRows.test(userInputSignUpPw.value)){
                 console.log("보통");
-            };
-            // 위험: 9자 미만, 연속 3글자
-            if(regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value)){
-                console.log("dangerous");
-                validPwGuide[0].innerText = "위험"
-                validPwGuide[1].classList.remove("hide");
+            }
+            */
+            const newUser = {
+                userEmail: newUserEmail.value,
+                password: userInputSignUpPw.value
             };
 
-        }); // 인증 버튼 클릭했을 때 이벤트 끝
+            fetch(`http://localhost:8080/signup/step3`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newUser)
+            });
+        }); // 완료 버튼 클릭했을 때 이벤트 끝
 
         // 비밀번호를 입력할 때는 경고문구("비밀번호를 입력해주시기 바랍니다") 사라지도록 한다.
         userInputSignUpPw.addEventListener("focus", ()=>{
