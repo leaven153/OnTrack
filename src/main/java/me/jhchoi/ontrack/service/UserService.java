@@ -79,6 +79,7 @@ public class UserService {
                 <span style='font-size:24px;font-color:#533e47; font-weight: 600'>On Track</span>
                 </div>
                 <div style='border:5px solid #533e47; border-radius:40px; width:600px; background-color:#fff5ec; padding:30px 20px 10px 10px; text-align:center'>
+                <p>Step 2/4</p>
                 <p>아래 인증코드를 통해 가입을 완료하고<br/>
                 On Track의 서비스를 바로 이용하세요 ;D</p>
                 <a href='http://localhost:8080/signup/step2?vCode=%s' style='text-decoration: none'>

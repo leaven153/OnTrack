@@ -7,9 +7,9 @@
   <meta name="Description" content="all projects">
 
   <title>on track - sign up</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/signup.js"></script>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+  <script src="../../static/js/signup.js" th:src="@{/js/signup.js}"></script>
   <!-- <script src="/js/main.js"></script> -->
  </head>
  <body>
@@ -21,21 +21,25 @@
             <div class="회원가입box flex-col-start-center-nowrap modal-signup">
                 <span class="font-30 extrabold mb-3">회원가입</span>
                 <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">3</span> of 4</span>
-                <div class="flex-col-justify-center signup-step-3">
-                    <label for="userName" class="font-12 bold mb-20">이름</label>
-                    <input type="text" id="userName" name="userName" class="bg-5ec input-signup-name" placeholder="">
-                </div>
+
+<!--                <div class="flex-col-justify-center signup-step-3">-->
+<!--                    <label for="userName" class="font-12 bold mb-20">이름</label>-->
+<!--                    <input type="text" id="userName" name="userName" class="bg-5ec input-signup-name" placeholder="">-->
+<!--                </div>-->
                 <!-- step 3. 비밀번호 입력 -->
-                <div class="flex-col-start-nowrap mb-20 signup-step-3"> <!--/*signup-step-3*/-->
-                    <label for="password" class="font-12 bold mb-20">비밀번호</label>
-                    <input type="password" id="password" name="password" class="bg-5ec input-signup mb-7" placeholder="●●●●●●●●">
-                    <span class="font-12 bold">9자 이상의 대·소문자+숫자+특수문자의 조합</span><!--/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/-->
+                <div class="flex-col-start-nowrap mb-30 signup-step-3"> <!--/*signup-step-3*/-->
+                    <label for="signup-password" class="signup-step-3 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
+                    <div class="signup-step-3 container-pw">
+                        <input type="password" id="signup-password" name="signup-password" class="bg-5ec signup-step-3" placeholder="●●●●●●●●●" required><!--/*input-signup*/-->
+                        <span class="valid-pw-guide font-12 bold cRed"></span>
+                    </div>
+                    <span class="font-12 bold valid-pw-guide hide">9자 미만이거나 연속된 3글자는 위험합니다.</span><!--/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/-->
                 </div>
 
                 <!-- step 3. 계속 버튼 -->
                 <button type="button" class="btn-signup-complete mt-14">완료</button>
 
-                <div class="mt-60 mb-7">
+                <div class="mt-30 mb-7">
                     <div class="status-sign not-yet"></div>
                     <div class="status-sign planning"></div>
                     <div class="status-sign ing"></div>
