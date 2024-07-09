@@ -7,9 +7,15 @@
         VALUES (#{userEmail}, #{userName}, #{password}, #{registeredAt})
     </insert>
 
-    <select id="findByLoginId" parameterType="String" resultType="LoginUser">
-        SELECT id as userId, user_email as loginId, user_name, password as loginPw
+    <select id="findByEmail" parameterType="String" resultType="OnTrackUser">
+        SELECT id, user_email, user_name, password
         FROM ontrack_user
         WHERE user_email = #{loginId}
+    </select>
+
+    <select id="findByVerificationCode" parameterType="String" resultType="NewUser">
+        SELECT user_email, user_name, verified
+        FROM ontrack_user
+        WHERE verification_code = #{vCode}
     </select>
 </mapper>

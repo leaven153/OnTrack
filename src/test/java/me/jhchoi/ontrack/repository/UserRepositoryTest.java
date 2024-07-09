@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.repository;
 
 import me.jhchoi.ontrack.domain.OnTrackUser;
+import me.jhchoi.ontrack.dto.NewUser;
 import me.jhchoi.ontrack.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -60,5 +62,20 @@ public class UserRepositoryTest {
 
         });
 
+    }
+
+    @Test @DisplayName("verification code로 가입하려는 유저 찾기")
+    void findByVerificationCode(){
+        //given
+        String vCode = "881ac812-8fa4-48af-b9a0-60dafb77a9c5";
+        String vCodeNull = "881ac812-8fa4-48af-b9a0-60dafb77a9c";
+
+        // when
+        Optional<NewUser> nUser = userRepository.findByVerificationCode(vCode);
+        Optional<NewUser> nullUser = userRepository.findByVerificationCode(vCodeNull);
+
+        // then
+//        assertThat(nUser.get().getUserEmail()).isEqualTo("users1@abc.com");
+        assertThat(nullUser.isEmpty()).isEqualTo(true);
     }
 }

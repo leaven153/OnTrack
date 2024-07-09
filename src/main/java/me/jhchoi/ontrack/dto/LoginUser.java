@@ -17,4 +17,5 @@ public class LoginUser {
 
     private String userName;
     private Long userId;
+
 }
