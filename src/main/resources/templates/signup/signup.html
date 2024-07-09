@@ -7,9 +7,9 @@
   <meta name="Description" content="all projects">
 
   <title>on track - sign up</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/signup.js"></script>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+  <script src="../../static/js/signup.js" th:src="@{/js/signup.js}"></script>
   <!-- <script src="/js/main.js"></script> -->
  </head>
  <body>
@@ -27,25 +27,18 @@
                     <input type="text" id="userEmail" name="userEmail" class="bg-5ec input-signup-email" placeholder="이메일 주소를 입력하세요">
                 </div>
 
-                <!-- step 3. 비밀번호 입력 -->
-<!--                <div class="flex-col-start-nowrap mb-20 signup-step-3 hide"> &lt;!&ndash;/*signup-step-3*/&ndash;&gt;-->
-<!--                    <label for="password" class="font-12 bold mb-20">비밀번호</label>-->
-<!--                    <input type="password" id="password" name="password" class="bg-5ec input-signup mb-7" placeholder="●●●●●●●●">-->
-<!--                    <span class="font-12 bold">9자 이상의 대·소문자+숫자+특수문자의 조합</span>&lt;!&ndash;/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/&ndash;&gt;-->
-<!--                </div>-->
-
                 <!-- step 1. 계속 버튼 -->
                 <button type="button" class="btn-signup-continue mt-14">계속</button>
 
                 <!-- step 2. 안내(인증메일발송) -->
                 <div class="flex-col-center mt_30 signup-step-2 hide">
-                    <img src="/imgs/email.png" alt="" class="img-5em">
-                    <!-- <p class="signup-step-2">입력하신 이메일로 인증링크가 발송되었습니다.<br/><mark class="bold font-18 c2d1">해당 링크를 통해 회원가입을 완료해주시기 바랍니다.</mark></p> -->
-                    <p class="signup-step-2">입력하신 이메일로(<span class="signup-email">그대가입력한@이메일.주소</span>)로<br/>
-                        인증코드가 발송되었습니다.<br/> <mark class="bold font-18 c2d1">메일을 확인해주시기 바랍니다.</mark></p>
-                    <label for="vCode"></label>
-                    <input type="text" name="vCode" id="vCode" class="bg-5ec signup-step-2" placeholder="인증코드를 입력해주세요">
-                    <button type="button" class="btn-signup-complete signup-step-2"></button>
+                    <img src="../../static/imgs/email.png" th:src="@{/imgs/email.png}" alt="" class="img-5em">
+                    <!--/* <p class="signup-step-2">입력하신 이메일로 인증링크가 발송되었습니다.<br/><mark class="bold font-18 c2d1">해당 링크를 통해 회원가입을 완료해주시기 바랍니다.</mark></p> */-->
+                    <p class="signup-step-2 mb-20">입력하신 이메일로(<span class="signup-email">그대가입력한@이메일.주소</span>)로<br/>
+                        <strong>인증코드</strong>가 발송되었습니다.<br/> <mark class="bold font-18 c2d1">메일을 확인해주시기 바랍니다.</mark></p>
+                    <label for="vCode" class="signup-step-2"><!--메일로 받으신 인증코드를 입력해주세요--></label>
+                    <input type="text" name="vCode" id="vCode" class="signup-step-2 " placeholder="인증코드">
+                    <button type="button" class="btn-signup-verify signup-step-2">인증</button>
                 </div>
 
                 <!-- step 1. OAuth -->

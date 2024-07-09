@@ -2525,9 +2525,46 @@ button[class*=btn-signup]{
 .ls-5 {
     letter-spacing: 0.15em;
 }
-
+input.signup-step-2 {
+    padding: 5px;
+    border-radius: 4px;
+    border: 2px solid #533e47;
+    margin-bottom: 15px;
+    width: 250px;
+    height: 25px;
+}
+label.signup-step-2 {
+    text-align: left;
+    font-size: 12px;
+    width: 260px;
+    margin-bottom: 3px;
+}
+button.signup-step-2 {
+    width: 250px;
+}
 p.signup-step-2 {
     line-height: 2em;
+}
+input.signup-step-3 {
+    border: none;
+    outline: none;
+    /*margin-bottom: 4px;*/
+}
+input.signup-step-3:focus {
+    border: none;
+}
+div.container-pw {
+    border-bottom: 1px solid #807980;
+    /*border-radius: 4px;*/
+    width: 295px;
+    height: 35px;
+    margin-bottom: 4px;
+    padding-left: 2px;
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /*background: #fff;*/
 }
 /******** Modal: 프로젝트 內 개인별명 설정 ********/
 

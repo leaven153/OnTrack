@@ -21,14 +21,14 @@ window.onload = function(){
         document.querySelectorAll(".signup-step-1").forEach(function(item){
             signUpStep1.push(item);
         });        
-        console.log(signUpStep1);
+        // console.log(signUpStep1);
     }
 
     if(elExists(document.querySelectorAll(".signup-step-2"))) {
         document.querySelectorAll(".signup-step-2").forEach(function(item){
             signUpStep2.push(item);
         });
-        console.log(signUpStep2);
+        // console.log(signUpStep2);
     }
 
     // if(elExists(document.querySelector(".signup-step-3"))){
@@ -58,10 +58,7 @@ window.onload = function(){
             const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
 
             if((regEmail.test(signUpEmail))){
-                // console.log(true);
-                // console.log(signUpStep1);
 
-                // 인증링크(메일) 전송 성공시 추후 컨트롤러 반응 아래로 이동 요망
                 signUpStep1.forEach(function(item){
                     item.classList.add("hide");
                 });
@@ -72,8 +69,16 @@ window.onload = function(){
 
                 document.querySelector(".signup-email").innerText = signUpEmail;
                 document.querySelector(".signup-step-num").innerText = "2";
-                
+
+                signUpStep2.forEach(function(item){
+                    item.classList.remove("hide");
+                    if(item.tagName === "INPUT") {
+                        item.value = "";
+                    }
+                });
+
                 // 컨트롤러 통해서 메일 전송,
+                /*
                 fetch(`http://localhost:8080/signup/step1`, {
                     method: 'POST',
                     headers: {
@@ -84,27 +89,14 @@ window.onload = function(){
                     if(response.ok){
                         signUpStep2.forEach(function(item){
                             item.classList.remove("hide");
+                            if(item.tagName === "INPUT") {
+                            item.value = "";
+                    }
                         });
                     } else {
                         console.log(`something's wrong.. try again plz..`);
                     }
-                } );
-                /* const response = await fetch("/url", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringfy(userInputSignupEmail.value)
-                }); */
-                /* if (response.ok) {
-                    signUpStep1.classList.add("hide");
-                    signUpStep2.classList.remove("hide");
-                } else {
-                    메일 전송 실패 안내 with btn (다시 보내기 or 메일 주소 다시 입력하기)
-                }*/
-                // await response.text();
-                
-
+                });*/
             } else {
                 document.querySelectorAll(".valid-email-guide").forEach(function(item){
                     item.classList.remove("hide");
@@ -122,9 +114,51 @@ window.onload = function(){
     } // input.input-signup-email과 btn-signup-continue에 대한 이벤트 끝
 
     // 2. 비밀번호
-    if(elExists(document.querySelector(".btn-signup-complete")) && elExists(document.querySelector("input.password"))){
-        const userInputSignUpPw = document.querySelector("input.password");
-        const regPw = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()+=_/,.<>-])[A-Za-z\d~!@#$%^&*()+=_/,.<>-]{9,}$/;
+    if(elExists(document.querySelector(".btn-signup-complete")) ){
+        const userInputSignUpPw = document.querySelector("input[name=signup-password]");
+        // 안전: 9자 이상의 대·소문자+숫자+특수문자 조합
+        const regPwStrong = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()+=_/,.<>-])[A-Za-z\d~!@#$%^&*()+=_/,.<>-]{10,}$/;
+
+        // 9자 이상
+        const regPwLetterCount = /[\W\w]{9,}/;
+
+        // 위험: 연속된 3글자
+        const regPwLetterInRows = /(\w)\1\1/;
+
+        document.querySelector(".btn-signup-complete").addEventListener("click", ()=>{
+            const validPwGuide = document.querySelectorAll(".valid-pw-guide");
+            
+            console.log(userInputSignUpPw.value);
+            if(userInputSignUpPw.value == ""){
+                document.querySelectorAll(".valid-pw-required").forEach(function(eachOne){
+                    eachOne.classList.remove("hide");
+                    eachOne.classList.add("cRed");
+                });
+            };
+            // 안전: 10자 이상, 대소문자숫자특수문자조합
+            if(regPwStrong.test(userInputSignUpPw.value)){
+                console.log("안전");
+            };
+            // 보통: 9자 이상, not 연속 3글자
+            if(regPwLetterCount.test(userInputSignUpPw.value) && !regPwLetterInRows.test(userInputSignUpPw.value)){
+                console.log("보통");
+            };
+            // 위험: 9자 미만, 연속 3글자
+            if(regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value)){
+                console.log("dangerous");
+                validPwGuide[0].innerText = "위험"
+                validPwGuide[1].classList.remove("hide");
+            };
+
+        }); // 인증 버튼 클릭했을 때 이벤트 끝
+
+        // 비밀번호를 입력할 때는 경고문구("비밀번호를 입력해주시기 바랍니다") 사라지도록 한다.
+        userInputSignUpPw.addEventListener("focus", ()=>{
+            document.querySelectorAll(".valid-pw-required")[1].classList.add("hide");
+            document.querySelectorAll(".valid-pw-required")[0].classList.remove("cRed");
+            document.querySelectorAll(".valid-pw-guide")[0].innerText = "";
+            document.querySelectorAll(".valid-pw-guide")[1].classList.add("hide");
+        });
     }
 
     /*---- ▲  이메일 유효성 검사 끝 ▲ ----*/
