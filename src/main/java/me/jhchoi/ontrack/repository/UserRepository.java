@@ -39,6 +39,7 @@ public class UserRepository {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         log.info("repository login 실행: id={}, pw={}", loginId, loginPw);
         Optional<OnTrackUser> user = findByEmail(loginId);
+
         LoginUser loginUser = LoginUser.builder()
                 .userId(user.get().getId())
                 .loginId(user.get().getUserEmail())

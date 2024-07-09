@@ -45,7 +45,7 @@ public class UserService {
     public ResponseEntity<?> sendVerificationMail(String email) {
 
         // 중복된 이메일인지 확인
-        if(userRepository.findByEmail(email) != null ) {
+        if(userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.badRequest().body("이미 가입된 이메일입니다.");
         }
         // 메일로 전송할 링크 생성(UUID)
