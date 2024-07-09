@@ -1,0 +1,24 @@
+1) 프로젝트 view 상단 고정 부분(proj-top-fixed) 
+- 할일추가버튼, D-day, search 위치 고민..................
+- 탭 메뉴 정리
+- search 정리
+
+2) 프로젝트 설정 모달
+- 만들고 (기본 설정 완료, 구성원과 파일은 일단 우선순위 중중으로...)
+- 모달 내부 버튼, 탭 출력 연결
+- 모달 열고 닫기
+
+3) nav 정리
+- after·before에는 이벤트 걸 수 없으므로, relative와 absolute으로 수정
+- 최상단 3bar 버튼 추가
+- a와 button 태그 구분(모달은 button, 나머지는 a)
+- 새 프로젝트 만들기 버튼과 모달 연결(열고 닫기. 
+  + 닫기에 reset 기능 추가
+  + form의 내용 서버 전송 형태 확인
+  + radio 버튼 css 정리
+
+4) 프로젝트 view 
+- table view의 체크박스: 클릭하면 opacity: 1되도록 수정
+- 탭버튼과 탭 연결
+- assignee view: 담당자별 상세box 열고 닫기
+  + 담당자box 추가해서 열리는 transition-duration test해보기

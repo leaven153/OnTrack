@@ -1,0 +1,98 @@
+ <!-- 모달: 할 일 상세 -->
+  <!-- 모달 컨테이너 -->
+  <div id="task-detail" class="modal-container">
+    <!-- 할 일 상세 시작 -->
+    <div class="modal-Right flex-col-start-nowrap">
+      <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
+        <div class="flex-row-justify-start-align-center img-hidden">
+          <img src="../../static/imgs/icon_blur_parentTask1817.png" alt="parentTask" class="">
+          <span class="font-blur ml-5">바다와 나비</span>
+        </div>
+        <span class="btn-close font-24">&times;</span>
+      </div>
+      <form action="#" method="POST" id="edit-task" class="" enctype="multipart/form-data">
+        <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5"><!--modal-create-proj-name-->
+          <img src="../../static/imgs/icon_blur_childTask24.png" alt="childTask" class="hide">
+          <img src="../../static/imgs/icon_childTask24.png" alt="childTask" class="hide">
+          <input type="text" class="modal-add-task" name="" max="20" value="하면 돼 끝까지 해보자 해내자">
+        </div><!-- 할일제목 끝 -->
+
+        <div class="할일중요도 flex-row-justify-start-align-center mb-30 modal-add-task"> <!--modal-create-proj-items-->
+          <span class="font-18 c411">중요도</span>
+          <div class="">
+            <input type="radio" id="edit-vip" name="task_priority" value="vip" class="input-radio hide">
+            <input type="radio" id="edit-ip" name="task_priority" value="ip" class="input-radio hide">
+            <input type="radio" id="edit-norm" name="task_priority" value="norm" class="input-radio hide" checked="checked">
+            <div class="">
+              <label for="edit-vip" class="btn-radio radio-l">
+                <span class="font-15 vip">매우중요</span>
+              </label><label for="edit-ip" class="btn-radio">
+              <span class="font-15 ip font-blur">중요</span>
+            </label><label for="edit-norm" class="btn-radio radio-r">
+              <span class="font-15 norm font-blur">일반</span>
+            </label>
+            </div>
+          </div>
+        </div><!-- 할일중요도 끝 -->
+
+        <div class="할일마감일 flex-row-justify-start-align-center mb-30 modal-add-task"><!--modal-create-proj-items-->
+          <span class="font-18 c411">마감일</span>
+          <div class="">
+            <div class="bottom-line200">
+              <input type="date" name="" class="altivo-light">
+            </div>
+          </div>
+        </div><!-- 할일마감일 끝 -->
+
+        <div class="담당자배정 flex-row-start-nowrap mb-30 modal-add-task">
+          <span class="font-18 c411 alignCenter">담당자</span>
+          <div class="vertical-ctrl01">
+            <div class="ul과checkbox로test bottom-line350">
+
+              <!-- 선택된 담당자가 담길 box -->
+              <!-- fragment로 할 일 생성과 할 일 상세는 분리해야겠다!-->
+              <div id="chosens-boxes" class="hide pd-b5">
+              </div>
+
+              <!-- 담당자 선택 전 -->
+              <div id="assignee-before-choose" class="assignee-display mb-5">
+                <span id="assign-indication" class="ml-3">담당자 배정하기(프로젝트 멤버 목록)</span>
+              </div>
+
+              <!-- 프로젝트 멤버 목록 -->
+              <div id="assignee-list" class="hide">
+                <input type="checkbox" class="hide" name="" value="박종건" id="assignee1"><label for="assignee1" class="display-block lists ">박종건</label>
+                <input type="checkbox" class="hide" name="" value="박그리디" id="assignee2"><label for="assignee2" class="display-block lists">박그리디</label>
+                <input type="checkbox" class="hide" name="" value="박그라스" id="assignee3"><label for="assignee3" class="display-block lists">박그라스</label>
+                <input type="checkbox" class="hide" name="" value="박개발자" id="assignee4"><label for="assignee4" class="display-block lists">박개발자</label>
+                <input type="checkbox" class="hide" name="" value="밀리브라운" id="assignee5"><label for="assignee5" class="display-block lists">밀리브라운</label>
+                <input type="checkbox" class="hide" name="" value="크리스 헴스워스" id="assignee6"><label for="assignee6" class="display-block lists">크리스 헴스워스</label>
+                <input type="checkbox" class="hide" name="" value="Beyonce" id="assignee7"><label for="assignee7" class="display-block lists">Beyonce</label>
+              </div>
+            </div>
+          </div>
+          <img src="../../static/imgs/icon_down127.png" alt="show list" class="alignCenter cursorP" id="show-assignee-list">
+        </div><!-- 담당자배정 끝 -->
+
+        <div class="할일파일첨부 flex-row-justify-start-align-center hide">
+          <div class="filebox flex-row-justify-start-align-center">
+            <input type="file" id="file" name="" class="opacity0 wh0" multiple>
+            <label for="file" class="flex-row-justify-start-align-center btn-attach">
+              <img src="../../static/imgs/icon_upload1519.png" alt="upload" class="">
+              <span class="ml-5">파일첨부</span>
+            </label>
+            <div id="attached" class="flex-col-start-nowrap scroll modal-files-box">
+              <p id="no-file-placeholder" class="no-file vertical-ctrl032">첨부된 파일이 없습니다.</p>
+            </div>
+          </div>
+          <div class="btn-guide">?</div>
+        </div><!-- 파일첨부 끝 -->
+
+        <div class="확인(할일상세수정버튼) flex-row-center-center-nowrap mt-60 mb-5">
+          <button type="submit" form="edit-task" class="btn-large-ok done font-white">확인</button>
+          <button type="button" class="">닫기</button>
+        </div>
+      </form>
+    </div> <!-- 할 일 상세 끝 -->
+  </div><!-- 모달 감싸는 컨테이너 끝 -->
+  <!-- 모달: 할 일 상세 끝-->
