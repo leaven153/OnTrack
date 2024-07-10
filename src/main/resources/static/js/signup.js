@@ -31,9 +31,6 @@ window.onload = function(){
         // console.log(signUpStep2);
     }
 
-    // if(elExists(document.querySelector(".signup-step-3"))){
-    //     signUpStep3.push(document.querySelector(".signup-step-3"));
-    // }
 
     // '계속' 버튼.
     // step1에서만 보여야 한다.
@@ -46,48 +43,66 @@ window.onload = function(){
     }
 
     /*---- ▼  회원가입 정보 유효성 검사 시작 ▼ ----*/
-    // 1. 이메일
-    if(elExists(document.querySelector("input.input-signup-email")) && elExists(document.querySelector(".btn-signup-continue"))){
-        const userInputSignupEmail = document.querySelector("input.input-signup-email");
+    // 이메일, 비밀번호
+    if(elExists(document.querySelector("input.signup-email")) && elExists(document.querySelector(".btn-signup-continue"))){
+        const userInputSignupEmail = document.querySelector("input.signup-email");
+        const userInputSignUpPw = document.querySelector("input[name=signup-password]");
+        const validPwGuide = document.querySelectorAll(".valid-pw-guide");
         userInputSignupEmail.value="";
+
+        // 이메일 형식
+        const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
+        // 9자 이상
+        const regPwLetterCount = /[\W\w]{9,}/;
+        // 위험: 연속된 3글자
+        const regPwLetterInRows = /(\w)\1\1/;
+
 
         // 이메일 주소 입력 후
         // '계속' 버튼 클릭했을 때(유효성 검사)
         document.querySelector(".btn-signup-continue").addEventListener("click", ()=>{
-            const signUpEmail= userInputSignupEmail.value;
-            const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
 
-            if((regEmail.test(signUpEmail))){
+            const signUpEmail= userInputSignupEmail.value;
+
+            // 비밀번호 입력 안 했을 경우, 경고 (이메일을 입력하지 않았을 경우는 '유효하지 않은 이메일 형식'으로 취급한다.)
+            if(userInputSignUpPw.value === ""){
+                document.querySelectorAll(".valid-pw-required").forEach(function(eachOne){
+                    eachOne.classList.remove("hide");
+                    eachOne.classList.add("cRed");
+                });
+            }
+
+            // 허술한 비밀번호(9자 미만 or 연속 3글자)에 대한 경고
+            if(userInputSignUpPw.value !== "" && (regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value))){
+                console.log("dangerous");
+                validPwGuide[0].innerText = "위험"
+                validPwGuide[1].classList.remove("hide");
+            }
+
+            // 이메일 형식이 맞고, 비밀번호가 9자 이상이며 연속의 3글자를 포함하지 않을 경우,
+            if(regEmail.test(signUpEmail) && regPwLetterCount.test(userInputSignUpPw.value) && !regPwLetterInRows.test(userInputSignUpPw.value)){
+
+                const newUser = {
+                    userEmail: signUpEmail,
+                    password: userInputSignUpPw.value,
+                    userName: signUpEmail.slice(0, signUpEmail.indexOf("@"))
+                };
 
                 signUpStep1.forEach(function(item){
                     item.classList.add("hide");
                 });
 
-                // signUpStep3.forEach(function(item){
-                //     item.classList.add("hide");
-                // });
-
-                document.querySelector(".signup-email").innerText = signUpEmail;
+                document.querySelector("span.signup-email").innerText = signUpEmail;
                 document.querySelector(".signup-step-num").innerText = "2";
 
-                /*
-                signUpStep2.forEach(function(item){
-                    item.classList.remove("hide");
-                    if(item.tagName === "INPUT") {
-                        item.value = "";
-                    }
-                });
-
-                 */
 
                 // 컨트롤러 통해서 메일 전송,
-
                 fetch(`http://localhost:8080/signup/step1`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(signUpEmail)
+                    body: JSON.stringify(newUser)
                 }).then(response => {
                     if(response.ok){
                         signUpStep2.forEach(function(item){
@@ -105,76 +120,21 @@ window.onload = function(){
                         });
                     }
                 });
-            } else {
+
+            } else if (signUpEmail === "" || !regEmail.test(signUpEmail)) {
+                // 이메일 입력하지 않거나 유효하지 않은 형식으로 입력 했을 때, 
                 document.querySelectorAll(".valid-email-guide").forEach(function(item){
                     item.classList.remove("hide");
                     item.classList.add("cRed");
                 });
             }
-        }); // 계속 버튼 눌렀을 때 이벤트 끝
+        }); // 이메일과 비밀번호 유효성 검사와 btn-signup-continue에 대한 클릭이벤트 끝
 
         // 이메일 입력할 때는 경고문구("이메일이 유효하지 않습니다") 사라지도록 한다.
         userInputSignupEmail.addEventListener("focus", ()=>{
             document.querySelectorAll(".valid-email-guide")[1].classList.add("hide");
             document.querySelectorAll(".valid-email-guide")[0].classList.remove("cRed");
         });
-
-    } // input.input-signup-email과 btn-signup-continue에 대한 이벤트 끝
-
-    // 2. 비밀번호
-    if(elExists(document.querySelector(".btn-signup-complete")) ){
-        const userInputSignUpPw = document.querySelector("input[name=signup-password]");
-        // 안전: 9자 이상의 대·소문자+숫자+특수문자 조합
-        const regPwStrong = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[~!@#$%^&*()+=_/,.<>-])[A-Za-z\d~!@#$%^&*()+=_/,.<>-]{10,}$/;
-
-        // 9자 이상
-        const regPwLetterCount = /[\W\w]{9,}/;
-
-        // 위험: 연속된 3글자
-        const regPwLetterInRows = /(\w)\1\1/;
-
-        document.querySelector(".btn-signup-complete").addEventListener("click", ()=>{
-            const newUserEmail = document.querySelector("input[name=newUserEmail]");
-            const validPwGuide = document.querySelectorAll(".valid-pw-guide");
-
-            // 비밀번호 입력 안 했을 때 경고
-            if(userInputSignUpPw.value === ""){
-                document.querySelectorAll(".valid-pw-required").forEach(function(eachOne){
-                    eachOne.classList.remove("hide");
-                    eachOne.classList.add("cRed");
-                });
-            }
-
-            // 위험: 9자 미만, 연속 3글자
-            if(userInputSignUpPw.value != "" && (regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value))){
-                console.log("dangerous");
-                validPwGuide[0].innerText = "위험"
-                validPwGuide[1].classList.remove("hide");
-            }
-
-            /*
-            // 안전: 10자 이상, 대소문자숫자특수문자조합
-            if(regPwStrong.test(userInputSignUpPw.value)){
-                console.log("안전");
-            };
-            // 보통: 9자 이상, not 연속 3글자
-            if(regPwLetterCount.test(userInputSignUpPw.value) && !regPwLetterInRows.test(userInputSignUpPw.value)){
-                console.log("보통");
-            }
-            */
-            const newUser = {
-                userEmail: newUserEmail.value,
-                password: userInputSignUpPw.value
-            };
-
-            fetch(`http://localhost:8080/signup/step3`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newUser)
-            });
-        }); // 완료 버튼 클릭했을 때 이벤트 끝
 
         // 비밀번호를 입력할 때는 경고문구("비밀번호를 입력해주시기 바랍니다") 사라지도록 한다.
         userInputSignUpPw.addEventListener("focus", ()=>{
@@ -183,9 +143,11 @@ window.onload = function(){
             document.querySelectorAll(".valid-pw-guide")[0].innerText = "";
             document.querySelectorAll(".valid-pw-guide")[1].classList.add("hide");
         });
-    }
 
-    /*---- ▲  이메일 유효성 검사 끝 ▲ ----*/
+
+    } // 
+
+    /*---- ▲  회원가입 정보 유효성 검사 끝 ▲ ----*/
     
 } // window.onload = function(){} 끝
 

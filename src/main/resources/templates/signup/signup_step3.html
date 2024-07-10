@@ -19,23 +19,22 @@
                 <span class="font-24 altivo-bold ml-30 ls-clear">on track</span>
             </div>
             <div class="회원가입box flex-col-start-center-nowrap modal-signup">
-                <span class="font-30 extrabold mb-3">회원가입</span>
-                <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">3</span> of 4</span>
+                <span class="font-24 extrabold mb-20">반갑습니다 ;D</span>
+                <span class="font-15 bold mb-30">지금 바로 On Track을 이용해보세요!</span>
+<!--                <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">3</span> of 4</span>-->
 
-                <!-- step 3. 비밀번호 입력 -->
+                <!-- step 3. 비밀번호 입력하여 로그인 -->
+                <form action="/login" th:action th:object="${newUser}">
                 <div class="flex-col-start-nowrap mb-30 signup-step-3"> <!--/*signup-step-3*/-->
-                    <input type="hidden" name="newUserEmail" th:value="${newUser.getUserEmail()}">
-                    <label for="signup-password" class="signup-step-3 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
-                    <div class="signup-step-3 container-pw">
-                        <input type="password" id="signup-password" name="signup-password" class="bg-5ec signup-step-3" placeholder="●●●●●●●●●" required><!--/*input-signup*/-->
-                        <span class="valid-pw-guide font-12 bold cRed"></span>
-                    </div>
-                    <span class="font-12 bold valid-pw-guide hide">9자 미만이거나 연속된 3글자는 위험합니다.</span><!--/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/-->
+                    <input type="hidden" name="newUserEmail" th:field="*{loginId}" th:value="${newUser.getUserEmail()}"><!--th:value="${newUser.getUserEmail()}"-->
+                    <label for="first-login-password" class="font-12 bold mb-15 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
+                    <input type="password" id="first-login-password"  th:field="*{loginPw}" name="first-login-password" class="bg-5ec input-login-pw" placeholder="●●●●●●●●●"><!--/*input-signup*/-->
+
                 </div>
 
-                <!-- step 3. 계속 버튼 -->
-                <button type="button" class="btn-signup-complete mt-14">완료</button>
-
+                <!-- step 3. 로그인 버튼 -->
+                <button type="submit" class="btn-signup-complete mt-14">로그인</button>
+                </form>
                 <div class="mt-30 mb-7">
                     <div class="status-sign not-yet"></div>
                     <div class="status-sign planning"></div>

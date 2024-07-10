@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor @Builder
 public class LoginUser {
-    @NotEmpty
-    private String loginId; // email
-    @NotEmpty
-    private String loginPw;
 
+    private String loginId; // email
+    private String loginPw;
     private String userName;
     private Long userId;
 

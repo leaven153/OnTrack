@@ -40,22 +40,22 @@ public class UserService {
      * created  : 24-07-08
      * param    :
      * return   :
-     * explain  : 회원가입 1/3 (인증 이메일 발송)
+     * explain  : 회원가입 1/2 (인증 이메일 발송)
      * */
-    public ResponseEntity<?> sendVerificationMail(String email) {
+    public ResponseEntity<?> sendVerificationMail(NewUser newUser) {
 
         // 중복된 이메일인지 확인
-        if(userRepository.findByEmail(email).isPresent()) {
+        if(userRepository.findByEmail(newUser.getUserEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("이미 가입된 이메일입니다.");
         }
         // 메일로 전송할 링크 생성(UUID)
         String vCode = UUID.randomUUID().toString();
 
-        // user 테이블에 저장(email의 @ 앞부분을 이름으로 저장한다)
-        String userName = email.substring(0, email.indexOf("@"));
+
         OnTrackUser user = OnTrackUser.builder()
-                .userEmail(email)
-                .userName(userName)
+                .userEmail(newUser.getUserEmail())
+                .userName(newUser.getUserName())
+                .password(bCryptPasswordEncoder.encode(newUser.getPassword()))
                 .verified(false)
                 .verificationCode(vCode)
                 .registeredAt(LocalDate.now()).build();
@@ -63,7 +63,7 @@ public class UserService {
 
         // 메일 전송
         try {
-            MimeMessage message = createMail(email, vCode);
+            MimeMessage message = createMail(newUser.getUserEmail(), vCode);
             mailSender.send(message);
         } catch(Exception e){
             e.printStackTrace();
@@ -110,21 +110,32 @@ public class UserService {
      * created  : 24-07-09
      * param    :
      * return   :
-     * explain  : 회원가입 2/3 (링크 인증)
+     * explain  : 회원가입 2/2 (링크 인증)
      * */
-    public Optional<NewUser> signUpVerifyLink(String vCode) {
-        return userRepository.findByVerificationCode(vCode);
+    public ResponseEntity<?> signUpVerifyLink(String vCode) {
+
+        // 해당 인증코드를 가진 유저가 있는지 확인한다.
+        Optional<NewUser> newUser = userRepository.findByVerificationCode(vCode);
+        
+        // 해당 인증코드를 가진 유저가 있고, 인증절차를 완료하지 않은 것이 맞다면
+        if(newUser.isPresent() && !newUser.get().getVerified()){
+            // 해당 유저의 인증상태를 확인됨(true)로 변경한다.
+            Integer verified = userRepository.verifyUser(newUser.get());
+            if(verified.equals(1)) {
+                Optional<NewUser> nUser = userRepository.findByVerificationCode(vCode);
+                // 해당 유저가 비밀번호만 입력하여 로그인할 수 있도록 id(이메일)를 보낸다.
+                return ResponseEntity.ok().body(nUser.get().getUserEmail());
+            } else {
+                return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");
+            }
+
+        } else if (newUser.get().getVerified()){
+            // 인증절차를 이미 완료한 회원이라면
+            return ResponseEntity.badRequest().body("인증절차를 이미 완료하셨네요!");
+        } else {
+            // 해당 인증코드를 가진 유저가 없다면
+            return ResponseEntity.badRequest().body("잘못된 인증코드입니다.");
+        }
     }
 
-    /**
-     * created  : 24-07-08
-     * updated  : 24-07-09
-     * param    :
-     * return   :
-     * explain  : 회원가입 3/3 (비밀번호 설정)
-     * */
-    public ResponseEntity<?> signupPw(NewUser newUser){
-        // 해당 email 유저 찾아서
-        return null;
-    }
 }

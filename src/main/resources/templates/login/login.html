@@ -30,20 +30,20 @@
                     <div class="flex-row-between-nowrap mb-20">
                         <div class="">
                             <label th:attr="for='loginId'">
-                                <span class="font-12 bold valid-email-guide c451">아이디<span th:errors="*{loginId}" th:errorclass="c451 bold font-12 valid-email-guide">를 입력해주세요</span></span>
+                                <span class="font-12 bold valid-email-guide c451">아이디<span class="valid-email-guide c451 bold font-12 hide">를 입력해주세요</span></span> <!-- -->
                             </label>
                         </div>
                         <div class="">
                             <button type="button" class="login-find-email font-12 bold">이메일찾기</button>
                         </div>
                     </div>
-                    <input type="text" class="bg-5ec input-login-id" th:field="*{loginId}" placeholder="이메일 주소를 입력하세요" autofocus tabindex="1">
+                    <input type="text" class="bg-5ec input-login-id" th:field="*{loginId}" th:errorclass="valid-email-guide" placeholder="이메일 주소를 입력하세요" autofocus tabindex="1">
                 </div>
                 
                     <!-- 비밀번호 입력 -->
                     <div class="flex-col-justify-center mb-20 signup-step-3">
                     <div class="flex-row-between-nowrap mb-20">
-                        <div class=""><label th:attr="for='loginPw'"><span class="font-12 bold c451 valid-pw-guide">비밀번호<span th:errors="*{loginPw}" th:errorclass="valid-pw-guide cRed bold" >를 입력해주세요.</span></span></label></div>
+                        <div class=""><label th:attr="for='loginPw'"><span class="font-12 bold c451 valid-pw-guide">비밀번호<span th:if="${#fields.hasErrors('loginPw')}" th:errors="*{loginPw}" th:errorclass="valid-pw-guide cRed bold" >를 입력해주세요.</span></span></label></div>
                         <div class=""><button type="button" class="login-find-pw font-12 bold">비밀번호 찾기</button></div>
                     </div>
                     <input type="password" class="bg-5ec input-login-pw mb-7" th:field="*{loginPw}" placeholder="●●●●●●●●" tabindex="2">
