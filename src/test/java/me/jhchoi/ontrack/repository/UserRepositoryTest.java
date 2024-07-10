@@ -107,7 +107,7 @@ public class UserRepositoryTest {
         }
 
         // 이미 인증을 완료한 회원인 경우
-        if(newUser.isPresent() && newUser.get().getVerified() == true){
+        if(newUser.isPresent() && newUser.get().getVerified()){
             ResponseEntity<?> result = ResponseEntity.badRequest().body("이미 인증을 완료했습니다.");
             log.info("이미 인증완료인 경우: {}", result);
             log.info("이미 인증완료인 경우: {}", result.getStatusCode());
@@ -120,7 +120,7 @@ public class UserRepositoryTest {
         }
 
         // 해당 인증코드를 가진 유저가 있고, 인증절차를 완료하지 않은 것이 맞다면
-        if(newUser.isPresent() && newUser.get().getVerified() != true){
+        if(newUser.isPresent() && !newUser.get().getVerified()){
             Integer verified = userRepository.verifyUser(newUser.get());
             log.info("업데이트 됐는가?: {}", verified);
             if(verified.equals(1)) {

@@ -73,7 +73,7 @@ window.onload = function(){
             }
 
             // 허술한 비밀번호(9자 미만 or 연속 3글자)에 대한 경고
-            if(userInputSignUpPw.value != "" && (regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value))){
+            if(userInputSignUpPw.value !== "" && (regPwLetterInRows.test(userInputSignUpPw.value)|| !regPwLetterCount.test(userInputSignUpPw.value))){
                 console.log("dangerous");
                 validPwGuide[0].innerText = "위험"
                 validPwGuide[1].classList.remove("hide");
@@ -121,7 +121,7 @@ window.onload = function(){
                     }
                 });
 
-            } else if (signUpEmail == "" || !regEmail.test(signUpEmail)) {
+            } else if (signUpEmail === "" || !regEmail.test(signUpEmail)) {
                 // 이메일 입력하지 않거나 유효하지 않은 형식으로 입력 했을 때, 
                 document.querySelectorAll(".valid-email-guide").forEach(function(item){
                     item.classList.remove("hide");

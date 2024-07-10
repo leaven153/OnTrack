@@ -118,7 +118,7 @@ public class UserService {
         Optional<NewUser> newUser = userRepository.findByVerificationCode(vCode);
         
         // 해당 인증코드를 가진 유저가 있고, 인증절차를 완료하지 않은 것이 맞다면
-        if(newUser.isPresent() && newUser.get().getVerified() != true){
+        if(newUser.isPresent() && !newUser.get().getVerified()){
             // 해당 유저의 인증상태를 확인됨(true)로 변경한다.
             Integer verified = userRepository.verifyUser(newUser.get());
             if(verified.equals(1)) {
@@ -129,7 +129,7 @@ public class UserService {
                 return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");
             }
 
-        } else if (newUser.get().getVerified() == true){
+        } else if (newUser.get().getVerified()){
             // 인증절차를 이미 완료한 회원이라면
             return ResponseEntity.badRequest().body("인증절차를 이미 완료하셨네요!");
         } else {
