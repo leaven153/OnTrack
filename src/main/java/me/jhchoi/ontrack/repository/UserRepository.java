@@ -55,17 +55,43 @@ public class UserRepository {
         return loginUser;
     }
 
+    /**
+     * created  : 24-05
+     * param    :
+     * return   :
+     * explain  : 회원조회: email로 찾기
+     * */
     public Optional<OnTrackUser> findByEmail(String email){
         return userMapper.findByEmail(email);
     }
 
+
+    /**
+     * created  : 24-07-09
+     * param    :
+     * return   :
+     * explain  : 회원가입절차: 인증코드로 찾기
+     * */
     public Optional<NewUser> findByVerificationCode(String vCode){
         Optional<NewUser> nUser = userMapper.findByVerificationCode(vCode);
-        log.info("vCode를 인코딩 할 필요 없는 거 맞나?: {}", nUser);
+//        log.info("vCode를 인코딩 할 필요 없는 거 맞나?: {}", nUser);
         // vCode를 인코딩 할 필요 없는 거 맞나?:
         // Optional[NewUser(userEmail=users1@abc.com, password=null,
         // userName=null, verificationCode=null, verified=false)]
         return nUser;
     }
+
+
+    /**
+     * created  : 24-07-10
+     * param    :
+     * return   :
+     * explain  : 회원가입절차: 인증완료한 회원의 verified 컬럼 상태 변경(false → true)
+     * */
+    public Integer verifyUser(NewUser newUser){
+        return userMapper.verifyUser(newUser);
+    }
+    
+    
 
 }

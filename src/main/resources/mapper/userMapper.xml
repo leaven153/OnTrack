@@ -8,14 +8,21 @@
     </insert>
 
     <select id="findByEmail" parameterType="String" resultType="OnTrackUser">
-        SELECT id, user_email, user_name, password
+        SELECT id, user_email, user_name, password, verified
         FROM ontrack_user
         WHERE user_email = #{loginId}
     </select>
 
     <select id="findByVerificationCode" parameterType="String" resultType="NewUser">
-        SELECT user_email, user_name, verified
+        SELECT user_email, password, verification_code, user_name, verified
         FROM ontrack_user
         WHERE verification_code = #{vCode}
     </select>
+
+    <update id="verifyUser" parameterType="NewUser">
+        UPDATE ontrack_user
+        SET verified = 1
+        WHERE verification_code = #{verificationCode}
+        AND user_email = #{userEmail}
+    </update>
 </mapper>

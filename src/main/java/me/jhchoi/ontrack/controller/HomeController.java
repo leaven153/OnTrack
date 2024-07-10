@@ -27,17 +27,7 @@ public class HomeController {
         return "signup/signup";
     }
 
-    /**
-     * created  : 24-05-15
-     * param    : OntrackUser,
-     * return   :
-     * explain  : 회원가입
-     * */
-    @PostMapping("/signup")
-    public String signUpSubmit(){
-        log.info("==============submit sign up===================");
-        return null;
-    }
+
 
     /**
      * created  : 24-05-
@@ -45,9 +35,9 @@ public class HomeController {
      * return   :
      * explain  : 로그인 페이지로 이동
      * */
-    @GetMapping("login")
+    @GetMapping("/login")
     public String login(Model model){
         model.addAttribute("loginRequest", new LoginUser());
-        return "login/login";
+        return "/login/login";
     }
 }

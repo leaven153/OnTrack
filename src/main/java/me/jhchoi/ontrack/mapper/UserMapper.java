@@ -17,7 +17,12 @@ public interface UserMapper {
     // 회원 가입 절차: verification code 인증
     Optional<NewUser> findByVerificationCode(String vCode);
 
+    // 회원 가입 절차: 인증메일 확인한 회원 check
+    Integer verifyUser(NewUser newUser);
+
+    // 회원 조회: email
     Optional<OnTrackUser> findByEmail(String email);
+
 
     // 로그인
     

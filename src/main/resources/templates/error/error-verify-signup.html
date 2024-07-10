@@ -14,8 +14,9 @@
 </head>
 <body>
     <div class="mt-60 signup-no-vcode">
-        <h1 class="signup-no-need mb-10">이미 인증을 마친 회원입니다.</h1>
-        <a href="http://localhost:8080/login">로그인하러가기</a>
+        <h1 class="signup-no-vcode mb-10" th:text="${errorMsg}">해당 링크는 존재하지 않습니다.</h1>
+        <a href="http://localhost:8080">홈으로</a>
+        <a href="http://localhost:8080/login">로그인 하러 가기</a>
     </div>
 </body>
 </html>

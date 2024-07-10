@@ -20,22 +20,22 @@
             </div>
             <div class="회원가입box flex-col-start-center-nowrap modal-signup">
                 <span class="font-30 extrabold mb-3">회원가입</span>
-                <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">1</span> of 4</span>
-                <!-- step 1. 이메일 입력 -->
-                <div class="flex-col-start-nowrap mb-20 signup-step-1"> <!--/*flex-col-justify-center*/-->
-                    <label for="userEmail" class="font-12 bold mb-20 valid-email-guide">이메일<span class="valid-email-guide cRed bold hide">이 유효하지 않습니다.</span></label>
-                    <input type="text" id="userEmail" name="userEmail" class="bg-5ec input-signup-email" placeholder="이메일 주소를 입력하세요">
+                <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">1</span> of 2</span>
+                <!-- step 1. 이메일, 비밀번호 입력 -->
+                <div class="flex-col-justify-center">
+                <div class="flex-col-start-nowrap mb-30 signup-step-1"> <!--/*flex-col-justify-center*/-->
+                    <label for="userEmail" class="valid-email-guide signup-step-1">이메일<span class="valid-email-guide cRed bold hide">이 유효하지 않습니다.</span></label>
+                    <input type="text" id="userEmail" name="userEmail" class="signup-email " placeholder="이메일 주소를 입력하세요">
                 </div>
-                <div class="flex-col-start-nowrap mb-30 signup-step-3"> <!--/*signup-step-3*/-->
-                    <input type="hidden" name="newUserEmail" th:value="${newUser.getUserEmail()}">
-                    <label for="signup-password" class="signup-step-3 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
-                    <div class="signup-step-3 container-pw">
-                        <input type="password" id="signup-password" name="signup-password" class="bg-5ec signup-step-3" placeholder="●●●●●●●●●" required><!--/*input-signup*/-->
+                <div class="flex-col-start-nowrap mb-30 signup-step-1"> <!--/*signup-step-3*/-->
+                    <label for="signup-password" class="signup-step-1 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
+                    <div class=" container-pw">
+                        <input type="password" id="signup-password" name="signup-password" class="bg-5ec signup-password" placeholder="●●●●●●●●●" required><!--/*input-signup*/-->
                         <span class="valid-pw-guide font-12 bold cRed"></span>
                     </div>
-                    <span class="font-12 bold valid-pw-guide hide">9자 미만이거나 연속된 3글자는 위험합니다.</span><!--/*8~16자의 영문대/소문자, 숫자, 특수문자를 사용해주세요*/-->
+                    <span class="font-12 bold valid-pw-guide hide">9자 미만이거나 연속된 3글자는 위험합니다.</span>
                 </div>
-
+                </div>
                 <!-- step 1. 계속 버튼 -->
                 <button type="button" class="btn-signup-continue mt-14">계속</button>
 

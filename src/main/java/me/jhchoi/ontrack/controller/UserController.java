@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -35,9 +34,9 @@ public class UserController {
      * explain  : 회원가입 절차 1/3(인증코드 생성 후, 메일 전송)
      * */
     @PostMapping("/signup/step1")
-    public ResponseEntity<?> signupSendMail(@RequestBody String email){
-        log.info("회원가입 신청(email): {}", email);
-        return userService.sendVerificationMail(email);
+    public ResponseEntity<?> signupSendMail(@RequestBody NewUser newUser){
+        log.info("회원가입 신청(email): {}", newUser);
+        return userService.sendVerificationMail(newUser);
 //        return null;
     }
 
@@ -45,7 +44,7 @@ public class UserController {
      * created  : 24-07-08
      * param    :
      * return   :
-     * explain  : 회원가입 절차 2/3(인증링크)
+     * explain  : 회원가입 절차 2/2(인증링크)
      * */
     @GetMapping("/signup/step2")
     public String signUpLinkVerify(@RequestParam(required = false) String vCode, Model model){
@@ -54,42 +53,30 @@ public class UserController {
 
         // vCode 없이 url 접근 시 에러페이지로 이동
         if(vCode == null) {
-            return "/error/novcode";
+            model.addAttribute("errorMsg", "잘못된 코드입니다.");
+            return "/error/error-verify-signup";
         }
 
-        // 해당 인증코드를 가진 유저가 없다면 에러 페이지로 이동
-        Optional<NewUser> nUser = userService.signUpVerifyLink(vCode);
-        if(nUser.isEmpty()){
-            return "/error/novcode";
+        ResponseEntity<?> result = userService.signUpVerifyLink(vCode);
+        log.info("ResponseEntity확인: {}", result);
+        log.info("ResponseEntity 안의 객체는 어떻게 접근?: {}", result.getBody());
+        // ResponseEntity 안의 객체는 어떻게 접근?:
+        // NewUser(userEmail=users1@abc.com,
+        // password=$2a$10$5OiektMZnzXs6oei6SRwGewTaWcsm2Rgh9CTb2pxOKmY5ZpEubZGW,
+        // userName=메리 포핀스, verificationCode=881ac812-8fa4-48af-b9a0-60dafb77a9c5, verified=true)
+
+        // 해당 인증코드를 가진 유저가 없거나 이미 인증을 마친 유저라면 에러 페이지로 이동
+        if(result.getStatusCode().is4xxClientError() || result.getStatusCode().is5xxServerError()){
+            model.addAttribute("errorMsg", result.getBody());
+            return "/error/error-verify-signup";
         }
 
-        // 이미 verified 되어 있다면 에러 페이지로 이동(login페이지 링크된 에러 페이지)
-        if(!nUser.get().getVerified()){
-            return "/error/alreadyverified";
-        }
 
-        model.addAttribute("newUser", nUser);
+        model.addAttribute("newUser", LoginUser.builder().loginId((String) result.getBody()).build());
 
         return "/signup/signup_step3";
     }
 
-    /**
-     * created  : 24-07-09
-     * param    :
-     * return   :
-     * explain  : 회원가입 절차 3/3(비밀번호  입력)
-     * */
-    @PostMapping("/signup/step3")
-    public String signUpPw(@RequestBody NewUser newUser){
-        
-        log.info("가입 절차 마지막 단계: {}", newUser);
-
-        // 비밀번호 암호화하여 DB에 저장한 후,
-
-        // userEmail과 loginPw를 LoginUser객체에 담아 model에 add 후, login으로 넘긴다.
-
-        return "redirect:/login";
-    }
     
     /**
      * created  : 24-05
@@ -98,27 +85,23 @@ public class UserController {
      * explain  : 로그인 실행
      * */
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginUser loginRequest, BindingResult bindingResult, HttpServletRequest request, Model model){
+    public String login(@ModelAttribute LoginUser loginRequest, HttpServletRequest request){
         log.info("로그인 입력정보: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
-        if(loginRequest == null) {
-            model.addAttribute("loginRequest", LoginUser.builder().build());
-            return "/login/login";
-        }
-        if(Objects.equals(loginRequest.getLoginId(), "") || loginRequest.getLoginId() == null) {
-            log.info("id 입력 안했을 때 if 들어옴");
-            bindingResult.rejectValue("loginId", "required", "error입니다");
+        if(loginRequest.getLoginId().isEmpty() || loginRequest.getLoginPw().isEmpty()) {
+//            model.addAttribute("loginRequest", LoginUser.builder().build());
+//            return "/login/login";
+            return "redirect:/login";
         }
 
-        if(bindingResult.hasErrors()) {
-            log.info("error={}", bindingResult);
-            model.addAttribute("loginRequest", LoginUser.builder().build());
-            return "login/login";
-        }
+
+
         LoginUser loginUser = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
+        // 해당 유저의 비번이 매칭되지 않았을 때
         if(loginUser == null) {
-            model.addAttribute("loginRequest", LoginUser.builder().build());
-            return "login/login";
+            return "redirect:/login";
+//            model.addAttribute("loginRequest", LoginUser.builder().build());
+//            return "login/login";
         }
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", loginUser);
