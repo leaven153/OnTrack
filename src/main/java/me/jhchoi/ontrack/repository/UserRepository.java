@@ -29,31 +29,7 @@ public class UserRepository {
         return user;
     }
 
-    /**
-     * created  : 24-05
-     * param    :
-     * return   :
-     * explain  : 로그인
-     * */
-    public LoginUser login(String loginId, String loginPw){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        log.info("repository login 실행: id={}, pw={}", loginId, loginPw);
-        Optional<OnTrackUser> user = findByEmail(loginId);
 
-        LoginUser loginUser = LoginUser.builder()
-                .userId(user.get().getId())
-                .loginId(user.get().getUserEmail())
-                .loginPw(user.get().getPassword())
-                .userName(user.get().getUserName())
-                .build();
-
-        log.info("findByLoginId결과: {}", loginUser);
-        log.info("result의 비번매칭: {}", encoder.matches(loginPw, loginUser.getLoginPw()));
-        if(!encoder.matches(loginPw, loginUser.getLoginPw())) {
-            return null;
-        }
-        return loginUser;
-    }
 
     /**
      * created  : 24-05

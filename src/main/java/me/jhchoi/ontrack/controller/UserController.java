@@ -95,7 +95,6 @@ public class UserController {
         }
 
 
-
         ResponseEntity<?> result = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
         // 해당 유저의 비번이 매칭되지 않았을 때
         if(result.getStatusCode().is4xxClientError()) {

@@ -142,14 +142,16 @@ public class UserService {
             // 해당 유저의 인증상태를 확인됨(true)로 변경한다.
             Integer verified = userRepository.verifyUser(newUser.get());
             if(verified.equals(1)) {
-                Optional<NewUser> nUser = userRepository.findByVerificationCode(vCode);
+                // verified가 true로 업데이트 된 후의 user객체 값 다시 받아온다.
+                // if문을 다시 쓰는 것보다 Optional.of(.orElseThrow())를 사용해본다..
+                Optional<NewUser> nUser = Optional.of(userRepository.findByVerificationCode(vCode).orElseThrow());
                 // 해당 유저가 비밀번호만 입력하여 로그인할 수 있도록 id(이메일)를 보낸다.
-                return ResponseEntity.ok().body(Optional.ofNullable(nUser.get().getUserEmail()));
+                return ResponseEntity.ok().body(nUser.get().getUserEmail());
             } else {
                 return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");
             }
 
-        } else if (Optional.ofNullable(newUser.get().getVerified()).equals(true)){
+        } else if (newUser.isPresent() && newUser.get().getVerified()){
             // 인증절차를 이미 완료한 회원이라면
             return ResponseEntity.badRequest().body("인증절차를 이미 완료하셨네요!");
         } else {
