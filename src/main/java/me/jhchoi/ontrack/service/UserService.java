@@ -31,11 +31,31 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JavaMailSender mailSender; // application.properties에 내용 있어야 오류가 안생긴다!
 
-    public LoginUser login(String loginId, String loginPw){
+    /**
+     * created  : 24-05-
+     * param    :
+     * return   :
+     * explain  : 로그인
+     * */
+    public ResponseEntity<?> login(String loginId, String loginPw){
         log.info("service 진입: id={}, pw={}", loginId, loginPw);
-        return userRepository.login(loginId, loginPw);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        Optional<OnTrackUser> user = userRepository.findByEmail(loginId);
+
+        // matches는 rawcode가 앞에 와야 한다.
+        if(user.isPresent() && encoder.matches(loginPw, user.get().getPassword())){
+            LoginUser loginUser = LoginUser.builder()
+                    .userId(user.get().getId())
+                    .loginId(user.get().getUserEmail())
+                    .userName(user.get().getUserName())
+                    .build();
+            return ResponseEntity.ok().body(loginUser);
+        }
+
+        return ResponseEntity.badRequest().body("로그인에 실패했습니다.");
     }
 
+    
     /**
      * created  : 24-07-08
      * param    :

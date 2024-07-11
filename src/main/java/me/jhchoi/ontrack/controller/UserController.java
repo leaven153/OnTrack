@@ -96,15 +96,15 @@ public class UserController {
 
 
 
-        LoginUser loginUser = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
+        ResponseEntity<?> result = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
         // 해당 유저의 비번이 매칭되지 않았을 때
-        if(loginUser == null) {
+        if(result.getStatusCode().is4xxClientError()) {
             return "redirect:/login";
 //            model.addAttribute("loginRequest", LoginUser.builder().build());
 //            return "login/login";
         }
         HttpSession session = request.getSession();
-        session.setAttribute("loginUser", loginUser);
+        session.setAttribute("loginUser", result.getBody());
         log.info("session 생성: {}", session.getAttribute("loginUser"));
         return "redirect:/mypage/myProjects";
     }
