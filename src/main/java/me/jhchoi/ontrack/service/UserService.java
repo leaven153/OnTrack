@@ -149,7 +149,7 @@ public class UserService {
                 return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");
             }
 
-        } else if (newUser.get().getVerified()){
+        } else if (Optional.ofNullable(newUser.get().getVerified()).equals(true)){
             // 인증절차를 이미 완료한 회원이라면
             return ResponseEntity.badRequest().body("인증절차를 이미 완료하셨네요!");
         } else {
