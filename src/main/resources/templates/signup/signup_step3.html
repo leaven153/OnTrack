@@ -24,16 +24,17 @@
 <!--                <span class="altivo-regular ls-clear font-20 mb-30">step <span class="altivo-regular ls-clear font-20 mb-30 signup-step-num">3</span> of 4</span>-->
 
                 <!-- step 3. 비밀번호 입력하여 로그인 -->
-                <form action="/login" th:action th:object="${newUser}">
+                <form action="/login" th:action="@{/login}" th:object="${newUser}" method="POST">
                 <div class="flex-col-start-nowrap mb-30 signup-step-3"> <!--/*signup-step-3*/-->
-                    <input type="hidden" name="newUserEmail" th:field="*{loginId}" th:value="${newUser.getUserEmail()}"><!--th:value="${newUser.getUserEmail()}"-->
-                    <label for="first-login-password" class="font-12 bold mb-15 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
-                    <input type="password" id="first-login-password"  th:field="*{loginPw}" name="first-login-password" class="bg-5ec input-login-pw" placeholder="●●●●●●●●●"><!--/*input-signup*/-->
+                    <input type="hidden" id="first-login-id" th:field="*{loginId}" th:value="${newUser.getLoginId()}"><!--th:value="${newUser.getUserEmail()}"-->
+                    <label for="first-login-pw" class="font-12 bold mb-15 valid-pw-required">비밀번호<span class="valid-pw-required cRed bold hide">를 입력해주시기 바랍니다.</span></label>
+                    <input type="password" id="first-login-pw" th:field="*{loginPw}" name="first-login-password" class="bg-5ec input-login-pw" placeholder="●●●●●●●●●"><!--/*input-signup*/-->
 
                 </div>
 
                 <!-- step 3. 로그인 버튼 -->
                 <button type="submit" class="btn-signup-complete mt-14">로그인</button>
+<!--                    <button type="submit" class="toLogin hide"></button>-->
                 </form>
                 <div class="mt-30 mb-7">
                     <div class="status-sign not-yet"></div>

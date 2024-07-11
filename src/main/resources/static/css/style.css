@@ -2576,6 +2576,13 @@ div.container-pw {
 div[class*=signup-no] {
     text-align: center;
 }
+
+div.login-nomatch{
+    width: 250px;
+    text-align: center;
+    padding: 0 25px;
+    margin-bottom: 20px;
+}
 /******** Modal: 프로젝트 內 개인별명 설정 ********/
 
 .project-name-ellipsis {

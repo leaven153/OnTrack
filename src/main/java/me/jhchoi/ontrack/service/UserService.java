@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -52,7 +53,7 @@ public class UserService {
             return ResponseEntity.ok().body(loginUser);
         }
 
-        return ResponseEntity.badRequest().body("로그인에 실패했습니다.");
+        return ResponseEntity.badRequest().body("아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요. ");
     }
 
     
@@ -132,6 +133,7 @@ public class UserService {
      * return   :
      * explain  : 회원가입 2/2 (링크 인증)
      * */
+    @Transactional
     public ResponseEntity<?> signUpVerifyLink(String vCode) {
 
         // 해당 인증코드를 가진 유저가 있는지 확인한다.
@@ -145,7 +147,11 @@ public class UserService {
                 // verified가 true로 업데이트 된 후의 user객체 값 다시 받아온다.
                 // if문을 다시 쓰는 것보다 Optional.of(.orElseThrow())를 사용해본다..
                 Optional<NewUser> nUser = Optional.of(userRepository.findByVerificationCode(vCode).orElseThrow());
-                // 해당 유저가 비밀번호만 입력하여 로그인할 수 있도록 id(이메일)를 보낸다.
+//                LoginUser loginUser = LoginUser.builder()
+//                        .loginId(nUser.get().getUserEmail())
+//                        .loginPw(nUser.get().getPassword())
+//                        .build();
+                // 해당 유저에게 로그인 된 화면으로 바로 넘어갈 수 있도록 한다.
                 return ResponseEntity.ok().body(nUser.get().getUserEmail());
             } else {
                 return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");

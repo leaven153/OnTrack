@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -26,6 +28,19 @@ public class UserController {
 
     private final UserService userService;
     private final ProjectService projectService;
+
+    /**
+     * created  : 24-05
+     * param    : void
+     * return   : 회원 가입 페이지
+     * explain  : 첫 화면에서 회원가입페이지로 이동
+     * */
+    @GetMapping("/signup")
+    public String signUp(){
+        log.info("================go to sign up===================");
+//        model.addAttribute("addUser", new NewUser());
+        return "signup/signup";
+    }
 
     /**
      * created  : 24-07-08
@@ -46,7 +61,7 @@ public class UserController {
      * return   :
      * explain  : 회원가입 절차 2/2(인증링크)
      * */
-    @GetMapping("/signup/step2")
+    @GetMapping("/signup/step2") // RedirectAttributes redirectAttributes
     public String signUpLinkVerify(@RequestParam(required = false) String vCode, Model model){
         // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5 (메리포핀스: users1@abc.com, id=38)
         log.info("인증 링크 통해 들어옴!: {}", vCode);
@@ -55,6 +70,8 @@ public class UserController {
         if(vCode == null) {
             model.addAttribute("errorMsg", "잘못된 코드입니다.");
             return "/error/error-verify-signup";
+//            redirectAttributes.addFlashAttribute("errorMsg", "잘못된 코드입니다.");
+//            return new RedirectView("/error/error-verify-signup");
         }
 
         ResponseEntity<?> result = userService.signUpVerifyLink(vCode);
@@ -67,16 +84,36 @@ public class UserController {
 
         // 해당 인증코드를 가진 유저가 없거나 이미 인증을 마친 유저라면 에러 페이지로 이동
         if(result.getStatusCode().is4xxClientError() || result.getStatusCode().is5xxServerError()){
+            log.info("해당 인증코드를 가진 유저가 없거나 이미 인증을 마친 유저의 에러페이지로 이동필요: {}", result.getBody());
+//            redirectAttributes.addFlashAttribute("errorMsg", result.getBody());
+//            return new RedirectView("/error/error-verify-signup");
             model.addAttribute("errorMsg", result.getBody());
             return "/error/error-verify-signup";
         }
 
 
         model.addAttribute("newUser", LoginUser.builder().loginId((String) result.getBody()).build());
+        return "signup/signup_step3";
 
-        return "/signup/signup_step3";
+        // redirectView는 Get으로만 Mapping 된다...
+//        redirectAttributes.addFlashAttribute("loginRequest", result.getBody());
+//        return new RedirectView("/login"); // /mypage/myProjects
     }
 
+
+
+    /**
+     * created  : 24-05-
+     * param    :
+     * return   :
+     * explain  : 로그인 페이지로 이동
+     * */
+    @GetMapping("/login")
+    public String loginForm(Model model){
+        log.info("로그인폼요청");
+        model.addAttribute("loginRequest", new LoginUser());
+        return "/login/login";
+    }
     
     /**
      * created  : 24-05
@@ -85,27 +122,25 @@ public class UserController {
      * explain  : 로그인 실행
      * */
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginUser loginRequest, HttpServletRequest request){
+    public RedirectView login(@ModelAttribute LoginUser loginRequest, HttpServletRequest request, RedirectAttributes redirectAttributes){
         log.info("로그인 입력정보: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
-        if(loginRequest.getLoginId().isEmpty() || loginRequest.getLoginPw().isEmpty()) {
-//            model.addAttribute("loginRequest", LoginUser.builder().build());
-//            return "/login/login";
-            return "redirect:/login";
-        }
-
+        // 이렇게 유효성 검사를 해도 됐겠네?!
+//        if(loginRequest.getLoginId().isEmpty() || loginRequest.getLoginPw().isEmpty()) {
+//            return "redirect:/login";
+//        }
 
         ResponseEntity<?> result = userService.login(loginRequest.getLoginId(), loginRequest.getLoginPw());
         // 해당 유저의 비번이 매칭되지 않았을 때
         if(result.getStatusCode().is4xxClientError()) {
-            return "redirect:/login";
-//            model.addAttribute("loginRequest", LoginUser.builder().build());
-//            return "login/login";
+            redirectAttributes.addFlashAttribute("noMatch", result.getBody());
+            return new RedirectView("/login");
         }
+
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", result.getBody());
         log.info("session 생성: {}", session.getAttribute("loginUser"));
-        return "redirect:/mypage/myProjects";
+        return new RedirectView("/mypage/myProjects");
     }
 
     /**
