@@ -144,7 +144,7 @@ public class UserService {
             if(verified.equals(1)) {
                 Optional<NewUser> nUser = userRepository.findByVerificationCode(vCode);
                 // 해당 유저가 비밀번호만 입력하여 로그인할 수 있도록 id(이메일)를 보낸다.
-                return ResponseEntity.ok().body(nUser.get().getUserEmail());
+                return ResponseEntity.ok().body(Optional.ofNullable(nUser.get().getUserEmail()));
             } else {
                 return ResponseEntity.internalServerError().body("인증절차가 완료되지 않았습니다. 다시 시도해주시기 바랍니다.");
             }
