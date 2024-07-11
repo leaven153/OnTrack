@@ -105,16 +105,16 @@ public class UserService {
         helper.addTo(email);
         helper.setSubject("[OnTrack] 회원 가입을 위한 인증코드입니다.");
         String mailDisplay = """
-                <div style='margin-bottom:0; width: 600px; text-align: right'>
+                <div style='margin-bottom:0; width:400px; text-align:right'>
                 <span style='font-size:24px;font-color:#533e47; font-weight: 600'>On Track</span>
                 </div>
-                <div style='border:5px solid #533e47; border-radius:40px; width:600px; background-color:#fff5ec; padding:30px 20px 10px 10px; text-align:center'>
-                <h2 style='margin-bottom: 3px'>You're on Track! ;)</h2>
-                <h4 style='margin-top: 2px'>Step 2/4</h4>
-                <p>아래 링크를 클릭하여 가입을 완료하고<br/>
-                On Track의 서비스를 바로 이용하세요 ;D</p>
+                <div style='border:5px solid #533e47; border-radius:40px; width:400px; background-color:#fff5ec; padding:30px 20px 10px 10px; text-align:center'>
+                <h2 style='margin-bottom:3px'>You're on Track! ;)</h2>
+                <h4 style='margin-top:2px; margin-bottom:10px'>Step 2/2</h4>
+                <p style='margin-bottom:20px;'>아래 링크를 클릭하여 가입을 완료하고<br/>
+                On Track의 서비스를 이용해보세요 ;D</p>
                 <a href='http://localhost:8080/signup/step2?vCode=%s' style='text-decoration: none'>
-                <p style='display:inline-block; width:200px; padding:10px; background-color: #533e47;color:#fff5ec;text-align:center; border-radius:5px; font-weight:600'>
+                <p style='display:inline-block; width:200px; padding:10px; background-color: #533e47;color:#fff5ec;text-align:center; border-radius:5px; font-weight:600; margin-bottom: 20px'>
                 가입완료 하러가기
                 </p></a>
                 </div>

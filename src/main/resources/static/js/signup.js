@@ -63,6 +63,8 @@ window.onload = function(){
         document.querySelector(".btn-signup-continue").addEventListener("click", ()=>{
 
             const signUpEmail= userInputSignupEmail.value;
+            const sendMailStatus = document.querySelector(".send-mail-status");
+            const chkMailMsg = document.querySelector(".send-mail-complete");
 
             // 비밀번호 입력 안 했을 경우, 경고 (이메일을 입력하지 않았을 경우는 '유효하지 않은 이메일 형식'으로 취급한다.)
             if(userInputSignUpPw.value === ""){
@@ -92,6 +94,12 @@ window.onload = function(){
                     item.classList.add("hide");
                 });
 
+                signUpStep2.forEach(function(item){
+                    item.classList.remove("hide");
+                });
+                sendMailStatus.innerText = "중입니다.";
+
+
                 document.querySelector("span.signup-email").innerText = signUpEmail;
                 document.querySelector(".signup-step-num").innerText = "2";
 
@@ -105,12 +113,8 @@ window.onload = function(){
                     body: JSON.stringify(newUser)
                 }).then(response => {
                     if(response.ok){
-                        signUpStep2.forEach(function(item){
-                            item.classList.remove("hide");
-                            if(item.tagName === "INPUT") {
-                                item.value = "";
-                            }
-                        });
+                        sendMailStatus.innerText = "되었습니다.";
+                        chkMailMsg.classList.remove("hide");
                     } else { // 이미 가입된 이메일일 경우(중복된 이메일)
                         const data = response.text();
                         data.then(value => {
