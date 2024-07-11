@@ -61,7 +61,7 @@ public class UserController {
      * return   :
      * explain  : 회원가입 절차 2/2(인증링크)
      * */
-    @GetMapping("/signup/step2") // RedirectAttributes redirectAttributes
+    @GetMapping("/signup/step2")
     public String signUpLinkVerify(@RequestParam(required = false) String vCode, Model model){
         // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5 (메리포핀스: users1@abc.com, id=38)
         log.info("인증 링크 통해 들어옴!: {}", vCode);

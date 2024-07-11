@@ -10,6 +10,7 @@ import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -29,6 +30,7 @@ public class ProjectService {
      * return   : void
      * explain  : 새 프로젝트 등록, 해당 프로젝트의 생성자(ProjectMember 테이블)로 등록
      * */
+    @Transactional
     public void createProject(OnTrackProject newProj, ProjectMember creator){
         log.info("===============project 생성 service 접근===============");
         projectRepository.save(newProj);

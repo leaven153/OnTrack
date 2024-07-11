@@ -116,12 +116,12 @@ public class ProjectController {
      * modelAttribute어노테이션을 이용해 프로젝트 멤버를 항상 붙일 수 있을 듯? →
      * */
     @PostMapping("/createProject")
-    public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, BindingResult bindingResult, HttpSession session){
+    public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, HttpSession session){
         log.info("======= 새 프로젝트 등록 =========");
         log.info("프로젝트 폼: {}", newProjectRequest);
         LoginUser user = (LoginUser) session.getAttribute("loginUser");
         newProjectRequest.setCreator(user.getUserId());
-        ProjectMember newCreator = AddProjectRequest.creator(user.getUserName());
+        ProjectMember newCreator = AddProjectRequest.creator(user.getUserId(), user.getUserName());
         projectService.createProject(newProjectRequest.toProjectEntity(), newCreator);
         log.info("프로젝트 엔티티생성확인: {}", newProjectRequest.toProjectEntity());
         log.info("멤버 엔티티생성확인: {}", newCreator);

@@ -149,17 +149,6 @@ window.onload = function(){
 
     /*---- ▲  회원가입 정보 유효성 검사 끝 ▲ ----*/
 
-    // 인증 완료 후 로그인
-    if(elExists(document.querySelector(".btn-signup-complete"))){
-        const btnFirstLogin = document.querySelector(".btn-signup-complete");
-        const firstLoginId = document.querySelector("input#first-login-id");
-        const inputFirstLoginPw = document.querySelector("input#first-login-pw");
-        btnFirstLogin.addEventListener("click", ()=>{
-            console.log(`그냥 버튼은 submit과 다른 거 맞지용?`);
-            console.log(`firstLoginId: ${firstLoginId.value}`);
-            console.log(inputFirstLoginPw.value);
-        });
-    }
 } // window.onload = function(){} 끝
 
 /*---- ▼  시작 ▼ ----*/

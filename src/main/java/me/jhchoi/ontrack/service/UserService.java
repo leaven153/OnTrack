@@ -63,6 +63,7 @@ public class UserService {
      * return   :
      * explain  : 회원가입 1/2 (인증 이메일 발송)
      * */
+    @Transactional
     public ResponseEntity<?> sendVerificationMail(NewUser newUser) {
 
         // 중복된 이메일인지 확인

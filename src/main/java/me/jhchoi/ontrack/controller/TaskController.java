@@ -32,11 +32,10 @@ public class TaskController {
 
 
     @PostMapping("/addTask")
-    public String addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
-//            return new RedirectView("login/login");
             return "redirect:/login/login";
         }
         log.info("=============from 할일추가 form==================");
@@ -51,24 +50,12 @@ public class TaskController {
         if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(2);
         taskService.addTask(taskFormRequest);
 
-//        String encodedName = URLEncoder.encode(taskFormRequest.getAuthorName(), StandardCharsets.UTF_8);
         log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
         String url = """
                 redirect:/project/%s
                 """.formatted(taskFormRequest.getProjectId());
         return url;
-//        redirectAttributes.addAttribute("projectId", taskFormRequest.getProjectId());
-//        redirectAttributes.addAttribute("memberId", taskFormRequest.getTaskAuthorMid());
-//        redirectAttributes.addAttribute("nickname", taskFormRequest.getAuthorName());
-//        redirectAttributes.addAttribute("position", member.getPosition());
-
-
-//        return new RedirectView("/project/{taskFormRequest.getProjectId()}"); // /{projectId}/{memberId}/{nickname}/{position}
-//        return "redirect:/task/test";
-//        return """
-//                redirect:/project/%s/%s/%s
-//                """.formatted(taskFormRequest.getProjectId(), taskFormRequest.getTaskAuthorMid(), encodedName);
     }
 
     // 할 일 상세 fragment만 rendering

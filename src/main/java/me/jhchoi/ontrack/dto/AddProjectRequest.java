@@ -47,8 +47,9 @@ public class AddProjectRequest {
                 .build();
     }
 
-    public static ProjectMember creator(String userName){
+    public static ProjectMember creator(Long userId, String userName){
         return ProjectMember.builder()
+                .userId(userId)
                 .nickname(userName)
                 .position("creator")
                 .capacity("PD")
