@@ -9,7 +9,7 @@
   <title>on track - login</title>
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}">
-<!--  <script src="../../static/js/login.js" th:src="@{js/login.js}"></script>-->
+  <script src="../../static/js/login.js" th:src="@{js/login.js}"></script>
   <!-- <script src="../../static/js/main.js"></script> -->
  </head>
  <body>
@@ -21,37 +21,40 @@
             <div class="로그인box flex-col-start-center-nowrap modal-login">
 
                 <span class="font-30 extrabold mb-60">로그인</span>
-                <form action="/login" th:action th:object="${loginRequest}" method="POST">
-<!--                    <div th:if="${#fields.hasGlobalErrors()}">-->
-<!--                        <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>-->
-<!--                    </div>-->
+                <form action="/login" th:action="@{/login}" th:object="${loginRequest}" method="POST">
                     <!-- 이메일 입력 -->
                     <div class="flex-col-justify-center mb-20 signup-step-1">
-                    <div class="flex-row-between-nowrap mb-20">
-                        <div class="">
+                        <div class="flex-row-between-nowrap mb-20">
+                            <div class="">
                             <label th:attr="for='loginId'">
-                                <span class="font-12 bold valid-email-guide c451">아이디<span class="valid-email-guide c451 bold font-12 hide">를 입력해주세요</span></span> <!-- -->
+                                <span class="font-12 bold valid-email-guide c451">이메일</span><span class="valid-email-guide c451 bold font-12 hide">의 형식이 유효하지 않습니다.</span> <!-- -->
                             </label>
                         </div>
-                        <div class="">
+                            <div class="">
                             <button type="button" class="login-find-email font-12 bold">이메일찾기</button>
                         </div>
+                        </div>
+                        <input type="text" class="bg-5ec input-login-id" th:field="*{loginId}" placeholder="이메일 주소를 입력하세요" autofocus tabindex="1">
                     </div>
-                    <input type="text" class="bg-5ec input-login-id" th:field="*{loginId}" th:errorclass="valid-email-guide" placeholder="이메일 주소를 입력하세요" autofocus tabindex="1">
-                </div>
                 
                     <!-- 비밀번호 입력 -->
-                    <div class="flex-col-justify-center mb-20 signup-step-3">
-                    <div class="flex-row-between-nowrap mb-20">
-                        <div class=""><label th:attr="for='loginPw'"><span class="font-12 bold c451 valid-pw-guide">비밀번호<span th:if="${#fields.hasErrors('loginPw')}" th:errors="*{loginPw}" th:errorclass="valid-pw-guide cRed bold" >를 입력해주세요.</span></span></label></div>
-                        <div class=""><button type="button" class="login-find-pw font-12 bold">비밀번호 찾기</button></div>
+                    <div class="flex-col-justify-center mb-20">
+                        <div class="flex-row-between-nowrap mb-20">
+                            <div class=""><label th:attr="for='loginPw'"><span class="font-12 bold c451 valid-pw-guide">비밀번호<span class="valid-pw-guide cRed bold hide" >를 입력해주세요.</span></span></label></div>
+                            <div class=""><button type="button" class="login-find-pw font-12 bold">비밀번호 찾기</button></div>
+                        </div>
+                        <input type="password" class="bg-5ec input-login-pw mb-7" th:field="*{loginPw}" placeholder="●●●●●●●●" tabindex="2">
                     </div>
-                    <input type="password" class="bg-5ec input-login-pw mb-7" th:field="*{loginPw}" placeholder="●●●●●●●●" tabindex="2">
-                </div>
-                    <button type="submit" class="btn-login-submit mt-14" tabindex="3">로그인</button>
+                    <div class="login-nomatch" th:if="${noMatch}">
+                        <span class="font-13 cRed bold" >아이디 또는 비밀번호가 잘못 되었습니다.<br/> 아이디와 비밀번호를 정확히 입력해 주세요. </span>
+                    </div>
+                    <button type="button" class="btn-login-submit mt-14" tabindex="3">로그인</button>
+                    <button type="submit" class="toLogin hide"></button>
                 </form>
 
+
                 <!--/* OAuth */-->
+                <div class="hide">
                 <div class="mb-10 ">
                     <span class="mid-line bold font-14">간편 로그인</span>
                 </div>
@@ -69,9 +72,11 @@
                             <span class="altivo-regular ls-5 ml-7">NAVER</span>
                         </a>
                     </div>
-                </div><!-- step 1. OAuth 끝 -->
+                </div>
+                </div>
+                <!-- step 1. OAuth 끝 -->
 
-                <div class="mt-60 mb-7">
+                <div class="mt-20 mb-7">
                     <div class="status-sign not-yet"></div>
                     <div class="status-sign planning"></div>
                     <div class="status-sign ing"></div>

@@ -3,8 +3,8 @@
         "http://mybatis.org/schema/mybatis-3-mapper.dtd">
 <mapper namespace="me.jhchoi.ontrack.mapper.UserMapper">
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ontrack_user(user_email, user_name, password, registeredAt)
-        VALUES (#{userEmail}, #{userName}, #{password}, #{registeredAt})
+        INSERT INTO ontrack_user(user_email, user_name, password, registeredAt, verification_code, verified)
+        VALUES (#{userEmail}, #{userName}, #{password}, #{registeredAt}, #{verificationCode}, #{verified})
     </insert>
 
     <select id="findByEmail" parameterType="String" resultType="OnTrackUser">

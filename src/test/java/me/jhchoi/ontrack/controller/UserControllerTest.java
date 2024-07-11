@@ -56,7 +56,7 @@ class UserControllerTest {
         final ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
 
         // then
-        result.andExpect(status().isOk());
+        result.andExpect(status().is3xxRedirection());
 
     }
 }

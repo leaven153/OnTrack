@@ -15,41 +15,66 @@ window.onload = function(){
     /*---- 1. 이메일 유효성 ----*/
     if(elExists(document.querySelector("input.input-login-id")) && elExists(document.querySelector(".btn-login-submit")) && elExists(document.querySelector("input.input-login-pw"))){
         // console.log("connected");
+        const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
         const userInputLoginEmail = document.querySelector("input.input-login-id");
         const userInputLoginPw = document.querySelector("input.input-login-pw");
         userInputLoginEmail.value="";
         userInputLoginEmail.focus();
 
-        // 이메일 주소 입력 후 (입력하지 않고 눌러도)
-        // '계속' 버튼 클릭했을 때(유효성 검사)
+        // 이메일 주소 입력 후 (혹은 아무 것도 입력하지 않고 로그인을 클릭했을 경우에도)
+        // '로그인' 버튼 클릭했을 때(유효성 검사)
         document.querySelector(".btn-login-submit").addEventListener("click", (e)=>{
             e.preventDefault();
-            
-            console.log("login test");
-            const loginEmail= userInputLoginEmail.value;
-            const regEmail = /^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/;
-            if(regEmail.test(loginEmail) && userInputLoginPw != null){
-                // 컨트롤러에 LoginRequest 객체 전달
-                console.log("id와 pw모두 정상");
-                console.log(`id: ${loginEmail}`);
-                console.log(`pw: ${userInputLoginPw.value}`);
-                
 
-            } else if (!regEmail.test(loginEmail)) {
+            console.log(userInputLoginPw.value);
+            const loginEmail= userInputLoginEmail.value;
+
+            if(regEmail.test(loginEmail) && userInputLoginPw.value !== ""){
+
+                // hide된 button(submit)
+                const btnToLogin = document.querySelector(".toLogin")
+                btnToLogin.click();
+
+            }
+
+            if (!regEmail.test(loginEmail)) { // 이메일 형식에 맞지 않게 입력했을 때
                 document.querySelectorAll(".valid-email-guide").forEach(function(item){
                     item.classList.remove("hide");
                     item.classList.add("cRed");
                 });
             }
+
+            if (userInputLoginPw.value === "") {
+                document.querySelectorAll(".valid-pw-guide").forEach(function(el){
+                    el.classList.remove("hide");
+                    el.classList.add("cRed");
+                });
+            }
         }); // 로그인 버튼 눌렀을 때 이벤트 끝
 
-        // 아이디(이메일) 입력할 때는 경고문구("이메일을 확인해주세요") 사라지도록 한다.
-        userInputLoginEmail.addEventListener("keydown", ()=>{
+        // 아이디(이메일) 입력할 때는 경고문구가 사라지도록 한다.
+        userInputLoginEmail.addEventListener("focus", ()=>{
             document.querySelectorAll(".valid-email-guide")[1].classList.add("hide");
             document.querySelectorAll(".valid-email-guide")[0].classList.remove("cRed");
         });
 
-        // 비밀번호 입력할 때는 경고문구("비밀번호를 입력해주세요") 사라지도록 한다.
+        // 아이디(이메일)에서 blur 됐을 때도 유효성 검사를 실시한다..?
+        userInputLoginEmail.addEventListener("blur", ()=>{
+
+            if (userInputLoginEmail.value !== "" && !regEmail.test(userInputLoginEmail.value)) { // 이메일 형식에 맞지 않게 입력했을 때
+                document.querySelectorAll(".valid-email-guide").forEach(function(item){
+                    console.log(item);
+                    item.classList.remove("hide");
+                    item.classList.add("cRed");
+                });
+            } else { // 이메일 형식에 맞는다면 경고문구 사라진다.
+                document.querySelectorAll(".valid-email-guide")[0].classList.remove("cRed");
+                document.querySelectorAll(".valid-email-guide")[1].classList.add("hide");
+            }
+
+        });
+
+        // 비밀번호 입력할 때는 경고문구가 사라지도록 한다.
         userInputLoginPw.addEventListener("keydown", ()=>{
             document.querySelectorAll(".valid-pw-guide")[1].classList.add("hide");
             document.querySelectorAll(".valid-pw-guide")[0].classList.remove("cRed");
