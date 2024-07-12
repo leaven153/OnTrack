@@ -31,6 +31,7 @@ public class StatusTaskList extends TaskList{
     private List<String> assigneeNames;
     private Map<Long, String> assignees;
 
+
     public void makeAssigneeMap(){
         this.assignees = new HashMap<>();
         if(this.assigneeMid != null){

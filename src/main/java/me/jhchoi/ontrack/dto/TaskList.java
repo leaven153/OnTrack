@@ -7,7 +7,10 @@ import me.jhchoi.ontrack.domain.TaskFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.lang.Long.parseLong;
 
 @Data @Slf4j
 @NoArgsConstructor
@@ -32,6 +35,7 @@ public class TaskList {
 
     //  할 일의 파일
     private List<TaskFile> taskFiles;
+
 
 
     // 담당자 여러 명일 때, 성만 출력되도록 한다. (projectView.html에서 직접 호출)
