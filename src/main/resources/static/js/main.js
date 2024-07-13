@@ -727,7 +727,7 @@ window.onload = function(){
                         parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").append(newAssigneeBySelf(datum));
 
                         // 서버 전송 성공시: 담당자 요약 박스에 담는다
-                        if (cntAssignee == 1) { // 담당자없음 → 담당자 1명
+                        if (cntAssignee === 1) { // 담당자없음 → 담당자 1명
                             // no-assignee 일단 hide
                             parents(btn, ".staus-assignee")[0].querySelector(".no-assignee").classList.add("hide");
                             // one-assignee div
