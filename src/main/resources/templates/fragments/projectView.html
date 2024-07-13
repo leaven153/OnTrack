@@ -119,7 +119,7 @@
               <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
                 <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                 <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
+                <span class="btn-dropOut-task ml-3" data-view="table" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
               </div>
             </div>
 
@@ -144,7 +144,7 @@
                 <button type="button" class="btn-findByName-member-to-assign" >검색</button> <!--/* th:value="${memberList}" */-->
               </div>
               <div class="배정안된멤버목록 unassigned-member-list">
-                <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
+                <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" data-view="table" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
                   <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
                 </div>
               </div>
@@ -253,7 +253,7 @@
                         <span class="statusview-duedate-day" th:text="${t.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(t.getTaskDueDate())}+')'">(월)</span>
                       </div>
                       <!-- status view: 담당자 -->
-                      <div class="status-assignee"><!--statusview-task (flex 설정 다름..)-->
+                      <div class="status-assignee"><!-- statusview-task (flex 설정 다름..)-->
                         <div class="배정된담당자구역">
                         <span class="font-14 btn-more-assignInfo no-assignee" data-view="status" th:if="${t.getAssignees().containsValue('noassignee') }">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
                         <th:block th:each="assignee: ${t.getAssignees()}">
@@ -270,18 +270,27 @@
                             <div class="개별담당자box assignee-fullname-box mb-7" th:if="${!t.getAssignees().containsValue('noassignee')}" th:each="assignee : ${t.getAssignees()}">
                               <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/*  th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                               <!--/* '완료'전까지 담당자 본인 혹은 작성자는 담당자를 해제할 수 있다 */-->
-<!--                              <span class="btn-dropOut-task ml-3 cursorP" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>-->
+                              <span class="btn-dropOut-task ml-3" data-view="staus" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
                             </div>
                           </div>
+                          <!--/* 담당자 추가하기 버튼 추가 후에, unassigned-member-list 다시 붙이도록 한다. */-->
+                          <th:block th:if="${t.getAuthorMid() == myMid}">
+                            <div class="statusview담당자추가하기">
+                              <span class="">담당자 추가</span>
+                              <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="" alt="add assignee">
+                            </div>
+                            <div class="unassigned-member-list img-hidden"></div>
+                          </th:block>
                           <!--/* status view에서는 담당자 추가를 하지 않는다.  */-->
                         </div>
                         </div>
                         <th:block th:each="assignee : ${t.getAssignees()}">
                           <div class="참여하기 flex-row-center-center-nowrap mr-5 btn-applySelf-task opacity0" data-view="status" th:if="${!#strings.equals(assignee.value, myNickname)} and ${t.getTaskStatus() < 3} and ${assigneeStat.first}"> <!--mt-5 mb-5 pd-t5-->
 <!--                            <img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task">-->
-                            <span class="font-11" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}">참여하기</span>
+                            <span class="font-11" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}">참여하기</span>
                           </div>
                         </th:block>
+
                       </div>
                     </div> <!-- End of <div class="statusview-task-box"> -->
                   </th:block>
