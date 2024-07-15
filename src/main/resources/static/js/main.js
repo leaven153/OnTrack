@@ -669,7 +669,8 @@ window.onload = function(){
                     console.log(datum); // DOMStringMap(4) { mid → "14", nickname → "공지철", projectid → "9", taskid → "21" }
                     console.log(`현재 담당자 수: ${cntAssignee}`);
 
-                    // 0. (이전에 담긴 currAssignees를 먼저 clear)
+                    // 0. 이전에 담긴 currAssignees를 먼저 clear
+                    // (status view에서는 '참여하기'가 btn-more-assignInfo를 거치지 않고 시작된다.)
                     currAssignees.clear();
 
                     // 1. 현재 담당자를 currAssignees map에 담는다 (∴status는 참여하기 버튼이 btn-moreAssign-info와 별도로 있다)
@@ -727,13 +728,26 @@ window.onload = function(){
                         parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").append(newAssigneeBySelf(datum));
 
                         // 서버 전송 성공시: 담당자 요약 박스에 담는다
-                        if (cntAssignee === 1) { // 담당자없음 → 담당자 1명
+                        // ★★★ DB에 저장 전에 현재 담당자가 6명인지 확인하는 로직이 필요하다!!
+
+                        // 담당자없음 → 담당자 1명
+                        if (cntAssignee === 1) {
                             // no-assignee 일단 hide
                             parents(btn, ".staus-assignee")[0].querySelector(".no-assignee").classList.add("hide");
                             // one-assignee div
                             parents(btn, ".status-assignee")[0].firstElementChild.append(assingeeBoxByNum(1, btn.dataset.mid, btn.dataset.nickname));
                         }
-                        // DB에 저장 전에 현재 담당자가 6명인지 확인하는 로직이 필요하다!!
+
+                        // 담당자 1명 → 담당자 다수(many-assignee)
+                        // 담당자를 추가한 후에 (모달을 열어둔 상태에서) 기존 담당자를 삭제할 수도 있기 때문에,
+                        // 이전 담당자 수만이 아닌 현재 담당자 수도 확인하고 one to many를 진행해야 한다.
+                        if (beforeCnt === 1) {
+                            // 담당자 이름 요약 및 상세보기 버튼 부착
+                        }
+
+
+
+
 
                     } else {
                         alert(`담당자는 6명을 초과할 수 없습니다.`);
@@ -857,6 +871,8 @@ window.onload = function(){
 
                                     // 멤버 추가 후에 one → many가 된 상태
                                     // 기존 배정된 담당자의 이름도 축약해서 출력해야 한다.★★★
+                                    // 멤버 추가한 후에 (모달을 열어둔 상태에서) 기존 담당자를 지울 수도 있기 때문에
+                                    // 현재 담당자의 수도 체크한 후에 one to many를 적용해야 한다.
                                     if (beforeAssigneeNum === 1 && cntAssignee > 1) {
                                         // console.log(`div.many-assignee에 기존 담당자 이름첫글자와, 새로 배정된 담당자 이름 첫글자를 span.lastName append`);
 

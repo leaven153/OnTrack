@@ -153,7 +153,7 @@ public class ProjectService {
         });
         project.setAssignmentList(aList);
         
-        // 4-2. 담당자 없는 할 일 목록
+        // 4-2. 담당자 없는 할 일 목록 (assignee view에서는 담당자 배정 등을 진행하지 않을 것이므로, 관리자 화면에서 사용한다.)
         project.setNoAssigneeTasks(taskRepository.getNoAssigneeTask(projectId));
 
         // 5. 진행상태별 할 일 목록

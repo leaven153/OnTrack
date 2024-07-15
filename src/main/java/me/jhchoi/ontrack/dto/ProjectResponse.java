@@ -33,7 +33,7 @@ public class ProjectResponse {
     // 5-1. 담당자별 할 일
     private List<AssignmentList> assignmentList;
 
-    // 5-2. 담당자 없는 할 일 목록
+    // 5-2. 담당자 없는 할 일 목록 (assignee view에서는 담당자 배정 등을 진행하지 않을 것이므로, 관리자 화면에서 사용한다.)
     private List<NoAssigneeTask> noAssigneeTasks;
 
     // 6. 진행상태별 할 일

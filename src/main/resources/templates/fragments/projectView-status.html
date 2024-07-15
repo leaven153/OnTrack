@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>project - Table view</title>
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+<!--  <script src="../../static/js/projectView.js" th:src="@{/js/projectView.js.js}"></script>-->
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+</head>
+<body>
+ <div id="status-view" class="project-view" th:classappend="${view != 'status' or view == null}?'hide'" th:fragment="statusView(tasks, memberList, myNickname, myMid)">
+    <!-- status view: notice starts-->
+    <div class="wrapper mb-20 flex-row-start-nowrap">
+      <div class="statusview-notice btn-open-notice" data-id="notice01">
+        <div class="statusview-bgRed-radius div-inline-block">
+          <img src="/imgs/icon_pin(white).png" alt="notice" class="icon-pin-statusview">
+        </div>
+        <span class="statusview-notice">케이크와 맥주팀 공통서식</span>
+        <img src="/imgs/icon_attachment(status).png" alt="file" class="icon-file-statusview">
+      </div>
+    </div>
+    <!-- status view: notice ends-->
+
+    <!-- status view: content starts -->
+    <div class="wrapper mb-20">
+      <!-- status view: 각 진행상태box가 다 담긴 컨테이너.. -->
+      <div class="flex-row-start-nowrap ml-5">
+        <!--/* status view: box start */-->
+        <!--/* tasks는 LinkedHashMap<Integer, List<StatusTaskList>> statusTaskList 임!!! */-->
+        <th:block th:each="statusN : ${tasks}">
+          <th:block th:each="task : ${statusN.value}"> <!--/* statusN.value: List<StatusTaskList>?? */-->
+            <th:block th:if="${taskStat.count == 1}">
+              <div class="statusview-type-box"> <!--/*th:if="${task.getTaskStatus() == 99}"*/-->
+                <div class="statusview-type-header">
+                  <div class="bar" th:classappend="${task.switchStatusToCss(statusNStat.index)[1]}"></div> <!--/* pause */-->
+                  <span class="statusview-type-name" th:text="${task.switchStatusToCss(statusNStat.index)[0]}">보류/취소</span>
+                  <span class="statusview-type-count altivo-regular" th:if="${taskStat.count == 1}" th:text="${tasks.get(statusNStat.index).size() > 0}?${tasks.get(statusNStat.index).size()}:'0'"></span>
+                </div>
+                <div class="statusview-type-board" th:classappend="${task.switchStatusToCss(statusNStat.index)[2]}"> <!--/* pause-bg */-->
+                  <th:block th:each="t : ${tasks.get(statusNStat.index)}"> <!--/* t는 StatusTaskList이며, task는 List<StatusTaskList> 임!!! */--> <!--task : ${tasks.get(statusNStat.index)}-->
+                    <!-- statusview-task-box Start -->
+                    <div class="statusview-task-box" th:classappend="${t.switchStatusToCss(statusNStat.index)[3]}"><!--/* btn-task-detail pause-border-shadow*/-->
+                      <!-- status view: 할 일 명 -->
+                      <div class="statusview-task">
+                        <span class="statusview-task-title" th:classappend="${t.chkEditAuth(myMid, t)}?'btn-edit-task-title'" th:text="${t.getTaskTitle()}">스프링 퀵 스타트 늘어나면 어떻게 되는지 확인해봅니다</span> <!--/* btn-edit-task-title */-->
+                        <input type="text" class="edit-task-title w200 hide" th:value="${t.getTaskTitle()}" th:attr="data-taskid=${t.getId()}, data-myNickname=${myNickname}" autofocus> <!--/* , data-clicker=${memberId} */-->
+                        <img src="/imgs/icon_write.png" class="img-20 opacity0" alt="edit title" th:classappend="${t.chkEditAuth(myMid, t)}?'btn-edit-task-title'">
+                        <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
+                      </div>
+                      <!-- status view: 마감일 -->
+                      <div class="statusview-task">
+                        <span class="no-dueDate status-vt-control1 font-12" th:if="${t.getTaskDueDate() == null}">마감일 없음</span>
+                        <span class="statusview-dueDate altivo-regular" th:text="${t.getTaskDueDate() != null}?${#temporals.format(t.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                        <span class="statusview-duedate-day" th:text="${t.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(t.getTaskDueDate())}+')'">(월)</span>
+                      </div>
+                      <!-- status view: 담당자 -->
+                      <div class="status-assignee"><!-- statusview-task (flex 설정 다름..)-->
+                        <div class="배정된담당자구역">
+                        <span class="font-14 btn-more-assignInfo no-assignee" data-view="status" th:if="${t.getAssignees().containsValue('noassignee') }">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
+                        <th:block th:each="assignee: ${t.getAssignees()}">
+                        <span class="font-14 btn-more-assignInfo one-assignee" data-view="status" th:if="${!t.getAssignees().containsValue('noassignee')} and ${t.getAssignees().size() == 1}" th:text="${assignee.value}">채규태</span> <!--/*안 쓰는 값인 듯.. ? th:attr="data-size=${t.getAssignees()}"*/-->
+                        </th:block>
+                        <th:block th:if="${t.getAssignees().size() > 1}">
+                          <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
+                            <div class="many-assignee"><span class="lastName" th:text="${assignee.value}">채</span></div>
+                          </th:block>
+                          <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo ml-5" data-view="status" alt="more assignment info">
+                        </th:block>
+                        <div class="more-assignInfo statusView-assignee-list img-hidden">
+                          <div class="담당자목록 task-assignee-list pd-t5">
+                            <div class="개별담당자box assignee-fullname-box mb-7" th:if="${!t.getAssignees().containsValue('noassignee')}" th:each="assignee : ${t.getAssignees()}">
+                              <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/*  th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
+                              <!--/* '완료'전까지 담당자 본인 혹은 작성자는 담당자를 해제할 수 있다 */-->
+                              <span class="btn-dropOut-task ml-3" data-view="staus" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
+                            </div>
+                          </div>
+                          <!--/* 담당자 추가하기 버튼 추가 후에, unassigned-member-list 다시 붙이도록 한다. */-->
+                          <th:block th:if="${t.getAuthorMid() == myMid}">
+                            <div class="statusview담당자추가하기">
+                              <span class="">담당자 추가</span>
+                              <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="" alt="add assignee">
+                            </div>
+                            <div class="unassigned-member-list img-hidden"></div>
+                          </th:block>
+                          <!--/* status view에서는 담당자 추가를 하지 않는다.  */-->
+                        </div>
+                        </div>
+                        <th:block th:each="assignee : ${t.getAssignees()}">
+                          <div class="참여하기 flex-row-center-center-nowrap mr-5 btn-applySelf-task opacity0" data-view="status" th:if="${!#strings.equals(assignee.value, myNickname)} and ${t.getTaskStatus() < 3} and ${assigneeStat.first}"> <!--mt-5 mb-5 pd-t5-->
+<!--                            <img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task">-->
+                            <span class="font-11" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}">참여하기</span>
+                          </div>
+                        </th:block>
+
+                      </div>
+                    </div> <!-- End of <div class="statusview-task-box"> -->
+                  </th:block>
+                </div> <!-- End of <div class="statusview-type-board"> -->
+              </div> <!-- End of <div class="statusview-type-box"> -->
+            </th:block>
+          </th:block>
+
+        </th:block>
+
+      </div> <!-- End of <div class="flex-row-start-nowrap ml-5"> -->
+      <!-- status view: content ends -->
+    </div><!-- End of <div class="wrapper mb-20"> -->
+  </div> <!-- End of #status-view div -->
+</body>
+</html>

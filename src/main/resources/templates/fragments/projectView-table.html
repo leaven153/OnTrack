@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>project - Table view</title>
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+<!--  <script src="../../static/js/projectView.js" th:src="@{/js/projectView.js.js}"></script>-->
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+</head>
+<body>
+  <div id="table-view" class="project-view" th:classappend="${view == 'status' or view == 'assignee'}?'hide'" th:fragment="tableView(tasks, memberList, myNickname, myMid)">
+    <!-- 테이블 컬럼명 시작 Begin Task List Column Name (table)-->
+    <div class="tableview-colName wrapper flex-row-justify-start-align-center bottom-line">
+      <div class="tableview-column content-chkbox"><input type="checkbox"></div><!-- 우선순위: 하하하하하하 마지막에 해라 -->
+      <div class="tableview-column"></div>
+      <div class="tableview-column">할 일</div>
+      <div class="tableview-column">담당자</div>
+      <div class="tableview-column">진행상태</div>
+      <div class="tableview-column">마감일</div>
+      <div class="tableview-column">파일</div>
+      <div class="tableview-column">작성자</div>
+    </div>
+    <!-- 테이블 컬럼명 끝 Task List Column Name (table) Ends-->
+
+    <!-- 테이블뷰: 공지row 시작 Begin Notice -->
+    <div class="tableview-notice bottom-line">
+      <div class="tableview-column content-chkbox"></div><!-- <input type="checkbox"> 추후 결정요망 -->
+
+      <div class="tableview-column flex-row-center-center-nowrap">
+        <img src="../../static/imgs/icon_notice(pin).png" th:src="@{/imgs/icon_notice(pin).png}" alt="notice" class="img-25">
+      </div>
+
+      <!-- 공지 제목 notice title -->
+      <div class="tableview-column flex-row-justify-start-align-center btn-open-notice" data-id="notice01">
+          <span class="table-notice cursorP">
+            <mark class="table-notice">달과 6펜스 공통 서식</mark>
+          </span>
+      </div>
+
+      <!-- 공지 담당자(=작성자) -->
+      <div class="tableview-column">
+        <span class="">나탈리 포트만</span>
+      </div>
+
+      <!-- 공지 확인cnt 시작 -->
+      <div class="tableview-column flex-row-center-center-nowrap">
+          <div class="flex-row-justify-start-align-center wMin105">
+            <div class="notice-unchk-sign"></div>
+            <span class="status-remark ">미확인</span>
+            <span class="unchk-count altivo-regular ml-5">8</span>
+            <span class="font-10 opacity0 transit-250 ml-3">상태끄기</span>
+          </div>
+
+<!--        <div class="flex-col-start-nowrap">-->
+<!--          <div class="font-10 flex-row-justify-start-align-center">-->
+<!--            <div class="status-sign done"></div>-->
+<!--              <span class="status-remark ">확인</span>-->
+<!--              <span class="chk-count altivo-regular ml-3"> 7</span>-->
+<!--            </div>-->
+<!--          </div>-->
+      </div> <!-- 공지 확인cnt 끝 -->
+
+      <!-- due Date -->
+      <div class="tableview-column">
+      </div>
+
+      <!-- file -->
+      <div class="tableview-column flex-row-center-center-nowrap">
+        <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
+        <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
+      </div>
+
+      <!-- 공지 작성자 -->
+      <div class="tableview-column">나탈리 포트만</div>
+    </div>
+    <!-- 테이블뷰: 공지row 끝 Notice Contents Ends -->
+
+    <!-- 테이블뷰: 할 일 목록Row 시작 Begin Task List(table) Contents -->
+    <th:block th:each="task : ${tasks}">
+      <div class="tableview-taskrow bottom-line ">
+        <div class="tableview-column content-chkbox"><input type="checkbox" th:value="${task.getId()}"></div>
+
+        <!-- child mark: create or has-->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <img src="/imgs/icon_arrow_closed910.png" alt="has child task" class="ml-3 hide">
+          <img src="/imgs/icon_sub.png" alt="create child task" class="img-18 btn-create-child-task">
+          <span class="hover-tip-child">세부 항목으로 나누기</span>
+        </div>
+
+        <!-- task title -->
+        <div class="tableview-column table-task-title"><!--/* flex-row-justify-start-align-center */-->
+          <div class="flex-row-justify-start-align-center">
+            <span class="table-task-title" th:classappend="${task.chkEditAuth(myMid, task)}?'btn-edit-task-title'" th:text="${task.getTaskTitle()}" th:attr="data-id=${task.getId()}, data-nickname=${myNickname}">물에 빠진 사람에게 수영을 잘하고 못하고는</span> <!--vertical-ctrl015, data-clicker=${memberId} -->
+            <input type="text" class="edit-task-title hide" th:value="${task.getTaskTitle()}" th:attr="data-taskid=${task.getId()}, data-mid=${myMid}, data-nickname=${myNickname}" autofocus> <!--/*, data-clicker=${memberId} */-->
+            <img src="/imgs/icon_write.png" class="img-20 opacity0" alt="edit title" th:classappend="${task.chkEditAuth(myMid, task)}?'btn-edit-task-title'">
+            <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
+          </div>
+
+          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment">
+        </div>
+
+        <!-- assignee -->
+        <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
+          <span class="font-blur no-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+          <span class="one-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().size() == 1}" th:attr="data-mid=${task.getAssigneeMids()[0]}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
+          <!--/*
+          <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">
+            <span class=" altivo-bold opacity0 transit-250 cursorP font-16 ml-3">+</span>
+          </th:block> */-->
+          <th:block th:if="${task.getAssigneeNames().size() > 1}">
+            <th:block th:each="assignee : ${task.manyAssigneeFirstName(task.getAssignees())}">
+              <div class="many-assignee"><span class="lastName" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">김</span></div>
+            </th:block>
+            <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="btn-more-assignInfo ml-3" data-view="table" alt="more assignment info">
+          </th:block>
+
+          <div class="more-assignInfo tableView-assignee-list img-hidden">
+            <div class="담당자풀네임목록 task-assignee-list pd-t10">
+              <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
+                <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
+                <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
+                <span class="btn-dropOut-task ml-3" data-view="table" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
+              </div>
+            </div>
+
+              <!--/* 해당 일의 작성자나 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능. (작성자는 담당자가 아니어도 '참여하기'가 아닌 담당자 추가로만 가능함.) */-->
+            <th:block th:each="assignee : ${task.getAssignees()}">
+                <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-applySelf-task" data-view="table" th:if="${!#strings.equals(assignee.value, myNickname)} and ${!#strings.equals(myNickname, task.getAuthorName())} and ${task.getTaskStatus() < 3} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">
+                  <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
+                  <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>
+                </div>
+            </th:block>
+
+              <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 추가가능 */-->
+            <div class="담당자추가 btn-add-member-to-assignee top-line pd-t10 pd-b5"
+                 th:attr="data-executor=${myMid}, data-taskid=${task.getId()}, data-projectid=${projectId}, data-authormid=${task.getAuthorMid()}"
+                 th:if="${task.getAuthorMid() == myMid} and ${task.getTaskStatus() < 5}"> <!--/*data-assigneeCnt=${task.getAssigneeMids().size()},*/-->
+                <span>담당자 추가하기</span>
+                <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="img-angle270" alt="add assignee">
+            </div>
+            <div class="담당자로추가할멤버찾기box find-member-to-assign img-hidden">
+              <div class="검색 bottom-line pd-b3">
+                <input type="text" class="input-findByName-toAssign font-15 w100" placeholder="멤버검색" name="">
+                <button type="button" class="btn-findByName-member-to-assign" >검색</button> <!--/* th:value="${memberList}" */-->
+              </div>
+              <div class="배정안된멤버목록 unassigned-member-list">
+                <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" data-view="table" th:each="unassingedMember : ${task.unassignedMember(memberList, task.getAssignees())}">
+                  <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
+                </div>
+              </div>
+              <div class="배정안된멤버검색결과"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- status -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
+          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
+            <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
+            <span class="status-remark btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
+            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span>
+            <div class="진행상태목록 tableView-status-list img-hidden">
+              <th:block th:each="tStatus: ${statusMap}">
+                <div class="status-each" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-status=${tStatus.key}, data-updatedby=${myMid}">
+                  <div class="status-sign" th:classappend="${tStatus.value[1]}"></div><p class="div-inline-block" th:text="${tStatus.value[0]}">시작 안 함</p><br/>
+                </div>
+              </th:block>
+            </div>
+          </div>
+          <div class="table-status-sign-hasChild hide">
+            <div class="status-sign-hasChild-cntbox not-yet "><!-- vertical-ctrl01-->
+              <span class="status-child-count altivo-regular">19</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox planning "><!-- vertical-ctrl01-->
+              <span class="status-child-count altivo-regular">2</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox ing "> <!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">4</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox review "><!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">5</span>
+            </div>
+            <div class="status-sign-hasChild-cntbox done "><!-- vertical-ctrl01-->
+              <span class="status-child-count font-white altivo-regular">3</span>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- due Date -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
+          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
+          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
+        </div>
+
+        <!-- file -->
+        <div class="tableview-column flex-row-center-center-nowrap">
+          <button type="button" class="add-file flex-row-center-center-nowrap btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="file"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
+        </div>
+
+        <!-- author -->
+        <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div> <!-- vertical-ctrl01-->
+      </div><!-- 테이블뷰: 할 일 목록Row 끝 Task List Contents Ends -->
+    </th:block>
+  </div>
+</body>
+</html>
