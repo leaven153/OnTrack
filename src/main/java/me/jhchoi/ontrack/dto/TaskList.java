@@ -130,6 +130,17 @@ public class TaskList {
         }
         return false;
     }
+
+    // projectView-table.html에서 직접 호출한다.
+    // 해당 task에 '참여하기'가 가능한 지 확인(작성자가 아니고 담당자가 아닐 때 가능하다.
+    public boolean chkParticipateInTask(Long mId, TaskList task){
+        if (Objects.equals(task.getAuthorMid(), mId)) return false;
+        Map<Long, String> assignees = task.getAssignees();
+        for(Map.Entry<Long, String> entry: assignees.entrySet()){
+            if(Objects.equals(entry.getKey(), mId)) return false;
+        }
+        return true;
+    }
     // 소통하기
     
     // 진행내역

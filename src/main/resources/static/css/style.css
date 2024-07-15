@@ -598,9 +598,10 @@ div.statusView-assignee-list .unassigned-member-list {
     top: 72%;
     border-radius: 5px;
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
+    overflow-y: scroll;
 }
 
-.btn-add-assignee,
+/*.btn-add-assignee,*/
 .btn-findByName-member-to-assign {
     border-radius: 3px;
     padding: 3px;
@@ -608,6 +609,7 @@ div.statusView-assignee-list .unassigned-member-list {
     background-color: #411c02;
 }
 
+/* 사용되는 곳 없는 듯. 정리요망*/
 .iconBox-30 {
     border-radius: 50%;
     background-color: #d1c9bb22;
@@ -621,7 +623,7 @@ div.content-chkbox > input {
     opacity: 0;
 }
 
-.status-assignee:hover .btn-applySelf-task,
+.status-assignee:hover div[class*=btn-],
 span[class*=edit-task-title]:hover ~ img.btn-edit-task-title,
 span.status-remark:hover ~ span.transit-250,
 span.transit-250:hover,

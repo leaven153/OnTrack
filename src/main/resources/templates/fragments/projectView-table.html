@@ -101,7 +101,7 @@
 
         <!-- assignee -->
         <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
-          <span class="font-blur no-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+          <span class="font-blur no-assignee btn-more-assignInfo" data-view="table" th:attr="data-test=${!#strings.equals(myNickname, task.getAuthorName())}" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
           <span class="one-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().size() == 1}" th:attr="data-mid=${task.getAssigneeMids()[0]}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
           <!--/*
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">
@@ -124,11 +124,17 @@
             </div>
 
               <!--/* 해당 일의 작성자나 담당자가 아니고, 해당 일의 진행상태가 '계획중'일때 까지만 '참여'가능. (작성자는 담당자가 아니어도 '참여하기'가 아닌 담당자 추가로만 가능함.) */-->
-            <th:block th:each="assignee : ${task.getAssignees()}">
-                <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-applySelf-task" data-view="table" th:if="${!#strings.equals(assignee.value, myNickname)} and ${!#strings.equals(myNickname, task.getAuthorName())} and ${task.getTaskStatus() < 3} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">
-                  <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
-                  <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>
-                </div>
+<!--            <th:block th:each="assignee : ${task.getAssignees()}">-->
+<!--                <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-applySelf-task" data-view="table" th:if="${!#strings.equals(assignee.value, myNickname)} and ${!#strings.equals(myNickname, task.getAuthorName())} and ${task.getTaskStatus() < 3} and ${assigneeStat.first}" th:attr="data-assigneemid=${assignee.key}, data-assigneeName=${assignee.value}">-->
+<!--                  <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>-->
+<!--                  <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>-->
+<!--                </div>-->
+<!--            </th:block>-->
+            <th:block th:if="${task.chkParticipateInTask(myMid, task)} and ${task.getTaskStatus() < 3}">
+              <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-applySelf-task" data-view="table" >
+                <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
+                <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>
+              </div>
             </th:block>
 
               <!--/* 해당 일의 작성자이며, 해당 일의 진행상태가 '검토중'일 때까지만 추가가능 */-->
