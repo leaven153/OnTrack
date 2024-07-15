@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>project - Table view</title>
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+<!--  <script src="../../static/js/projectView.js" th:src="@{/js/projectView.js.js}"></script>-->
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+</head>
+<body>
+  <div id="assignee-view" class="project-view" th:classappend="${view != 'assignee' or view == null}?'hide'" th:fragment="assigneeView(assignees, noAssigneeTasks, myNickname, myMid)">
+    <div class="wrapper mb-20 flex-col-start-nowrap">
+
+      <div class="flex-row-justify-start-align-center sort-box">
+        <span class="mr-15">정렬기준: </span>
+        <button type="button" class="btn-sort btn-choosen ">담당자명</button>
+        <button type="button" class="btn-sort btn-blur ">할 일 개수</button>
+        <button type="button" class="btn-sort btn-blur ">진행률</button>
+      </div>
+      <!--/* 담당자별box 컨테이너 시작 */-->
+      <div class="flex-col-start-nowrap">
+        <th:block th:each="assignee : ${assignees}">
+          <!--/* 담당자 있는 div(요약)시작 */-->
+          <div class="flex-row-between-nowrap assignee-box">
+            <div class="flex-row-justify-start-align-center "><!--overflow-hidden-->
+              <div class="assignee-name-n-status-cnt flex-col-justify-center">
+                <span class="" th:text="${assignee.getAssigneeName()}">라이언 고슬링</span>
+              </div>
+              <!-- 2rows 담을 div: ①진행상황 그래프, ②개수 -->
+              <div class="flex-col-between-nowrap ml-5 overflow-hidden">
+                <div class="flex-row-start-nowrap">
+                  <th:block th:if="${assignee.getTList().size() != null}">
+                    <th:block th:each="task : ${assignee.getTList()}">
+                      <div class="status-graph pause" th:if="${task.getTaskStatus() == 0}"></div>
+                      <div class="status-graph not-yet" th:if="${task.getTaskStatus() == 1}"></div>
+                      <div class="status-graph planning" th:if="${task.getTaskStatus() == 2}"></div>
+                      <div class="status-graph ing" th:if="${task.getTaskStatus() == 3}"></div>
+                      <div class="status-graph review" th:if="${task.getTaskStatus() == 4}"></div>
+                      <div class="status-graph done" th:if="${task.getTaskStatus() == 5}"></div>
+                    </th:block>
+                  </th:block>
+
+                </div>
+                <div class="flex-row-between-nowrap assignee-state">
+                  <div class="flex-row-start-nowrap">
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">보류</span>
+                      <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}"></span> <!--?${task.countStatus(assignee.getTList(), 1)}:'0'-->
+                      </th:block>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">시작 안 함</span>
+                      <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}"></span> <!--?${task.countStatus(assignee.getTList(), 1)}:'0'-->
+                      </th:block>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">계획중</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}"></span><!--?${task.countStatus(assignee.getTList(), 2)}:'0'-->
+                      </th:block>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">진행중</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}"></span><!--?${task.countStatus(assignee.getTList(), 3)}:'0'-->
+                      </th:block>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">검토중</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}"></span><!--?${task.countStatus(assignee.getTList(), 4)}:'0'-->
+                      </th:block>
+                    </div>
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">완료</span>
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 5)}"></span><!--?${task.countStatus(assignee.getTList(), 5)}:'0'-->
+                      </th:block>
+                    </div>
+                  </div>
+
+                  <!-- <div class="flex-row-start-nowrap">
+                    <div class="mr-15 각 진행상황 div">
+                      <span class="">보류</span>
+                      <span class="altivo-regular">2</span>
+                    </div>
+                    <div class="각 진행상황 div">
+                      <span class="">취소</span>
+                      <span class="altivo-regular">0</span>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+
+            </div>
+            <div class="mr-15 flex-row-end-center-nowrap"> <!--zIdx2 flex-row-center-center-nowrap -->
+              <img src="/imgs/icon_arrow_down.png" alt="button for open box" class="btn-open-assignee-status-box" th:attr="data-id=${assignee.getAssigneeName()}">
+            </div>
+          </div> <!-- 담당자 있는 div(요약) 끝 -->
+          <!-- 담당자별 상세컨테이너 시작 -->
+          <div class="담당자별상세컨테이너 assignee-status-box mb-30 hide" th:attr="data-id=${assignee.getAssigneeName()}">
+            <th:block th:each="tStatus : ${statusMap}">
+              <!--/* 담당자 진행상태별box 시작 */-->
+              <div class="flex-row-start-nowrap mt-14">
+                <div class="진행상황명n개수 flex-col-start-nowrap assignee-name-n-status-cnt">
+                  <div class="flex-row-between-nowrap mt-5">
+                    <div class="flex-row-justify-start-align-center">
+                      <div class="assignee-bar" th:classappend="${tStatus.value[1]}"></div> <!--/* css 상태바 not-yet */-->
+                      <span class="ml-5 font-15" th:text="${tStatus.value[0]}">시작 안 함</span>
+                    </div>
+                    <th:block th:each="task : ${assignee.getTList()}">
+                      <div class="mr-9 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), tStatus.key)}?${task.countStatus(assignee.getTList(), tStatus.key)}:'-'"></div>
+                    </th:block>
+                  </div>
+                  <div class="공동작업 flex-row-between-nowrap font-11">
+                    <span class="ml-15">공동작업</span>
+                    <th:block th:each="task : ${assignee.getTList()}">
+                      <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', tStatus.key, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', tStatus.key, assignee.getAssigneeName())}:'-'"></div>
+                    </th:block>
+                  </div>
+                  <div class="개인작업 flex-row-between-nowrap font-11">
+                    <span class="ml-15">개인작업</span>
+                    <th:block th:each="task : ${assignee.getTList()}">
+                      <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', tStatus.key, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', tStatus.key, assignee.getAssigneeName())}:'-'"></div>
+                    </th:block>
+                  </div>
+                </div> <!-- 진행상황명·개수 끝 -->
+                <div class="할일박스컨테이너 flex-row-justify-start-align-center-wrap assignee-taskbox-container" th:classappend="${tStatus.value[2]}"> <!--/* css task박스 컨테이너  notYet-bg20 */-->
+                  <th:block th:each="task : ${assignee.getTList()}">
+                    <th:block th:if="${task.getTaskStatus() == tStatus.key}">
+                      <div class="태스크박스 assignee-task-box" th:classappend="${tStatus.value[3]}" th:attr="data-id=${task.getId()}"> <!--/* btn-task-detail css task박스 테두리 notYet-border-shadow*/-->
+                      <div class="flex-row-between-nowrap mb-5">
+                        <div class="assignee-task-title" th:text="${task.getTaskTitle()}">인라인블록뺀 후 할일상세버튼삽입</div>
+                        <img src="/imgs/icon_group.png" alt="group work" class="icon-group23" th:if="${task.getAssigneeNum() > 1}">
+                      </div>
+                      <div class="마감일 flex-row-justify-start-align-center">
+                        <span class="font-11">마감일&nbsp;</span>
+                        <span class="font-11" th:text="${task.getTaskDueDate() == null}?'없음'"></span>
+                        <span class="altivo-regular font-11" th:text="${task.getTaskDueDate() !=null}?${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                        <span class="font-11" th:text="${task.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}+')'">&nbsp;(일)</span>
+                        <img src="/imgs/icon_overDue.png" alt="overDue" class="img-15 ml-3" th:if="${task.getTaskDueDate() != null} and ${task.getTaskDueDate() le today}">
+                      </div>
+                    </div> <!-- task box END-->
+                    </th:block>
+                  </th:block>
+
+                </div> <!-- 할일박스컨테이너 END -->
+              </div>
+              <!--/* 담당자 진행상태별box 끝 */-->
+            </th:block>
+          </div><!-- 담당자별상세컨테이너 끝 (for scrollY)-->
+        </th:block>
+      </div> <!--/* 담당자별box 전체 컨테이너 끝 */-->
+    </div> <!--/* 정렬box와 담당자별box 컨테이너 끝 */-->
+  </div>
+</body>
+</html>

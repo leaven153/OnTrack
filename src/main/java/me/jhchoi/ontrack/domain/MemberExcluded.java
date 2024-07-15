@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class ProjectExcluded {
+public class MemberExcluded {
     private Long id;
     private Long projectId;
     private String nickname;
@@ -18,7 +18,7 @@ public class ProjectExcluded {
     private String reason;
 
     @Builder
-    public ProjectExcluded(Long projectId, String nickname, String email, Long excludedBy, LocalDateTime excludedAt, String reason) {
+    public MemberExcluded(Long projectId, String nickname, String email, Long excludedBy, LocalDateTime excludedAt, String reason) {
         this.projectId = projectId;
         this.nickname = nickname;
         this.email = email;

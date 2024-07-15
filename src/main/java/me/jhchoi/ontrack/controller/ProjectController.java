@@ -74,11 +74,6 @@ public class ProjectController {
             return "redirect:/login";
         }
 
-        // 1. 해당 프로젝트에 접근한 멤버의 정보 → 추후 접근경로의 정보 정합성 여부 확인 추가 요망
-//        model.addAttribute("loginMember", MemberInfo.builder().userId(loginUser.getUserId()).projectId(projectId).memberId(memberId).nickName(nickname).position(position).build());
-        // 1. member의 nickname 매칭 (project list에서 pathvariable로 넘긴 값)
-//        model.addAttribute("nickname", nickname);
-
         // 2. project
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
         // 2-2. 해당 프로젝트의 멤버들: List<MemberInfo>
@@ -97,6 +92,7 @@ public class ProjectController {
 
         URI projectLocation = URI.create("project/project");
 
+        // null일 경우, thymeleaf가 table view로 처리한다.
         if(view != null){
             model.addAttribute("view", view);
 //            return ResponseEntity.created(projectLocation).body(view);
