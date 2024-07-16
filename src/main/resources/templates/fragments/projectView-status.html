@@ -63,7 +63,7 @@
                           </th:block>
                           <th:block th:if="${t.getAssignees().size() > 1}">
                             <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
-                              <div class="many-assignee"><span class="lastName" th:text="${assignee.value}">채</span></div>
+                              <div class="many-assignee"><span class="lastName" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">채</span></div>
                             </th:block>
                           </th:block>
                           <div class="more-assignInfo statusView-assignee-list img-hidden">
@@ -79,20 +79,24 @@
                               <input type="text" class="font-12 input-findByName-toAssign" placeholder="배정할 멤버 검색">
                               <button type="button" class="btn-findByName-member-to-assign">검색</button>
                             </div>
-                            <div class="unassigned-member-list hide"></div>
+                            <div class="배정안된멤버목록 unassigned-member-list hide">
+                              <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" data-view="status" th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">
+                                <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <!--/* 해당 할 일의 작성자나 담당자가 아닌 경우: '참여하기'버튼이 출력된다. */-->
-                        <th:block th:if="${t.chkParticipateInTask(myMid, t)} and ${t.getTaskStatus() < 3}">
-                          <div class="참여하기 flex-row-center-center-nowrap mr-5 btn-applySelf-task opacity0" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}"> <!--mt-5 mb-5 pd-t5-->
+                        <th:block th:if="${!t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 3}">
+                          <div class="참여하기 flex-row-center-center-nowrap mr-5 btn-bePartOf-task opacity0" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}"> <!--mt-5 mb-5 pd-t5-->
 <!--                            <img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task">-->
                             <span class="font-11">참여하기</span>
                           </div>
                         </th:block>
-                        <!--/* 해당 할 일의 작성자인 경우: '담당자추가'버튼이 출력된다. */-->
-                        <th:block th:if="${t.getAuthorMid() == myMid}">
+                        <!--/* 해당 할 일의 담당자거나 작성자인 경우: '담당 더보기'버튼이 출력된다. */--><!--/* 해당 할 일의 작성자인 경우: '담당자추가'버튼이 출력된다. */-->
+                        <th:block th:if="${t.chkEditAuth(myMid, t)}"> <!--/*t.getAuthorMid() == myMid*/-->
                           <div class="statusview담당자추가하기 btn-add-assignee mr-5">
-                            <span class="font-11">담당자 추가</span>
+                            <span class="font-11">담당 더보기</span>
 <!--                            <img src="../../static/imgs/down.png" th:src="@{/imgs/down.png}" class="" alt="add assignee">-->
                           </div>
                         </th:block>

@@ -122,6 +122,7 @@ public class TaskList {
     }
 
     // 해당 task의 수정권한 확인 (projectView.html에서 직접 호출)
+    // 작성자이거나 담당자일 때 수정 가능: 할일명, 진행상태, 마감일, 담당자 해제(혹은 이 일에서 빠지기)
     public boolean chkEditAuth(Long mId, TaskList task){
         if (Objects.equals(task.getAuthorMid(), mId)) return true;
         Map<Long, String> assignees = task.getAssignees();
@@ -131,15 +132,14 @@ public class TaskList {
         return false;
     }
 
-    // projectView-table.html에서 직접 호출한다.
-    // 해당 task에 '참여하기'가 가능한 지 확인(작성자가 아니고 담당자가 아닐 때 가능하다.
-    public boolean chkParticipateInTask(Long mId, TaskList task){
-        if (Objects.equals(task.getAuthorMid(), mId)) return false;
+
+    // 해당 task의 담당자인지 확인.. 아직 사용하지않음.
+    public boolean chkAssigned(Long mId, TaskList task){
         Map<Long, String> assignees = task.getAssignees();
         for(Map.Entry<Long, String> entry: assignees.entrySet()){
-            if(Objects.equals(entry.getKey(), mId)) return false;
+            if(Objects.equals(entry.getKey(), mId)) return true;
         }
-        return true;
+        return false;
     }
     // 소통하기
     

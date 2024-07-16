@@ -152,7 +152,7 @@ public class TaskController {
         log.info("member id?: {}", mid);
         log.info("task history 객체: {}", th);
 
-        // 배정한 시간
+        // 배정/해제한 시간
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
         th.setUpdatedAt(nowWithNano.minusNanos(nanosec));
@@ -168,25 +168,25 @@ public class TaskController {
                     .role(th.getModItem())
                     .assignedAt(nowWithNano.minusNanos(nanosec))
                     .build();
-                    // 추후 예외 처리 요망
-                    taskService.addAssignee(ta, th);
+
+            return taskService.addAssignee(ta, th);
+
         } else if (th.getModType().equals("delete")){
             log.info("담당자 삭제");
+            TaskAssignment ta = TaskAssignment.builder()
+                    .projectId(th.getProjectId())
+                    .taskId(th.getTaskId())
+                    .memberId(mid)
+                    .nickname(th.getModContent())
+                    .role(th.getModItem())
+                    .assignedAt(nowWithNano.minusNanos(nanosec))
+                    .build();
+            int result = taskService.unassign(ta, th);
+            if(result != 1) {
+                // 해당 task id나 member id가 없을 경우라 가정...
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("담당자 삭제가 이뤄지지 않았습니다.");
+            }
         }
-
-        // TaskHistory 객체 생성
-        /*
-        TaskHistory th = TaskHistory.builder()
-                .projectId(ta.getProjectId())
-                .taskId(ta.getTaskId())
-                .modItem("assginee")
-                .modType("register")
-                .modContent(ta.getNickname())
-                .updatedAt(nowWithNano.minusNanos(nanosec))
-                .updatedBy(execMid)
-                .build();
-*/
-
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

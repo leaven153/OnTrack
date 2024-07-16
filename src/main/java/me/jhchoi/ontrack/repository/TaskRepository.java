@@ -31,9 +31,12 @@ public class TaskRepository {
     }
 
     // 할 일 담당자 등록
-    public Long assign(List<TaskAssignment> assignees){
+    public int assign(List<TaskAssignment> assignees){
         return taskMapper.assign(assignees);
     }
+
+    // 할 일 담당자 해제
+    public int delAssignee(TaskAssignment ta) { return taskMapper.delAssignee(ta); }
 
     // 할 일 별 첨부파일 등록
     public void attachFile(List<TaskFile> taskFile) { taskMapper.attachFile(taskFile); }
@@ -57,4 +60,12 @@ public class TaskRepository {
 
     // 할 일 수정: 진행상태
     public Integer editTaskStatus(TaskEditRequest ter) { return taskMapper.editTaskStatus(ter); }
+
+    // 해당 멤버의 맡은 할 일
+    public List<TaskList> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
+
+    public Integer cntAssigneeByTaskId(Long taskId) { return taskMapper.cntAssigneeByTaskId(taskId); }
+
+    // 해당 할 일에 이미 배정된 담당자인지 확인
+    public Long chkAssigned(TaskAssignment ta) { return taskMapper.chkAssigned(ta); }
 }
