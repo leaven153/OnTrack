@@ -130,7 +130,7 @@ public class TaskService {
 
         // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
         Long assigned = taskRepository.chkAssigned(ta);
-        if (assigned == ta.getTaskId()) {
+        if (ta.getTaskId().equals(assigned)) {
             return ResponseEntity.badRequest().body("이미 배정된 담당자입니다.");
         }
 
