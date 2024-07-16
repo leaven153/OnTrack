@@ -518,8 +518,8 @@ window.onload = function(){
                         currAssignees.delete(chosenOne.dataset.assigneemid);
 
                         // 6) 담당자 요약 목록에서 해당 담당자 이름 제거
-                        if(cntAssignee === 0) {
-                            // one → none
+                        if(cntAssignee === 0) { // one → none
+
                             // one-assignee는 remove
                             if(parents(chosenOne, "[class$=-assignee]")[0].children[0].classList.contains("one-assignee")){ // table view
                                 parents(chosenOne, "[class$=-assignee]")[0].children[0].remove();
@@ -534,8 +534,8 @@ window.onload = function(){
                             // 담당자 추가하기에 top-line 없애기
                             parents(chosenOne, "[class^=more-]")[0].children[1].classList.remove("top-line", "pd-t10");
 
-                        } else if (cntAssignee === 1) {
-                            // many → one
+                        } else if (cntAssignee === 1) { // many → one
+
                             // 더보기 버튼(img) remove (status view에는 없기 때문에 요소가 있는지 검사 후 진행한다.)
                             if (elExists([...parents(chosenOne, "[class$=-assignee]")[0].children].filter(child => child.tagName === "IMG")[0])){
                                 [...parents(chosenOne, "[class$=-assignee]")[0].children].filter(child => child.tagName === "IMG")[0].remove();
@@ -566,8 +566,8 @@ window.onload = function(){
                                 eachOne.remove();
                             });
 
-                        } else {
-                            // many에서 many 유지 (cntAssignee가 2이상인 경우)
+                        } else { // many에서 many 유지 (cntAssignee가 2이상인 경우)
+
                             // 담당자 요약목록에서 담당해제된 멤버의 mid를 찾아 지운다
                             // full name에는 assigneemid, 요약 목록에는 mid
                             // const assigneeFirstNameList = [...parents(chosenOne, "[class$=-assignee]")[0].children].filter(child => child.classList.contains("many-assignee")); // status view와 통합 전
@@ -588,7 +588,7 @@ window.onload = function(){
         });
     }
 
-    // 10-4. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)
+    // 10-4A. 새로 배정했던 담당자 다시 해제(이 일에서 빠지기)
     // 동적으로 생성된 해당 요소의 class 명은 btn-cancel-assign-task로 부여한다. (cf. btn-dropOut-task)
     onEvtListener(document, "click", ".btn-cancel-assign-task", function(){
         console.log(this);
@@ -671,7 +671,18 @@ window.onload = function(){
             }
         }); // fetch ends
 
-    });
+    }); // 10-4A 새로 배정했던 담당자 다시 해제(btn-cancel-assign-task) Ends.
+
+    // 10-4B. 참여취소 (status view에서 보류, 시작 안 함, 계획중인 일에 참여하기를 누른 사람에게만 나타나는 버튼.)
+    // cf. 이 일에서 빠지기: btn-dropOut-task
+    if(elExists(document.querySelector(".btn-cancel-participate"))){
+        const btnCancelParticipate = document.querySelectorAll(".btn-cancel-participate");
+        btnCancelParticipate.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
+
+            });
+        });
+    }
 
     // 10-5. 해제했던 담당자 다시 배정하기
     // 작성자의 경우, ('완료'이전까지만 )담당자 목록에 이름 추가
