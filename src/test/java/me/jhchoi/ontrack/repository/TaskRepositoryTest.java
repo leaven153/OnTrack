@@ -192,4 +192,60 @@ public class TaskRepositoryTest {
         assertThat(result).isEqualTo(1);
     }
 
+    @Test @DisplayName("담당한 일이 하나도 없는 멤버는 어떻게 반환되는가")
+    void findTaskByMemberId(){
+        //given
+        Long memberId = 31L; // 프로젝트 9의 서머싯 몸은 현재 담당한 일이 0개
+
+        //when
+        List<TaskList> t = taskRepository.findTaskByMemberId(memberId);
+
+        // then
+        log.info("null을 어떻게 처리해야 할까?: {}", t);
+        // null을 어떻게 처리해야 할까?: []
+        log.info("[]는 size가 어떻게 나오는가?: {}", t.size());
+        // []는 size가 어떻게 나오는가?: 0
+        log.info("그냥 isEmpty로 하면 되나?: {}", t.isEmpty());
+        // 그냥 isEmpty로 하면 되나?: true
+
+    }
+
+    @Test @DisplayName("담당자가 하나도 없는 일은 어떻게 반환되는가")
+    void cntAssigneeByTaskId(){
+        // given
+        Long taskId = 35L; // project 9의 톰하디가 쓴 해내자는 담당자가 0인 상태
+
+        // when
+        Integer cntAssignee = taskRepository.cntAssigneeByTaskId(taskId);
+
+        log.info("0 row returned는 어떻게 출력되는가: {}", cntAssignee); // 0 row returned는 어떻게 출력되는가: null
+    }
+
+    @Test @DisplayName("해당 할 일에 이미 배정된 담당자인지 확인")
+    void chkAssigned(){
+        // given
+        Long taskId = 8L;
+        Long assignedMId = 26L; // 송혜교
+        Long notAssignedMember = 31L; // 서머싯몸
+
+        TaskAssignment ta1 = TaskAssignment.builder().taskId(taskId).memberId(notAssignedMember).build();
+        TaskAssignment ta2 = TaskAssignment.builder().taskId(taskId).memberId(assignedMId).build();
+
+        // when
+        Long noresult = taskRepository.chkAssigned(ta1);
+        Long result = taskRepository.chkAssigned(ta2);
+
+        // then
+        log.info("해당 할 일에 배정되지 않은 담당자는 어떻게 반환되는가?: {}", noresult);
+        // 해당 할 일에 배정되지 않은 담당자는 어떻게 반환되는가?: null
+
+        log.info("해당 할 일에 배정된 담당자는 어떻게 반환되는가?: {}", result);
+        // 해당 할 일에 배정된 담당자는 어떻게 반환되는가?: 8
+
+        log.info("result == 1L이 맞는 건가: {}", result == 1L);
+        // result == 1L이 맞는 건가: false >> 틀리지 진화야!!! task_id를 Select하라고 했으면서!
+
+
+
+    }
 }

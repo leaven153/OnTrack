@@ -22,10 +22,10 @@ public interface TaskMapper {
     Long log(TaskHistory taskHistory);
 
     // 담당자 배정
-    Long assign(List<TaskAssignment> taskAssignment);
+    int assign(List<TaskAssignment> taskAssignment);
 
     // 담당자 삭제
-    void unassign(TaskAssignment taskAssignment);
+    int delAssignee(TaskAssignment taskAssignment);
 
     // 할 일: 파일 첨부
     void attachFile(List<TaskFile> taskFile);
@@ -42,7 +42,8 @@ public interface TaskMapper {
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
 
-//    List<TaskList> findByMemberId(Long memberId);
+    // 해당 멤버의 할 일
+    List<TaskList> findTaskByMemberId(Long memberId);
 
     // Assignee view: 담당자별 할 일 목록
     List<AssigneeTaskList> getAssigneeView(Long memberId);
@@ -51,4 +52,10 @@ public interface TaskMapper {
     List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest);
 
     List<NoAssigneeTask> getNoAssigneeTask(Long projectId);
+
+    Integer cntAssigneeByTaskId(Long taskId);
+
+    // 해당 할 일에 이미 배정된 담당자인지 확인
+    Long chkAssigned(TaskAssignment ta);
+
 }

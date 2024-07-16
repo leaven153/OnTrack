@@ -20,6 +20,7 @@ public class MemberInfo {
     private String invitedAs;
 
 
+
 //    public Map<Long, String> memberInfo(){
 //        Map<Long, String> members = new LinkedHashMap<>();
 //        members.put(memberId, nickname);
