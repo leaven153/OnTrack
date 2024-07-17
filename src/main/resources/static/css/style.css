@@ -2401,6 +2401,14 @@ span.project-card-title {
 /**********************************/
 
 /******** Modal: 공통(컨테이너) ********/
+/* 추후 정리 요망 */
+.z3 {
+    z-index: 3;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+}
 
 .modal-container {
     z-index: 3;
@@ -2412,9 +2420,15 @@ span.project-card-title {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.2);
 }
+/* 컨트롤러를 다녀오는 한 이것은 먹히지 않는다...*/
+.modal-Right.w500 .tran-test{
+    transform: translateX(0);
+}
 
-.modal-Right {
+.modal-Right .tran-test{
     width: 500px;
+    transform: translateX(100%);
+    transition: transform 1000ms;
     height: 100%;
     max-height: calc(100vh - 1%);
     overflow-y: scroll;
@@ -3163,7 +3177,7 @@ div#childTasks-list_temp{
     line-height: 1.5em;
 }
 
-.task-comment-write-notice {
+.task-comment-notice {
     border: 2px solid #9e3f3b;
 }
 

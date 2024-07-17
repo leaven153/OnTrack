@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.net.URI;
@@ -53,6 +56,48 @@ public class ProjectController {
         return statusView;
     }
 */
+
+    // fragment만 rendering test
+    /*
+    @GetMapping("/part")
+    public String part(Model model, Locale locale){
+        log.info("=====================들어는 왔니");
+        log.info("locale 세팅을 어떻게 해야 할까?: {}", locale.toString());
+        // locale 세팅을 어떻게 해야 할까?: ko_KR
+        String msg = "is it possible?";
+        model.addAttribute("msg", msg);
+        return "part";
+    }
+    @Bean(name="part")
+    @Scope("prototype")
+    public ThymeleafView partTest(){
+        ThymeleafView view = new ThymeleafView("project");
+        view.setMarkupSelector("part");
+        return view;
+    }
+    */
+
+    /**
+     * created : 2024-05-21
+     * param   :
+     * return  :
+     * explain : 프로젝트 생성(team)
+     * 프로젝트를 생성하는 것은 mypage에서만 가능하도록 수정하면
+     * modelAttribute어노테이션을 이용해 프로젝트 멤버를 항상 붙일 수 있을 듯? →
+     * */
+    @PostMapping("/createProject")
+    public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, HttpSession session){
+        log.info("======= 새 프로젝트 등록 =========");
+        log.info("프로젝트 폼: {}", newProjectRequest);
+        LoginUser user = (LoginUser) session.getAttribute("loginUser");
+        newProjectRequest.setCreator(user.getUserId());
+        ProjectMember newCreator = AddProjectRequest.creator(user.getUserId(), user.getUserName());
+        projectService.createProject(newProjectRequest.toProjectEntity(), newCreator);
+        log.info("프로젝트 엔티티생성확인: {}", newProjectRequest.toProjectEntity());
+        log.info("멤버 엔티티생성확인: {}", newCreator);
+        return "redirect:/mypage/myProjects";
+    }
+
     /**
      * created  : 2024-05-
      * updated  : 2024-05-23
@@ -61,7 +106,7 @@ public class ProjectController {
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
     @GetMapping("/{projectId}")
-    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, HttpSession session, Model model){
+    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, @RequestParam(required = false)String hide, HttpSession session, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request){
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("project id: {}", projectId);
         log.info("선택한 view: {}", view);
@@ -90,9 +135,33 @@ public class ProjectController {
         // 4. 할일 추가 객체(TaskFormRequest)
         model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(project.getMemberId()).build());
 
+
+        // 5. 할 일 상세 모달의 hide
+        Boolean detail = true;
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if(inputFlashMap != null){
+            detail = (Boolean) inputFlashMap.get("hide");
+            String test = "This is test";
+            model.addAttribute("test", test);
+
+            log.info("flashMap으로 잡은 flash attribute: {}", inputFlashMap);
+            // flashMap으로 잡은 flash attribute: FlashMap [attributes={hide=false}, targetRequestPath=/project/9, targetRequestParams={}]
+            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("attributes")); // 잡았다! 근데 어떻게 접근하지?: null
+            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
+        }
+
+        TaskDetailRequest taskCommentForm = new TaskDetailRequest();
+        taskCommentForm.setProjectId(9L);
+        taskCommentForm.setTaskId(35L);
+        // if문(hide != null)안 에 넣으면 계속 에러 남 ㅠㅠ
+        model.addAttribute("taskCommentForm", taskCommentForm);
+
+
+        log.info("할 일 상세에 대한 hide(detail): {}", detail);
+        model.addAttribute("hide", detail);
         URI projectLocation = URI.create("project/project");
 
-        // null일 경우, thymeleaf가 table view로 처리한다.
+        // null일 경우, table view로 처리한다.
         if(view != null){
             model.addAttribute("view", view);
 //            return ResponseEntity.created(projectLocation).body(view);
@@ -104,32 +173,22 @@ public class ProjectController {
 
 
     /**
-     * created : 2024-05-21
+     * created : 2024-07-17
      * param   :
      * return  :
-     * explain : 프로젝트 생성(team)
-     * 프로젝트를 생성하는 것은 mypage에서만 가능하도록 수정하면
-     * modelAttribute어노테이션을 이용해 프로젝트 멤버를 항상 붙일 수 있을 듯? →
+     * explain : project (table) view에서 task 상세 클릭
      * */
-    @PostMapping("/createProject")
-    public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, HttpSession session){
-        log.info("======= 새 프로젝트 등록 =========");
-        log.info("프로젝트 폼: {}", newProjectRequest);
-        LoginUser user = (LoginUser) session.getAttribute("loginUser");
-        newProjectRequest.setCreator(user.getUserId());
-        ProjectMember newCreator = AddProjectRequest.creator(user.getUserId(), user.getUserName());
-        projectService.createProject(newProjectRequest.toProjectEntity(), newCreator);
-        log.info("프로젝트 엔티티생성확인: {}", newProjectRequest.toProjectEntity());
-        log.info("멤버 엔티티생성확인: {}", newCreator);
-        return "redirect:/mypage/myProjects";
+//    @GetMapping("/{projectId}/taskDetail/{taskId}")
+    public String getTaskDetail(@PathVariable("projectId") Long projectId, @PathVariable("taskId") Long taskId, RedirectAttributes redirectAttributes, Model model){
+        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", taskId);
+        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", projectId);
+//        model.addAttribute("hide", false);
+//        redirectAttributes.addFlashAttribute("test", "This is test");
+        return """
+                redirect:/project/%s?hide=false
+                """.formatted(projectId);
+        // void하면 Error resolving template [project/taskDetail/8], template might not exist or might not be accessible by any of the configured Template Resolvers
+//        return ResponseEntity.ok().body("해보자끝까지"); // http://localhost:8080/project/taskDetail/8 에서 "해보자끝까지" 문구만 뜸...
     }
-
-
-
-
-
-
-
-
 
 }

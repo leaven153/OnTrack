@@ -1412,99 +1412,76 @@ window.onload = function(){
     }
     /*---------- 011 ------------*/
     /* 할 일 상세 모달 열기 */
-    const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
-    const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
-    // const btnModalTaskDetailTab = document.querySelector("#task-tab-info");
-    const modalTaskCommonArea = document.querySelector("#task-detail-common");
-    const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
-    // const modalTaskDetailForm = document.querySelector("form#edit-task");
+    if(elExists(document.querySelectorAll(".btn-task-detail"))){
+        const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
+        const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
+        const containerTaskDetail = document.querySelector("#container-task-detail");
+        const modalTaskCommonArea = document.querySelector("#task-detail-common");
+        const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
 
-    btnOpenTaskDetail.forEach(function(chosenTask){
-        chosenTask.addEventListener("click", ()=>{
 
-            // console.log(chosenTask.id); // id값 가져옴. 8
-            // id값으로 서버에서 해당 task 정보 가져오는 코드 추가 요망
-            let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
-            console.log(`currUrlSplit: ${currUrl}`);
-            const taskDetailRequest = {
-                projectId: currUrl[2],
-                taskId: chosenTask.dataset.taskid,
-                item: chosenTask.dataset.tab
-            };
+        btnOpenTaskDetail.forEach(function(chosenTask){
+            chosenTask.addEventListener("click", ()=>{
 
-            const getTaskUrl = `http://localhost:8080/task/detail`; // /${chosenTask.dataset.clicker}
-            console.log(`url: ${getTaskUrl}`);
-            // console.log(`--------outerHTML-----------`);
-            // console.log(`${document.querySelector('form#edit-task').outerHTML}`);
+                // 어떤 탭 열어야 하는지 확인
+                const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
+                // console.log(chosenTab);
 
-            fetch(getTaskUrl,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(taskDetailRequest) // stringfy안 하면 안됨!  JSON parse error: Cannot deserialize value of type `me.jhchoi.ontrack.dto.MemberList` from Array value (token `JsonToken.START_ARRAY`)]
-            }).then(response => response.text()
-                // location.reload(); // 창이 열렸다가 바로 닫힌다.
-                // location.replace("../../../../fragments/taskDetail");
-                // modalTaskDetailForm.outerHTML = response.text();
-            ).then(data => console.log(data));
-            // ↑{"id":null,"taskId":null,"projectId":null,"modItem":null,"modType":null,"modContent":null,"updatedAt":null,"updatedBy":null}
+                // 1) 컨테이너 열고
+                containerTaskDetail.classList.remove("hide");
 
-            // 어떤 탭 열어야 하는지 확인
-            const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
-            console.log(chosenTab);
+                // 2) 전체 탭버튼에서 선택됨 뺐다가
+                btnTaskTabs.forEach(function(btnTabs){
+                    btnTabs.classList.remove("task-tab-chosen");
+                });
 
-            // 1) 컨테이너 열고
-            containerTaskDetail.classList.remove("hide");
+                // 3) 선택된 탭버튼에 '선택됨' 넣고
+                [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
 
-            // 2) 전체 탭버튼에서 선택됨 뺐다가
-            btnTaskTabs.forEach(function(btnTabs){
-                btnTabs.classList.remove("task-tab-chosen");
-            });
+                // 4) 모든 탭을 숨겼다가
+                modalTaskTabs.forEach(function(everyTabs){
+                    everyTabs.classList.add("hide");
+                });
 
-            // 3) 선택된 탭버튼에 '선택됨' 넣고
-            [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
+                // 5) 공통영역과 선택된 탭을 출력한다.
+                modalTaskCommonArea.classList.remove("hide");
+                [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
+                    chosenArea.classList.remove("hide");
+                });
 
-            // 4) 모든 탭을 숨겼다가
-            modalTaskTabs.forEach(function(everyTabs){
-                everyTabs.classList.add("hide");
-            });
-
-            // 5) 공통영역과 선택된 탭을 출력한다.
-            modalTaskCommonArea.classList.remove("hide");
-            [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
-                chosenArea.classList.remove("hide");
-            });
-
-        });
-    });
-
-    /*---------- 012 ------------*/
-    /* 할 일 상세 모달 탭버튼 클릭*/
-    let modalTaskTabChosen;
-    
-    btnTaskTabs.forEach(function(chosenTab){
-        chosenTab.addEventListener("click", ()=>{
-            // 1. 선택된 탭메뉴 표시
-            chosenTab.classList.add("task-tab-chosen");
-            modalTaskTabChosen = chosenTab.id;
-            // console.log(modalTaskTabChosen);
-            [...chosenTab.parentElement.children].filter((child) => child.id !== chosenTab.id).forEach(function(others){
-                others.classList.remove("task-tab-chosen");
-            });
-            // 2. 선택된 탭 표시 
-            modalTaskTabs.forEach(function(eachtab){
-                eachtab.classList.add("hide");
-                if(eachtab.id === "task-tab-info"){ // 상세 보기(수정)의 id → 수정요망...
-                    eachtab.classList.remove("hide");
-                    modalTaskCommonArea.classList.add("hide");
-                } else if (eachtab.classList.contains(modalTaskTabChosen)) {
-                    eachtab.classList.remove("hide");
-                    document.querySelector("#task-detail-common").classList.remove("hide");
-                }
             });
         });
-    }); // 할 일 상세 모달 탭버튼 클릭 끝
+
+        /*---------- 012 ------------*/
+        /* 할 일 상세 모달 탭버튼 클릭*/
+        let modalTaskTabChosen;
+
+        btnTaskTabs.forEach(function(chosenTab){
+            chosenTab.addEventListener("click", ()=>{
+                // 1. 선택된 탭메뉴 표시
+                chosenTab.classList.add("task-tab-chosen");
+                modalTaskTabChosen = chosenTab.id;
+                // console.log(modalTaskTabChosen);
+                [...chosenTab.parentElement.children].filter((child) => child.id !== chosenTab.id).forEach(function(others){
+                    others.classList.remove("task-tab-chosen");
+                });
+                // 2. 선택된 탭 표시
+                modalTaskTabs.forEach(function(eachtab){
+                    eachtab.classList.add("hide");
+                    if(eachtab.id === "task-tab-info"){ // 상세 보기(수정)의 id → 수정요망...
+                        eachtab.classList.remove("hide");
+                        modalTaskCommonArea.classList.add("hide");
+                    } else if (eachtab.classList.contains(modalTaskTabChosen)) {
+                        eachtab.classList.remove("hide");
+                        document.querySelector("#task-detail-common").classList.remove("hide");
+                    }
+                });
+            });
+        }); // 할 일 상세 모달 탭버튼 클릭 끝
+    }
+
+
+
 
     /*---------- 013 ------------*/
     /* 할 일 나누기(create child task) - 세부(하위)항목 */
@@ -2214,33 +2191,56 @@ window.onload = function(){
 
     /*---------- 037 ------------*/
     /*---- ▼ Modal(Task comment)소통하기 - 글 등록 ▼ ----*/
-    // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
-    const commentNoticeBtn = document.querySelector("#task-comment-notice");
-    const commentWriteBox = document.querySelector(".modal-task-comment-write");
-    const btnSubmitComment = document.querySelector("#btn-submit-comment");
-    let commentType;
-    commentNoticeBtn.addEventListener("change", ()=>{
-        if(commentNoticeBtn.checked){
-            commentWriteBox.classList.add("task-comment-write-notice");
-            btnSubmitComment.style.backgroundColor = "#9d3f3b";
-            commentType = "notice";
-        } else {
-            commentType = "Normal";
-            commentWriteBox.classList.remove("task-comment-write-notice");
-            btnSubmitComment.style.backgroundColor = "#411c02";
-        }
-    });
+    if(elExists(document.querySelector("#btn-submit-comment"))) {
 
-    /*---------- 038 ------------*/
-    // 글 등록
-    const newCommentContent = document.querySelector("#task-comment-write-content");
-    btnSubmitComment.addEventListener("click", ()=>{
-        // console.log(newCommentContent.value); // 입력한 글 뜸.
+        // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
+        // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
+        const commentNoticeBtn = document.querySelector("#task-comment-notice");
+        const commentWriteBox = document.querySelector(".modal-task-comment-write");
+        const btnSubmitComment = document.querySelector("#btn-submit-comment");
+        let commentType = "normal";
+        commentNoticeBtn.addEventListener("change", ()=>{
+            if(commentNoticeBtn.checked){
+                commentWriteBox.classList.add("task-comment-write-notice");
+                btnSubmitComment.style.backgroundColor = "#9d3f3b";
+                commentType = "notice";
+            } else {
+                commentType = "normal";
+                commentWriteBox.classList.remove("task-comment-write-notice");
+                btnSubmitComment.style.backgroundColor = "#411c02";
+            }
+        });
 
-        // 화면 바로 출력 (비동기) 아니야... 그냥 서버 치고 오자...
-    
-        // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
-    });
+        /*---------- 038 ------------*/
+        // 글 등록
+        const newCommentContent = document.querySelector("textarea#task-comment-write-content");
+
+        // btnSubmitComment.addEventListener("click", ()=>{
+        //     console.log(newCommentContent.value);
+        //     const datum = btnSubmitComment.dataset;
+        //
+        //     // 서버에 보낼 정보 입력
+        //     const taskComment = {
+        //         taskId: datum["taskid"],
+        //         projectId: datum["projectid"],
+        //         authorMid: datum["authormid"],
+        //         authorName: datum["authorname"],
+        //         type: commentType,
+        //         comment: newCommentContent.value
+        //     };
+        //
+        //     console.log(taskComment);
+        //
+        //     // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
+        //
+        //     // 화면에 출력
+        //     const commentArea = document.querySelector("#task-tab-comment-list");
+        //     commentArea.prepend(createCommentBox(datum["authorname"], commentType, newCommentContent.value, 3));
+        // });
+    }
+
+
+
 
     /*---------- 039 ------------*/
     // 작성한 소통하기 글 바로 출력할 때 사용할 function (쓰게 될까? 쓰게 되겠지...)
@@ -2253,7 +2253,6 @@ window.onload = function(){
         // 동적으로 RR을 생성할 때 미확인에 들어갈 숫자를 서버로부터 가져와야 한..다? 노노노
         // 해당 task의 담당자 수가 어딘가에 잠재되어 있어야겠..네? ㅋㅋㅋㅋㅋㅋㅋㅋㅋ 있으면 되지! 
 
-        
         // 0. Container
         const commentBox = document.createElement("div");
         
@@ -2309,6 +2308,7 @@ window.onload = function(){
         const commentEditSubmitBtn = document.createElement("span");
         const commentEditCancelBtn = document.createElement("span");
 
+        // 하다 만 나에게 박수...
     }
 
     /*---- ▲ Modal(Task comment)소통하기 - 글 등록 끝 ▲ ----*/
