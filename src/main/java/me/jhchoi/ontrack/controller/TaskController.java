@@ -1,5 +1,6 @@
 package me.jhchoi.ontrack.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,20 +72,24 @@ public class TaskController {
         return projectView;
     }
 
-    @PostMapping("/detail")
-    public ResponseEntity<?> getTask(@RequestBody TaskDetailRequest taskDetailRequest, HttpSession session){
+
+    @GetMapping("/detail/{taskId}")
+    public String getTaskDetail(@PathVariable Long taskId, HttpSession session, RedirectAttributes redirectAttributes, HttpServletRequest request){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
-            URI location = URI.create("/login");
-            return ResponseEntity.created(location).build();
-//            return "login/login";
+//            URI location = URI.create("/login");
+//            return ResponseEntity.created(location).build();
+            return "redirect:/login";
         }
-        log.info("======== getTask 컨트롤러 진입 ========");
-        log.info("taskId: {}", taskDetailRequest);
+        log.info("======== getTaskDetail 컨트롤러 진입 ========");
 
-        TaskHistory th = TaskHistory.builder().build();
+        TaskDetailRequest tr = new TaskDetailRequest();
+        redirectAttributes.addFlashAttribute("hide", false);
+        tr.setProjectId(9L);
 
-        return ResponseEntity.ok().body(th);
+        return "redirect:/project/%s".formatted(tr.getProjectId());
+
+//        return ResponseEntity.ok().body(th);
 //        return TaskList.builder().authorName("testAuthor").build();
 //        return "fragments/taskDetail :: editForm";
 //        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
@@ -93,6 +98,13 @@ public class TaskController {
     } // getTask ends
 
 
+    @PostMapping("/{taskId}/comment")
+    public String taskComment(@PathVariable Long taskId, @ModelAttribute TaskDetailRequest taskDetailRequest){
+        log.info("**************comment controller enter :) ***************");
+        log.info("무엇이 작성되어 왔나: {}", taskDetailRequest);
+        // 무엇이 작성되어 왔나: TaskDetailRequest(projectId=9, taskId=35, authorMid=14, authorName=공지철, comment=모두확인요청은 또 어떻게 풀거니..?, commentType=null, fileName=null)
+        return "redirect:/task/detail/%s".formatted(taskId);
+    }
     /**
      * 할 일의 내용 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate), 중요도(priority)
      * 리퀘스트 파라미터로 어떤 항목(item)을 바꾸는지 받고

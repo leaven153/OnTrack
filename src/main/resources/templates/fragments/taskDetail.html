@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Task - 상세</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
 </head>
 <body>
-  <div id="container-task-detail" class="modal-container hide" th:fragment="taskDetail(loginMember, taskDetail)">
+  <div id="container-task-detail" class="z3" th:classappend="${hide}?hide" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, test, taskCommentForm)"> <!--/*loginMember, */-->
   <!-- 할 일 상세 시작 -->
-  <div class="modal-Right flex-col-start-nowrap">
+    <div class="modal-Right flex-col-start-nowrap"> <!--/*방정맞은 리로드를 감춰보고 싶었던 어떤 시도.. th:classappend="${!hide}?w500"*/-->
+      <div class="tran-test">
     <!-- sticky 시작-->
     <div class="sticky">
       <div class="상단닫기버튼 flex-row-end-center-nowrap">
         <span class="btn-close font-24 btn-close-modal-createTask mr-10 cursorP btn-close-modal-taskDetail">&times;</span>
       </div>
       <div class="할일상세탭버튼 flex-row-justify-start-align-center mb-20 mt_10 bottom-line">
-        <div id="task-tab-comment" class="btn-modal-task-tab "><span class="">소통하기</span></div>
+        <div id="task-tab-comment" class="btn-modal-task-tab " th:classappend="${!hide}?'task-tab-chosen'"><span class="">소통하기</span></div>
         <div id="task-tab-history" class="btn-modal-task-tab"><span class="">진행내역</span></div>
         <div id="task-tab-file" class="btn-modal-task-tab"><span class="">파일</span></div>
       </div><!-- 할일상세탭메뉴 끝 -->
@@ -23,12 +24,12 @@
       <!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 시작 -->
       <!-- 나한테 parent-id에 값이 없다(있다면 나는 child)
         → 전체 task list에서 나를 parent로 갖고 있는 task가 있는가 (있다면 나는 parent, 없다면 나는 빛이나는 solo)-->
-      <div id="task-detail-common" class="공통내용(할일명작성자담당자)div modal-task-tab bottom-line-subtle mb-20 hide">
+      <div id="task-detail-common" class="공통내용(할일명작성자담당자)div modal-task-tab bottom-line-subtle mb-20">
         <div class="할일명 flex-row-between-nowrap mb-15 pd-b5 bottom-line-subtle">
           <div class="flex-row-justify-start-align-center">
             <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-7 img-18 hide">
             <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-7 img-18 hide">
-            <span class="ml-7 font-18 modal-task-title-small">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
+            <span class="ml-7 font-18 modal-task-title-small" th:text="${test}">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
 
           </div>
           <span class="작성자 ml-5 font-11 modal-task-author">로버트 다우니 주니어</span>
@@ -37,7 +38,7 @@
 
         <div class="담당자 flex-row-start-start-nowrap ml-7 mb-10">
           <span class="font-15 c411 mr-10 noShrink mt-2">담당자</span>
-          <div class="">
+          <div class="" >
             <!-- <div class="assignee-chosen-box mr-3">알라딘</div>
             <div class="assignee-chosen-box mr-3">쟈스민</div> -->
             <div class="assignee-chosen-box mr-3 mb-3">헬레나 본햄 카터</div>
@@ -54,51 +55,28 @@
         </div>
       </div><!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 끝 -->
 
-      <!-- 진행상태 변경 시작 -->
-      <div id="" class="진행상태 flex-row-justify-start-align-center mb-30 fb-1672 task-tab-history modal-task-tab hide">
-        <span class="font-15 c411">진행상태</span>
-        <div class="hasChild font-blur">
-          <span class="font-15">세부 항목으로 나눠진 일은 진행상태가 표시되지 않습니다.</span>
-        </div>
-        <div class="noChild hide">
-          <input type="radio" id="task-status-notYet" name="task_status" value="0" class="input-radio-status hide">
-          <input type="radio" id="task-status-planning" name="task_status" value="1" class="input-radio-status hide">
-          <input type="radio" id="task-status-ing" name="task_status" value="2" class="input-radio-status hide">
-          <input type="radio" id="task-status-review" name="task_status" value="3" class="input-radio-status hide">
-          <input type="radio" id="task-status-done" name="task_status" value="4" class="input-radio-status hide">
-          <div class="">
-            <label for="task-status-notYet" class="btn-radio btn-edit-status radio-l">
-              <span class="font-11">시작 안 함</span>
-            </label><label for="task-status-planning" class="btn-radio btn-edit-status">
-            <span class="font-11">계획중</span>
-          </label><label for="task-status-ing" class="btn-radio btn-edit-status">
-            <span class="font-11">진행중</span>
-          </label><label for="task-status-review" class="btn-radio btn-edit-status">
-            <span class="font-11">검토중</span>
-          </label><label for="task-status-done" class="btn-radio btn-edit-status radio-r">
-            <span class="font-11">완료</span>
-          </label>
-          </div>
-        </div>
-        <button type="button" class="btn-task-pause">
-          <span class="font-white pause-font">||</span>
-        </button>
-        <button type="button" class="border-dash-red hide"><img src="/imgs/icon_task_status_bin(red).png" alt="delete" class=""></button>
-      </div><!-- 진행상태 끝 -->
+
       <!-- 소통하기 시작 -->
-      <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10 hide">
+      <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10">
         <div class="modal-task-comment-write mb-20">
-          <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 업무에 대한 진행상황을 간단히 공유합니다(200자 이내)"></textarea>
-          <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
-            <div class="flex-row-justify-start-align-center">
-              <span class="ml-3 mr-5 font-13 c411 bold">모두확인요청</span>
-              <label class="switch" for="task-comment-notice">
-                <input type="checkbox" id="task-comment-notice" class="opacity0 wh0">
-                <span class="slider"></span>
-              </label>
+          <th:block th:with="taskId=9">
+          <form th:object="${taskCommentForm}" th:action="@{|/task/${taskId}/comment|}" method="POST">
+            <input type="hidden" th:field="${taskCommentForm.projectId}">
+            <input type="hidden" th:field="${taskCommentForm.taskId}">
+            <input type="hidden" name="authorMid" th:value="${myMid}">
+            <input type="hidden" name="authorName" th:value="${myNickname}">
+            <textarea th:field="${taskCommentForm.comment}" id="task-comment-write-content" class="" maxlength="200" placeholder="이 업무에 대한 진행상황을 간단히 공유합니다(200자 이내)"></textarea>
+            <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
+              <div class="flex-row-justify-start-align-center">
+                <span class="ml-3 mr-5 font-13 c411 bold">모두확인요청</span>
+                <label class="switch" for="task-comment-notice">
+                  <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <button type="submit" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${projectId}, data-projectid=${projectId}, data-authormid=${myMid}, data-authorname=${myNickname}">입력</button>
             </div>
-            <a href="#" id="btn-submit-comment" class="btn-submit-comment">입력</a>
-          </div>
+          </form></th:block>
         </div>
       </div> <!-- 소통하기: 글 입력 영역 끝 -->
 
@@ -116,7 +94,7 @@
       <!-- 파일첨부(drag and drop) 끝 (sticky 영역 내부)-->
     </div> <!-- sticky 끝-->
 
-    <div id="task-tab-comment-list" class="소통하기글출력영역 task-tab-comment modal-task-tab flex-col-start-nowrap c411 scroll mt-5 hide">
+    <div id="task-tab-comment-list" class="소통하기글출력영역 task-tab-comment modal-task-tab flex-col-start-nowrap c411 scroll mt-5">
       <!-- 글 하나 박스 시작 -->
       <div class="modal-task-comment-read">
         <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
@@ -132,7 +110,7 @@
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
             <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
+            <div class="btn-comment-edit-del"><!-- tool버튼과 기능 시작 -->
               <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
               <div class="click-comment-edit-del img-hidden">
                 <p class="btn-comment-edit">
@@ -153,9 +131,9 @@
               </div><!-- 삭제 confirm 창 끝 -->
             </div><!-- tool버튼과 기능 끝 -->
           </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
+        </div> <!-- commentInfoBox: 작성자(+RR cnt)+작성일시+tool box 끝-->
         <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
+          <textarea class="" maxlength="200" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
         </div><!-- commentContent 끝 -->
         <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
           <div class="flex-row-justify-start-align-center mr-15">
@@ -166,7 +144,7 @@
         </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
       </div> <!-- 글 하나 박스 끝 -->
       <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
+      <div class="modal-task-comment-read task-comment-notice">
         <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
           <div class="작성자와RR확인 flex-row-justify-start-align-center">
             <span class="작성자 commentWriter">고윤정</span>
@@ -203,8 +181,8 @@
           </div><!-- 작성일시와tool 끝 -->
         </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
         <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
+          <textarea class="" maxlength="200" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
+        </div><!-- commentContent 끝 -->
         <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
           <div class="flex-row-justify-start-align-center mr-15">
             <span class="btn-comment-edit-submit">등록</span>
@@ -213,295 +191,6 @@
           <button type="button" class="btn-comment-notice-check hide">내용확인</button>
         </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
       </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea maxlength="200" readonly class="btn-test">그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContetn 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-
     </div> <!-- 글 출력영역 끝 -->
     <!-- 소통하기 끝 -->
 
@@ -786,9 +475,9 @@
       </div> <!-- 파일내역row 끝 -->
 
     </div><!-- 파일 목록 끝(sticky 외부) -->
+      </div>
+    </div> <!-- 할 일 상세(수정, 소통하기, 진행내역, 파일) 끝 -->
 
-  </div> <!-- 할 일 상세(수정, 소통하기, 진행내역, 파일) 끝 -->
-
-</div><!-- 모달 감싸는 컨테이너 끝 -->
+  </div><!-- 모달 감싸는 컨테이너 끝 -->
 </body>
 </html>

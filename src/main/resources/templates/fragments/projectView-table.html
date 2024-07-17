@@ -96,7 +96,8 @@
             <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
           </div>
 
-          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment">
+          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 " th:onclick="|location.href='@{|/task/detail/${task.getId()}|}'|" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment"><!--btn-task-detail-->
+          <button type="button" class="font-11 hide" >상세보기</button>
         </div>
 
         <!-- assignee -->
