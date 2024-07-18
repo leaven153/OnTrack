@@ -190,11 +190,14 @@ public class TaskService {
      * */
 
     /*
-     * created : 2024-05-
-     * param   :
-     * return  :
+     * created : 2024-07-18
+     * param   : Long taskId
+     * return  : TaskDetailResponse
      * explain : 할 일 상세
      * */
+    public void getTaskDetail(Long taskId) {
+        taskRepository.findByTaskId(taskId);
+    }
 
 
 }

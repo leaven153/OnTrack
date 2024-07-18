@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.TaskRepository;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -23,6 +25,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -30,7 +33,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/task")
 public class TaskController {
     private final TaskService taskService;
-
+    private final TaskRepository taskRepository;
 
     @PostMapping("/addTask")
     public String addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, HttpSession session) {
@@ -83,11 +86,16 @@ public class TaskController {
         }
         log.info("======== getTaskDetail 컨트롤러 진입 ========");
 
-        TaskDetailRequest tr = new TaskDetailRequest();
-        redirectAttributes.addFlashAttribute("hide", false);
-        tr.setProjectId(9L);
+        Optional<OnTrackTask> task = taskRepository.findByTaskId(taskId);
+        log.info("task가 어떻게 받아와지는가: {}", task);
+        // task가 어떻게 받아와지는가: Optional[OnTrackTask(id=null, projectId=9, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14)]
 
-        return "redirect:/project/%s".formatted(tr.getProjectId());
+        redirectAttributes.addFlashAttribute("hide", false);
+        redirectAttributes.addFlashAttribute("taskId", taskId);
+
+
+
+        return "redirect:/project/%s".formatted(task.get().getProjectId());
 
 //        return ResponseEntity.ok().body(th);
 //        return TaskList.builder().authorName("testAuthor").build();
@@ -103,6 +111,10 @@ public class TaskController {
         log.info("**************comment controller enter :) ***************");
         log.info("무엇이 작성되어 왔나: {}", taskDetailRequest);
         // 무엇이 작성되어 왔나: TaskDetailRequest(projectId=9, taskId=35, authorMid=14, authorName=공지철, comment=모두확인요청은 또 어떻게 풀거니..?, commentType=null, fileName=null)
+
+        // comment 등록 후,
+        // comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
+
         return "redirect:/task/detail/%s".formatted(taskId);
     }
     /**

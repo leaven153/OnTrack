@@ -30,7 +30,7 @@
     </insert>
 
     <select id="findByTaskId" resultType="OnTrackTask">
-        SELECT task_title, AUTHOR, task_status, createdAt
+        SELECT project_id, task_title, authorMid, authorName, task_priority, task_status, task_dueDate, createdAt, updatedAt, updatedBy
         FROM ontrack_task
         WHERE id = #{id}
     </select>

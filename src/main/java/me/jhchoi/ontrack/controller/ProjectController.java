@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.ProjectService;
+import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
@@ -31,6 +33,7 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final TaskService taskService;
 
 
     @ModelAttribute("statusMap")
@@ -106,7 +109,7 @@ public class ProjectController {
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
     @GetMapping("/{projectId}")
-    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, @RequestParam(required = false)String hide, HttpSession session, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, HttpSession session, Model model, HttpServletRequest request){
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("project id: {}", projectId);
         log.info("선택한 view: {}", view);
@@ -114,7 +117,7 @@ public class ProjectController {
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            URI location = URI.create("/login");
+//            URI location = URI.create("/login");
 //            return ResponseEntity.created(location).build();
             return "redirect:/login";
         }
@@ -136,30 +139,43 @@ public class ProjectController {
         model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(project.getMemberId()).build());
 
 
+
         // 5. 할 일 상세 모달의 hide
-        Boolean detail = true;
+        Boolean detailOpen = true;
+        TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
         if(inputFlashMap != null){
-            detail = (Boolean) inputFlashMap.get("hide");
+            detailOpen = (Boolean) inputFlashMap.get("hide");
             String test = "This is test";
             model.addAttribute("test", test);
 
-            log.info("flashMap으로 잡은 flash attribute: {}", inputFlashMap);
+            for(int i = 0; i < project.getTaskList().size(); i++) {
+                if(project.getTaskList().get(i).getId().equals(inputFlashMap.get("taskId"))) {
+                    taskDetail = taskDetail.entityToDTO(project.getTaskList().get(i), projectId);
+                }
+            }
+            log.info("task detail이 생성되었는지 확인: {}", taskDetail);
+            // task detail이 생성되었는지 확인: TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
+
+//            log.info("flashMap으로 잡은 flash attribute: {}", inputFlashMap);
             // flashMap으로 잡은 flash attribute: FlashMap [attributes={hide=false}, targetRequestPath=/project/9, targetRequestParams={}]
-            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("attributes")); // 잡았다! 근데 어떻게 접근하지?: null
-            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
+//            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("attributes")); // 잡았다! 근데 어떻게 접근하지?: null
+//            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
         }
+        // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)
+        model.addAttribute("taskDetail", taskDetail);
+        // 일단 소통하기 글 작성은 fetch로 진행하도록 한다..
+//        TaskDetailRequest taskCommentForm = new TaskDetailRequest();
+//        taskCommentForm.setProjectId(9L);
+//        taskCommentForm.setTaskId(35L);
 
-        TaskDetailRequest taskCommentForm = new TaskDetailRequest();
-        taskCommentForm.setProjectId(9L);
-        taskCommentForm.setTaskId(35L);
         // if문(hide != null)안 에 넣으면 계속 에러 남 ㅠㅠ
-        model.addAttribute("taskCommentForm", taskCommentForm);
+//        model.addAttribute("taskCommentForm", taskCommentForm);
 
 
-        log.info("할 일 상세에 대한 hide(detail): {}", detail);
-        model.addAttribute("hide", detail);
-        URI projectLocation = URI.create("project/project");
+        log.info("할 일 상세에 대한 hide(detail): {}", detailOpen);
+        model.addAttribute("hide", detailOpen);
+//        URI projectLocation = URI.create("project/project");
 
         // null일 경우, table view로 처리한다.
         if(view != null){

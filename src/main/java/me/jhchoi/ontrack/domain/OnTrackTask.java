@@ -22,7 +22,7 @@ public class OnTrackTask {
     private Long authorMid;
     private String authorName;
     private Integer taskPriority; // vip: 0, ip: 1, norm: 2
-    private Integer taskStatus; // not-yet: 0, planning: 1, ing: 2, review: 3, done: 4
+    private Integer taskStatus; // not-yet: 1, planning: 2, ing: 3, review: 4, done: 5
     private LocalDate taskDueDate;
     private Long taskParentId;
     private LocalDateTime createdAt;

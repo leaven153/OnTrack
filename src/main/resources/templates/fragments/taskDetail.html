@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Task - 상세</title>
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
+
 </head>
 <body>
-  <div id="container-task-detail" class="z3" th:classappend="${hide}?hide" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, test, taskCommentForm)"> <!--/*loginMember, */-->
-  <!-- 할 일 상세 시작 -->
-    <div class="modal-Right flex-col-start-nowrap"> <!--/*방정맞은 리로드를 감춰보고 싶었던 어떤 시도.. th:classappend="${!hide}?w500"*/-->
-      <div class="tran-test">
+  <div id="container-task-detail" class="z3" th:classappend="${!hide}?open" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid)"> <!--/*loginMember, , taskCommentForm*/-->
+    <!-- 할 일 상세 시작 -->
+    <div class="modal-Right flex-col-start-nowrap" >
     <!-- sticky 시작-->
     <div class="sticky">
       <div class="상단닫기버튼 flex-row-end-center-nowrap">
@@ -29,28 +29,26 @@
           <div class="flex-row-justify-start-align-center">
             <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-7 img-18 hide">
             <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-7 img-18 hide">
-            <span class="ml-7 font-18 modal-task-title-small" th:text="${test}">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
+            <span class="ml-7 font-18 modal-task-title-small" th:text="${taskDetail.getTaskTitle()}">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
 
           </div>
-          <span class="작성자 ml-5 font-11 modal-task-author">로버트 다우니 주니어</span>
+          <span class="작성자 ml-5 font-11 modal-task-author" th:text="${taskDetail.getAuthorName()}">로버트 다우니 주니어</span>
           <img src="/imgs/icon_bell.png" alt="task update alarm" class="mr-5 img-18 cursorP hide">
         </div>
 
-        <div class="담당자 flex-row-start-start-nowrap ml-7 mb-10">
+        <div class="담당자 flex-row-start-start-nowrap ml-7 mb-10" >
           <span class="font-15 c411 mr-10 noShrink mt-2">담당자</span>
-          <div class="" >
-            <!-- <div class="assignee-chosen-box mr-3">알라딘</div>
-            <div class="assignee-chosen-box mr-3">쟈스민</div> -->
-            <div class="assignee-chosen-box mr-3 mb-3">헬레나 본햄 카터</div>
-            <div class="assignee-chosen-box mr-3 mb-3">크리스토퍼 놀란</div>
-            <div class="assignee-chosen-box mr-3 mb-3">로버트 다우니 주니어</div>
-            <div class="assignee-chosen-box mr-3 mb-3">에밀리 블런트</div>
-            <div class="assignee-chosen-box mr-3 mb-3">존 크래신스키</div>
-            <div class="assignee-chosen-box mr-3 mb-3">이적</div>
-            <div class="assignee-chosen-box mr-3 mb-3">김연우</div>
-            <div class="assignee-chosen-box mr-3 mb-3">윤종신</div>
-            <div class="assignee-chosen-box mr-3 mb-3">장항준</div>
-            <div class="assignee-chosen-box mr-3 mb-3">제임스서버</div>
+          <div class="" th:each="assignee: ${taskDetail.getAssignees()}">
+            <div class="assignee-chosen-box mr-3 mb-3" th:text="${assignee.value}">헬레나 본햄 카터</div>
+<!--            <div class="assignee-chosen-box mr-3 mb-3">크리스토퍼 놀란</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">로버트 다우니 주니어</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">에밀리 블런트</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">존 크래신스키</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">이적</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">김연우</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">윤종신</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">장항준</div>-->
+<!--            <div class="assignee-chosen-box mr-3 mb-3">제임스서버</div>-->
           </div>
         </div>
       </div><!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 끝 -->
@@ -59,13 +57,13 @@
       <!-- 소통하기 시작 -->
       <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10">
         <div class="modal-task-comment-write mb-20">
-          <th:block th:with="taskId=9">
-          <form th:object="${taskCommentForm}" th:action="@{|/task/${taskId}/comment|}" method="POST">
-            <input type="hidden" th:field="${taskCommentForm.projectId}">
-            <input type="hidden" th:field="${taskCommentForm.taskId}">
-            <input type="hidden" name="authorMid" th:value="${myMid}">
-            <input type="hidden" name="authorName" th:value="${myNickname}">
-            <textarea th:field="${taskCommentForm.comment}" id="task-comment-write-content" class="" maxlength="200" placeholder="이 업무에 대한 진행상황을 간단히 공유합니다(200자 이내)"></textarea>
+<!--          <th:block th:with="taskId=9">-->
+<!--          <form th:object="${taskCommentForm}" th:action="@{|/task/${taskId}/comment|}" method="POST">-->
+<!--            <input type="hidden" th:field="${taskCommentForm.projectId}">-->
+<!--            <input type="hidden" th:field="${taskCommentForm.taskId}">-->
+<!--            <input type="hidden" name="authorMid" th:value="${myMid}">-->
+<!--            <input type="hidden" name="authorName" th:value="${myNickname}">-->
+            <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 일에 대한 진행상황을 간단히 공유합니다(400자 이내)"></textarea> <!--th:field="${taskCommentForm.comment}"-->
             <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
               <div class="flex-row-justify-start-align-center">
                 <span class="ml-3 mr-5 font-13 c411 bold">모두확인요청</span>
@@ -74,9 +72,9 @@
                   <span class="slider"></span>
                 </label>
               </div>
-              <button type="submit" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${projectId}, data-projectid=${projectId}, data-authormid=${myMid}, data-authorname=${myNickname}">입력</button>
+              <button type="button" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-authormid=${myMid}, data-authorname=${myNickname}, data-assigneecnt=${taskDetail.getAssigneeCnt()}">입력</button>
             </div>
-          </form></th:block>
+<!--          </form></th:block>-->
         </div>
       </div> <!-- 소통하기: 글 입력 영역 끝 -->
 
@@ -158,14 +156,14 @@
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
             <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del cursorP"><!-- tool버튼과 기능 시작 -->
+            <div class="btn-comment-edit-del"><!-- tool버튼과 기능 시작 -->
               <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
               <div class="click-comment-edit-del img-hidden">
                 <p class="btn-comment-edit">
                   <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
                   <span class="">수정하기</span>
                 </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
+                <p class="btn-comment-del">
                   <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
                   <span class="">삭제하기</span>
                 </p>
@@ -475,9 +473,11 @@
       </div> <!-- 파일내역row 끝 -->
 
     </div><!-- 파일 목록 끝(sticky 외부) -->
-      </div>
+
     </div> <!-- 할 일 상세(수정, 소통하기, 진행내역, 파일) 끝 -->
 
   </div><!-- 모달 감싸는 컨테이너 끝 -->
+
+
 </body>
 </html>
