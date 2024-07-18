@@ -2279,26 +2279,26 @@ window.onload = function(){
     function dateDay(date){
         const D = date.getDay();
         switch(D){
-            case 0: return `(일) `; break;
-            case 1: return `(월) `; break;
-            case 2: return `(화) `; break;
-            case 3: return `(수) `; break;
-            case 4: return `(목) `; break;
-            case 5: return `(금) `; break;
-            case 6: return `(토) `; break;
+            case 0: return `(일) `;
+            case 1: return `(월) `;
+            case 2: return `(화) `;
+            case 3: return `(수) `;
+            case 4: return `(목) `;
+            case 5: return `(금) `;
+            case 6: return `(토) `;
         }
     }
 
     function dateDayEng(date){
         const D = date.getDay();
         switch(D){
-            case 0: return `SUN `; break;
-            case 1: return `MON `; break;
-            case 2: return `TUE `; break;
-            case 3: return `WED `; break;
-            case 4: return `THU `; break;
-            case 5: return `FRI `; break;
-            case 6: return `SAT `; break;
+            case 0: return `SUN `;
+            case 1: return `MON `;
+            case 2: return `TUE `;
+            case 3: return `WED `;
+            case 4: return `THU `;
+            case 5: return `FRI `;
+            case 6: return `SAT `;
         }
     }
 

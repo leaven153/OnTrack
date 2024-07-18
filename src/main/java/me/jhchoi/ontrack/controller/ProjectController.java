@@ -109,7 +109,7 @@ public class ProjectController {
      * explain  : 개별 프로젝트 진입(프로젝트 할 일 목록 조회)
      * */
     @GetMapping("/{projectId}")
-    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, @RequestParam(required = false)String hide, HttpSession session, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, HttpSession session, Model model, HttpServletRequest request){
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("project id: {}", projectId);
         log.info("선택한 view: {}", view);
@@ -117,7 +117,7 @@ public class ProjectController {
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            URI location = URI.create("/login");
+//            URI location = URI.create("/login");
 //            return ResponseEntity.created(location).build();
             return "redirect:/login";
         }
@@ -175,7 +175,7 @@ public class ProjectController {
 
         log.info("할 일 상세에 대한 hide(detail): {}", detailOpen);
         model.addAttribute("hide", detailOpen);
-        URI projectLocation = URI.create("project/project");
+//        URI projectLocation = URI.create("project/project");
 
         // null일 경우, table view로 처리한다.
         if(view != null){
