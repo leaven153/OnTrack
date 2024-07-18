@@ -1,6 +1,7 @@
 package me.jhchoi.ontrack.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import me.jhchoi.ontrack.domain.TaskComment;
@@ -8,11 +9,29 @@ import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class TaskDetailResponse {
+@AllArgsConstructor @Builder
+public class TaskDetailResponse{
+
+    private Long projectId;
+    private Long taskId;
+    private String taskTitle;
+    private Long authorMid;
+    private String authorName;
+    private Map<Long, String> assignees;
+    private Integer assigneeCnt;
+    
+    /** OnTrackTask 에 있지만 현재 포함되지 않은 필드
+     *     private Integer taskPriority; // vip: 0, ip: 1, norm: 2
+     *     private Integer taskStatus; // not-yet: 1, planning: 2, ing: 3, review: 4, done: 5
+     *     private LocalDate taskDueDate;
+     *     private Long taskParentId;
+     *     private LocalDateTime createdAt;
+     *     private LocalDateTime updatedAt;
+     *     private Long updatedBy;*/
 
     // comment (소통)
     private List<TaskComment> taskComments;
@@ -22,4 +41,16 @@ public class TaskDetailResponse {
 
     // File
     private List<TaskFile> taskFiles;
+
+    public static TaskDetailResponse entityToDTO(TaskList taskList, Long projectId){
+        return TaskDetailResponse.builder()
+                .projectId(projectId)
+                .taskId(taskList.getId())
+                .taskTitle(taskList.getTaskTitle())
+                .authorMid(taskList.getAuthorMid())
+                .authorName(taskList.getAuthorName())
+                .assignees(taskList.getAssignees())
+                .assigneeCnt(taskList.getAssigneeMids().size())
+                .build();
+    }
 }

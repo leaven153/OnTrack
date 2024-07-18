@@ -37,7 +37,6 @@ public class TaskList {
     private List<TaskFile> taskFiles;
 
 
-
     // 담당자 여러 명일 때, 성만 출력되도록 한다. (projectView.html에서 직접 호출)
     public static LinkedHashMap<Long, String> manyAssigneeFirstName(Map<Long, String> assignees){
         LinkedHashMap<Long, String> result = new LinkedHashMap<>();

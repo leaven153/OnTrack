@@ -4,11 +4,7 @@ function elExists(el){
     return el !== undefined && el !== null;
 }
 
-
 window.onload = function(){
-
-
-
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
     /*---------- 001 ------------*/
@@ -179,10 +175,10 @@ window.onload = function(){
         const containerTaskDetail = document.querySelector("#container-task-detail");
         btnCloseModalTaskDetail.forEach(function(chosenBtn){
             chosenBtn.addEventListener("click", ()=>{
-                containerTaskDetail.classList.add("hide");
+                // containerTaskDetail.classList.add("hide");
+                document.querySelector("#container-task-detail .modal-Right").classList.remove("slide-side");
             });
         });
-
     }
 
     /*---------- 009 ------------*/
@@ -1412,49 +1408,20 @@ window.onload = function(){
     }
     /*---------- 011 ------------*/
     /* 할 일 상세 모달 열기 */
-    if(elExists(document.querySelectorAll(".btn-task-detail"))){
-        const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
-        const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
-        const containerTaskDetail = document.querySelector("#container-task-detail");
-        const modalTaskCommonArea = document.querySelector("#task-detail-common");
-        const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
+    // 컨트롤러에 다녀와서 열리는 버전: 화면이 깜빡거리더라도 slide로 열린다면 좀 낫지 않을까.. ㅠㅠ
+    if(elExists(document.querySelector(".z3")) && document.querySelector(".z3").classList.contains("open")) {
+        // console.log("does it work?");
+        document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
+        // setTimeout(document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side"), 300)
+    }
 
-
-        btnOpenTaskDetail.forEach(function(chosenTask){
-            chosenTask.addEventListener("click", ()=>{
-
-                // 어떤 탭 열어야 하는지 확인
-                const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
-                // console.log(chosenTab);
-
-                // 1) 컨테이너 열고
-                containerTaskDetail.classList.remove("hide");
-
-                // 2) 전체 탭버튼에서 선택됨 뺐다가
-                btnTaskTabs.forEach(function(btnTabs){
-                    btnTabs.classList.remove("task-tab-chosen");
-                });
-
-                // 3) 선택된 탭버튼에 '선택됨' 넣고
-                [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
-
-                // 4) 모든 탭을 숨겼다가
-                modalTaskTabs.forEach(function(everyTabs){
-                    everyTabs.classList.add("hide");
-                });
-
-                // 5) 공통영역과 선택된 탭을 출력한다.
-                modalTaskCommonArea.classList.remove("hide");
-                [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
-                    chosenArea.classList.remove("hide");
-                });
-
-            });
-        });
-
-        /*---------- 012 ------------*/
-        /* 할 일 상세 모달 탭버튼 클릭*/
+    /*---------- 012 ------------*/
+    /* 할 일 상세 모달 탭버튼 클릭*/
+    if(elExists(document.querySelector(".btn-modal-task-tab"))){
         let modalTaskTabChosen;
+        const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
+        const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
+        const modalTaskCommonArea = document.querySelector("#task-detail-common");
 
         btnTaskTabs.forEach(function(chosenTab){
             chosenTab.addEventListener("click", ()=>{
@@ -1478,6 +1445,52 @@ window.onload = function(){
                 });
             });
         }); // 할 일 상세 모달 탭버튼 클릭 끝
+    }
+
+
+
+    // 아래는 컨트롤러 다녀오지 않는 버전.
+    if(elExists(document.querySelectorAll(".btn-task-detail"))){
+        const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
+        const containerTaskDetail = document.querySelector("#container-task-detail");
+
+        btnOpenTaskDetail.forEach(function(chosenTask){
+            chosenTask.addEventListener("click", ()=>{
+
+                console.log("다시 시도");
+                // document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
+                document.querySelector("#container-task-detail .modal-Right").style.transform = "translateX(0)";
+
+
+                // 어떤 탭 열어야 하는지 확인
+                const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
+                // console.log(chosenTab);
+
+                // 1) 컨테이너 열고
+                containerTaskDetail.classList.remove("hide");
+
+                // 2) 전체 탭버튼에서 선택됨 뺐다가
+                // btnTaskTabs.forEach(function(btnTabs){
+                //     btnTabs.classList.remove("task-tab-chosen");
+                // });
+
+                // 3) 선택된 탭버튼에 '선택됨' 넣고
+                // [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
+
+                // 4) 모든 탭을 숨겼다가
+                // modalTaskTabs.forEach(function(everyTabs){
+                //     everyTabs.classList.add("hide");
+                // });
+
+                // 5) 공통영역과 선택된 탭을 출력한다.
+                // modalTaskCommonArea.classList.remove("hide");
+                // [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
+                //     chosenArea.classList.remove("hide");
+                // });
+
+            });
+        });
+
     }
 
 
@@ -2215,91 +2228,266 @@ window.onload = function(){
         // 글 등록
         const newCommentContent = document.querySelector("textarea#task-comment-write-content");
 
-        // btnSubmitComment.addEventListener("click", ()=>{
-        //     console.log(newCommentContent.value);
-        //     const datum = btnSubmitComment.dataset;
-        //
-        //     // 서버에 보낼 정보 입력
-        //     const taskComment = {
-        //         taskId: datum["taskid"],
-        //         projectId: datum["projectid"],
-        //         authorMid: datum["authormid"],
-        //         authorName: datum["authorname"],
-        //         type: commentType,
-        //         comment: newCommentContent.value
-        //     };
-        //
-        //     console.log(taskComment);
-        //
-        //     // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
-        //
-        //     // 화면에 출력
-        //     const commentArea = document.querySelector("#task-tab-comment-list");
-        //     commentArea.prepend(createCommentBox(datum["authorname"], commentType, newCommentContent.value, 3));
-        // });
+        btnSubmitComment.addEventListener("click", ()=>{
+            console.log(newCommentContent);
+            const content = newCommentContent.value;
+            const datum = btnSubmitComment.dataset;
+            const date = new Date();
+
+            // 서버에 보낼 정보 입력
+            // ★★ comment_check에도 작성자는 확인함으로 입력해야 한다.
+            // ★★ 작성한 글을 바로 출력할 것이기 때문에 작성한 시간을 javascript에서 보내줘야 한다.
+            const taskComment = {
+                taskId: datum["taskid"],
+                projectId: datum["projectid"],
+                authorMid: datum["authormid"],
+                authorName: datum["authorname"],
+                type: commentType,
+                comment: content,
+                createdAt: date,
+                updatedAt: date
+            };
+
+            console.log(taskComment);
+            newCommentContent.value = "";
+            // Object { taskId: "8", projectId: "9", authorMid: "14", authorName: "공지철",
+            // type: "normal", comment: "소통하기 작성",
+            // createdAt: Date Fri Jul 19 2024 00:19:33 GMT+0900 (대한민국 표준시),
+            // updatedAt: Date Fri Jul 19 2024 00:19:33 GMT+0900 (대한민국 표준시) }
+
+
+            // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
+
+            // 화면에 출력
+            const commentArea = document.querySelector("#task-tab-comment-list");
+            commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, datum["assigneecnt"], date));
+        });
     }
 
 
+    /*---------- 059 날짜형태반환(YY.MM.DD (요일) hh:mm ------------*/
+    function dateYYMMDD(date){
+        const YY = date.getFullYear().toString().substring(2);
+        let MM = date.getMonth()+1;
+        if(MM < 10) { MM = `0${MM}`}
+        let DD = date.getDate();
+        if(DD < 10) { DD = `0${DD}`; }
 
+        return `${YY}.${MM}.${DD} `;
+    }
+
+    function dateDay(date){
+        const D = date.getDay();
+        switch(D){
+            case 0: return `(일) `; break;
+            case 1: return `(월) `; break;
+            case 2: return `(화) `; break;
+            case 3: return `(수) `; break;
+            case 4: return `(목) `; break;
+            case 5: return `(금) `; break;
+            case 6: return `(토) `; break;
+        }
+    }
+
+    function dateDayEng(date){
+        const D = date.getDay();
+        switch(D){
+            case 0: return `SUN `; break;
+            case 1: return `MON `; break;
+            case 2: return `TUE `; break;
+            case 3: return `WED `; break;
+            case 4: return `THU `; break;
+            case 5: return `FRI `; break;
+            case 6: return `SAT `; break;
+        }
+    }
+
+    function timeHHMM(date){
+        let hh = date.getHours();
+        if(hh < 10) { hh = `0${hh}`; }
+        let mm = date.getMinutes();
+        if(mm < 10) { mm = `0${mm}`; }
+        return `${hh}:${mm}`;
+    }
 
     /*---------- 039 ------------*/
     // 작성한 소통하기 글 바로 출력할 때 사용할 function (쓰게 될까? 쓰게 되겠지...)
-    function createCommentBox(writer, type, content, assigneeCnt) {
-
-        // img도 createElement or new Image();
-        // .src = URL, .alt로 속성 지정 가능
-        // url: js파일 기준 or html 기준?
-
-        // 동적으로 RR을 생성할 때 미확인에 들어갈 숫자를 서버로부터 가져와야 한..다? 노노노
-        // 해당 task의 담당자 수가 어딘가에 잠재되어 있어야겠..네? ㅋㅋㅋㅋㅋㅋㅋㅋㅋ 있으면 되지! 
-
+    function createCommentBox(writer, type, content, assigneeCnt, date) {
         // 0. Container
         const commentBox = document.createElement("div");
+        commentBox.classList.add("modal-task-comment-read");
+        if(type === "notice"){
+            commentBox.classList.add("task-comment-notice");
+        }
         
-        // 1. 작성자+모두확인요청cnt+작성일시+tool
+        // 1. 작성자+모두확인요청cnt + 작성일시+tool DIV (2개 요소)
         const commentInfoBox = document.createElement("div");
-        
-        // 1-1. 작성자+모두확인요청cnt
+        commentInfoBox.classList.add("modal-task-comment-info-box");
+
+        // 1-1. 작성자+ RR확인cnt (2개 요소 appendChild)
         const commentWriterNNoticeBox = document.createElement("div");
-        // 작성자
+        commentWriterNNoticeBox.classList.add("flex-row-justify-start-align-center");
+
+        // 1-1-1. 작성자
         const commentWriter = document.createElement("span");
-        // 모두확인요청 글의 확인/미확인 수 
+        commentWriter.classList.add("commentWriter");
+        commentWriter.innerText = writer;
+
+        // 1-1-2. 모두확인요청 글의 확인/미확인 수 (5개 요소 appendChild)
         const commentNoticeChkCntBox = document.createElement("div");
+        commentNoticeChkCntBox.classList.add("flex-row-justify-start-align-center");
+
         const commentNoticeIcon = document.createElement("img");
+        commentNoticeIcon.classList.add("img-2520", "mr-5");
+        commentNoticeIcon.src = "../../imgs/icon_chatRR.png";
+        commentNoticeIcon.setAttribute("th:src", `@{/imgs/commentNoticeIcon}`);
+
+        // 1-1-2-1. 확인span, cnt span
         const commentNoticeChk = document.createElement("span");
+        commentNoticeChk.classList.add("font-12");
+        commentNoticeChk.innerText = "확인"
+
         const commentNoticeChkCnt = document.createElement("span");
+        commentNoticeChkCnt.classList.add("comment-notice-chk-cnt");
+        commentNoticeChkCnt.innerText = "1"; // 작성자는 이미 확인한 것으로 출력한다.
+
+        // 1-1-2-2. 미확인 span, cnt span
         const commentNoticeUnchk = document.createElement("span");
+        commentNoticeUnchk.classList.add("font-12");
+        commentNoticeUnchk.innerText = "미확인";
+
         const commentNoticeUnhkCnt = document.createElement("span");
-        
-        //1-2. 작성일시+tool
+        commentNoticeUnhkCnt.classList.add("altivo-light");
+        commentNoticeUnhkCnt.innerText = assigneeCnt - 1;
+
+        // 1-1-2에 appendChild (5개)
+        commentNoticeChkCntBox.appendChild(commentNoticeIcon);
+        commentNoticeChkCntBox.appendChild(commentNoticeChk);
+        commentNoticeChkCntBox.appendChild(commentNoticeChkCnt);
+        commentNoticeChkCntBox.appendChild(commentNoticeUnchk);
+        commentNoticeChkCntBox.appendChild(commentNoticeUnhkCnt);
+
+        // 1-1에 appendChild (2개)
+        commentWriterNNoticeBox.appendChild(commentWriter);
+        commentWriterNNoticeBox.appendChild(commentNoticeChkCntBox);
+
+
+        // 1-2. 작성일시+tool (2개요소 appendChild)
         const commentDateNToolBox = document.createElement("div");
-        // 작성일시
+        commentDateNToolBox.classList.add("mr-15", "flex-row-justify-start-align-center");
+
+        // 1-2-1. 작성일시
         const commentDate = document.createElement("span");
-        // tool(수정/삭제) 버튼과 그에 따른 모달 2개
+        commentDate.classList.add("altivo-regular", "mr-5");
+        commentDate.innerText = dateYYMMDD(date);
+        commentDate.innerText += dateDayEng(date);
+        commentDate.innerText += timeHHMM(date);
+
+        // 1-2-2. tool(수정/삭제) 버튼과 그에 따른 모달 2개 (3개요소 appendChild)
         const commentToolBox = document.createElement("div");
-        // tool 버튼(3dot)
+        commentToolBox.classList.add("btn-comment-edit-del");
+
+        // 1-2-2-1. tool 버튼 (이미지; 3dot)
         const commentToolBtn = document.createElement("img");
-        // 수정/삭제 버튼box
+        commentToolBtn.src = "../../imgs/icon_3dot.png";
+        commentToolBtn.setAttribute("th:src", `@{/imgs/icon_3dot.png}`);
+
+        // 1-2-2-2. 수정/삭제 버튼box (2개요소 appendChild)
         const commentEditDelBox = document.createElement("div");
-        // 수정버튼 (∵button으로 하면 visibility hidden이 적용되지 않음)
-        const commentEditBtn = document.createElement("p");
+        commentEditDelBox.classList.add("click-comment-edit-del", "img-hidden");
+
+        // 1-2-2-2-1. 수정버튼 (2개요소 appendChild. p > img, span)
+        // (∵ button으로 하면 visibility hidden이 적용되지 않음)
+        const commentEditBtnP = document.createElement("p");
+        commentEditBtnP.classList.add("btn-comment-edit");
+
         const commentEditIcon = document.createElement("img");
-        const commentEdit = document.createElement("span");
-        // 삭제버튼
-        const commentDelBtn = document.createElement("p");
+        commentEditIcon.src = "../../imgs/icon_write.png";
+        commentEditIcon.setAttribute("th:src", `@{/imgs/icon_write.png}`);
+        commentEditIcon.classList.add("img-1718", "mr-3");
+
+        const commentEditSpan = document.createElement("span");
+        commentEditSpan.innerText = "수정하기";
+
+        // 수정버튼(p)에 icon과 span 부착
+        commentEditBtnP.appendChild(commentEditIcon);
+        commentEditBtnP.appendChild(commentEditSpan);
+
+        // 1-2-2-2-2. 삭제버튼 (2개요소 appendChild)
+        const commentDelBtnP = document.createElement("p");
+        commentDelBtnP.classList.add("btn-comment-del");
+
         const commentDelIcon = document.createElement("img");
-        const commentDel = document.createElement("span");
-        // 삭제confirm창
+        commentDelIcon.src = "../../imgs/icon_bin98.png";
+        commentDelIcon.setAttribute("th:src", `@{/imgs/icon_bin98.png}`);
+        commentDelIcon.classList.add("img-1718", "mr-3");
+
+        const commentDelSpan = document.createElement("span");
+        commentDelSpan.innerText = "삭제하기";
+
+        // 삭제버튼(p)에 icon과 span 부착
+        commentDelBtnP.appendChild(commentDelIcon);
+        commentDelBtnP.appendChild(commentDelSpan);
+
+        // 수정/삭제버튼 box(1-2-2-2)에 각 버튼 부착
+        commentEditDelBox.appendChild(commentEditBtnP);
+        commentEditDelBox.appendChild(commentDelBtnP);
+
+
+        // 1-2-2-3. 삭제confirm창 (2개요소 appendChild)
         const commentDelConfirmBox = document.createElement("div");
+        commentDelConfirmBox.classList.add("popupYN", "img-hidden");
+
+        // 1-2-2-3-1.
         const commentDelConfirm = document.createElement("span");
+        commentDelConfirm.innerText = "정말로 삭제하시겠습니까?";
+
+        // 1-2-2-3-2. 확인/취소버튼 box (2개 요소 appendChild)
         const commentDelConfirmBtnBox = document.createElement("div");
+        commentDelConfirmBtnBox.classList.add("flex-row-center-center-nowrap", "mt-20");
+
         const commentDelConfirmY = document.createElement("p");
+        commentDelConfirmY.classList.add("btn-confirm-yes");
+        commentDelConfirmY.innerText = "확인";
+
         const commentDelConfirmN = document.createElement("p");
+        commentDelConfirmN.classList.add("btn-confirm-no");
+        commentDelConfirmN.innerText = "취소";
+
+        // 1-2-2-3-2에 부착 (2개 요소)
+        commentDelConfirmBtnBox.appendChild(commentDelConfirmY);
+        commentDelConfirmBtnBox.appendChild(commentDelConfirmN);
+
+        // 1-2-2-3에 요소 부착(2개 요소)
+        commentDelConfirmBox.appendChild(commentDelConfirm);
+        commentDelConfirmBox.appendChild(commentDelConfirmBtnBox);
+
+        // 1-2-2에 요소 부착 (btn(img)+모달,모달)
+        commentToolBox.appendChild(commentToolBtn);
+        commentToolBox.appendChild(commentEditDelBox);
+        commentToolBox.appendChild(commentDelConfirmBox);
+
+
+        // 1-2에 작성일시+tool 부착(2개요소)
+        commentDateNToolBox.appendChild(commentDate);
+        commentDateNToolBox.appendChild(commentToolBox);
+
+        // 1. commentInfoBox(①작성자+모두확인요청cnt + ②작성일시+tool)에 2개 요소 부착
+        commentInfoBox.appendChild(commentWriterNNoticeBox);
+        commentInfoBox.appendChild(commentDateNToolBox);
+
 
         // 2. 글 내용
         const commentContentBox = document.createElement("div");
+        commentContentBox.classList.add("task-comment-content");
+
         const commentContent = document.createElement("textarea");
-        
+        commentContent.setAttribute("maxlength", "200");
+        commentContent.setAttribute("readonly", "readonly");
+        commentContent.innerText = content;
+        commentContentBox.appendChild(commentContent);
+
+
         // 3. 글 하단 버튼(수정 등록/취소) - hide
         // 모두확인요청인 comment의 '내용확인'버튼은 어차피 작성자에게는 노출되지 않도록 한다.
         // 댓글은 내가 작성한 글만 실시간으로 화면에 반영되도록 한다.
@@ -2308,7 +2496,22 @@ window.onload = function(){
         const commentEditSubmitBtn = document.createElement("span");
         const commentEditCancelBtn = document.createElement("span");
 
+        commentEditApplyBtnBox.classList.add("flex-row-end-center-nowrap", "hide");
+        commentEditSubmitBtn.classList.add("btn-comment-edit-submit");
+        commentEditCancelBtn.classList.add("btn-comment-edit-cancel");
+
+        commentEditApplyBtnBox.appendChild(commentEditSubmitBtn);
+        commentEditApplyBtnBox.appendChild(commentEditCancelBtn);
+
+        // 0. container에 부착 (3개요소)
+        commentBox.appendChild(commentInfoBox);
+        commentBox.appendChild(commentContentBox);
+        commentBox.appendChild(commentEditApplyBtnBox);
+
+        return commentBox;
+
         // 하다 만 나에게 박수...
+        // 결국엔 이 function을 사용하게 된 나에게도 박수..
     }
 
     /*---- ▲ Modal(Task comment)소통하기 - 글 등록 끝 ▲ ----*/
