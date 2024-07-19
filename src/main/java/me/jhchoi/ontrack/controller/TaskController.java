@@ -1,11 +1,12 @@
 package me.jhchoi.ontrack.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskComment;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
@@ -15,15 +16,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.spring6.view.ThymeleafView;
-
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -77,7 +74,7 @@ public class TaskController {
 
 
     @GetMapping("/detail/{taskId}")
-    public String getTaskDetail(@PathVariable Long taskId, HttpSession session, RedirectAttributes redirectAttributes, HttpServletRequest request){
+    public String getTaskDetail(@PathVariable Long taskId, @RequestParam String tab, HttpSession session, RedirectAttributes redirectAttributes){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if(loginUser == null) {
 //            URI location = URI.create("/login");
@@ -88,12 +85,12 @@ public class TaskController {
 
         Optional<OnTrackTask> task = taskRepository.findByTaskId(taskId);
         log.info("task가 어떻게 받아와지는가: {}", task);
+        log.info("어떤 탭을 보여줘야 하는가: {}", tab);
         // task가 어떻게 받아와지는가: Optional[OnTrackTask(id=null, projectId=9, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14)]
 
         redirectAttributes.addFlashAttribute("hide", false);
         redirectAttributes.addFlashAttribute("taskId", taskId);
-
-
+        redirectAttributes.addFlashAttribute("tab", tab);
 
         return "redirect:/project/%s".formatted(task.get().getProjectId());
 
@@ -107,15 +104,30 @@ public class TaskController {
 
 
     @PostMapping("/{taskId}/comment")
-    public String taskComment(@PathVariable Long taskId, @ModelAttribute TaskDetailRequest taskDetailRequest){
+    public ResponseEntity<?> taskComment(@PathVariable Long taskId, @RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
         log.info("**************comment controller enter :) ***************");
+        log.info("task id: {}", taskId);
+        log.info("등록이요 수정이요: {}", type);
         log.info("무엇이 작성되어 왔나: {}", taskDetailRequest);
-        // 무엇이 작성되어 왔나: TaskDetailRequest(projectId=9, taskId=35, authorMid=14, authorName=공지철, comment=모두확인요청은 또 어떻게 풀거니..?, commentType=null, fileName=null)
+        // 무엇이 작성되어 왔나: TaskDetailRequest(projectId=9, taskId=8, authorMid=14, authorName=공지철,
+        // comment=Tigger can do everything, commentType=normal,
+        // createdAt=24.07.19 14:16, updatedAt=24.07.19 14:16, fileName=null)
 
-        // comment 등록 후,
-        // comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
+        // 1. 새 글 등록인지, 수정인지 확인한다.
+        // entity로 변환 (컨트롤러에서? 아니면 서비스에서?)
+        // entity로 변환하는 과정(parsing string to localdatetime) 예외가 발생하는데
+        // 일단 컨트롤러 메소드에서 예외잡도록 하기 위해 컨트롤러에서 엔티티로 변환
+        TaskComment taskComment = taskDetailRequest.toTaskComment(taskDetailRequest);
 
-        return "redirect:/task/detail/%s".formatted(taskId);
+        log.info(".이 어떻게 되는건지 확인: {}", taskDetailRequest);
+        // ↓ type과 comment만 getXxxXxx()로 하지 않고 그냥 .xxX로 입력해봤다.
+        // .이 어떻게 되는건지 확인: TaskComment(id=null, projectId=9, taskId=8, authorMid=14,
+        // authorName=공지철, type=normal, comment=Tigger can do everything,
+        // createdAt=2024-07-19T14:46, modifiedAt=null)
+
+        Long commentId = taskService.addTaskComment(taskComment);
+
+        return ResponseEntity.ok(commentId);
     }
     /**
      * 할 일의 내용 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate), 중요도(priority)

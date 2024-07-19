@@ -2,17 +2,10 @@ package me.jhchoi.ontrack.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.OnTrackTask;
-import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
-import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.TaskEditRequest;
-import me.jhchoi.ontrack.dto.TaskFormRequest;
-import me.jhchoi.ontrack.dto.FileStore;
-import me.jhchoi.ontrack.dto.TaskList;
+import me.jhchoi.ontrack.domain.*;
+import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -199,5 +192,53 @@ public class TaskService {
         taskRepository.findByTaskId(taskId);
     }
 
+
+    /*
+     * created : 2024-07-19
+     * param   : TaskComment
+     * return  : int
+     * explain : 할 일 상세: 소통하기 글 등록
+     * */
+    public Long addTaskComment(TaskComment taskComment) {
+
+        // 1. comment 등록 후,
+//        Long commentId = taskRepository.addComment(taskComment);
+
+        // 2. 모두확인요청일 경우,
+        /*
+        if(taskComment.getType().equals("notice")) {
+            // 2-1. comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
+            CheckComment chkCommentAuthor = CheckComment.builder()
+                    .commentId(commentId)
+                    .memberId(taskComment.getAuthorMid())
+                    .checked(true)
+                    .build();
+            taskRepository.saveCheckComment(chkCommentAuthor);
+
+            // 2-2. 해당 task의 assignees들은 확인하지 않은 것으로 check_comment 테이블에 저장한다.
+            // 1) 해당 task의 assignee 목록을 가져온다.
+            // 할 일의 작성자도 포함해야 하며, 소통하기의 작성자는 중복저장되지 않도록 해야 한다.
+            // 단, comment id에 멤버id는 중복되어 등록되어선 안된다. (일단 db에 두 컬럼을 unique 설정해두었으나
+            // 로직에서도 검사하도록 하는 게 필..요?
+
+            List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(taskComment.getTaskId());
+
+            for(int i = 0; i < assigneeList.size(); i++) {
+                CheckComment chkComment = CheckComment.builder()
+                        .commentId(commentId)
+                        .memberId(assigneeList.get(i).getMemberId())
+                        .checked(false)
+                        .build();
+                taskRepository.saveCheckComment(chkComment);
+            }
+        }
+        */
+        return taskRepository.addComment(taskComment);
+    }
+
+    public List<TaskComment> getTaskComment(Long taskId) {
+        List<TaskComment> tcList = taskRepository.getTaskComment(taskId);
+        return tcList;
+    }
 
 }

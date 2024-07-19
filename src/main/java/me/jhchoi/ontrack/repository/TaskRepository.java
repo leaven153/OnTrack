@@ -1,10 +1,7 @@
 package me.jhchoi.ontrack.repository;
 
 import lombok.RequiredArgsConstructor;
-import me.jhchoi.ontrack.domain.OnTrackTask;
-import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
-import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.mapper.TaskMapper;
 import org.apache.ibatis.annotations.Param;
@@ -68,4 +65,14 @@ public class TaskRepository {
 
     // 해당 할 일에 이미 배정된 담당자인지 확인
     public Long chkAssigned(TaskAssignment ta) { return taskMapper.chkAssigned(ta); }
+
+    // 할 일 상세: 소통하기 글 등록
+    public Long addComment(TaskComment taskComment) { return taskMapper.addComment(taskComment); }
+
+    // 할 일 상세: 소통하기 글 목록
+    public List<TaskComment> getTaskComment(Long taskId) { return taskMapper.getTaskComment(taskId); }
+
+    // 할 일 상세: 모두확인요청한 소통글의 확인여부 등록
+    public Long saveCheckComment(CheckComment chkComment) { return taskMapper.saveCheckComment(chkComment); }
+
 }

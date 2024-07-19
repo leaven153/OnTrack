@@ -609,6 +609,13 @@ div.statusView-assignee-list .unassigned-member-list {
     background-color: #411c02;
 }
 
+div.task-detail-history {
+    border-top: 1px dotted #c7b6aa;
+    padding: 7px 0 4px 7px;
+    margin-top: 2px;
+    text-align: center;
+}
+
 /* 사용되는 곳 없는 듯. 정리요망*/
 .iconBox-30 {
     border-radius: 50%;

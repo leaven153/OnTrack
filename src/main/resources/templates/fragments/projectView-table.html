@@ -96,7 +96,7 @@
             <img src="/imgs/enter.png" class="img-20 btn-enter-new-title hide" alt="enter new title">
           </div>
 
-          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 " th:onclick="|location.href='@{|/task/detail/${task.getId()}|}'|" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment"><!--btn-task-detail-->
+          <img src="../../static/imgs/icon_comment.png" th:src="@{/imgs/icon_comment.png}" class="comment img-20 cursorP" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=comm|}'|" th:attr="data-taskid=${task.getId()}" data-tab="comment" alt="comment"><!--btn-task-detail-->
           <button type="button" class="font-11 hide" >상세보기</button>
         </div>
 
@@ -158,7 +158,7 @@
           <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
           <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
             <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
-            <span class="status-remark btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
+            <span class="status-remark" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
             <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span>
             <div class="진행상태목록 tableView-status-list img-hidden">
               <th:block th:each="tStatus: ${statusMap}">
@@ -166,6 +166,12 @@
                   <div class="status-sign" th:classappend="${tStatus.value[1]}"></div><p class="div-inline-block" th:text="${tStatus.value[0]}">시작 안 함</p><br/>
                 </div>
               </th:block>
+              <div class="task-detail-history">
+                <button type="button" class="font-14 flex-row-center-center-nowrap" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=history|}'|" data-tab="history">
+                  <img src="../../static/imgs/icon_history(bold).png" th:src="@{/imgs/icon_history(bold).png}" class="img-15 mr-5" alt="history">
+                  내역보기
+                </button>
+              </div>
             </div>
           </div>
           <div class="table-status-sign-hasChild hide">
@@ -197,8 +203,8 @@
 
         <!-- file -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <button type="button" class="add-file flex-row-center-center-nowrap btn-task-detail" th:attr="data-taskid=${task.getId()}" data-tab="file"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
-          <button type="button" class="more-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
+          <button type="button" class="add-file flex-row-center-center-nowrap" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|" th:attr="data-taskid=${task.getId()}" data-tab="file"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class="more-file flex-row-center-center-nowrap hide" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
         </div>
 
         <!-- author -->

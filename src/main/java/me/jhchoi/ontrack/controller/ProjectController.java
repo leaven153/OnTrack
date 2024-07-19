@@ -8,16 +8,13 @@ import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.TaskService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-import org.thymeleaf.spring6.view.ThymeleafView;
+
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -48,37 +45,6 @@ public class ProjectController {
         return statusMap;
     }
 
-/*
-    // 할 일 상세 fragment만 rendering
-    @Bean(name="statusView")
-    @Scope("prototype")
-    public ThymeleafView statusViewBean(){
-        ThymeleafView statusView = new ThymeleafView("projectView");
-        statusView.setMarkupSelector("#status-view");
-        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
-        return statusView;
-    }
-*/
-
-    // fragment만 rendering test
-    /*
-    @GetMapping("/part")
-    public String part(Model model, Locale locale){
-        log.info("=====================들어는 왔니");
-        log.info("locale 세팅을 어떻게 해야 할까?: {}", locale.toString());
-        // locale 세팅을 어떻게 해야 할까?: ko_KR
-        String msg = "is it possible?";
-        model.addAttribute("msg", msg);
-        return "part";
-    }
-    @Bean(name="part")
-    @Scope("prototype")
-    public ThymeleafView partTest(){
-        ThymeleafView view = new ThymeleafView("project");
-        view.setMarkupSelector("part");
-        return view;
-    }
-    */
 
     /**
      * created : 2024-05-21
@@ -140,20 +106,29 @@ public class ProjectController {
 
 
 
-        // 5. 할 일 상세 모달의 hide
+        // 5. 할 일 상세 모달의 hide 여부
         Boolean detailOpen = true;
         TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
+        // Task Controller에서 redirect 경우 ↓
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
         if(inputFlashMap != null){
             detailOpen = (Boolean) inputFlashMap.get("hide");
-            String test = "This is test";
-            model.addAttribute("test", test);
 
             for(int i = 0; i < project.getTaskList().size(); i++) {
                 if(project.getTaskList().get(i).getId().equals(inputFlashMap.get("taskId"))) {
+
+                    // 1) 할 일에 대한 기본 정보 (이미 있기 대문에, 굳이 서비스에 다녀오지 않고)
+                    // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
                     taskDetail = taskDetail.entityToDTO(project.getTaskList().get(i), projectId);
+
+                    // 2) comment 가져온다.
+                    taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
+                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
+                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
                 }
             }
+
+            taskDetail.setTab((String) inputFlashMap.get("tab"));
             log.info("task detail이 생성되었는지 확인: {}", taskDetail);
             // task detail이 생성되었는지 확인: TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
 
@@ -163,6 +138,7 @@ public class ProjectController {
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
         }
         // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)
+
         model.addAttribute("taskDetail", taskDetail);
         // 일단 소통하기 글 작성은 fetch로 진행하도록 한다..
 //        TaskDetailRequest taskCommentForm = new TaskDetailRequest();
@@ -187,24 +163,5 @@ public class ProjectController {
         return "project/project"; // url - http://localhost:8080/project/9
     }
 
-
-    /**
-     * created : 2024-07-17
-     * param   :
-     * return  :
-     * explain : project (table) view에서 task 상세 클릭
-     * */
-//    @GetMapping("/{projectId}/taskDetail/{taskId}")
-    public String getTaskDetail(@PathVariable("projectId") Long projectId, @PathVariable("taskId") Long taskId, RedirectAttributes redirectAttributes, Model model){
-        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", taskId);
-        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", projectId);
-//        model.addAttribute("hide", false);
-//        redirectAttributes.addFlashAttribute("test", "This is test");
-        return """
-                redirect:/project/%s?hide=false
-                """.formatted(projectId);
-        // void하면 Error resolving template [project/taskDetail/8], template might not exist or might not be accessible by any of the configured Template Resolvers
-//        return ResponseEntity.ok().body("해보자끝까지"); // http://localhost:8080/project/taskDetail/8 에서 "해보자끝까지" 문구만 뜸...
-    }
 
 }

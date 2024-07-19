@@ -1,15 +1,10 @@
 package me.jhchoi.ontrack.mapper;
 
-import me.jhchoi.ontrack.domain.OnTrackTask;
-import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
-import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -34,10 +29,18 @@ public interface TaskMapper {
 
     // 할 일 수정: 할일명, 진행상태, 마감일, 중요도
     Integer editTaskStatus(TaskEditRequest ter);
-//    void update(@Param("taskId") Long taskId, @Param("modTask")OnTrackTask task);
 
     // 할 일 상세
     Optional<OnTrackTask> findByTaskId(Long taskId);
+
+    // 할 일 상세: 소통하기 글 등록
+    Long addComment(TaskComment taskComment);
+
+    // 할 일 상세: 모두확인요청한 소통글의 확인여부 등록
+    Long saveCheckComment(CheckComment chkComment);
+
+    // 할 일 상세: 소통하기 글 목록
+    List<TaskComment> getTaskComment(Long TaskId);
 
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
@@ -51,8 +54,10 @@ public interface TaskMapper {
     // Status view: 진행상태별 할 일 목록
     List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest);
 
+    // 담당자 없는 할 일 목록
     List<NoAssigneeTask> getNoAssigneeTask(Long projectId);
 
+    // 해당 할 일에 배정된 담당자 수
     Integer cntAssigneeByTaskId(Long taskId);
 
     // 해당 할 일에 이미 배정된 담당자인지 확인

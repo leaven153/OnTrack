@@ -16,9 +16,9 @@
         <span class="btn-close font-24 btn-close-modal-createTask mr-10 cursorP btn-close-modal-taskDetail">&times;</span>
       </div>
       <div class="할일상세탭버튼 flex-row-justify-start-align-center mb-20 mt_10 bottom-line">
-        <div id="task-tab-comment" class="btn-modal-task-tab " th:classappend="${!hide}?'task-tab-chosen'"><span class="">소통하기</span></div>
-        <div id="task-tab-history" class="btn-modal-task-tab"><span class="">진행내역</span></div>
-        <div id="task-tab-file" class="btn-modal-task-tab"><span class="">파일</span></div>
+        <div id="task-tab-comment" class="btn-modal-task-tab" th:classappend="${taskDetail.getTab() == 'comm'}?'task-tab-chosen'"><span class="">소통하기</span></div>
+        <div id="task-tab-history" class="btn-modal-task-tab" th:classappend="${taskDetail.getTab() == 'history'}?'task-tab-chosen'"><span class="">진행내역</span></div>
+        <div id="task-tab-file" class="btn-modal-task-tab" th:classappend="${taskDetail.getTab() == 'file'}?'task-tab-chosen'"><span class="">파일</span></div>
       </div><!-- 할일상세탭메뉴 끝 -->
 
       <!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 시작 -->
@@ -30,14 +30,16 @@
             <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-7 img-18 hide">
             <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-7 img-18 hide">
             <span class="ml-7 font-18 modal-task-title-small" th:text="${taskDetail.getTaskTitle()}">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
-
           </div>
-          <span class="작성자 ml-5 font-11 modal-task-author" th:text="${taskDetail.getAuthorName()}">로버트 다우니 주니어</span>
-          <img src="/imgs/icon_bell.png" alt="task update alarm" class="mr-5 img-18 cursorP hide">
+          <div class="flex-row-end-center-nowrap">
+            <span class="font-10 ml-5 c411">작성자</span>
+            <span class="작성자 ml-5 font-11 modal-task-author" th:text="${taskDetail.getAuthorName()}">로버트 다우니 주니어</span>
+            <img src="/imgs/icon_bell.png" alt="task update alarm" class="mr-5 img-18 cursorP hide">
+          </div>
         </div>
 
         <div class="담당자 flex-row-start-start-nowrap ml-7 mb-10" >
-          <span class="font-15 c411 mr-10 noShrink mt-2">담당자</span>
+          <span class="font-14 c411 mr-10 noShrink mt-2">담당자</span>
           <div class="" th:each="assignee: ${taskDetail.getAssignees()}">
             <div class="assignee-chosen-box mr-3 mb-3" th:text="${assignee.value}">헬레나 본햄 카터</div>
 <!--            <div class="assignee-chosen-box mr-3 mb-3">크리스토퍼 놀란</div>-->
@@ -55,7 +57,7 @@
 
 
       <!-- 소통하기 시작 -->
-      <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10">
+      <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10" th:classappend="${taskDetail.getTab() != 'comm'}?hide">
         <div class="modal-task-comment-write mb-20">
 <!--          <th:block th:with="taskId=9">-->
 <!--          <form th:object="${taskCommentForm}" th:action="@{|/task/${taskId}/comment|}" method="POST">-->
@@ -66,20 +68,20 @@
             <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 일에 대한 진행상황을 간단히 공유합니다(400자 이내)"></textarea> <!--th:field="${taskCommentForm.comment}"-->
             <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
               <div class="flex-row-justify-start-align-center">
-                <span class="ml-3 mr-5 font-13 c411 bold">모두확인요청</span>
+                <span class="ml-3 mr-5 font-13 c411 bold">중요</span>
                 <label class="switch" for="task-comment-notice">
                   <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">
                   <span class="slider"></span>
                 </label>
               </div>
-              <button type="button" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-authormid=${myMid}, data-authorname=${myNickname}, data-assigneecnt=${taskDetail.getAssigneeCnt()}">입력</button>
+              <button type="button" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-authormid=${myMid}, data-authorname=${myNickname}, data-taskauthor=${taskDetail.getAuthorMid()}">입력</button>
             </div>
 <!--          </form></th:block>-->
         </div>
       </div> <!-- 소통하기: 글 입력 영역 끝 -->
 
       <!-- 파일첨부(drag and drop) 시작 (sticky 영역 내부)--><!--flex-row-justify-start-align-center-->
-      <div id="task-tab-file-upload" class="파일첨부컨테이너 task-tab-file modal-task-tab flex-row-center-center-nowrap bottom-line-subtle hide">
+      <div id="task-tab-file-upload" class="파일첨부컨테이너 task-tab-file modal-task-tab flex-row-center-center-nowrap bottom-line-subtle" th:classappend="${taskDetail.getTab() != 'file'}?hide">
         <div class="파일첨부영역 dropzone " id="upload-drop-zone">
           <input type="file" id="upload" class="opacity0 wh0">
           <label for="upload" class="flex-col-center">
@@ -92,32 +94,27 @@
       <!-- 파일첨부(drag and drop) 끝 (sticky 영역 내부)-->
     </div> <!-- sticky 끝-->
 
-    <div id="task-tab-comment-list" class="소통하기글출력영역 task-tab-comment modal-task-tab flex-col-start-nowrap c411 scroll mt-5">
+    <div id="task-tab-comment-list" class="소통하기글출력영역 task-tab-comment modal-task-tab flex-col-start-nowrap c411 scroll mt-5" th:classappend="${taskDetail.getTab() != 'comm'}?hide">
+      <th:block th:if="${taskDetail != null} and ${taskDetail.getTaskComments() != null} and ${taskDetail.getTaskComments().size() == 0}" th:text="|등록된 글이 없습니다.|"></th:block>
       <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read">
+      <th:block th:each="comment : ${taskDetail.getTaskComments()}">
+      <div class="modal-task-comment-read" th:classappend="${comment.getType() == 'notice'}?'task-comment-notice'">
         <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
+          <div class="작성자와중요 flex-row-justify-start-align-center">
+            <span class="작성자 commentWriter" th:text="${comment.getAuthorName()}">고윤정</span>
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del"><!-- tool버튼과 기능 시작 -->
+            <span class="날짜 altivo-regular mr-5" th:text="${#temporals.format(comment.getCreatedAt(), 'yy.MM.dd HH:mm')}">24.02.14 17:50</span>
+            <div class="btn-comment-edit-del" th:attr="data-commentid=${comment.getId()}"><!-- tool버튼과 기능 시작. 여기에 comment id 넣으면 될까? -->
               <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
               <div class="click-comment-edit-del img-hidden">
                 <p class="btn-comment-edit">
                   <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
+                  <span>수정하기</span>
                 </p>
                 <p class="flex-row-center-center-nowrap btn-comment-del">
                   <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
+                  <span>삭제하기</span>
                 </p>
               </div>
               <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
@@ -129,71 +126,24 @@
               </div><!-- 삭제 confirm 창 끝 -->
             </div><!-- tool버튼과 기능 끝 -->
           </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자(+RR cnt)+작성일시+tool box 끝-->
+        </div> <!-- commentInfoBox: 작성자(+중요)+작성일시+tool box 끝-->
         <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea class="" maxlength="200" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
+          <textarea class="" maxlength="200" th:text="${comment.getComment()}" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
         </div><!-- commentContent 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
+        <div class="수정확인버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
           <div class="flex-row-justify-start-align-center mr-15">
             <span class="btn-comment-edit-submit">등록</span>
             <span class="btn-comment-edit-cancel">취소</span>
           </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
-      <!-- 글 하나 박스 시작 -->
-      <div class="modal-task-comment-read task-comment-notice">
-        <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
-          <div class="작성자와RR확인 flex-row-justify-start-align-center">
-            <span class="작성자 commentWriter">고윤정</span>
-            <div class="RR확인 flex-row-justify-start-align-center">
-              <img src="/imgs/icon_chatRR.png" alt="comment required read" class="img-2520 mr-5">
-              <span class="font-12">확인</span>
-              <span class="comment-notice-chk-cnt">3</span>
-              <span class="font-12">미확인</span>
-              <span class="altivo-light">2</span>
-            </div>
-          </div>
-          <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
-            <span class="날짜 altivo-regular mr-5">24.02.14 17:50</span>
-            <div class="btn-comment-edit-del"><!-- tool버튼과 기능 시작 -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
-              <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
-                  <span class="">수정하기</span>
-                </p>
-                <p class="btn-comment-del">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
-                  <span class="">삭제하기</span>
-                </p>
-              </div>
-              <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
-                <span class="">정말로 삭제하시겠습니까?</span>
-                <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
-                  <p class="btn-confirm-no">취소</p>
-                </div>
-              </div><!-- 삭제 confirm 창 끝 -->
-            </div><!-- tool버튼과 기능 끝 -->
-          </div><!-- 작성일시와tool 끝 -->
-        </div> <!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea class="" maxlength="200" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
-        </div><!-- commentContent 끝 -->
-        <div class="내용확인수정삭제버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
-          </div>
-          <button type="button" class="btn-comment-notice-check hide">내용확인</button>
-        </div><!-- commentBottomBtnBox: 내용확인수정삭제버튼박스 끝-->
-      </div> <!-- 글 하나 박스 끝 -->
+        </div><!-- commentBottomBtnBox: 수정확인버튼박스 끝-->
+      </div>
+        <!-- 글 하나 박스 끝 -->
+      </th:block>
     </div> <!-- 글 출력영역 끝 -->
     <!-- 소통하기 끝 -->
 
     <!-- 진행내역 시작 -->
-    <div class="진행내역컨테이너 task-tab-history modal-task-tab modal-task-history-container flex-col-start-nowrap scroll hide">
+    <div class="진행내역컨테이너 task-tab-history modal-task-tab modal-task-history-container flex-col-start-nowrap scroll" th:classappend="${taskDetail.getTab() != 'history'}?hide">
       <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
         <div class="진행내역num altivo-regular">100</div>
         <div class="진행내역내용box flex-col-start-nowrap">
@@ -407,7 +357,7 @@
 
     <!-- 파일 목록 시작(sticky 외부) -->
     <!-- 첨부한 사람이 아닌 사람(관리자)이 지운 기록만 history에 남긴다. -->
-    <div id="task-tab-file-list" class="파일목록컨테이너 task-tab-file modal-task-tab modal-task-file-list-container flex-col-start-center-nowrap scroll hide">
+    <div id="task-tab-file-list" class="파일목록컨테이너 task-tab-file modal-task-tab modal-task-file-list-container flex-col-start-center-nowrap scroll" th:classappend="${taskDetail.getTab() != 'file'}?hide">
       <div class="파일공유내역목록 modal-task-file-list-col flex-row-center-center-nowrap c411 mb-3">
         <span class="font-11">첨부일시</span>
         <span class="font-11">올린이</span>
