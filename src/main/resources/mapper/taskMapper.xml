@@ -16,6 +16,16 @@
         </foreach>
     </insert>
 
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO task_comment(project_id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt)
+        VALUES (#{projectId}, #{taskId}, #{authorMid}, #{authorName}, #{type}, #{comment}, #{createdAt}, #{modifiedAt})
+    </insert>
+
+    <insert id="saveCheckComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO check_comment(commentary_id, member_id, checked)
+        VALUES (#{commentId}, #{memberId}, #{checked})
+    </insert>
+
     <insert id="attachFile" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO task_file(project_id, task_id, member_id, file_origName, file_newName, file_type, file_size, file_path, createdAt)
         VALUES
@@ -76,6 +86,22 @@
         WHERE t.task_status = #{status}
         AND t.project_id = #{projectId}
         GROUP BY t.id
+    </select>
+
+    <select id="commentChkMember" parameterType="CheckComment" resultType="CheckComment">
+        SELECT id, comment_id, member_id, checked
+        FROM check_comment
+        WHERE comment_id = #{commentId}
+        <if test="memberId != null">
+            AND member_id = #{memberId}
+        </if>
+    </select>
+
+    <select id="getTaskComment" resultType="TaskComment">
+        SELECT task_id, author_mid, author_name, type, comment, createdAt
+        FROM task_comment
+        WHERE task_id = #{taskId}
+        ORDER BY createdAt DESC;
     </select>
 
     <update id="editTaskStatus" parameterType="TaskEditRequest">

@@ -170,15 +170,14 @@ window.onload = function(){
 
     /*---------- 008 ------------*/
     /* 할 일 상세 모달 닫기 버튼 */
-    if(elExists(document.querySelectorAll(".btn-close-modal-taskDetail"))){
-        const btnCloseModalTaskDetail = document.querySelectorAll(".btn-close-modal-taskDetail");
+    if(elExists(document.querySelector(".btn-close-modal-taskDetail"))){
+        const btnCloseModalTaskDetail = document.querySelector(".btn-close-modal-taskDetail");
         const containerTaskDetail = document.querySelector("#container-task-detail");
-        btnCloseModalTaskDetail.forEach(function(chosenBtn){
-            chosenBtn.addEventListener("click", ()=>{
-                // containerTaskDetail.classList.add("hide");
-                document.querySelector("#container-task-detail .modal-Right").classList.remove("slide-side");
-            });
+        btnCloseModalTaskDetail.addEventListener("click", ()=>{
+            document.querySelector("#container-task-detail .modal-Right").classList.remove("slide-side");
+            containerTaskDetail.classList.add("hide");
         });
+
     }
 
     /*---------- 009 ------------*/
@@ -1249,7 +1248,7 @@ window.onload = function(){
                 }
 
                 // 변경하고자 하는 진행상태를 클릭했을 때
-                [...next(chosenOne).children].forEach(function(eachStatus){
+                next(chosenOne).querySelectorAll(".status-each").forEach(function(eachStatus){
                     eachStatus.addEventListener("click", ()=>{
                         console.log(eachStatus);
                         console.log(eachStatus.dataset.projectid); // ontrack_task에서는 task id만으로 쿼리 가능, 단 task_history에 저장하기 위해서 필요!!
@@ -2237,30 +2236,43 @@ window.onload = function(){
             // 서버에 보낼 정보 입력
             // ★★ comment_check에도 작성자는 확인함으로 입력해야 한다.
             // ★★ 작성한 글을 바로 출력할 것이기 때문에 작성한 시간을 javascript에서 보내줘야 한다.
-            const taskComment = {
+            const taskDetailRequest = {
                 taskId: datum["taskid"],
                 projectId: datum["projectid"],
                 authorMid: datum["authormid"],
                 authorName: datum["authorname"],
-                type: commentType,
+                commentType: commentType,
                 comment: content,
-                createdAt: date,
-                updatedAt: date
+                createdAt: dateYYMMDD(date) + timeHHMM(date),
             };
 
-            console.log(taskComment);
+            console.log(taskDetailRequest);
             newCommentContent.value = "";
             // Object { taskId: "8", projectId: "9", authorMid: "14", authorName: "공지철",
-            // type: "normal", comment: "소통하기 작성",
-            // createdAt: Date Fri Jul 19 2024 00:19:33 GMT+0900 (대한민국 표준시),
-            // updatedAt: Date Fri Jul 19 2024 00:19:33 GMT+0900 (대한민국 표준시) }
+            // type: "normal", comment: "dateDay(date)+timeHHMM(date)",
+            // createdAt: "24.07.19 13:43", updatedAt: "24.07.19 13:43" }
 
 
             // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
+            fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(taskDetailRequest)
+            }).then(response => response.text())
+                .then(data => {
 
-            // 화면에 출력
-            const commentArea = document.querySelector("#task-tab-comment-list");
-            commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, datum["assigneecnt"], date));
+                    console.log(data);
+                    const commentId = data;
+                    // 화면에 출력
+                    const commentArea = document.querySelector("#task-tab-comment-list");
+
+
+                    commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
+
+                });
+
         });
     }
 
@@ -2312,7 +2324,7 @@ window.onload = function(){
 
     /*---------- 039 ------------*/
     // 작성한 소통하기 글 바로 출력할 때 사용할 function (쓰게 될까? 쓰게 되겠지...)
-    function createCommentBox(writer, type, content, assigneeCnt, date) {
+    function createCommentBox(writer, type, content, date, commentId) {
         // 0. Container
         const commentBox = document.createElement("div");
         commentBox.classList.add("modal-task-comment-read");
@@ -2333,43 +2345,9 @@ window.onload = function(){
         commentWriter.classList.add("commentWriter");
         commentWriter.innerText = writer;
 
-        // 1-1-2. 모두확인요청 글의 확인/미확인 수 (5개 요소 appendChild)
-        const commentNoticeChkCntBox = document.createElement("div");
-        commentNoticeChkCntBox.classList.add("flex-row-justify-start-align-center");
-
-        const commentNoticeIcon = document.createElement("img");
-        commentNoticeIcon.classList.add("img-2520", "mr-5");
-        commentNoticeIcon.src = "../../imgs/icon_chatRR.png";
-        commentNoticeIcon.setAttribute("th:src", `@{/imgs/commentNoticeIcon}`);
-
-        // 1-1-2-1. 확인span, cnt span
-        const commentNoticeChk = document.createElement("span");
-        commentNoticeChk.classList.add("font-12");
-        commentNoticeChk.innerText = "확인"
-
-        const commentNoticeChkCnt = document.createElement("span");
-        commentNoticeChkCnt.classList.add("comment-notice-chk-cnt");
-        commentNoticeChkCnt.innerText = "1"; // 작성자는 이미 확인한 것으로 출력한다.
-
-        // 1-1-2-2. 미확인 span, cnt span
-        const commentNoticeUnchk = document.createElement("span");
-        commentNoticeUnchk.classList.add("font-12");
-        commentNoticeUnchk.innerText = "미확인";
-
-        const commentNoticeUnhkCnt = document.createElement("span");
-        commentNoticeUnhkCnt.classList.add("altivo-light");
-        commentNoticeUnhkCnt.innerText = assigneeCnt - 1;
-
-        // 1-1-2에 appendChild (5개)
-        commentNoticeChkCntBox.appendChild(commentNoticeIcon);
-        commentNoticeChkCntBox.appendChild(commentNoticeChk);
-        commentNoticeChkCntBox.appendChild(commentNoticeChkCnt);
-        commentNoticeChkCntBox.appendChild(commentNoticeUnchk);
-        commentNoticeChkCntBox.appendChild(commentNoticeUnhkCnt);
 
         // 1-1에 appendChild (2개)
         commentWriterNNoticeBox.appendChild(commentWriter);
-        commentWriterNNoticeBox.appendChild(commentNoticeChkCntBox);
 
 
         // 1-2. 작성일시+tool (2개요소 appendChild)
@@ -2386,6 +2364,7 @@ window.onload = function(){
         // 1-2-2. tool(수정/삭제) 버튼과 그에 따른 모달 2개 (3개요소 appendChild)
         const commentToolBox = document.createElement("div");
         commentToolBox.classList.add("btn-comment-edit-del");
+        commentToolBox.setAttribute("data-commentid", commentId);
 
         // 1-2-2-1. tool 버튼 (이미지; 3dot)
         const commentToolBtn = document.createElement("img");

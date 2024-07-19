@@ -22,7 +22,8 @@ public class TaskDetailResponse{
     private Long authorMid;
     private String authorName;
     private Map<Long, String> assignees;
-    private Integer assigneeCnt;
+//    private Integer assigneeCnt;
+    private String tab;
     
     /** OnTrackTask 에 있지만 현재 포함되지 않은 필드
      *     private Integer taskPriority; // vip: 0, ip: 1, norm: 2
@@ -50,7 +51,6 @@ public class TaskDetailResponse{
                 .authorMid(taskList.getAuthorMid())
                 .authorName(taskList.getAuthorName())
                 .assignees(taskList.getAssignees())
-                .assigneeCnt(taskList.getAssigneeMids().size())
                 .build();
     }
 }

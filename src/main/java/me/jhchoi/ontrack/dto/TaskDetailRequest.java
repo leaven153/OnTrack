@@ -5,20 +5,41 @@ import me.jhchoi.ontrack.domain.TaskComment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true) // 경고:(13, 1) 이 클래스가 java.lang.Object를 확장하지 않은 경우에도 상위 클래스를 호출하지 않고 equals/hashCode 구현을 생성합니다. 의도적인 경우에는 타입에 '(call Super=false)'를 추가하세요.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDetailRequest extends TaskList {
+public class TaskDetailRequest {
 
     private Long projectId;
     private Long taskId;
     private Long authorMid;
     private String authorName;
     private String comment;
-    private String commentType;
+    private String commentType; // 모두 확인 요청/일반
+    private String createdAt;
+    private Long[] assigneesMids;
+
     private String fileName;
+
+
+    public TaskComment toTaskComment(TaskDetailRequest tdr) throws ParseException {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
+        LocalDateTime date = LocalDateTime.parse(tdr.createdAt, dateFormat);
+
+        return TaskComment.builder()
+                .projectId(tdr.projectId)
+                .taskId(tdr.taskId)
+                .authorMid(tdr.authorMid)
+                .authorName(tdr.authorName)
+                .type(tdr.commentType)
+                .comment(tdr.comment)
+                .createdAt(date)
+                .build();
+    }
 
 }

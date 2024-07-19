@@ -140,20 +140,29 @@ public class ProjectController {
 
 
 
-        // 5. 할 일 상세 모달의 hide
+        // 5. 할 일 상세 모달의 hide 여부
         Boolean detailOpen = true;
         TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
+        // Task Controller에서 redirect 경우 ↓
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
         if(inputFlashMap != null){
             detailOpen = (Boolean) inputFlashMap.get("hide");
-            String test = "This is test";
-            model.addAttribute("test", test);
 
             for(int i = 0; i < project.getTaskList().size(); i++) {
                 if(project.getTaskList().get(i).getId().equals(inputFlashMap.get("taskId"))) {
+
+                    // 1) 할 일에 대한 기본 정보 (이미 있기 대문에, 굳이 서비스에 다녀오지 않고)
+                    // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
                     taskDetail = taskDetail.entityToDTO(project.getTaskList().get(i), projectId);
+
+                    // 2) comment 가져온다.
+                    taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
+                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
+                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
                 }
             }
+
+            taskDetail.setTab((String) inputFlashMap.get("tab"));
             log.info("task detail이 생성되었는지 확인: {}", taskDetail);
             // task detail이 생성되었는지 확인: TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
 
@@ -163,6 +172,7 @@ public class ProjectController {
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
         }
         // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)
+
         model.addAttribute("taskDetail", taskDetail);
         // 일단 소통하기 글 작성은 fetch로 진행하도록 한다..
 //        TaskDetailRequest taskCommentForm = new TaskDetailRequest();

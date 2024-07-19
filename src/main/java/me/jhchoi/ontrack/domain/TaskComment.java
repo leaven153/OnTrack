@@ -20,5 +20,4 @@ public class TaskComment {
     private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-
 }
