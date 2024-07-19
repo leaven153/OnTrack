@@ -6,7 +6,6 @@ import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

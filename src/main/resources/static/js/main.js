@@ -471,7 +471,7 @@ window.onload = function(){
     if(elExists(document.querySelector(".btn-dropOut-task"))){
         const btnDropOutTask = document.querySelectorAll(".btn-dropOut-task");
         btnDropOutTask.forEach(function(chosenOne){
-            chosenOne.addEventListener("click", (evt)=>{
+            chosenOne.addEventListener("click", ()=>{
 
 
                 // 1) 서버로 정보 넘긴다.
@@ -1446,55 +1446,6 @@ window.onload = function(){
         }); // 할 일 상세 모달 탭버튼 클릭 끝
     }
 
-
-
-    // 아래는 컨트롤러 다녀오지 않는 버전.
-    if(elExists(document.querySelectorAll(".btn-task-detail"))){
-        const btnOpenTaskDetail = document.querySelectorAll(".btn-task-detail");
-        const containerTaskDetail = document.querySelector("#container-task-detail");
-
-        btnOpenTaskDetail.forEach(function(chosenTask){
-            chosenTask.addEventListener("click", ()=>{
-
-                console.log("다시 시도");
-                // document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
-                document.querySelector("#container-task-detail .modal-Right").style.transform = "translateX(0)";
-
-
-                // 어떤 탭 열어야 하는지 확인
-                const chosenTab = `task`+`-tab-`+ chosenTask.dataset.tab;
-                // console.log(chosenTab);
-
-                // 1) 컨테이너 열고
-                containerTaskDetail.classList.remove("hide");
-
-                // 2) 전체 탭버튼에서 선택됨 뺐다가
-                // btnTaskTabs.forEach(function(btnTabs){
-                //     btnTabs.classList.remove("task-tab-chosen");
-                // });
-
-                // 3) 선택된 탭버튼에 '선택됨' 넣고
-                // [...btnTaskTabs].filter(btn => btn.id === chosenTab)[0].classList.add("task-tab-chosen");
-
-                // 4) 모든 탭을 숨겼다가
-                // modalTaskTabs.forEach(function(everyTabs){
-                //     everyTabs.classList.add("hide");
-                // });
-
-                // 5) 공통영역과 선택된 탭을 출력한다.
-                // modalTaskCommonArea.classList.remove("hide");
-                // [...modalTaskTabs].filter(tab => tab.classList.contains(chosenTab)).forEach(function(chosenArea){
-                //     chosenArea.classList.remove("hide");
-                // });
-
-            });
-        });
-
-    }
-
-
-
-
     /*---------- 013 ------------*/
     /* 할 일 나누기(create child task) - 세부(하위)항목 */
     const btnOpenModalCreateChildTask = document.querySelectorAll(".btn-create-child-task");
@@ -2175,7 +2126,6 @@ window.onload = function(){
 
         div.className = "assignee-chosen-box";
         span1.className = "assignee-chosen-name";
-        span2.className = "cursorP";
         span2.classList.add("ml-5");
         span2.classList.add("btn-assignee-del");
         span2.innerHTML = "&times;";
@@ -2531,7 +2481,7 @@ window.onload = function(){
             const btnCancelEdit = chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[1];
 
             // 수정한 내용 등록
-            btnSubmitEdit.addEventListener("click", (chosenBtnthis)=>{
+            btnSubmitEdit.addEventListener("click", ()=>{
                 // 3dot 버튼 나타내기
                 btn3dot.classList.remove("hide");
                 // 자신이담긴div 숨기기

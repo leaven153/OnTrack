@@ -8,7 +8,6 @@ import me.jhchoi.ontrack.domain.TaskHistory;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

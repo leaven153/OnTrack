@@ -8,16 +8,13 @@ import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.TaskService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
-import org.thymeleaf.spring6.view.ThymeleafView;
+
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -48,37 +45,6 @@ public class ProjectController {
         return statusMap;
     }
 
-/*
-    // 할 일 상세 fragment만 rendering
-    @Bean(name="statusView")
-    @Scope("prototype")
-    public ThymeleafView statusViewBean(){
-        ThymeleafView statusView = new ThymeleafView("projectView");
-        statusView.setMarkupSelector("#status-view");
-        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
-        return statusView;
-    }
-*/
-
-    // fragment만 rendering test
-    /*
-    @GetMapping("/part")
-    public String part(Model model, Locale locale){
-        log.info("=====================들어는 왔니");
-        log.info("locale 세팅을 어떻게 해야 할까?: {}", locale.toString());
-        // locale 세팅을 어떻게 해야 할까?: ko_KR
-        String msg = "is it possible?";
-        model.addAttribute("msg", msg);
-        return "part";
-    }
-    @Bean(name="part")
-    @Scope("prototype")
-    public ThymeleafView partTest(){
-        ThymeleafView view = new ThymeleafView("project");
-        view.setMarkupSelector("part");
-        return view;
-    }
-    */
 
     /**
      * created : 2024-05-21
@@ -197,24 +163,5 @@ public class ProjectController {
         return "project/project"; // url - http://localhost:8080/project/9
     }
 
-
-    /**
-     * created : 2024-07-17
-     * param   :
-     * return  :
-     * explain : project (table) view에서 task 상세 클릭
-     * */
-//    @GetMapping("/{projectId}/taskDetail/{taskId}")
-    public String getTaskDetail(@PathVariable("projectId") Long projectId, @PathVariable("taskId") Long taskId, RedirectAttributes redirectAttributes, Model model){
-        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", taskId);
-        log.info("지금부터 할 일 상세(소통, 내역, 파일)을 해볼 것이다.. {}", projectId);
-//        model.addAttribute("hide", false);
-//        redirectAttributes.addFlashAttribute("test", "This is test");
-        return """
-                redirect:/project/%s?hide=false
-                """.formatted(projectId);
-        // void하면 Error resolving template [project/taskDetail/8], template might not exist or might not be accessible by any of the configured Template Resolvers
-//        return ResponseEntity.ok().body("해보자끝까지"); // http://localhost:8080/project/taskDetail/8 에서 "해보자끝까지" 문구만 뜸...
-    }
 
 }
