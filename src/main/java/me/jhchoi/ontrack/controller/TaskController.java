@@ -33,7 +33,7 @@ public class TaskController {
     private final TaskRepository taskRepository;
 
     @PostMapping("/addTask")
-    public String addTaskSubmit(@ModelAttribute TaskFormRequest taskFormRequest, HttpSession session) {
+    public String addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
@@ -41,7 +41,7 @@ public class TaskController {
         }
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
-        log.info("작성자아이디 = {}", taskFormRequest.getTaskAuthorMid());
+        log.info("작성자아이디 = {}", taskFormRequest.getAuthorMid());
         log.info("작성자 이름 = {}", taskFormRequest.getAuthorName());
         log.info("할일 이름 = {}", taskFormRequest.getTaskTitle());
         log.info("전체 = {}", taskFormRequest);
@@ -95,7 +95,7 @@ public class TaskController {
         return "redirect:/project/%s".formatted(task.get().getProjectId());
 
 //        return ResponseEntity.ok().body(th);
-//        return TaskList.builder().authorName("testAuthor").build();
+//        return TaskAndAssignee.builder().authorName("testAuthor").build();
 //        return "fragments/taskDetail :: editForm";
 //        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
 //        return """
@@ -168,7 +168,7 @@ public class TaskController {
                     .build();
 
             return taskService.editTaskStatus(th, ter);
-//            log.info("진행상태 한글로: {}", TaskList.switchStatusToKor(Integer.parseInt(th.getModContent())));
+//            log.info("진행상태 한글로: {}", TaskAndAssignee.switchStatusToKor(Integer.parseInt(th.getModContent())));
 
 
         }
@@ -229,7 +229,7 @@ public class TaskController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<?> searchMemberToAssign(@RequestParam String object, @RequestParam(required = false) String purpose, @RequestBody GetMemberNameRequest searchCond){
+    public ResponseEntity<?> searchMemberToAssign(@RequestParam String object, @RequestParam(required = false) String purpose, @RequestBody MemberInfo searchCond){
         log.info("무엇을 찾는가: {}", object); // 무엇을 찾는가: member
         log.info("무엇을 위해 찾는가: {}", purpose); // 무엇을 위해 찾는가: toassign
         log.info("검색할 이름: {}", searchCond); //검색할 이름: GetMemberNameRequest(projectId=9, taskId=14, userId=null, memberId=null, nickname=adele)
@@ -238,7 +238,7 @@ public class TaskController {
 
         // 검색한 사람이 없는 경우
 
-        return new ResponseEntity<>(searchCond.getNickname(), HttpStatus.OK);
+        return new ResponseEntity<>(searchCond.getNickName(), HttpStatus.OK);
     }
 
 }// class TaskController ends

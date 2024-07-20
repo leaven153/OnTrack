@@ -33,9 +33,9 @@ public class TaskService {
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
     @Transactional
-    public Long addTask(TaskFormRequest taskFormRequest) {
+    public Long addTask(TaskAndAssignee taskFormRequest) {
 
-        // 1. 새 할 일 정보 등록
+        // 1. 할 일 객체 생성
         OnTrackTask task = taskFormRequest.dtoToEntityTask();
 
         // 1-1. 할 일 등록
@@ -45,15 +45,15 @@ public class TaskService {
         taskRepository.log(TaskHistory.logNewTask(task));
         
         // 3. 담당자 유무 확인
-        if (taskFormRequest.getAssigneesMid() !=null && taskFormRequest.getAssigneesMid().size() > 0) {
+        if (taskFormRequest.getAssigneeMid() != null && !taskFormRequest.getAssigneeMid().isEmpty()) {
 
-//            taskFormRequest.setAssigneeNames(new ArrayList<>());
+            taskFormRequest.setAssigneeNames(new ArrayList<>());
             // 3-1. 담당자 nickname 가져오기
-//            for(int i= 0; i < taskFormRequest.getAssigneesMid().size(); i++){
-//                log.info("task service에서 멤버 id: {}", taskFormRequest.getAssigneesMid().get(i));
-//                List<MemberInfo> mList = projectRepository.getNickNames(GetMemberNameRequest.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneesMid().get(i)).build());
-//                taskFormRequest.getAssigneeNames().add(mList.get(0).getNickName());
-//            }
+            for(int i= 0; i < taskFormRequest.getAssigneeMids().size(); i++){
+                log.info("task service에서 멤버 id: {}", taskFormRequest.getAssigneeMids().get(i));
+                List<MemberInfo> mList = projectRepository.getMemberInfo(MemberInfo.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneeMids().get(i)).build());
+                taskFormRequest.getAssigneeNames().add(mList.get(0).getNickName());
+            }
 
             // 3-2. 담당자 객체(TaskAssignment) 생성 및 DB 저장
             List<TaskAssignment> assignees = taskFormRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
@@ -66,9 +66,9 @@ public class TaskService {
         // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
 
-        if (taskFormRequest.getTaskFile() != null && !taskFormRequest.getTaskFile().isEmpty()) {
+        if (taskFormRequest.getTaskFiles() != null && !taskFormRequest.getTaskFiles().isEmpty()) {
             try {
-                List<TaskFile> fList = fileStore.storeFile(taskFormRequest.getTaskFile(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
+                List<TaskFile> fList = fileStore.storeFile(taskFormRequest.getTaskFiles(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
                 log.info("task service에서 file list: {}", fList);
                 if(fList != null && !fList.isEmpty()) taskRepository.attachFile(fList);
             } catch (IOException e) {

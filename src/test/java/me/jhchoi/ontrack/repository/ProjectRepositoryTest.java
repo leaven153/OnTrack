@@ -3,7 +3,6 @@ import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.dto.MemberInfo;
 import me.jhchoi.ontrack.dto.MyProject;
-import me.jhchoi.ontrack.dto.GetMemberNameRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +90,7 @@ public class ProjectRepositoryTest {
 
     @Test @DisplayName("프로젝트 소속 멤버의 목록 조회")
     void getNicknames(){
-        List<MemberInfo> memberInfo = projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(9L).build());
+        List<MemberInfo> memberInfo = projectRepository.getMemberInfo(MemberInfo.builder().projectId(9L).build());
         log.info("프로젝트 멤버 목록: {}", memberInfo);
         // 프로젝트 멤버 목록: [MemberInfo(userId=45, projectId=9, memberId=4, nickname=Adele),
         // MemberInfo(userId=35, projectId=9, memberId=14, nickname=공지철),

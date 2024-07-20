@@ -43,7 +43,7 @@ public class TaskDetailResponse{
     // File
     private List<TaskFile> taskFiles;
 
-    public static TaskDetailResponse entityToDTO(TaskList taskList, Long projectId){
+    public static TaskDetailResponse entityToDTO(TaskAndAssignee taskList, Long projectId){
         return TaskDetailResponse.builder()
                 .projectId(projectId)
                 .taskId(taskList.getId())

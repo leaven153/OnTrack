@@ -51,7 +51,7 @@
         WHERE task_id = #{taskId}
     </select>
 
-    <select id="findTaskByMemberId" resultType="TaskList">
+    <select id="findTaskByMemberId" resultType="TaskAndAssignee">
         SELECT t.id, t.task_title, t.task_status, t.task_dueDate
         FROM ontrack_task t
         INNER JOIN task_assignment ta
@@ -59,7 +59,7 @@
         WHERE member_id = #{memberId}
     </select>
 
-    <select id="getAssigneeView" resultType="AssigneeTaskList">
+    <select id="getAssigneeView" resultType="TaskAndAssignee">
         SELECT t.id, t.task_title, t.task_status, t.task_dueDate, count(task_id) assigneeNum
         FROM task_assignment ta
         INNER JOIN ontrack_task t
@@ -69,21 +69,21 @@
         ORDER BY t.task_status
     </select>
 
-    <select id="getNoAssigneeTask" resultType="NoAssigneeTask">
+    <select id="getNoAssigneeTask" resultType="TaskAndAssignee">
         SELECT id, task_title, task_status, task_dueDate, authorMid, authorName, createdAt, task_priority
         FROM ontrack_task
         WHERE project_id = #{projectId}
         AND id NOT IN (SELECT task_id FROM task_assignment WHERE project_id = #{projectId})
     </select>
 
-    <select id="getStatusView" parameterType="StatusViewRequest" resultType="StatusTaskList">
+    <select id="getStatusView" parameterType="TaskAndAssignee" resultType="TaskAndAssignee">
         SELECT t.id, t.task_title, t.authorMid, t.authorName, t.task_status, t.task_dueDate
         , GROUP_CONCAT(ta.member_id ORDER BY ta.member_id SEPARATOR ',') assigneeMid
         , GROUP_CONCAT(ta.nickname ORDER BY ta.member_id SEPARATOR ',') assigneeName
         FROM ontrack_task t
         LEFT OUTER JOIN task_assignment ta
         ON ta.task_id = t.id
-        WHERE t.task_status = #{status}
+        WHERE t.task_status = #{taskStatus}
         AND t.project_id = #{projectId}
         GROUP BY t.id
     </select>

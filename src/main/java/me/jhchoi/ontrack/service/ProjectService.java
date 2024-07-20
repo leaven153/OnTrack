@@ -71,9 +71,9 @@ public class ProjectService {
         // (ontrack_project 테이블의 creator 컬럼에는 creator의 user id가 저장되어 있다.
         // ∵ 프로젝트를 만든 '후'에 project id를 가지고
         // project member 테이블에 멤버로서 추가되기 때문에 ontrack_project테이블에는 member id가 들어갈 수 없다.)
-        List<GetMemberNameRequest> reqList = new ArrayList<>();
+        List<MemberInfo> reqList = new ArrayList<>();
         for (MyProject list : myProjects) {
-            GetMemberNameRequest request = GetMemberNameRequest.builder()
+            MemberInfo request = MemberInfo.builder()
                     .projectId(list.getProjectId())
                     .userId(list.getCreatorId())
                     .build();
@@ -110,20 +110,20 @@ public class ProjectService {
         project.setProject(projectRepository.findByProjectId(projectId));
 
         // 1-2. 프로젝트 內 내 정보(member id, 닉네임, 포지션)
-        List<MemberInfo> myMInfo = projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).userId(userId).build());
+        List<MemberInfo> myMInfo = projectRepository.getMemberInfo(MemberInfo.builder().projectId(projectId).userId(userId).build());
         project.setMemberId(myMInfo.get(0).getMemberId());
         project.setNickname(myMInfo.get(0).getNickName());
         project.setPosition(myMInfo.get(0).getPosition());
 
         // 2. 프로젝트 소속 멤버 정보  → MemberInfo
         // id as memberId, user_id, project_id, nickname
-        project.setMemberList(projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getMemberInfo(MemberInfo.builder().projectId(projectId).build()));
 
-        // 3-1. 프로젝트 內 할 일 목록 (from ontrack_task) → TaskList
+        // 3-1. 프로젝트 內 할 일 목록 (from ontrack_task) → TaskAndAssignee
         // id, task_title, task_status, task_dueDate, task_priority, author, createdAt, updatedAt
         project.setTaskList(projectRepository.allTasksInProject(projectId));
 
-        // 3-2. 할 일 별 담당자 목록 (from task_assignment) → TaskList
+        // 3-2. 할 일 별 담당자 목록 (from task_assignment) → TaskAndAssignee
         // task id로 assignee list를 가져온다.
         // assingee 수 만큼 task list에 add한다.
         IntStream.range(0, project.getTaskList().size()).forEach(i -> {
@@ -157,10 +157,10 @@ public class ProjectService {
         project.setNoAssigneeTasks(taskRepository.getNoAssigneeTask(projectId));
 
         // 5. 진행상태별 할 일 목록
-        LinkedHashMap<Integer, List<StatusTaskList>> stm = new LinkedHashMap<>();
+        LinkedHashMap<Integer, List<TaskAndAssignee>> stm = new LinkedHashMap<>();
         IntStream.rangeClosed(0, 5).forEach(i -> {
-            List<StatusTaskList> stl = taskRepository.getStatusView(new StatusViewRequest(projectId, i));
-            for (StatusTaskList statusTaskList : stl) {
+            List<TaskAndAssignee> stl = taskRepository.getStatusView(TaskAndAssignee.builder().projectId(projectId).taskStatus(i).build());
+            for (TaskAndAssignee statusTaskList : stl) {
                 statusTaskList.makeAssigneeMap();
             }
             stm.put(i, stl);

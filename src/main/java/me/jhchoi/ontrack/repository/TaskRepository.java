@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -47,19 +46,19 @@ public class TaskRepository {
     public List<TaskAssignment> getAssigneeList(Long taskId) { return taskMapper.getAssigneeList(taskId); }
 
     // Assignee view: 담당자별 할 일 목록
-    public List<AssigneeTaskList> getAssigneeView(Long memberId) { return taskMapper.getAssigneeView(memberId); }
+    public List<TaskAndAssignee> getAssigneeView(Long memberId) { return taskMapper.getAssigneeView(memberId); }
 
     // Assignee view: 담당자 없는 할 일 목록
-    public List<NoAssigneeTask> getNoAssigneeTask(Long projectId) { return taskMapper.getNoAssigneeTask(projectId); }
+    public List<TaskAndAssignee> getNoAssigneeTask(Long projectId) { return taskMapper.getNoAssigneeTask(projectId); }
 
     // Status view: 진행상태별 할 일 목록
-    public List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest) { return taskMapper.getStatusView(statusViewRequest); }
+    public List<TaskAndAssignee> getStatusView(TaskAndAssignee statusViewRequest) { return taskMapper.getStatusView(statusViewRequest); }
 
     // 할 일 수정: 진행상태
     public Integer editTaskStatus(TaskEditRequest ter) { return taskMapper.editTaskStatus(ter); }
 
     // 해당 멤버의 맡은 할 일
-    public List<TaskList> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
+    public List<TaskAndAssignee> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
 
     public Integer cntAssigneeByTaskId(Long taskId) { return taskMapper.cntAssigneeByTaskId(taskId); }
 

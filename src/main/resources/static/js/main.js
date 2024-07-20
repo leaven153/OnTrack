@@ -1209,7 +1209,7 @@ window.onload = function(){
                 const searchCondTaskId = prev(prev(statusviewSearchMemberToAssign)).dataset.taskid;
                 const searchCondProjectId = prev(prev(statusviewSearchMemberToAssign)).dataset.projectid;
                 const searchName = prev(statusviewSearchMemberToAssign).value;
-                const getMemberName = {
+                const memberInfo = {
                   projectId: searchCondProjectId,
                   taskId: searchCondTaskId,
                   nickname: searchName
@@ -1219,7 +1219,7 @@ window.onload = function(){
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(getMemberName)
+                    body: JSON.stringify(memberInfo)
                 }).then(response => response.text())
                     .then(data => {
                         console.log(data);
@@ -1647,9 +1647,9 @@ window.onload = function(){
     }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
 
     // 배정된 담당자 member Id array
-    let chosenAssigneesMid = [];
+    let chosenAssigneeMids = [];
     // 배정된 담당자 nick name array
-    let choosenAssigneesName = [];
+    let choosenAssigneeNames = [];
 
     // 프로젝트 멤버 목록에서 담당자 선택
     assigneesName.forEach(function(chosenName){
@@ -1909,8 +1909,8 @@ window.onload = function(){
         addTaskForm.elements.assigneesMid.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
-                chosenAssigneesMid.push(eachOne.id);
-                choosenAssigneesName.push(eachOne.dataset.nickname);
+                chosenAssigneeMids.push(eachOne.id);
+                choosenAssigneeNames.push(eachOne.dataset.nickname);
             }
         });
         // 부분 삭제가 이뤄졌을 때만 새로운 array가 가고 아닐 경우, 기존의 fileList가 전송된다.
@@ -1943,8 +1943,8 @@ window.onload = function(){
         addTaskData.append("taskTitle", addTaskForm.elements.taskTitle.value);
         addTaskData.append("taskPriority", addTaskForm.elements.taskPriority.value);
         addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
-        addTaskData.append("assigneesMid", chosenAssigneesMid);
-        addTaskData.append("assigneeNames", choosenAssigneesName);
+        addTaskData.append("assigneesMid", chosenAssigneeMids);
+        addTaskData.append("assigneeNames", choosenAssigneeNames);
         //
         console.log(`------- addTaskData -------`);
         console.log(addTaskData);
@@ -1974,13 +1974,13 @@ window.onload = function(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        addTaskForm.elements.assigneesMid.forEach(function(eachOne){
+        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
         // 담당자 담은 array clear (data to controller)
-        chosenAssigneesMid = [];
-        choosenAssigneesName = [];
+        chosenAssigneeMids = [];
+        choosenAssigneeNames = [];
 
         // 담당자 담은 set clear (화면)
         chosenAssigneeList.clear();

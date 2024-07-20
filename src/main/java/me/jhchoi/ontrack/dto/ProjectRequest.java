@@ -1,6 +1,9 @@
 package me.jhchoi.ontrack.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.jhchoi.ontrack.domain.OnTrackProject;
 import me.jhchoi.ontrack.domain.ProjectMember;
 
@@ -10,11 +13,13 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class AddProjectRequest {
-    // 새 프로젝트 입력 정보
-    private String newProjectType;
-    private String newProjectName;
+@AllArgsConstructor @Builder
+public class ProjectRequest {
+    // 프로젝트 생성자가 form에 입력한 정보
+    private Long projectId;
+    private String type;
+    private String projectName;
+    private Integer Status;
     private LocalDate dueDate;
 
     // 추출 정보 (session)
@@ -25,20 +30,14 @@ public class AddProjectRequest {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    // 프로젝트 멤버로 등록
-//    private String nickname;
-//    private String position;
-//    private String capacity;
-//    private LocalDate joinedAt;
-
-
+    
     public OnTrackProject toProjectEntity() {
         LocalDateTime now = LocalDateTime.now();
         int nanosec = now.getNano();
         return OnTrackProject.builder()
                 .creator(creator)
-                .projectType(newProjectType)
-                .projectName(newProjectName)
+                .projectType(type)
+                .projectName(projectName)
                 .projectUrl(UUID.randomUUID().toString())
                 .projectStatus("activated")
                 .projectDueDate(dueDate)
@@ -69,6 +68,5 @@ public class AddProjectRequest {
                 .invitedAs(invitedAs)
                 .build();
     }
-
 
 }
