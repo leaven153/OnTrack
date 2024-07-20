@@ -74,8 +74,8 @@
                                 <span class="btn-dropOut-task ml-3" data-view="status" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
                               </div>
                             </div>
-                            <!--/* 담당자 추가하기 버튼 추가 후에, unassigned-member-list 다시 붙이도록 한다. */-->
-                            <div class="검색하여추가하기 top-line pd-t10">
+                            <!--/*검색하여 추가히기, 배정안된멤버목록은 '작성자'에게만 출력된다. */-->
+                            <div class="검색하여추가하기 top-line pd-t10" th:classappend="${t.getAuthorMid() != myMid}?'hide'">
                               <input type="text" class="font-12 input-findByName-toAssign" placeholder="배정할 멤버 검색">
                               <button type="button" class="btn-findByName-member-to-assign">검색</button>
                             </div>

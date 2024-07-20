@@ -46,16 +46,16 @@ public interface TaskMapper {
     List<TaskAssignment> getAssigneeList(Long taskId);
 
     // 해당 멤버의 할 일
-    List<TaskList> findTaskByMemberId(Long memberId);
+    List<TaskAndAssignee> findTaskByMemberId(Long memberId);
 
     // Assignee view: 담당자별 할 일 목록
-    List<AssigneeTaskList> getAssigneeView(Long memberId);
+    List<TaskAndAssignee> getAssigneeView(Long memberId);
 
     // Status view: 진행상태별 할 일 목록
-    List<StatusTaskList> getStatusView(StatusViewRequest statusViewRequest);
+    List<TaskAndAssignee> getStatusView(TaskAndAssignee statusViewRequest);
 
     // 담당자 없는 할 일 목록
-    List<NoAssigneeTask> getNoAssigneeTask(Long projectId);
+    List<TaskAndAssignee> getNoAssigneeTask(Long projectId);
 
     // 해당 할 일에 배정된 담당자 수
     Integer cntAssigneeByTaskId(Long taskId);

@@ -14,11 +14,11 @@
         <img src="/imgs/icon_blur_parentTask1817.png" alt="parentTask" class="">
         <span class="font-blur ml-5">바다와 나비</span>
       </div>
-      <span class="btn-close-modal-createTask cursorP font-24">&times;</span>
+      <span class="btn-close-modal-createTask font-24">&times;</span>
     </div>
     <form th:action="@{/task/addTask}" th:object="${taskFormRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
       <input type="hidden" th:field="${taskFormRequest.projectId}">
-      <input type="hidden" th:field="${taskFormRequest.taskAuthorMid}">
+      <input type="hidden" th:field="${taskFormRequest.authorMid}">
       <input type="hidden" name="authorName" th:value="${myNickname}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
         <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
@@ -70,7 +70,7 @@
             <!-- 프로젝트 멤버 목록 -->
             <div id="assignee-list-box" class="hide" > <!--/* th:each="member : ${memberList}" */-->
               <th:block th:each="member : ${memberList}"> <!--/* taskAssignee */-->
-                <input type="checkbox" class="hide" name="assigneesMid" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickName()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickName()}"></label>
+                <input type="checkbox" class="hide" name="assigneeMids" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickName()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickName()}"></label>
               </th:block>
             </div>
           </div>

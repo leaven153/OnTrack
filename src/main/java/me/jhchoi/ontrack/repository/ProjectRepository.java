@@ -62,7 +62,7 @@ public class ProjectRepository {
      * return   : List<MemberInfo>
      * explain  : 프로젝트 멤버 목록
      * */
-    public List<MemberInfo> getMemberInfo(GetMemberNameRequest request){
+    public List<MemberInfo> getMemberInfo(MemberInfo request){
         return projectMapper.getMemberInfo(request);
     }
 
@@ -72,7 +72,7 @@ public class ProjectRepository {
      * return   : List<OnTrackTask>
      * explain  : 프로젝트 내 할 일 목록
      * */
-    public List<TaskList> allTasksInProject(Long projectId){ return projectMapper.allTasksInProject(projectId); }
+    public List<TaskAndAssignee> allTasksInProject(Long projectId){ return projectMapper.allTasksInProject(projectId); }
     
     /**
      * created  : 24-05-23

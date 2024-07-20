@@ -5,14 +5,12 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.*;
-import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -95,7 +93,7 @@ public class TaskRepositoryTest {
      void getAssigneeList(){
         Long memberId = 26L;
 
-//        List<TaskList> assignmentList = taskRepository.getAssginementList(memberId);
+//        List<TaskAndAssignee> assignmentList = taskRepository.getAssginementList(memberId);
 //        log.info("담당자별 할 일 목록: {}", assignmentList);
         //담당자별 할 일 목록:
          // [AssignmentList(assigneeMid=26, assigneeName=송혜교, taskId=8, taskTitle=Tigger can do everything, taskStatus=ing),
@@ -109,14 +107,14 @@ public class TaskRepositoryTest {
          Long projectId = 9L;
          Integer[] statusType = {0, 1, 2, 3, 4, 5};
          ProjectResponse pr = new ProjectResponse();
-         LinkedHashMap<Integer, List<StatusTaskList>> m = new LinkedHashMap<>();
-         List<StatusTaskList> stl = new ArrayList<>();
+         LinkedHashMap<Integer, List<TaskAndAssignee>> m = new LinkedHashMap<>();
+         List<TaskAndAssignee> stl = new ArrayList<>();
 
 
          for (Integer integer : statusType) {
-             StatusViewRequest svr = new StatusViewRequest(projectId, integer);
-             List<StatusTaskList> ttt = taskRepository.getStatusView(svr);
-             for (StatusTaskList statusTaskList : ttt) {
+             TaskAndAssignee svr = TaskAndAssignee.builder().projectId(projectId).taskStatus(integer).build();
+             List<TaskAndAssignee> ttt = taskRepository.getStatusView(svr);
+             for (TaskAndAssignee statusTaskList : ttt) {
                  statusTaskList.makeAssigneeMap();
              }
              m.put(integer, ttt);
@@ -125,7 +123,7 @@ public class TaskRepositoryTest {
          pr.setStatusTaskList(m);
          //         log.info("상태별 할 일 목록: {}", pr.getStatusTaskList());
 
-         LinkedHashMap<Integer, List<StatusTaskList>> test = pr.getStatusTaskList();
+         LinkedHashMap<Integer, List<TaskAndAssignee>> test = pr.getStatusTaskList();
          log.info("사이즈는 언제나 0~5이므로 6?: {}", test.size()); // 6 맞음
 
          // 보류: 0, 시작안함: 1, 계획중: 2, 진행중: 3, 검토중: 4, 완료: 5
@@ -133,17 +131,17 @@ public class TaskRepositoryTest {
          // LinkedHashMap다루기 연습1: [StatusTaskList(id=9,
          // taskTitle=경복궁 야간개방, taskStatus=2, authorMid=14, authorName=공지철,
          // taskDueDate=null, assigneeMid=26, assigneeName=송혜교, assignees=null)]
-         List<StatusTaskList> tList = test.get(1);
-         log.info("StatusTaskList의 함수 사용-get(0): {}", (Object) StatusTaskList.switchStatusToCss(1));
-         log.info("StatusTaskList의 함수 사용-get(0): {}", StatusTaskList.switchStatusToCss(1)[1]);
-         log.info("StatusTaskList의 함수 사용-get(1): {}", (Object) StatusTaskList.switchStatusToCss(1));
+         List<TaskAndAssignee> tList = test.get(1);
+         log.info("StatusTaskList의 함수 사용-get(0): {}", (Object) TaskAndAssignee.switchStatusToCss(1));
+         log.info("StatusTaskList의 함수 사용-get(0): {}", TaskAndAssignee.switchStatusToCss(1)[1]);
+         log.info("StatusTaskList의 함수 사용-get(1): {}", (Object) TaskAndAssignee.switchStatusToCss(1));
          log.info("LinkedHashMap다루기 연습2: {}", tList.get(2));
          //LinkedHashMap다루기 연습2: StatusTaskList(id=10,
          // taskTitle=그 벌들은 다 어디로 갔을까, taskStatus=1, authorMid=4, authorName=Adele, taskDueDate=2024-05-31, assigneeMid=27, assigneeName=크러쉬, assignees=null)
 
 
 
-//         StatusViewRequest svr2 = new StatusViewRequest(projectId, statusType[1]);
+//         ProjectRequest svr2 = new ProjectRequest(projectId, statusType[1]);
 //         List<StatusTaskList> stl2 = taskRepository.getStatusView(svr2);
 //         log.info("어떻게 담아야 할까: {}", stl2);
 //         StatusTaskList stl = taskRepository.getStatusView();
@@ -151,16 +149,16 @@ public class TaskRepositoryTest {
 
      }
 
-    @Test @DisplayName("담당자 없는 할 일 목록 조회")
-    void getNoAssigneeTask(){
-        Long projectId = 9L;
-        List<NoAssigneeTask> nList = taskRepository.getNoAssigneeTask(projectId);
-        log.info("어떻게 나오는가: {}", nList);
-        /**
-         * 어떻게 나오는가:
-         * [NoAssigneeTask(id=30, taskTitle=그대 내 품에, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05),
-         * NoAssigneeTask(id=35, taskTitle=해내자, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05)]*/
-    }
+//    @Test @DisplayName("담당자 없는 할 일 목록 조회")
+//    void getNoAssigneeTask(){
+//        Long projectId = 9L;
+//        List<NoAssigneeTask> nList = taskRepository.getNoAssigneeTask(projectId);
+//        log.info("어떻게 나오는가: {}", nList);
+//        /**
+//         * 어떻게 나오는가:
+//         * [NoAssigneeTask(id=30, taskTitle=그대 내 품에, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05),
+//         * NoAssigneeTask(id=35, taskTitle=해내자, taskStatus=1, taskDueDate=null, authorMid=14, authorName=공지철, createdAt=2024-06-05)]*/
+//    }
 
     @Test @DisplayName("진행상태 수정")
     void editTaskStatus(){
@@ -198,7 +196,7 @@ public class TaskRepositoryTest {
         Long memberId = 31L; // 프로젝트 9의 서머싯 몸은 현재 담당한 일이 0개
 
         //when
-        List<TaskList> t = taskRepository.findTaskByMemberId(memberId);
+        List<TaskAndAssignee> t = taskRepository.findTaskByMemberId(memberId);
 
         // then
         log.info("null을 어떻게 처리해야 할까?: {}", t);

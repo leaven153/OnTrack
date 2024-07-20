@@ -105,10 +105,10 @@ class ProjectServiceTest {
 //        Map<Long, Long> creatorList = pl.stream().collect(toUnmodifiableMap(MyProject::getProjectId, MyProject::getCreatorId));
 //        log.info("Map이 됐나?: {}", creatorList); // Map이 됐나?: {16=42, 9=35} 프로젝트id=userId(creatorId)
 
-        List<GetMemberNameRequest> reqList = new ArrayList<>();
+        List<MemberInfo> reqList = new ArrayList<>();
 
         for (MyProject projectList : pl) {
-            GetMemberNameRequest request = GetMemberNameRequest.builder()
+            MemberInfo request = MemberInfo.builder()
                     .projectId(projectList.getProjectId())
                     .userId(projectList.getCreatorId())
                     .build();
@@ -144,7 +144,7 @@ class ProjectServiceTest {
 
         // 2. 프로젝트 소속 멤버 정보
         // id as memberId, user_id, project_id, nickname
-        project.setMemberList(projectRepository.getMemberInfo(GetMemberNameRequest.builder().projectId(projectId).build()));
+        project.setMemberList(projectRepository.getMemberInfo(MemberInfo.builder().projectId(projectId).build()));
 
         // 3-1. 프로젝트 내 할 일 목록
         project.setTaskList(projectRepository.allTasksInProject(projectId));
@@ -188,23 +188,23 @@ class ProjectServiceTest {
         // MemberInfo(userId=47, projectId=9, memberId=27, nickname=크러쉬),
         // MemberInfo(userId=50, projectId=9, memberId=28, nickname=스칼렛 요한슨)],
         //
-        // taskList=[TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철,
+        // taskList=[TaskAndAssignee(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철,
         // taskPriority=norm, taskStatus=ing, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29,
         // updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28],
         // assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨]),
-        // TaskList(id=9, taskTitle=경복궁 야간개방, authorMid=14, authorName=공지철, taskPriority=norm,
+        // TaskAndAssignee(id=9, taskTitle=경복궁 야간개방, authorMid=14, authorName=공지철, taskPriority=norm,
         // taskStatus=planning, taskDueDate=null, taskParentId=null, createdAt=2024-05-28T12:13:54,
         // updatedAt=2024-05-28T12:13:54, updatedBy=14, assigneeMids=[26], assigneeNames=[송혜교]),
-        // TaskList(id=10, taskTitle=그 벌들은 다 어디로 갔을까, authorMid=4, authorName=Adele, taskPriority=norm,
+        // TaskAndAssignee(id=10, taskTitle=그 벌들은 다 어디로 갔을까, authorMid=4, authorName=Adele, taskPriority=norm,
         // taskStatus=not-yet, taskDueDate=2024-05-31, taskParentId=null, createdAt=2024-05-28T12:17:53,
         // updatedAt=2024-05-28T12:17:53, updatedBy=4, assigneeMids=[27], assigneeNames=[크러쉬]),
-        // TaskList(id=11, taskTitle=Deep Time, authorMid=26, authorName=송혜교, taskPriority=ip, taskStatus=not-yet,
+        // TaskAndAssignee(id=11, taskTitle=Deep Time, authorMid=26, authorName=송혜교, taskPriority=ip, taskStatus=not-yet,
         // taskDueDate=2024-05-29, taskParentId=null, createdAt=2024-05-29T15:36:42, updatedAt=2024-05-29T15:36:42,
         // updatedBy=26, assigneeMids=[28], assigneeNames=[스칼렛 요한슨]),
-        // TaskList(id=12, taskTitle=2시탈출 컬투쇼, authorMid=26, authorName=송혜교, taskPriority=ip, taskStatus=review,
+        // TaskAndAssignee(id=12, taskTitle=2시탈출 컬투쇼, authorMid=26, authorName=송혜교, taskPriority=ip, taskStatus=review,
         // taskDueDate=2024-05-29, taskParentId=null, createdAt=2024-05-29T15:41:36, updatedAt=2024-05-29T15:41:36,
         // updatedBy=26, assigneeMids=[4, 28], assigneeNames=[Adele, 스칼렛 요한슨]),
-        // TaskList(id=13, taskTitle=인생의 베일, authorMid=28, authorName=스칼렛 요한슨, taskPriority=ip,
+        // TaskAndAssignee(id=13, taskTitle=인생의 베일, authorMid=28, authorName=스칼렛 요한슨, taskPriority=ip,
         // taskStatus=done, taskDueDate=2024-06-06, taskParentId=null, createdAt=2024-05-29T15:44:42,
         // updatedAt=2024-05-29T15:44:42, updatedBy=28, assigneeMids=[14, 26], assigneeNames=[공지철, 송혜교])],
         //

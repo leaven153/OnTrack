@@ -55,12 +55,12 @@ public class ProjectController {
      * modelAttribute어노테이션을 이용해 프로젝트 멤버를 항상 붙일 수 있을 듯? →
      * */
     @PostMapping("/createProject")
-    public String createProjectSubmit(@ModelAttribute AddProjectRequest newProjectRequest, HttpSession session){
+    public String createProjectSubmit(@ModelAttribute ProjectRequest newProjectRequest, HttpSession session){
         log.info("======= 새 프로젝트 등록 =========");
         log.info("프로젝트 폼: {}", newProjectRequest);
         LoginUser user = (LoginUser) session.getAttribute("loginUser");
         newProjectRequest.setCreator(user.getUserId());
-        ProjectMember newCreator = AddProjectRequest.creator(user.getUserId(), user.getUserName());
+        ProjectMember newCreator = ProjectRequest.creator(user.getUserId(), user.getUserName());
         projectService.createProject(newProjectRequest.toProjectEntity(), newCreator);
         log.info("프로젝트 엔티티생성확인: {}", newProjectRequest.toProjectEntity());
         log.info("멤버 엔티티생성확인: {}", newCreator);
@@ -91,7 +91,7 @@ public class ProjectController {
         // 2. project
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
         // 2-2. 해당 프로젝트의 멤버들: List<MemberInfo>
-        // 2-3. 할 일 목록 - List<TaskList>
+        // 2-3. 할 일 목록 - List<TaskAndAssignee>
         // 2-4. 담당자별 할 일 목록 - List<AssignmentList>
         ProjectResponse project = projectService.getProject(projectId, loginUser.getUserId());
         model.addAttribute("project", project);
@@ -102,7 +102,7 @@ public class ProjectController {
         model.addAttribute("today", today);
 
         // 4. 할일 추가 객체(TaskFormRequest)
-        model.addAttribute("taskFormRequest", TaskFormRequest.builder().projectId(projectId).taskAuthorMid(project.getMemberId()).build());
+        model.addAttribute("taskFormRequest", TaskAndAssignee.builder().projectId(projectId).authorMid(project.getMemberId()).build());
 
 
 
@@ -130,7 +130,7 @@ public class ProjectController {
 
             taskDetail.setTab((String) inputFlashMap.get("tab"));
             log.info("task detail이 생성되었는지 확인: {}", taskDetail);
-            // task detail이 생성되었는지 확인: TaskList(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
+            // task detail이 생성되었는지 확인: TaskAndAssignee(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
 
 //            log.info("flashMap으로 잡은 flash attribute: {}", inputFlashMap);
             // flashMap으로 잡은 flash attribute: FlashMap [attributes={hide=false}, targetRequestPath=/project/9, targetRequestParams={}]

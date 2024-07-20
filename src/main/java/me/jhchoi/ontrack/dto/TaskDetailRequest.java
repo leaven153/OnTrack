@@ -4,10 +4,12 @@ import lombok.*;
 import me.jhchoi.ontrack.domain.TaskComment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,14 +18,19 @@ public class TaskDetailRequest {
 
     private Long projectId;
     private Long taskId;
+
+    // task 작성자가 아닌, 소통/파일 작성자의 멤버 정보
     private Long authorMid;
     private String authorName;
+    
+    // 소통하기 등록
     private String comment;
     private String commentType; // 모두 확인 요청/일반
     private String createdAt;
-    private Long[] assigneesMids;
 
+    // 파일 등록
     private String fileName;
+    private List<MultipartFile> taskFiles;
 
 
     public TaskComment toTaskComment(TaskDetailRequest tdr) throws ParseException {

@@ -27,7 +27,7 @@
         WHERE pm.user_id = #{id}
     </select>
 
-    <select id="getMemberInfo" parameterType="GetMemberNameRequest" resultType="MemberInfo">
+    <select id="getMemberInfo" parameterType="MemberInfo" resultType="MemberInfo">
         SELECT id as memberId, user_id, project_id, nickname, position, invitedAt, invitedAs
         FROM project_member
         WHERE project_id = #{projectId}
@@ -39,7 +39,7 @@
         </if>
     </select>
 
-    <select id="allTasksInProject" parameterType="Long" resultType="TaskList">
+    <select id="allTasksInProject" parameterType="Long" resultType="TaskAndAssignee">
         SELECT id, task_title, task_status, task_dueDate, task_priority, authorMid, authorName, createdAt, updatedAt, updatedBy
         FROM ontrack_task
         WHERE project_id = #{projectId}

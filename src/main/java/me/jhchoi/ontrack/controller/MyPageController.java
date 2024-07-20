@@ -3,9 +3,9 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.dto.AddProjectRequest;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.dto.MyProject;
+import me.jhchoi.ontrack.dto.ProjectRequest;
 import me.jhchoi.ontrack.service.ProjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,7 @@ public class MyPageController {
 
         log.info("=================myProjects====================");
         // AddProjectRequest의 creator에 로그인한 유저의 id, nickname 담는 코드 추가요망
-        model.addAttribute("createProjectRequest", new AddProjectRequest());
+        model.addAttribute("createProjectRequest", new ProjectRequest());
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
             log.info("로그인 정보 없음");
