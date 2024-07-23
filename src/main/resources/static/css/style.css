@@ -609,6 +609,10 @@ div.statusView-assignee-list .unassigned-member-list {
     background-color: #411c02;
 }
 
+.unassigned-member {
+    margin: 10px 0;
+    cursor: pointer;
+}
 div.task-detail-history {
     border-top: 1px dotted #c7b6aa;
     padding: 7px 0 4px 7px;
