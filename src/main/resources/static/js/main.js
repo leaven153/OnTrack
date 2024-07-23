@@ -891,168 +891,6 @@ window.onload = function(){
         }
     });
 
-    /*
-    // '참여하기' 버튼을 미배정멤버에게만 나타나게 했던 버전 (현재는 기배정 담당자에게도 '참여취소'버튼이 출력되고, 해당 버튼을 클릭하면
-    '참여하기' 버튼을 동적으로 생성하여 출력한다.
-    if(elExists(document.querySelector(".btn-bePartOf-task"))){
-        const btnApplySelfTask = document.querySelectorAll(".btn-bePartOf-task");
-        btnApplySelfTask.forEach(function(btn){
-            btn.addEventListener("click", ()=>{
-
-                const currView = btn.dataset.view;
-                if(currView === "table") {
-                    const datum = btn.children[1].dataset;
-                    const currAssigneeCnt = parents(btn, ".more-assignInfo")[0].querySelector(".task-assignee-list").children.length
-                    console.log("table view에서 참여하기 눌렀을 때: ")
-                    console.log(datum); // DOMStringMap(4) { mid → "14", nickname → "공지철", projectid → "9", taskid → "11" }
-                    console.log(`현재 담당자 수: ${currAssigneeCnt}`); // 현재 담당자 수: 1
-                    console.log(currAssignees); // 담당자 상세보기 버튼을 누를 때 담긴다.
-                    // 담당자가 6명 미만일 때만 참여하기 가능하다
-                    // 담당자 배정 및 해제가 자유로운 상태이기 때문에
-                    // 참여하기 버튼 자체는 진행중 이전의 할 일에 담당자가 아닌 멤버에게는 모두 노출된다.
-                    // 배정되는 과정에서 6명이상인지 아닌지 서버에서 확인할 필요가 있겠다.
-
-                }
-
-                if(currView === "status") {
-                    const datum = btn.dataset;
-                    let cntAssignee = parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").children.length;
-                    console.log("status view에서 참여하기 눌렀을 때: ")
-                    console.log(datum); // DOMStringMap(4) { mid → "14", nickname → "공지철", projectid → "9", taskid → "21" }
-                    console.log(`현재 담당자 수: ${cntAssignee}`);
-
-                    // 0. 이전에 담긴 currAssignees를 먼저 clear
-                    // (status view에서는 '참여하기'가 btn-more-assignInfo를 거치지 않고 시작된다.)
-                    currAssignees.clear();
-
-                    // 1-1. 현재 담당자를 currAssignees map에 담는다 (∴status는 참여하기 버튼이 btn-moreAssign-info와 별도로 있다)
-                    // console.log(parents(btn, ".status-assignee")[0]); // <div class="status-assignee">
-                    // 개별담당자div
-                    [...parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").children].forEach(function(eachAssignee){
-                        // 개별담당자 div 안의 p
-                        currAssignees.set(eachAssignee.children[0].dataset.mid, eachAssignee.children[0].innerHTML);
-                    });
-
-                    console.log(currAssignees);
-
-                    // 1-2. 현재 미배정 멤버 목록을 currUnassignedMembers map에 담는다. (검색에 사용한다.)
-                    [...parents(btn, ".status-assignee")[0].querySelectorAll(".unassigned-member p")].forEach(function(eachMember){
-                        currUnassignedMembers.set(eachMember.dataset.mid, eachMember.innerHTML);
-                    });
-
-                    console.log(currUnassignedMembers);
-
-                    // 1-3. 참여하기를 누른 멤버를 currUnassignedMembers에서 제거한다.
-                    currUnassignedMembers.delete(datum["mid"]);
-
-                    // console.log(parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").children.length);
-                    // console.log(parents(btn, ".status-assignee")[0].querySelector(".statusView-assignee-list").children[0].children.length);
-
-                    // 2. 기존 배정된 담당자 수가 6명 미만 때만 실행한다.
-                    if(cntAssignee < 6) {
-                        // 2-1. 추가하기 이전의 담당자 수를 beforeCnt에 담는다. (담당자 요약 박스에 담을 형태를 확인하기 위함)
-                        const beforeCnt = cntAssignee;
-
-                        // 2-2. 담당자 수 currAssigneeCnt를 추가한다.
-                        cntAssignee++;
-
-                        // 2-3. 참여하기를 누른 자의 member id와 name을 currAssignees map에 담는다
-                        // 참여하기 버튼 div 안의 span
-                        currAssignees.set(datum["mid"], datum["nickname"]);
-
-                        // 2-4. 서버로 보낼 정보(TaskHistory)를 생성한다.
-                        // TaskHistory에 보낼 정보 추출한다
-                        const taskHistory = {
-                            projectId: datum["projectid"],
-                            taskId: datum["taskid"],
-                            modItem: "assignee",
-                            modType: "register",
-                            modContent: datum["nickname"],
-                            updatedBy: datum["mid"]
-                        };
-
-                        console.log(taskHistory);
-
-                        // 2-5. 서버로 전송
-                        fetch(`http://localhost:8080/task/editAssignee?mid=${btn.dataset.mid}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(taskHistory)
-                        }).then(response => {
-                            if(response.ok){
-                                console.log('서버로 전송 및 결과 반환 ok');
-                                // 서버 전송 성공시: 담당자 풀네임 박스에 이름담는다
-                                parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").append(newAssigneeBySelf(datum));
-
-                                // 서버 전송 성공시: 담당자 요약 박스에 담는다
-                                // ★★★ DB에 저장 전에 현재 담당자가 6명인지 확인하는 로직이 필요하다!!
-
-                                // 담당자요약박스: 담당자없음 → 담당자 1명
-                                if (cntAssignee === 1) {
-                                    console.log("담당자 없다가 추가되었을 때");
-                                    console.log(currAssignees);
-                                    console.log(assigneeBoxByNum(1, btn.dataset.mid, btn.dataset.nickname));
-                                    // status view는 status-assignee 안에
-                                    // no-assignee와 담당자 full name list가 형제이기 때문에 지우면 안된다. 일단 숨기고
-                                    parents(btn, ".status-assignee")[0].querySelector(".no-assignee").classList.add("hide");
-
-                                    // one-assignee div 생성해서 '배정된 담당자'div의 첫 자식요소 뒤에 append 한다.
-                                    parents(btn, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(1, btn.dataset.mid, btn.dataset.nickname));
-
-                                    // no-assignee 요소 지운다.
-                                    parents(btn, ".status-assignee")[0].querySelector(".no-assignee").remove();
-                                }
-
-                                // 담당자요약박스: 담당자 1명 → 담당자 다수(many-assignee)
-                                // table view의 경우 담당자를 추가한 후에 (모달을 열어둔 상태에서) 기존 담당자를 삭제할 수도 있기 때문에
-                                // 이전 담당자 수만이 아닌 현재 담당자 수도 확인하고 one to many를 진행해야 하지만
-                                // staus view의 참여하기는 참여하기를 누르면 바로 요약 목록에 추가되고
-                                // 참여하기를 누른 멤버에게는 참여 취소 버튼만 노출되고
-                                // 담당자 삭제는 할 수 없기 때문에 이전 담당자 수가 1이었는지만 확인하면 된다.
-                                if (beforeCnt === 1) {
-                                    // 담당자 이름 요약 부착 (status view에는 btn-more-assignInfo 버튼을 부착하지 않고, 담당자 추가 버튼을 클릭하면 full name list가 뜨도록 한다)
-                                    console.log("one to many");
-                                    console.log(currAssignees); // Map { 28 → "스칼렛 요한슨", 14 → "공지철" }
-
-                                    parents(btn, ".status-assignee")[0].querySelector(".one-assignee").classList.add("hide");
-                                    for(const entry of currAssignees) {
-                                        parents(btn, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(2, entry[0], entry[1]));
-                                    }
-                                    parents(btn, ".status-assignee")[0].querySelector(".one-assignee").remove();
-                                }
-
-                                // 담당자요약박스: many → many
-                                if(beforeCnt > 1 && cntAssignee > 1){
-                                    console.log("many to many");
-                                    console.log(currAssignees);
-                                    console.log([...parents(btn, ".status-assignee")[0].querySelectorAll(".many-assignee")]);
-                                    parents(btn, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(2, btn.dataset.mid, btn.dataset.nickname));
-                                }
-
-                                // 참여취소 버튼으로 바꾼다.
-                                parents(btn, ".status-assignee")[0].append(btnCancelParticipation(datum));
-
-                                // 참여하기 버튼을 동적으로 생성하지 않고 숨기기한다.
-                                btn.classList.add("hide");
-                            }
-                        });
-
-                    } else {
-                        alert(`담당자는 6명을 초과할 수 없습니다.`);
-                    }
-                }
-
-
-
-            }); // click event ends
-        });
-    }
-
-
-     */
-
     // 055. 참여취소 버튼 생성
     function btnCancelParticipation(datum){
         const div = document.createElement("div");
@@ -1121,6 +959,7 @@ window.onload = function(){
 
                 // 3. table view - 담당자(새로 배정): 미배정 멤버 목록에서 '멤버 이름' 클릭했을 때
                 const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
+                /* // 아래 내용이 있을 땐, onEvtListener가 '동적으로 생성된 .unassigned-member'에게만 적용된다!
                 unassignedMember.forEach(function(member){
                     member.addEventListener("click", (evt)=>{
                         evt.stopImmediatePropagation();
@@ -1252,6 +1091,7 @@ window.onload = function(){
                         }
                     });
                 }); // 미배정 멤버 이름 클릭하여 담당자로 배정 끝
+                */
             }); // table view: 담당자 추가하기 버튼(btnFindMemberToAssign) click 이벤트 끝
         }); // table view: 담당자 추가하기 버튼 For Each 끝
     } // 10-6A. table view 담당자 추가하기: 새로운 담당자 배정하기 끝
@@ -1332,15 +1172,54 @@ window.onload = function(){
 
             });
         });
-    } // 10-6B.status view의 담당자관리 모달 여닫기(toggle) ends
+    } // 10-6B.status view의 담당자관리(.btn-add-assignee) 모달 여닫기(toggle) ends
 
 
-    // 10-7. 기배정 담당자를 해제했다가 다시 배정하기 + 담당자 추가하기도 통합해야 함.
-    //  + cf. 미배정 멤버였다가 담당자가 되었을 경우, unassigned-member에서 hide된다.
-    // 작성자의 경우, ('완료'이전까지만 )담당자 목록에 이름 추가
-    // 담당자의 경우, ('계획중'인 경우까지만 )'참여하기' 버튼 출력
+    // 10-7. 담당자 추가하기(.unassigned-member 클릭 이벤트)
+    // [A] table view:
+    // 담당자 상세보기 버튼(.btn-more-assigneInfo)를 클릭한 후(cntAssignee, currAssignees(map), currUnAssignees(map)이 생성된다)
+    // 작성자에게만 출력되는 담당자추가하기 버튼(.btn-add-member-to-assignee) 클릭하면 나오는
+    // 미배정목록에서 멤버 이름 클릭했을 때
+    // [B] status view:
+    // 작성자에게만 출력되는 담당자관리 버튼(.btn-add-assignee)을 클릭한 후
+    // cntAssignee, currAssignees(map), currUnAssignees(map)에 값이 저장된 상태에서
+    // 검색하기를 누른 후에 검색결과로 출력된 멤버 이름을 클릭했을 때
     onEvtListener(document, "click", ".unassigned-member", function(){
-        console.log(this);
+
+        console.log(this); // <div class="개별멤버box unassigned-member" data-view="table" data-executormid="14" data-authormid="14" data-taskid="8" data-projectid="9">
+        const datum = this.dataset;
+        console.log(datum); // DOMStringMap(5) { view → "table", executormid → "14", authormid → "14", taskid → "8", projectid → "9" }
+        console.log(`현재 담당자 수: ${cntAssignee}`);
+        console.log(`현재 담당자 목록(map): ${currAssignees}`);
+        console.log(`현재 미배정 멤버 목록(map): ${currUnassignedMembers}`);
+
+        // 현재 담당자 수가 6명 미만일 때만 추가가 가능하다
+        /*
+        if (cntAssignee < 6) {
+            // 담당자를 추가하기 전 담당자 수를 담아둔다. (담당자 요약 목록 변화에 반영한다.)
+            beforeCnt = cntAssignee;
+
+            // 현재 담당자 수에 추가한다.
+            cntAssignee++;
+
+            // 현재 담당자 목록 map에 추가한다.
+            currAssignees.set(this.querySelector("p").dataset.mid, this.querySelector("p").innerHTML);
+
+            // 현재 미배정 담당자 목록 map에서 삭제한다.
+            currUnassignedMembers.delete(this.querySelector("p").dataset.mid);
+            // 미배정 멤버 목록 div(.unassigned-member-list)에서 삭제한다.
+
+            // 담당자 풀네임 목록(.task-assignee-list)에 출력한다.
+
+            // .more-assignInfo의 높이를 구하여 table view의 미배정 멤버 목록 div(.find-member-to-assign)의 top에 반영한다.
+            boxHeight = parents(this, ".more-assignInfo")[0].offsetHeight;
+            topValue = boxHeight*(0.689);
+            parents(this, ".fint-member-to-assign").style.top = topValue + 'px';
+
+            //
+        } else {
+            alert(`담당자는 6명을 초과할 수 없습니다.`);
+        } */
     });
 
 
