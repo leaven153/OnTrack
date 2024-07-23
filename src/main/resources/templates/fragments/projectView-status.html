@@ -70,7 +70,7 @@
                             <div class="담당자풀네임목록 task-assignee-list pd-t5">
                               <div class="개별담당자box assignee-fullname-box mb-7" th:if="${!t.getAssignees().containsValue('noassignee')}" th:each="assignee : ${t.getAssignees()}">
                                 <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/*  th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
-                                <!--/* '완료'전까지 작성자는 담당자를 해제할 수 있다. cf. 담당자는 status view에서는 계획중일때까지만 '참여취소'버튼이 노출된다. */-->
+                                <!--/* '완료'전까지 작성자나 담당자를 해제할 수 있다. 담당자도 검토중까지 스스로를 해제할 수 있다. cf. 담당자는 status view에서는 계획중일때까지만 '참여취소'버튼이 노출된다. */-->
                                 <span class="btn-dropOut-task ml-3" data-view="status" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
                               </div>
                             </div>
@@ -80,7 +80,9 @@
                               <button type="button" class="btn-findByName-member-to-assign">검색</button>
                             </div>
                             <div class="배정안된멤버목록 unassigned-member-list hide">
-                              <div class="개별멤버box unassigned-member mt-10 mb-10 cursorP" data-view="status" th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">
+                              <div class="개별멤버box unassigned-member" data-view="status"
+                                   th:attr="data-executormid=${myMid}, data-taskid=${t.getId()}, data-projectid=${projectId}, data-authormid=${t.getAuthorMid()}"
+                                   th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">
                                 <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>
                               </div>
                             </div>
