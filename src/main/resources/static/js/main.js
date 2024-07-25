@@ -329,7 +329,8 @@ window.onload = function(){
         });
     }); */
 
-    // 10-1. table view: 해당 할 일의 담당자 상세보기 열기 (담당자full name목록, 참여하기, 추가하기 포함됨)
+    // 10-1. table view: 해당 할 일의 담당자 상세보기(.btn-more-assignInfo) 열기 (담당자full name목록, 참여하기, 추가하기 포함됨)
+    // (cf. status view: .btn-add-assignee)
     if(elExists(document.querySelector(".btn-more-assignInfo"))){
         const btnOpenAssigneeList = document.querySelectorAll(".btn-more-assignInfo");
         btnOpenAssigneeList.forEach(function(chosenOne){
@@ -360,16 +361,16 @@ window.onload = function(){
                 });
 
                 // 담당자가 없는 경우, 참여하기/담당차추가하기 div의 top-line과 padding값을 뺀다.
-                if(cntAssignee === 0 && elExists(next(chosenOne).children[1])) {
-                    next(chosenOne).children[1].classList.remove("top-line", "pd-t10");
+                if(cntAssignee === 0) {
+                    parents(chosenOne, "[class$=-assignee]")[0].children[1].classList.remove("top-line", "pd-t10");
                 }
 
                 // console.log(cntAssignee);
                 // 클릭한 담당자 목록 높이 구해서 변수에 담는다. (아래 담당자 배정하기 위치에서 활용)
-                boxHeight = next(chosenOne).offsetHeight;
+                boxHeight = parents(chosenOne, "[class$=-assignee]")[0].querySelector(".more-assignInfo").offsetHeight;
 
                 // 클릭한 task의 담당자 목록 toggle
-                if(next(chosenOne).classList.contains("img-hidden")){
+                if(parents(chosenOne, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.contains("img-hidden")){
                     // 열려있던 다른 box 다 닫아야 한다.
                     const allAssigneeListBox = document.querySelectorAll(".more-assignInfo");
                     allAssigneeListBox.forEach(function(eachOne){
@@ -394,7 +395,7 @@ window.onload = function(){
                     }
 
                     // 클릭한 task의 담당자 목록만 출력한다.
-                    next(chosenOne).classList.remove("img-hidden");
+                    parents(chosenOne, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.remove("img-hidden");
 
                     // staus view의 경우, 담당자가 없을 땐 열리지 않는다. → 취소. 담당자 추가하기 버튼이 열려야 한다..
                     // if(chosenOne.dataset.view === "table" || (chosenOne.dataset.view === "status" && cntAssignee !== 0)){
@@ -402,7 +403,7 @@ window.onload = function(){
                     // }
 
                 } else {
-                    next(chosenOne).classList.add("img-hidden");
+                    parents(chosenOne, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.add("img-hidden");
                 }
                 // if(!next(chosenOne).classList.contains("img-hidden"))
                 // if(tableViewAssigneeListBox.children[0].classList.contains("img-hidden")){
@@ -415,20 +416,20 @@ window.onload = function(){
         });
     } // 10-1. 담당자 목록 보기 ends
     
-    // 10-2. 동적으로 생성된 (여러)담당자 상세보기 (btn-more-assignInfo-new)
+    // 10-2. table view: 동적으로 생성된 (여러)담당자 상세보기 (.btn-more-assignInfo-new)
     // (담당자가 0 혹은 1명이었다가 2명 이상이 되어 해당 버튼이 생긴 경우)
     onEvtListener(document, "click", ".btn-more-assignInfo-new", function(evt){
         //↓ <img className="btn-more-assignInfo-new ml-3" src="/imgs/down.png" th:src="@{/imgs/down.png}" alt="more assignment info">
         console.log(this);
         //↓ <div class="more-assignInfo tableView-assignee-list">
-        console.log(next(this));
+
 
         evt.stopPropagation();
 
         // 버튼을 클릭했을 때 옆 요소(담당자 상세 div)가 열려있다면 닫고
         // 닫혀있다면 열어야 한다.
-        if(!next(this).classList.contains("img-hidden")) {
-            next(this).classList.add("img-hidden");
+        if(!parents(this, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.contains("img-hidden")) {
+            parents(this, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.add("img-hidden");
         } else {
             // 담당자 정보 clear
             currAssignees.clear();
@@ -437,7 +438,7 @@ window.onload = function(){
             currUnassignedMembers.clear();
 
             // 클릭한 task의 현재 담당자 수
-            cntAssignee = next(this).children[0].children.length;
+            cntAssignee = parents(this, "[class$=-assignee]")[0].querySelector(".task-assignee-list").children.length;
 
             // 클릭한 task의 현재 담당자 정보(mid, name)를 담는다.
             [...parents(this, ".table-assignee")[0].querySelectorAll(".assignee-fullname-box p")].forEach(function(eachAssignee){
@@ -456,11 +457,12 @@ window.onload = function(){
             // 담당자가 없는 상태일 경우
             // 담당자 추가하기 / 참여하기의 div에 top-line을 없앤다.
             if(cntAssignee === 0) {
-                next(this).children[1].classList.remove("top-line", "pd-t10");
+                parents(this, "[class^=more-]")[0].children[1].classList.remove("top-line", "pd-t10");
+                // next(this).children[1].classList.remove("top-line", "pd-t10");
             }
 
             // 현재 담당자 수에 따른 담당자 목록 높이를 담아둔다. (멤버목록 출력 시 활용)
-            boxHeight = next(this).offsetHeight;
+            // boxHeight = parents(this, "[class$=-assignee]")[0].querySelector(".more-assignInfo").offsetHeight;
 
             // 멤버 검색에 입력되어 있던 내용 지운다.
             if(elExists(document.querySelectorAll(".input-findByName-toAssign"))){
@@ -481,7 +483,7 @@ window.onload = function(){
             });
             
             // 클릭한 task의 담당자 목록 출력
-            next(this).classList.remove("img-hidden");
+            parents(this, "[class$=-assignee]")[0].querySelector(".more-assignInfo").classList.remove("img-hidden");
         }
     });
 
@@ -492,6 +494,8 @@ window.onload = function(){
     onEvtListener(document, "click", ".btn-dropOut-task", function(){
         console.log(this);
         const datum = this.dataset;
+
+        const midNname = [datum["assigneemid"], prev(this).innerText];
 
         // 1) 서버로 정보 넘긴다.
         // RequestParam에 assigneeMid 넘기고
@@ -525,14 +529,13 @@ window.onload = function(){
                 // 2) 미배정 멤버 목록에 (담당 해제된) 해당 멤버 출력 (appendChild): status view에는 미배정 멤버 목록을 출력하지 않는다. (just 검색만 한다.)
                 // 3) 변경된 boxHeight를 멤버목록 top에 반영: status에는 멤버목록이 없기 때문에(검색만 있다) 높이를 반영할 요소가 있는지 확인 후 진행한다.
 
-                // parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassingedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
-                if(datum["view"] !== undefined && datum["view"] === "table") {
-                    parents(this, ".more-assignInfo")[0].querySelector(".unassigned-member-list").appendChild(unassingedMemberElement(datum, prev(this).innerText)); // 해당 div의 높이가 조절되지 않는다?
-                    console.log(parents(this, ".more-assignInfo")[0]);
-                    console.log(parents(this, ".more-assignInfo")[0].offsetHeight);
-                    boxHeight = parents(this, ".more-assignInfo")[0].offsetHeight;
-                    topValue = (boxHeight-28)*(1/2);
-                    parents(this, ".more-assignInfo")[0].querySelector(".find-member-to-assign").style.top = topValue + 'px';
+                // parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassignedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
+                if(datum["view"] === "table") {
+                    parents(this, "[class$=-assignee]")[0].querySelector(".unassigned-member-list").appendChild(unassignedMemberElement(datum, midNname)); // 해당 div의 높이가 조절되지 않는다?
+                    boxHeight = parents(this, "[class$=-assignee]")[0].querySelector(".more-assignInfo").offsetHeight;
+                    topValue = (boxHeight-28)*(0.6885);
+                    console.log(topValue);
+                    parents(this, "[class$=-assignee]")[0].querySelector(".find-member-to-assign").style.top = topValue + 'px';
                 }
 
                 // 4) 현재 담당자 수에서 1 차감한다.
@@ -546,7 +549,8 @@ window.onload = function(){
 
                 // 7) 담당자 요약 목록에서 해당 담당자 이름 제거
                 if(cntAssignee === 0) { // one → none
-
+                    parents(this, ".status-assignee")[0].querySelector(".one-assignee").remove();
+                    /*
                     // one-assignee는 remove
                     if(parents(this, "[class$=-assignee]")[0].children[0].classList.contains("one-assignee")){ // table view
                         parents(this, "[class$=-assignee]")[0].children[0].remove();
@@ -554,11 +558,14 @@ window.onload = function(){
                     if(datum["view"] === "status") {
                         parents(this, ".status-assignee")[0].querySelector(".one-assignee").remove();
                     }
+                     */
 
                     // no-assignee를 prepend
-                    parents(this, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(0));
+                    parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(0, datum["view"]));
 
-                    // 담당자 추가하기에 top-line 없애기 (table view: .btn-add-member-to-assignee, status view: 클래스 이름 없음)
+                    // table view: 담당자 추가하기div(.btn-add-member-to-assignee),
+                    // status view: 검색(.findByName-member-to-assign)에
+                    // top-line 없애기
                     parents(this, "[class^=more-]")[0].children[1].classList.remove("top-line", "pd-t10");
 
                     // table view의 경우, 멤버목록 top 변경
@@ -571,15 +578,18 @@ window.onload = function(){
                 if (cntAssignee === 1) { // many → one
 
                     // 더보기 버튼(img) remove (status view에는 없기 때문에 요소가 있는지 검사 후 진행한다.)
-                    if (elExists([...parents(this, "[class$=-assignee]")[0].children].filter(child => child.tagName === "IMG")[0])){
-                        [...parents(this, "[class$=-assignee]")[0].children].filter(child => child.tagName === "IMG")[0].remove();
+                    if (elExists([...parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").children].filter(child => child.tagName === "IMG")[0])){
+                        [...parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").children].filter(child => child.tagName === "IMG")[0].remove();
                     }
 
 
                     if(datum["view"] === "status") {
-                        currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].firstElementChild.prepend(assigneeBoxByNum(1, k, v)));
+                        // currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].firstElementChild.prepend(assigneeBoxByNum(1, k, v)));
+                        currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(1, datum["view"], k, v)));
+
                     } else {
-                        currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(1, k, v)));
+                        // currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(1, k, v)));
+                        currAssignees.forEach((v, k) => parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(1, datum["view"], k, v)));
                     }
 
 
@@ -653,7 +663,7 @@ window.onload = function(){
                 cntAssignee = parents(this, ".status-assignee")[0].querySelector(".task-assignee-list").children.length;
                 console.log(cntAssignee);
 
-                // 참여 취소가 반영되기 전의 담당자 정보를 currAssingees map에 담는다.
+                // 참여 취소가 반영되기 전의 담당자 정보를 currAssignees map에 담는다.
                 [...parents(this, ".status-assignee")[0].querySelectorAll(".assignee-fullname-box p")].forEach(function (eachAssignee){
                     currAssignees.set(eachAssignee.dataset.mid, eachAssignee.innerHTML);
                 });
@@ -688,7 +698,7 @@ window.onload = function(){
 
                 // 검색 결과로 출력하기 위해 unassigned-member-list에도 추가한다.
                 // ☞ 참여하기/참여취소를 누른 멤버는 작성자가 아니라 멤버이기 때문에 배정을 위한 미배정멤버 검색이 불가능하다.
-                // parents(this, ".status-assignee")[0].querySelector(".unassigned-member-list").append(unassingedMemberElement(datum["mid"], datum["nickname"]));
+                // parents(this, ".status-assignee")[0].querySelector(".unassigned-member-list").append(unassignedMemberElement(datum["mid"], datum["nickname"]));
 
 
                 // 담당자 요약 목록에서 제거한다.
@@ -696,15 +706,16 @@ window.onload = function(){
                     console.log("one to none");
                     // (status view 구조상, 담당자 이름 요약 요소가 full name div와 같은 부모 아래 있기 때문에,
                     // 담당자 이름 일단 hide 후, no-assignee 요소 prepend 후에 one-assignee 제거
-                    parents(this, ".status-assignee")[0].querySelector(".one-assignee").classList.add("hide");
-                    parents(this, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(0));
+                    // parents(this, ".status-assignee")[0].querySelector(".one-assignee").classList.add("hide");
+                    parents(this, ".status-assignee")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(0, datum["view"]));
                     parents(this, ".status-assignee")[0].querySelector(".one-assignee").remove();
                 }
 
                 if(cntAssignee === 1){ // many to one
                     console.log(currAssignees);
                     // 내가 빠지고 남은 멤버의 이름을 one-assignee 요소로 변환하여 화면에 부착한다.
-                    currAssignees.forEach((v, k) => parents(this, ".status-assignee")[0].firstElementChild.prepend(assigneeBoxByNum(1, k, v)));
+                //     currAssignees.forEach((v, k) => parents(this, ".status-assignee")[0].firstElementChild.prepend(assigneeBoxByNum(1, k, v)));
+                    currAssignees.forEach((v, k) => parents(this, ".status-assignee")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(1, datum["view"], k, v)));
 
                     // many-assignee 요소 없앤다.
                     parents(this, ".status-assignee")[0].querySelectorAll(".many-assignee").forEach(function(eachOne){
@@ -836,13 +847,13 @@ window.onload = function(){
                         if (cntAssignee === 1) {
                             console.log("담당자 없다가 추가되었을 때");
                             console.log(currAssignees);
-                            console.log(assigneeBoxByNum(1, this.dataset.mid, this.dataset.nickname));
+                            // console.log(assigneeBoxByNum(1, this.dataset.mid, this.dataset.nickname));
                             // status view는 status-assignee 안에
                             // no-assignee와 담당자 full name list가 형제이기 때문에 지우면 안된다. 일단 숨기고
-                            parents(this, ".status-assignee")[0].querySelector(".no-assignee").classList.add("hide");
+                            // parents(this, ".status-assignee")[0].querySelector(".no-assignee").classList.add("hide");
 
-                            // one-assignee div 생성해서 '배정된 담당자'div의 첫 자식요소 뒤에 append 한다.
-                            parents(this, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(1, this.dataset.mid, this.dataset.nickname));
+                            // one-assignee div 생성해서 '배정된 담당자 이름 요약'div(.assignee-brief-box)에 append 한다.
+                            parents(this, ".status-assignee")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(1, datum["view"], this.dataset.mid, this.dataset.nickname));
 
                             // no-assignee 요소 지운다.
                             parents(this, ".status-assignee")[0].querySelector(".no-assignee").remove();
@@ -854,24 +865,24 @@ window.onload = function(){
                         // staus view의 참여하기는 참여하기를 누르면 바로 요약 목록에 추가되고
                         // 참여하기를 누른 멤버에게는 참여 취소 버튼만 노출되고
                         // 담당자 삭제는 할 수 없기 때문에 이전 담당자 수가 1이었는지만 확인하면 된다.
-                        if (beforeCnt === 1) {
+                        if (beforeCnt === 1) { // one → many
                             // 담당자 이름 요약 부착 (status view에는 btn-more-assignInfo 버튼을 부착하지 않고, 담당자 추가 버튼을 클릭하면 full name list가 뜨도록 한다)
                             console.log("one to many");
-                            console.log(currAssignees); // Map { 28 → "스칼렛 요한슨", 14 → "공지철" }
+                            // console.log(currAssignees); // Map { 28 → "스칼렛 요한슨", 14 → "공지철" }
 
-                            parents(this, ".status-assignee")[0].querySelector(".one-assignee").classList.add("hide");
-                            for(const entry of currAssignees) {
-                                parents(this, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(2, entry[0], entry[1]));
-                            }
                             parents(this, ".status-assignee")[0].querySelector(".one-assignee").remove();
+
+                            for(const entry of currAssignees) {
+                                parents(this, ".status-assignee")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(2, datum["view"], entry[0], entry[1]));
+                            }
                         }
 
                         // 담당자요약박스: many → many
                         if(beforeCnt > 1 && cntAssignee > 1){
                             console.log("many to many");
-                            console.log(currAssignees);
-                            console.log([...parents(this, ".status-assignee")[0].querySelectorAll(".many-assignee")]);
-                            parents(this, ".status-assignee")[0].firstElementChild.append(assigneeBoxByNum(2, this.dataset.mid, this.dataset.nickname));
+                            // console.log(currAssignees);
+                            // console.log([...parents(this, ".status-assignee")[0].querySelectorAll(".many-assignee")]);
+                            parents(this, ".status-assignee")[0].querySelector(".assignee-brief-box").append(assigneeBoxByNum(2, datum["view"], this.dataset.mid, this.dataset.nickname));
                         }
 
                         // 참여취소 버튼으로 바꾼다.
@@ -946,152 +957,6 @@ window.onload = function(){
                 } else {
                     next(chosenOne).classList.add("img-hidden");
                 }
-
-                // 2. table view - 멤버 검색 버튼 클릭했을 때 → 10-8.로 통합한다.
-                // btn-findByName-member-to-assign
-                /*
-                const btnFindByNameMemberToAssign = next(chosenOne).children[0].children[1];
-                btnFindByNameMemberToAssign.addEventListener("click", ()=>{
-                    // input에 입력된 값 받아온다
-                    console.log(prev(btnFindByNameMemberToAssign).value);
-                });
-                 */
-
-                // 3. table view - 담당자(새로 배정): 미배정 멤버 목록에서 '멤버 이름' 클릭했을 때
-                const unassignedMember = next(chosenOne).children[1].querySelectorAll(".unassigned-member");
-                /* // 아래 내용이 있을 땐, onEvtListener가 '동적으로 생성된 .unassigned-member'에게만 적용된다!
-                unassignedMember.forEach(function(member){
-                    member.addEventListener("click", (evt)=>{
-                        evt.stopImmediatePropagation();
-
-                        const datum = member.dataset;
-                        console.log(datum);
-
-                        // many → many 인지 one → many 인지 확인하기 위해 beforeCnt값 필요
-                        const beforeAssigneeNum = cntAssignee;
-
-                        // 담당자는 6명을 초과할 수 없다.
-                        if(cntAssignee < 6){
-
-                            cntAssignee++;
-                            const newAssgineeName = member.children[0].innerText;
-                            const newAssigneeMid = member.children[0].dataset.mid;
-
-                            const taskHistory = {
-                                taskId: datum["taskid"],
-                                projectId: datum["projectid"],
-                                modItem: "assignee",
-                                modType: "register",
-                                modContent: newAssgineeName,
-                                updatedBy: datum["executormid"]
-                            }
-                            // console.log(taskAssignment);
-                            
-                            // 1)-1 담당자 풀네임(fullname) div에 이름 출력
-                            parents(chosenOne, ".more-assignInfo")[0].firstElementChild.append(newAssigneeElement(newAssgineeName, newAssigneeMid, datum));
-
-                            // 1)-2 담당자 div 높이 변경에 따른 멤버 목록 위치(top) 변경
-                            console.log(parents(member, ".more-assignInfo")[0].offsetHeight);
-                            topValue = (parents(member, ".more-assignInfo")[0].offsetHeight)*(0.689);
-                            next(chosenOne).style.top = topValue + 'px';
-                            console.log(`4A. 담당자 추가하기-멤버클릭했을 때 (table view)의 topValue: ${topValue}`)
-
-                            // 2) 서버에 전달
-                            fetch(`http://localhost:8080/task/editAssignee?mid=${newAssigneeMid}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(taskHistory)
-                            }).then(response => {
-                                if(response.ok){
-                                    // 담당자 축약 목록에 출력
-                                    // 멤버 추가 후 담당자가 1명이 된 상태 (이전에는 담당자가 없었던 상태)
-                                    if (cntAssignee === 1) {
-
-                                        // no-assignee를 일단 hide한 후에
-                                        console.log(`기배정담당자인원: ${parents(member, "[class$=-assignee]")[0].children[0].className}`);
-                                        parents(member, "[class$=-assignee]")[0].children[0].classList.add("hide");
-
-                                        // (remove했던) 담당자 추가 div에 top-line과 pd-t10을 붙인다.
-                                        // parents(member, "[class$=-assignee]")[0].children[1].children[1]의 classList에 top-line, pd-t10 add
-                                        // console.log(`top-line붙여야할 요소 ↓`);
-                                        // console.log(parents(member, "[class$=-assignee]")[0].children[1].children[1]);
-                                        parents(member, "[class$=-assignee]")[0].children[1].children[1].classList.add("top-line", "pd-t10");
-
-                                        // no-assignee를 삭제
-                                        parents(member, "[class$=-assignee]")[0].children[0].remove();
-
-                                        // one-assignee를 parents(member, "[class$=-assignee]")[0]에 prepend (첫번째자식으로 붙는다.)
-                                        parents(member, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(1, newAssigneeMid, newAssgineeName));
-
-                                    }
-
-                                    // 멤버 추가 후에 one → many가 된 상태
-                                    // 기존 배정된 담당자의 이름도 축약해서 출력해야 한다.★★★
-                                    // 멤버 추가한 후에 (모달을 열어둔 상태에서) 기존 담당자를 지울 수도 있기 때문에
-                                    // 현재 담당자의 수도 체크한 후에 one to many를 적용해야 한다.
-                                    if (beforeAssigneeNum === 1 && cntAssignee > 1) {
-                                        // console.log(`div.many-assignee에 기존 담당자 이름첫글자와, 새로 배정된 담당자 이름 첫글자를 span.lastName append`);
-
-                                        // one-assignee는 hide가 아니라 remove해야 btn-more-assignInfo-new버튼이 작동할 수 있음.
-                                        // parents(member, "[class$=-assignee]")[0].children[0].classList.add("hide");
-                                        parents(member, "[class$=-assignee]")[0].children[0].remove();
-                                        // many-assignee의 moreInfo 버튼 prepend
-                                        parents(member, "[class$=-assignee]")[0].prepend(btnMoreAssigneeInfo());
-
-                                        // 새 담당자 prepend
-                                        parents(member, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(2, newAssigneeMid, newAssgineeName));
-
-                                        // 기존 담당자 many로 변환해서 prepend
-                                        for(const entry of currAssignees){
-                                            // console.log(entry); // Array [ "26", "송혜교" ]
-                                            // console.log(entry[0]); // mid
-                                            // console.log(entry[1]) // name
-                                            parents(member, "[class$=-assignee]")[0].prepend(assigneeBoxByNum(2, entry[0], entry[1]));
-                                        }
-
-                                    }
-
-                                    // many → many 인 상태
-                                    if (beforeAssigneeNum > 1) {
-                                        // ↓ <div class="flex-row-center-center-n…w-column table-assignee">
-                                        // console.log(parents(member, "[class$=-assignee]")[0]);
-
-                                        // console.log(`요소를 찾아요*******************************************`);
-
-                                        // ↓ <img class="btn-more-assignInfo cursorP ml-3" src="/imgs/down.png" alt="more assignment info">
-                                        // console.log([...parents(member, "[class$=-assignee]")[0].children].at(-2));
-
-                                        // ↓ <div class="more-assignInfo tableView-assignee-list">
-                                        // console.log([...parents(member, "[class$=-assignee]")[0].children].at(-1));
-
-                                        // div.many-assignee의 마지막 요소인 img(btn-more-assignInfo) 앞에 붙여야 함.
-                                        [...parents(member, "[class$=-assignee]")[0].children].at(-2).before(assigneeBoxByNum(2,newAssigneeMid, newAssgineeName));
-                                    }
-
-                                    // 현재 담당자 Map에 담기
-                                    currAssignees.set(newAssigneeMid, newAssgineeName);
-
-                                    // 3) 미배정 멤버 map에서 delete
-                                    currUnassignedMembers.delete(newAssigneeMid);
-
-                                    // 4) 미배정 멤버 목록에서 이름 빼기
-                                    member.remove();
-                                    // 배정했다가 다시 해제했을 때, 검색결과에 나올 수 있도록 hide로 처리
-                                    // 문제! remove hide하기 위해 요소 검색을 해야 한다...
-                                    // ∴ 검색 결과도 hide를 빼는 게 아니라 요소 생성해야 한다...
-                                    // member.classList.add("hide");
-
-
-                                }
-                            });
-                        } else {
-                            alert(`담당자는 6명을 초과할 수 없습니다.`);
-                        }
-                    });
-                }); // 미배정 멤버 이름 클릭하여 담당자로 배정 끝
-                */
             }); // table view: 담당자 추가하기 버튼(btnFindMemberToAssign) click 이벤트 끝
         }); // table view: 담당자 추가하기 버튼 For Each 끝
     } // 10-6A. table view 담당자 추가하기: 새로운 담당자 배정하기 끝
@@ -1102,6 +967,7 @@ window.onload = function(){
         btnAddAssignees.forEach(function(btn){
             btn.addEventListener("click", ()=>{
 
+                console.log("담당자관리 클릭");
                 // 담당자 목록을 열든 닫든 이미 담겨있던 담당자, 미배정멤버 map은 비운다.
                 currAssignees.clear();
                 currUnassignedMembers.clear();
@@ -1126,24 +992,30 @@ window.onload = function(){
 
                     // 이미 배정되어 있던 담당자 수를 구한다.
                     cntAssignee = parents(btn, ".status-assignee")[0].querySelector(".task-assignee-list").children.length;
-
+                    // console.log(cntAssignee);
                     // 이미 배정되어 있던 담당자의 member id와 이름을 currAssignees map에 담는다.
                     parents(btn, ".status-assignee")[0].querySelectorAll("div.assignee-fullname-box > p").forEach(function(eachOne){
                         currAssignees.set(eachOne.dataset.mid, eachOne.innerHTML);
                     });
+                    // console.log(currAssignees);
 
                     // 미배정된 담당자의 member id와 이름을 currUnassignedMembers map에 담는다.
-                    parents(btn, ".status-assignee")[0].querySelectorAll(".unassigned-member").forEach(function(eachUnassignedMember){
+                    parents(btn, ".status-assignee")[0].querySelectorAll(".unassigned-member p").forEach(function(eachUnassignedMember){
                         currUnassignedMembers.set(eachUnassignedMember.dataset.mid, eachUnassignedMember.innerHTML);
                     });
+                    console.log(currUnassignedMembers);
+
 
 
                     // 검색버튼에 click event 추가 → 해당 버튼 이벤트는 10-8에서 table view와 status view로 나누어 해결한다.
+                    /*
                     parents(btn, ".status-assignee")[0].querySelector(".btn-findByName-member-to-assign").addEventListener("click", ()=>{
                         // 검색input에 입력한 값
                         const searchUnassigneMemberName = parents(btn, ".status-assignee")[0].querySelector(".input-findByName-toAssign").value;
                         console.log(searchUnassigneMemberName);
                     });
+
+                     */
 
                     // 담당자 추가는 이미 배정된 담당자가 6명 미만일 때만 가능하다.
                     /*
@@ -1151,7 +1023,7 @@ window.onload = function(){
 
                         // 서버에 보낼 정보 담는다.
 
-                        // 배정안된멤버 currUnassignedMembers map에서 hide(∵remove할 경우, 배정 취소했을 때 동적요소로 unassinged-member가 되기 때문에 검색하기 어렵다..)
+                        // 배정안된멤버 currUnassignedMembers map에서 hide(∵remove할 경우, 배정 취소했을 때 동적요소로 unassigned-member가 되기 때문에 검색하기 어렵다..)
                         // 배정안된멤버 목록 요소에서 뺀다.
 
                         // 담당자 수를 추가한다.
@@ -1188,69 +1060,203 @@ window.onload = function(){
 
         console.log(this); // <div class="개별멤버box unassigned-member" data-view="table" data-executormid="14" data-authormid="14" data-taskid="8" data-projectid="9">
         const datum = this.dataset;
+        const newAssigneeMid = this.querySelector("p").dataset.mid;
+        const newAssigneeName = this.querySelector("p").innerHTML;
         console.log(datum); // DOMStringMap(5) { view → "table", executormid → "14", authormid → "14", taskid → "8", projectid → "9" }
         console.log(`현재 담당자 수: ${cntAssignee}`);
         console.log(`현재 담당자 목록(map): ${currAssignees}`);
         console.log(`현재 미배정 멤버 목록(map): ${currUnassignedMembers}`);
 
         // 현재 담당자 수가 6명 미만일 때만 추가가 가능하다
-        /*
+
         if (cntAssignee < 6) {
-            // 담당자를 추가하기 전 담당자 수를 담아둔다. (담당자 요약 목록 변화에 반영한다.)
-            beforeCnt = cntAssignee;
 
-            // 현재 담당자 수에 추가한다.
-            cntAssignee++;
+            // 서버에 전달할 정보
+            const taskHistory = {
+                projectId: datum["projectid"],
+                taskId: datum["taskid"],
+                modItem: "assignee",
+                modType: "register",
+                modContent: newAssigneeName,
+                updatedBy: datum["executormid"]
+            };
 
-            // 현재 담당자 목록 map에 추가한다.
-            currAssignees.set(this.querySelector("p").dataset.mid, this.querySelector("p").innerHTML);
+            console.log(taskHistory);
 
-            // 현재 미배정 담당자 목록 map에서 삭제한다.
-            currUnassignedMembers.delete(this.querySelector("p").dataset.mid);
-            // 미배정 멤버 목록 div(.unassigned-member-list)에서 삭제한다.
 
-            // 담당자 풀네임 목록(.task-assignee-list)에 출력한다.
+            fetch(`http://localhost:8080/task/editAssignee?mid=${newAssigneeMid}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(taskHistory)
+            }).then(response => {
+                if(response.ok){
+                    // 담당자를 추가하기 전 담당자 수를 담아둔다. (담당자 요약 목록 변화에 반영한다.)
+                    beforeCnt = cntAssignee;
 
-            // .more-assignInfo의 높이를 구하여 table view의 미배정 멤버 목록 div(.find-member-to-assign)의 top에 반영한다.
-            boxHeight = parents(this, ".more-assignInfo")[0].offsetHeight;
-            topValue = boxHeight*(0.689);
-            parents(this, ".fint-member-to-assign").style.top = topValue + 'px';
+                    // 현재 담당자 수에 추가한다.
+                    cntAssignee++;
 
-            //
+                    // 현재 미배정 담당자 목록 map에서 삭제한다.
+                    currUnassignedMembers.delete(newAssigneeMid);
+
+                    // 담당자 요약 목록에 출력한다.
+                    if(cntAssignee === 1) { // none → one
+                        console.log("unassigned-memeber click: none to one");
+                        // no-assignee hide
+                        parents(this, "[class$=-assignee]")[0].querySelector(".no-assignee").classList.add("hide");
+
+                        // one-assignee add
+                        parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").prepend(assigneeBoxByNum(1, datum["view"], newAssigneeMid, newAssigneeName, datum["view"]));
+
+                        // table view의 경우 담당자 추가 div(.btn-add-member-to-assignee)에 remove했던 top-line, pd-t10을 붙인다.
+                        if(datum["view"] === "table") {
+                            parents(this, ".more-assignInfo")[0].querySelector(".btn-add-member-to-assignee").classList.add("top-line", "pd-t10");
+                        }
+
+                        // no-assignee remove
+                        parents(this, "[class$=-assignee]")[0].querySelector(".no-assignee").remove();
+
+                    }
+
+                    // 멤버 추가한 후에 (모달을 열어둔 상태에서) 기존 담당자를 지울 수도 있기 때문에
+                    // 현재 담당자의 수도 체크한 후에 one to many를 적용해야 한다.
+                    if(beforeCnt === 1 && cntAssignee > 1) { // one → many
+                        console.log("unassigned-memeber click: one to many");
+                        // one-assignee 삭제
+                        parents(this, "[class$=-assignee]")[0].querySelector(".one-assignee").remove();
+
+                        // table view에는 담당자 상세보기(.btn-more-assignInfo) 버튼(▼) prepend
+                        if(datum["view"] === "table") {
+                            parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").prepend(btnMoreAssigneeInfo());
+                        }
+
+                        // 새 담당자 prepend
+                        parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").prepend(assigneeBoxByNum(2, datum["view"], newAssigneeMid, newAssigneeName, datum["view"]));
+
+                        // 기존 담당자 prepend
+                        for(const entry of currAssignees){
+                            parents(this, "[class$=-assignee]")[0].querySelector(".assignee-brief-box").prepend(assigneeBoxByNum(2, datum["view"], entry[0], entry[1], datum["view"]));
+                        }
+                    }
+
+                    if (beforeCnt > 1) { // many → many
+                        console.log("unassigned-memeber click: still many");
+                        // console.log([...parents(this, "[class$=-assignee]")[0].querySelectorAll(".many-assignee")][beforeCnt-1]);
+                        [...parents(this, "[class$=-assignee]")[0].querySelectorAll(".many-assignee")][beforeCnt-1].after(assigneeBoxByNum(2, datum["view"], newAssigneeMid, newAssigneeName, datum["view"]));
+
+                    }
+
+                    // 담당자 풀네임 목록(.task-assignee-list)에 출력한다.
+                    parents(this, ".more-assignInfo")[0].querySelector(".task-assignee-list").append(newAssigneeElement(newAssigneeMid, newAssigneeName, datum));
+
+                    // table view의 경우, .more-assignInfo의 높이를 구하여
+                    // 미배정 멤버 목록 div(.find-member-to-assign)의 top에 반영한다.
+                    if (datum["view"] === "table") {
+                        boxHeight = parents(this, ".more-assignInfo")[0].offsetHeight;
+                        topValue = boxHeight*(0.689);
+                        parents(this, ".find-member-to-assign")[0].style.top = topValue + 'px';
+                    }
+
+                    // 현재 담당자 목록 map에 추가한다.
+                    currAssignees.set(newAssigneeMid, newAssigneeName);
+
+                    // 미배정 멤버 목록 div(.unassigned-member-list)에서 삭제한다.
+                    this.remove();
+
+                } else {
+                    alert(`담당자 배정이 이뤄지지 않았습니다. `);
+                }
+            });
+
         } else {
             alert(`담당자는 6명을 초과할 수 없습니다.`);
-        } */
+        }
     });
 
 
-    // 10-8. 미배정 멤버(currUnAssignedMembers) '검색' 클릭 이벤트
+    // 10-8. '검색' 클릭 이벤트 (<< 담당자 추가하기/담당자관리)
     // table view: 담당자 상세보기 버튼(▼, .btn-more-assignInfo)을 클릭하면
     // status view: 담당자 관리(.btn-add-assignee)를 클릭하면
     // ☞ unassigned-member를 currUnassignedMembers map으로 받아둔다.
     if(elExists(document.querySelector(".btn-findByName-member-to-assign"))){
-        const findMemberByNameToAssign = document.querySelectorAll(".btn-findByName-member-to-assign");
-        findMemberByNameToAssign.forEach(function(statusviewSearchMemberToAssign){
-            statusviewSearchMemberToAssign.addEventListener("click", ()=>{
+        const btnFindMemberByNameToAssign = document.querySelectorAll(".btn-findByName-member-to-assign");
+        btnFindMemberByNameToAssign.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
                 console.log(`담당자 추가 위해 멤버 검색 버튼 눌렀을 때`);
-                console.log(`${prev(statusviewSearchMemberToAssign).value}`);
-                const searchCondTaskId = prev(prev(statusviewSearchMemberToAssign)).dataset.taskid;
-                const searchCondProjectId = prev(prev(statusviewSearchMemberToAssign)).dataset.projectid;
-                const searchName = prev(statusviewSearchMemberToAssign).value;
-                const memberInfo = {
-                  projectId: searchCondProjectId,
-                  taskId: searchCondTaskId,
-                  nickname: searchName
-                };
-                fetch(`http://localhost:8080/task/search?object=member&purpose=assign`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(memberInfo)
-                }).then(response => response.text())
-                    .then(data => {
-                        console.log(data);
-                    });
+                console.log(`${prev(btn).value}`);
+
+                const searchName = prev(btn).value;
+                const datum = btn.dataset;
+
+                // 검색에 사용할 정규표현식 생성
+                let regex = new RegExp(searchName, "gi");
+                console.log(regex);
+
+                // map filter test
+                // 1. map to array?
+                let arr = Array.from(currUnassignedMembers, ([mid, name]) => ({mid, name}));
+                console.log(arr);
+                /* arr의 결과 ↓
+                * 0: Object { mid: "32", name: "톰 하디" }
+                * 1: Object { mid: "33", name: "제임스 서버" }
+                * 2: Object { mid: "14", name: "공지철" }
+                * 3: Object { mid: "31", name: "서머싯 몸" }
+                * */
+                const result = arr.filter(value => regex.test(value["name"]));
+                console.log(result);
+                console.log(result[0]["mid"]);
+                console.log(result[0]["name"]);
+                console.log(result.length);
+                // 결과값 있을 때
+                // 0: Object { mid: "14", name: "공지철" }
+                // length: 1
+                // 결과값 없을 때: length 0
+
+
+                // 미배정 멤버에 해당 이름이 있는지 검색한다.
+                // const unassignedMemberList = currUnassignedMembers.values();
+                // let resultSearch = false;
+                // for(const name of unassignedMemberList){
+                //     console.log(name);
+                //     // console.log(`match: `);
+                //     // console.log(name.match(regex));
+                //     console.log(`test: `);
+                //     console.log(regex.test(name));
+                // }
+
+                // 해당 이름이 미배정 멤버에 있다면
+
+                if(result.length !== 0) {
+                    console.log(datum["view"]);
+                    // 1) status view
+                    if(datum["view"] === "status"){
+                        // 부모인 .more-assignInfo의 자식 .unassigned-member-list
+                        // ① hide제거
+                        console.log(parents(btn, ".more-assignInfo")[0]);
+                        console.log(parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list"));
+                        parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").classList.remove("hide");
+
+                        // ② 다른 미배정 멤버 모두 숨긴다
+                        [...parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").children].forEach(member => member.classList.add("hide"));
+
+                        // ③ appendChild: unassignedMemberElement(datum, result);
+                        for(let i = 0; i < result.length; i++) {
+                            parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").appendChild(unassignedMemberElement(datum, result[i]));
+                        }
+
+                    }
+
+                    // 2) table view
+                    if(datum["view"] === "table") {
+                        // 부모인 .find-member-to-assign의 자식 .unassigned-member-list
+                        // ① 다른 모든 멤버 hide
+                        [...parents(btn, ".unassigned-member-list")[0].children].forEach(member => member.classList.add("hide"));
+                        // ② 검색된 멤버만 appendChild: unassignedMemberElement(datum, searchName);
+                    }
+                }
+
             });
         });
     } // // 10-8. 담당자 검색하여 추가하기 끝
@@ -1325,7 +1331,7 @@ window.onload = function(){
 
     /*---------- 053A ------------*/
     // 추가된 담당자의 full name 요소 (table view: ①목록에서 담당자 추가, ②참여하기로 추가)
-    function newAssigneeElement(newAssigneeName, newAssigneeMid, datum) {
+    function newAssigneeElement(newAssigneeMid, newAssigneeName, datum) {
         const div = document.createElement("div");
         const p = document.createElement("p");
         const btnX = document.createElement("span");
@@ -1383,7 +1389,7 @@ window.onload = function(){
 
 
     /*---------- 056 ------------*/
-    function unassingedMemberElement(datum, nickname){
+    function unassignedMemberElement(datum, result){
         const div = document.createElement("div");
         const p = document.createElement("p");
 
@@ -1395,8 +1401,14 @@ window.onload = function(){
         div.setAttribute("data-taskid", datum["taskid"]);
         div.setAttribute("data-projectid", datum["projectid"]);
 
-        p.setAttribute("data-mid", datum["assigneemid"]);
-        p.innerText = nickname;
+        if(datum["view"] === "status") {
+            p.setAttribute("data-mid", result["mid"]);
+            p.innerText = result["name"];
+        }
+        if(datum["view"] === "table") {
+            p.setAttribute("data-mid", result[0]);
+            p.innerText = result[1];
+        }
         div.appendChild(p);
 
         return div;
@@ -1404,20 +1416,23 @@ window.onload = function(){
     /*---------- 057 ------------*/
     /* 담당자 추가할 때 담당자 이름 (요약) 출력 요소 생성 */
     // ★★★ 새로 생성된 btn-more-assignInfo는 -new를 붙인다. (기능이 겹쳐서 기존 버튼도 안열..림?)
-    function assigneeBoxByNum(assigneeNum, assigneeMid, assigneeName){
+    function assigneeBoxByNum(assigneeNum, view, assigneeMid, assigneeName){
         const span = document.createElement("span");
         const div = document.createElement("div");
 
         if (assigneeNum === 0) {
-            span.classList.add("font-blur", "no-assignee", "btn-more-assignInfo-new", "font-14");
+            span.classList.add("no-assignee", "font-14");
+            if (view === "table") span.classList.add("btn-more-assignInfo-new");
             span.innerText = "담당자 없음";
             return span;
         } else if (assigneeNum === 1) {
-            span.classList.add("one-assignee", "btn-more-assignInfo-new", "font-14");
+            span.classList.add("one-assignee", "font-14");
+            if (view === "table") span.classList.add("btn-more-assignInfo-new");
             span.setAttribute("data-mid", assigneeMid);
             span.innerText = assigneeName;
             return span;
         } else if (assigneeNum === 2) {
+
             div.classList.add("many-assignee");
             span.classList.add("lastName");
             span.setAttribute("data-mid", assigneeMid);

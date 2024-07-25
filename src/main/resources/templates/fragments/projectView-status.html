@@ -57,15 +57,17 @@
                       <!-- status view: 담당자 -->
                       <div class="status-assignee"><!-- statusview-task (flex 설정 다름..)-->
                         <div class="담당자요약및풀네임"> <!--btn-more-assignInfo는 table view에서(만) 사용...-->
-                          <span class="font-14 no-assignee" data-view="status" th:if="${t.getAssignees().containsValue('noassignee') }">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
-                          <th:block th:each="assignee: ${t.getAssignees()}">
-                            <span class="font-14 one-assignee" data-view="status" th:if="${!t.getAssignees().containsValue('noassignee')} and ${t.getAssignees().size() == 1}" th:text="${assignee.value}">채규태</span> <!--/*안 쓰는 값인 듯.. ? th:attr="data-size=${t.getAssignees()}"*/-->
-                          </th:block>
-                          <th:block th:if="${t.getAssignees().size() > 1}">
-                            <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
-                              <div class="many-assignee"><span class="lastName" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">채</span></div>
+                          <div class="담당자요약box assignee-brief-box">
+                            <span class="font-14 no-assignee" data-view="status" th:if="${t.getAssignees().containsValue('noassignee') }">담당자 없음</span> <!--원래 font-blur였음 no-assignee로 변경 6/20 -->
+                            <th:block th:each="assignee: ${t.getAssignees()}">
+                              <span class="font-14 one-assignee" data-view="status" th:if="${!t.getAssignees().containsValue('noassignee')} and ${t.getAssignees().size() == 1}" th:text="${assignee.value}">채규태</span> <!--/*안 쓰는 값인 듯.. ? th:attr="data-size=${t.getAssignees()}"*/-->
                             </th:block>
-                          </th:block>
+                            <th:block th:if="${t.getAssignees().size() > 1}">
+                              <th:block th:each="assignee : ${t.manyAssigneeFirstName(t.getAssignees())}">
+                                <div class="many-assignee"><span class="lastName" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">채</span></div>
+                              </th:block>
+                            </th:block>
+                          </div>
                           <div class="more-assignInfo statusView-assignee-list img-hidden">
                             <div class="담당자풀네임목록 task-assignee-list pd-t5">
                               <div class="개별담당자box assignee-fullname-box mb-7" th:if="${!t.getAssignees().containsValue('noassignee')}" th:each="assignee : ${t.getAssignees()}">
@@ -75,9 +77,10 @@
                               </div>
                             </div>
                             <!--/*검색하여 추가히기, 배정안된멤버목록은 '작성자'에게만 출력된다. */-->
-                            <div class="검색하여추가하기 top-line pd-t10" th:classappend="${t.getAuthorMid() != myMid}?'hide'">
-                              <input type="text" class="font-12 " placeholder="배정할 멤버 검색">
-                              <button type="button" class="btn-findByName-member-to-assign">검색</button>
+                            <div class="검색하여추가하기 findByName-member-to-assign top-line pd-t10" th:classappend="${t.getAuthorMid() != myMid}?'hide'">
+                              <input type="text" class="font-12 input-findByName-toAssign" placeholder="배정할 멤버 검색">
+                              <button type="button" class="btn-findByName-member-to-assign" data-view="status"
+                                      th:attr="data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}">검색</button>
                             </div>
                             <div class="배정안된멤버목록 unassigned-member-list hide">
                               <div class="개별멤버box unassigned-member" data-view="status"
