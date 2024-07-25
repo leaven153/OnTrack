@@ -102,7 +102,7 @@
 
         <!-- assignee -->
         <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
-          <span class="font-blur no-assignee btn-more-assignInfo" data-view="table" th:attr="data-test=${!#strings.equals(myNickname, task.getAuthorName())}" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+          <span class="no-assignee btn-more-assignInfo" data-view="table" th:attr="data-test=${!#strings.equals(myNickname, task.getAuthorName())}" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
           <span class="one-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().size() == 1}" th:attr="data-mid=${task.getAssigneeMids()[0]}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
           <!--/*
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">

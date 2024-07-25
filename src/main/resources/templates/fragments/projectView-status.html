@@ -76,15 +76,15 @@
                             </div>
                             <!--/*검색하여 추가히기, 배정안된멤버목록은 '작성자'에게만 출력된다. */-->
                             <div class="검색하여추가하기 top-line pd-t10" th:classappend="${t.getAuthorMid() != myMid}?'hide'">
-                              <input type="text" class="font-12 " placeholder="배정할 멤버 검색">
+                              <input type="text" class="font-12 input-findByName-toAssign" placeholder="배정할 멤버 검색">
                               <button type="button" class="btn-findByName-member-to-assign">검색</button>
                             </div>
                             <div class="배정안된멤버목록 unassigned-member-list hide">
-                              <div class="개별멤버box unassigned-member" data-view="status"
-                                   th:attr="data-executormid=${myMid}, data-taskid=${t.getId()}, data-projectid=${projectId}, data-authormid=${t.getAuthorMid()}"
-                                   th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">
-                                <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>
-                              </div>
+<!--                              <div class="개별멤버box unassigned-member" data-view="status"-->
+<!--                                   th:attr="data-executormid=${myMid}, data-taskid=${t.getId()}, data-projectid=${projectId}, data-authormid=${t.getAuthorMid()}"-->
+<!--                                   th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">-->
+<!--                                <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>-->
+<!--                              </div>-->
                             </div>
                           </div>
                         </div>
