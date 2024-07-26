@@ -242,9 +242,5 @@ public class TaskService {
         return tcList;
     }
 
-    public ResponseEntity<?> searchMemberByName(TaskAndAssignee searchCond){
-
-        return ResponseEntity.ok().body("ok");
-    }
 
 }

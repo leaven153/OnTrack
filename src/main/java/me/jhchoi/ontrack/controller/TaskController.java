@@ -252,16 +252,16 @@ public class TaskController {
         List<ProjectMember> member = (List<ProjectMember>) existsMember.getBody();
         log.info("해당 이름을 가진 멤버 존재: {}",member);
 
-        for(int i = 0; i < member.size(); i++) {
+        for (ProjectMember projectMember : member) {
             TaskAssignment request = TaskAssignment.builder()
                     .taskId(searchCond.getTaskId())
-                    .memberId(member.get(i).getId()).build();
-            if(taskRepository.chkAssigned(request) == null){
+                    .memberId(projectMember.getId()).build();
+            if (taskRepository.chkAssigned(request) == null) {
                 log.info("해당 task에 배정됐는가(task ID가 return 됐다면 배정된 것임): {}", taskRepository.chkAssigned((request)));
                 result.add(TaskAndAssignee.builder()
-                        .assigneeMid(String.valueOf(member.get(i).getId()))
-                        .assigneeName(member.get(i).getNickname()).build());
-            };
+                        .assigneeMid(String.valueOf(projectMember.getId()))
+                        .assigneeName(projectMember.getNickname()).build());
+            }
         }
 
         log.info("전달 직전 result: {}", result);
