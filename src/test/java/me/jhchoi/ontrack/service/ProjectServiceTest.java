@@ -122,7 +122,7 @@ class ProjectServiceTest {
         IntStream.range(0, mnn.size()).forEach(i -> {
             // 생성자 id가 키값인 map에서 해당 id의 인덱스를 가져온다.
             // 해당 인덱스에 생성자의 이름을 넣는다.
-            pl.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickName());
+            pl.get(idxOfCreator.get(mnn.get(i).getUserId())).setCreatorName(mnn.get(i).getNickname());
         });
 
         log.info("생성자 이름까지 완성된 projectList: {}", pl);
@@ -169,7 +169,7 @@ class ProjectServiceTest {
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
                     .assigneeMid(project.getMemberList().get(i).getMemberId())
-                    .assigneeName(project.getMemberList().get(i).getNickName())
+                    .assigneeName(project.getMemberList().get(i).getNickname())
                     .tList(taskRepository.getAssigneeView(project.getMemberList().get(i).getMemberId()))
                     .build();
             aList.add(assignment);

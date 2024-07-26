@@ -987,6 +987,13 @@ window.onload = function(){
                         });
                     }
 
+                    // 검색 결과로 출력했던 내용 hide
+                    if(document.querySelectorAll(".unassigned-member-list")){
+                        document.querySelectorAll(".unassigned-member-list").forEach(function(eachOne){
+                            eachOne.classList.add("hide");
+                        });
+                    }
+
                     // 클릭한 task의 모달(만) 연다.
                     parents(btn, ".status-assignee")[0].querySelector(".more-assignInfo").classList.remove("img-hidden");
 
@@ -1188,74 +1195,116 @@ window.onload = function(){
                 console.log(`${prev(btn).value}`);
 
                 const searchName = prev(btn).value;
-                const datum = btn.dataset;
 
-                // 검색에 사용할 정규표현식 생성
-                let regex = new RegExp(searchName, "gi");
-                console.log(regex);
+                // input에 아무 값이 들어오지 않았다면 실행하지 않는다.
+                if (searchName !== "" || searchName !== null) {
 
-                // map filter test
-                // 1. map to array?
-                let arr = Array.from(currUnassignedMembers, ([mid, name]) => ({mid, name}));
-                console.log(arr);
-                /* arr의 결과 ↓
-                * 0: Object { mid: "32", name: "톰 하디" }
-                * 1: Object { mid: "33", name: "제임스 서버" }
-                * 2: Object { mid: "14", name: "공지철" }
-                * 3: Object { mid: "31", name: "서머싯 몸" }
-                * */
-                const result = arr.filter(value => regex.test(value["name"]));
-                console.log(result);
-                console.log(result[0]["mid"]);
-                console.log(result[0]["name"]);
-                console.log(result.length);
-                // 결과값 있을 때
-                // 0: Object { mid: "14", name: "공지철" }
-                // length: 1
-                // 결과값 없을 때: length 0
+                    const datum = btn.dataset;
+
+                    // 서버에 보낼 정보 생성
+                    const searchCond = {
+                        projectId: datum["projectid"],
+                        taskId: datum["taskid"],
+                        nickname: prev(btn).value
+                    };
+
+                    fetch(`http://localhost:8080/task/search?object=member`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(searchCond)
+                    }).then(response => response.json())
+                        .then(result => {
+                            // console.log(result); // 결과가 없을 때: Array []
+                            // console.log(result.length); // 결과가 없을 때: 0
+                            // console.log(result[0]["id"]);
+                            // Object { id: 9, taskTitle: null, authorMid: null, authorName: null, taskPriority: null, taskStatus: null, taskDueDate: null, taskParentId: null, createdAt: null, updatedAt: null, … }
+                            // Array [ {…}, {…} ]
+                            // 0: Object { id: 9, taskTitle: null, authorMid: null, … }
+                            // 1: Object { id: 9, taskTitle: null, authorMid: null, … }
+                            // length: 2
+
+                            if(datum["view"] === "status"){
+
+                                // 검색결과 출력 전, margin-bottom 준다.
+                                if(!parents(btn, ".findByName-member-to-assign")[0].classList.contains("mb-10")){
+                                    parents(btn, ".findByName-member-to-assign")[0].classList.add("mb-10");
+                                }
+
+                                // 부모인 .more-assignInfo의 자식 .unassigned-member-list
+                                // ① hide제거
+                                console.log(parents(btn, ".more-assignInfo")[0]);
+                                console.log(parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list"));
+                                parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").classList.remove("hide");
+
+                                // ② 다른 미배정 멤버 모두 숨긴다
+                                [...parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").children].forEach(member => member.classList.add("hide"));
+
+                                // ③ appendChild: unassignedMemberElement(datum, result);
+                                // ③-1. 해당 이름이 미배정 멤버에 있다면
+                                if(result.length !== 0) {
+                                    for(let i = 0; i < result.length; i++) {
+                                        parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").appendChild(unassignedMemberElement(datum, result[i]));
+                                    }
+                                }
+                                // ③-2. 해당 이름이 미배정 멤버에 없다면
+                                if(result.length === 0) {
+                                    const span = document.createElement("span");
+                                    span.classList.add("font-blur", "font-12");
+                                    span.innerText = "검색 결과가 없습니다.";
+                                    parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").appendChild(span);
+                                }
 
 
-                // 미배정 멤버에 해당 이름이 있는지 검색한다.
-                // const unassignedMemberList = currUnassignedMembers.values();
-                // let resultSearch = false;
-                // for(const name of unassignedMemberList){
-                //     console.log(name);
-                //     // console.log(`match: `);
-                //     // console.log(name.match(regex));
-                //     console.log(`test: `);
-                //     console.log(regex.test(name));
-                // }
+                            }
 
-                // 해당 이름이 미배정 멤버에 있다면
+                            // 2) table view
+                            if(datum["view"] === "table") {
+                                // 부모인 .find-member-to-assign의 자식 .unassigned-member-list
+                                // ① 다른 모든 멤버 hide
+                                [...parents(btn, ".unassigned-member-list")[0].children].forEach(member => member.classList.add("hide"));
+                                // ② 검색된 멤버만 appendChild: unassignedMemberElement(datum, searchName);
+                            }
 
-                if(result.length !== 0) {
-                    console.log(datum["view"]);
-                    // 1) status view
-                    if(datum["view"] === "status"){
-                        // 부모인 .more-assignInfo의 자식 .unassigned-member-list
-                        // ① hide제거
-                        console.log(parents(btn, ".more-assignInfo")[0]);
-                        console.log(parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list"));
-                        parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").classList.remove("hide");
+                    });
 
-                        // ② 다른 미배정 멤버 모두 숨긴다
-                        [...parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").children].forEach(member => member.classList.add("hide"));
 
-                        // ③ appendChild: unassignedMemberElement(datum, result);
-                        for(let i = 0; i < result.length; i++) {
-                            parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").appendChild(unassignedMemberElement(datum, result[i]));
-                        }
+                    /*
+                    // 이전 검색결과 삭제
+                    // const prevResult = [...parents(btn, ".more-assignInfo")[0].querySelector(".unassigned-member-list").children].filter(child => !child.classList.contains("hide"));
+                    // console.log(prevResult)
+                    // prevResult.remove();
 
-                    }
+                    // 검색에 사용할 정규표현식 생성
+                    let regex = new RegExp(searchName, "gi");
+                    console.log(regex);
 
-                    // 2) table view
-                    if(datum["view"] === "table") {
-                        // 부모인 .find-member-to-assign의 자식 .unassigned-member-list
-                        // ① 다른 모든 멤버 hide
-                        [...parents(btn, ".unassigned-member-list")[0].children].forEach(member => member.classList.add("hide"));
-                        // ② 검색된 멤버만 appendChild: unassignedMemberElement(datum, searchName);
-                    }
-                }
+                    // 1. map to array
+                    let arr = Array.from(currUnassignedMembers, ([mid, name]) => ({mid, name}));
+                    console.log(arr);
+                    // arr의 결과 ↓
+                    // 0: Object { mid: "32", name: "톰 하디" }
+                    // 1: Object { mid: "33", name: "제임스 서버" }
+                    // 2: Object { mid: "14", name: "공지철" }
+                    // 3: Object { mid: "31", name: "서머싯 몸" }
+                    //
+
+                    const result = arr.filter(value => regex.test(value["name"]));
+                    // console.log(result);
+                    // console.log(result.length);
+                    // 결과값 있을 때
+                    // 0: Object { mid: "14", name: "공지철" }
+                    // length: 1
+                    // 결과값 없을 때: length 0
+                    */
+
+
+
+                } // if (searchName !== "" || searchName !== null) ends
+
+
+
 
             });
         });
@@ -1401,14 +1450,15 @@ window.onload = function(){
         div.setAttribute("data-taskid", datum["taskid"]);
         div.setAttribute("data-projectid", datum["projectid"]);
 
-        if(datum["view"] === "status") {
-            p.setAttribute("data-mid", result["mid"]);
-            p.innerText = result["name"];
-        }
-        if(datum["view"] === "table") {
-            p.setAttribute("data-mid", result[0]);
-            p.innerText = result[1];
-        }
+        p.setAttribute("data-mid", result["assigneeMid"]);
+        p.innerText = result["assigneeName"];
+        // if(datum["view"] === "status") {
+        //
+        // }
+        // if(datum["view"] === "table") {
+        //     p.setAttribute("data-mid", result[0]);
+        //     p.innerText = result[1];
+        // }
         div.appendChild(p);
 
         return div;

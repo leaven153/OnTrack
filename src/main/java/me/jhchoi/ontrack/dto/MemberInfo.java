@@ -14,7 +14,7 @@ public class MemberInfo {
     private Long projectId;
     private Long userId;
     private Long memberId;
-    private String nickName;
+    private String nickname;
     private String position;
     private LocalDate invitedAt; // position이 invited일 경우, 초대받은 날짜
     private String invitedAs;
