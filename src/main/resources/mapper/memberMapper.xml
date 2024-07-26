@@ -7,6 +7,13 @@
         VALUES (#{projectId}, #{userId}, #{nickname}, #{position}, #{capacity}, #{joinedAt})
     </insert>
 
+    <select id="findByName" parameterType="ProjectMember" resultType="ProjectMember">
+        SELECT id, nickname
+        FROM project_member
+        WHERE project_id = #{projectId}
+        AND nickname LIKE CONCAT('%', #{nickname}, '%')
+    </select>
+
     <update id="acceptInvitation" parameterType="ResponseInvitation">
         UPDATE project_member
         SET nickname = #{userName}, position = #{invitedAs}, capacity = #{capacity}, joinedAt = #{joinedAt}

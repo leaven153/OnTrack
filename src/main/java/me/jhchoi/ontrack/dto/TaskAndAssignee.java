@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -174,8 +173,8 @@ public class TaskAndAssignee {
     public static Map<Long, String> unassignedMember(List<MemberInfo> memberInfo, Map<Long, String> assigneeList){
         Map<Long, String> unAssignedMember = new HashMap<>();
         IntStream.range(0, memberInfo.size()).forEach(i -> {
-            if(!memberInfo.get(i).getNickName().equals(assigneeList.get(memberInfo.get(i).getMemberId()))){
-                unAssignedMember.put(memberInfo.get(i).getMemberId(), memberInfo.get(i).getNickName());
+            if(!memberInfo.get(i).getNickname().equals(assigneeList.get(memberInfo.get(i).getMemberId()))){
+                unAssignedMember.put(memberInfo.get(i).getMemberId(), memberInfo.get(i).getNickname());
             }
         });
         return unAssignedMember;

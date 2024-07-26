@@ -572,9 +572,9 @@ div.statusView-assignee-list {
     padding: 8px 10px 5px 10px;
     background-color: #fff;
     width: 135px;
-    left: -4%; /* 1000px이하일 때 (897px 이상) */
+    left: -3%; /* 1000px이하일 때 (897px 이상) */
     /*right: 18%;*/ /* full화면일 때*/
-    top: 100%;
+    top: 135%;
     border-radius: 5px;
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
     /*text-align: center;*/
@@ -599,6 +599,14 @@ div.statusView-assignee-list .unassigned-member-list {
     border-radius: 5px;
     box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
     overflow-y: scroll;
+}
+
+input.input-findByName-toAssign {
+    width: 100px;
+    font-size: 14px;
+}
+input.input-findByName-toAssign::placeholder {
+    font-size: 13px;
 }
 
 /*.btn-add-assignee,*/

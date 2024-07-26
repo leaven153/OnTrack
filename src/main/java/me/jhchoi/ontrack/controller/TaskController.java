@@ -4,12 +4,10 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.OnTrackTask;
-import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskComment;
-import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
+import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -22,7 +20,7 @@ import org.thymeleaf.spring6.view.ThymeleafView;
 import java.net.URI;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -31,6 +29,7 @@ import java.util.Optional;
 public class TaskController {
     private final TaskService taskService;
     private final TaskRepository taskRepository;
+    private final MemberService memberService;
 
     @PostMapping("/addTask")
     public String addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
@@ -229,16 +228,44 @@ public class TaskController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<?> searchMemberToAssign(@RequestParam String object, @RequestParam(required = false) String purpose, @RequestBody MemberInfo searchCond){
+    public ResponseEntity<?> search(@RequestParam String object, @RequestBody SearchCond searchCond){
         log.info("무엇을 찾는가: {}", object); // 무엇을 찾는가: member
-        log.info("무엇을 위해 찾는가: {}", purpose); // 무엇을 위해 찾는가: toassign
-        log.info("검색할 이름: {}", searchCond); //검색할 이름: GetMemberNameRequest(projectId=9, taskId=14, userId=null, memberId=null, nickname=adele)
+//        log.info("무엇을 위해 찾는가: {}", purpose); // 무엇을 위해 찾는가: toassign
+        log.info("검색할 이름: {}", searchCond); //검색할 이름:
 
         // 검색한 사람이 이미 담당자인 경우
 
         // 검색한 사람이 없는 경우
 
-        return new ResponseEntity<>(searchCond.getNickName(), HttpStatus.OK);
+        // member service에서 해당 이름을 가진 멤버가 해당 프로젝트에 존재하는지 먼저 검색
+        ResponseEntity<?> existsMember = memberService.findByName(searchCond);
+        log.info("task controller - exists member: {}", existsMember);
+
+        if(existsMember.getStatusCode().is4xxClientError()){
+            return ResponseEntity.ok().body(existsMember);
+        }
+
+        List<TaskAndAssignee> result = new ArrayList<>();
+
+        // 해당 이름을 가진 멤버가 존재한다면
+        // 해당 task에 배정됐는지 확인한다.
+        List<ProjectMember> member = (List<ProjectMember>) existsMember.getBody();
+        log.info("해당 이름을 가진 멤버 존재: {}",member);
+
+        for(int i = 0; i < member.size(); i++) {
+            TaskAssignment request = TaskAssignment.builder()
+                    .taskId(searchCond.getTaskId())
+                    .memberId(member.get(i).getId()).build();
+            if(taskRepository.chkAssigned(request) == null){
+                log.info("해당 task에 배정됐는가(task ID가 return 됐다면 배정된 것임): {}", taskRepository.chkAssigned((request)));
+                result.add(TaskAndAssignee.builder()
+                        .assigneeMid(String.valueOf(member.get(i).getId()))
+                        .assigneeName(member.get(i).getNickname()).build());
+            };
+        }
+
+        log.info("전달 직전 result: {}", result);
+        return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
 
 }// class TaskController ends

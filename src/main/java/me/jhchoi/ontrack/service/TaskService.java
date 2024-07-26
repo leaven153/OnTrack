@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class TaskService {
             for(int i= 0; i < taskFormRequest.getAssigneeMids().size(); i++){
                 log.info("task service에서 멤버 id: {}", taskFormRequest.getAssigneeMids().get(i));
                 List<MemberInfo> mList = projectRepository.getMemberInfo(MemberInfo.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneeMids().get(i)).build());
-                taskFormRequest.getAssigneeNames().add(mList.get(0).getNickName());
+                taskFormRequest.getAssigneeNames().add(mList.get(0).getNickname());
             }
 
             // 3-2. 담당자 객체(TaskAssignment) 생성 및 DB 저장
@@ -239,6 +240,11 @@ public class TaskService {
     public List<TaskComment> getTaskComment(Long taskId) {
         List<TaskComment> tcList = taskRepository.getTaskComment(taskId);
         return tcList;
+    }
+
+    public ResponseEntity<?> searchMemberByName(TaskAndAssignee searchCond){
+
+        return ResponseEntity.ok().body("ok");
     }
 
 }

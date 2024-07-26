@@ -89,7 +89,7 @@ public class ProjectService {
             // 생성자 id가 키값(mnn.get(i).getUserId())인 map(idxOfCreator)에서
             // value를 가져오면 그것은 생성자의 이름이 들어갈 위치!
             // 해당 인덱스에 생성자의 이름을 넣는다.
-            myProjects.get(idxOfCreator.get(creatorName.get(i).getUserId())).setCreatorName(creatorName.get(i).getNickName());
+            myProjects.get(idxOfCreator.get(creatorName.get(i).getUserId())).setCreatorName(creatorName.get(i).getNickname());
         });
 
         return myProjects;
@@ -112,7 +112,7 @@ public class ProjectService {
         // 1-2. 프로젝트 內 내 정보(member id, 닉네임, 포지션)
         List<MemberInfo> myMInfo = projectRepository.getMemberInfo(MemberInfo.builder().projectId(projectId).userId(userId).build());
         project.setMemberId(myMInfo.get(0).getMemberId());
-        project.setNickname(myMInfo.get(0).getNickName());
+        project.setNickname(myMInfo.get(0).getNickname());
         project.setPosition(myMInfo.get(0).getPosition());
 
         // 2. 프로젝트 소속 멤버 정보  → MemberInfo
@@ -146,7 +146,7 @@ public class ProjectService {
         IntStream.range(0, project.getMemberList().size()).forEach(i -> {
             AssignmentList assignment = AssignmentList.builder()
                     .assigneeMid(project.getMemberList().get(i).getMemberId())
-                    .assigneeName(project.getMemberList().get(i).getNickName())
+                    .assigneeName(project.getMemberList().get(i).getNickname())
                     .tList(taskRepository.getAssigneeView(project.getMemberList().get(i).getMemberId()))
                     .build();
             aList.add(assignment);
