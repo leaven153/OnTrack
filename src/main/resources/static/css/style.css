@@ -339,7 +339,7 @@ span을 아예 hide하도록 해야 한다.) */
 
 .project-fixed-top {
     width: 100%;
-    height: 120px;
+    /*height: 120px;*/
     position: fixed;
     top: 0;
     left: 0;
@@ -554,7 +554,7 @@ div.status-assignee {
 div.tableView-assignee-list {
     position: absolute;
     border: 1px solid #b6b6b688;
-    z-index: 2;
+    z-index: 1;
     padding: 3px 10px 5px 10px;
     background-color: #fff;
     width: 130px;
@@ -582,7 +582,9 @@ div.statusView-assignee-list {
 }
 div.statusView-assignee-list .unassigned-member-list {
     border-top: 1px solid #b6b6b6;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
+    max-height: 100px;
+    overflow-y: scroll;
 }
 .find-member-to-assign {
     position: absolute;

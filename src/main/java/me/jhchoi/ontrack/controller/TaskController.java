@@ -257,7 +257,7 @@ public class TaskController {
                     .taskId(searchCond.getTaskId())
                     .memberId(projectMember.getId()).build();
             if (taskRepository.chkAssigned(request) == null) {
-                log.info("해당 task에 배정됐는가(task ID가 return 됐다면 배정된 것임): {}", taskRepository.chkAssigned((request)));
+                log.info("해당 task에 이미 배정됐는가(task ID가 return 됐다면 이미 배정된 멤버임): {}", taskRepository.chkAssigned((request)));
                 result.add(TaskAndAssignee.builder()
                         .assigneeMid(String.valueOf(projectMember.getId()))
                         .assigneeName(projectMember.getNickname()).build());

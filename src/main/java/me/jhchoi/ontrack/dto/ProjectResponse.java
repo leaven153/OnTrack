@@ -39,4 +39,7 @@ public class ProjectResponse {
     // 6. 진행상태별 할 일
     private LinkedHashMap<Integer, List<TaskAndAssignee>> statusTaskList;
 
+    // 7. 세부 할 일
+    private LinkedHashMap<Long, List<TaskAndAssignee>> childTaskList;
+
 }
