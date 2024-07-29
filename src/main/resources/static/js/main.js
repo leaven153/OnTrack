@@ -1404,33 +1404,36 @@ window.onload = function(){
     } // // 10-8. 담당자 검색하여 추가하기 끝
 
     /* 10-9. 할 일 진행상태 수정 */
+    // 담당자가 없는 할 일은 진행상태를 변경할 수 없다.
+    // 변경 버튼은 권한이 있다면 출력되게 하되, 실행과정에서 담당자가 없을 경우, 변경이 안됨을 경고하도록 하자.
     if(elExists(document.querySelector(".btn-edit-task-status"))){
         const btnEditTaskStatus = document.querySelectorAll(".btn-edit-task-status");
-        btnEditTaskStatus.forEach(function(chosenOne){
-            chosenOne.addEventListener("click", ()=>{
+        btnEditTaskStatus.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
                 console.log(`진행상태 변경을 click`);
-                console.log(next(chosenOne));
+                // console.log(next(btn));
                 // 진행상태 목록 toggle
-                if(next(chosenOne).classList.contains("img-hidden")) {
+                if(next(btn).classList.contains("img-hidden")) {
                     // 열려 있던 다른 task의 진행상태 목록들 닫고
                     document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
                         everyList.classList.add("img-hidden");
                     });
                     // 선택된 목록만 연다
-                    next(chosenOne).classList.remove("img-hidden")
+                    next(btn).classList.remove("img-hidden")
                 } else {
-                    next(chosenOne).classList.add("img-hidden")
+                    next(btn).classList.add("img-hidden")
                 }
 
                 // 변경하고자 하는 진행상태를 클릭했을 때
-                next(chosenOne).querySelectorAll(".status-each").forEach(function(eachStatus){
-                    eachStatus.addEventListener("click", ()=>{
-                        console.log(eachStatus);
-                        console.log(eachStatus.dataset.projectid); // ontrack_task에서는 task id만으로 쿼리 가능, 단 task_history에 저장하기 위해서 필요!!
-                        console.log(eachStatus.dataset.taskid);
-                        console.log(eachStatus.dataset.status);
-                        console.log(eachStatus.dataset.updatedby);
-                        console.log(eachStatus.children[1].innerHTML);
+                next(btn).querySelectorAll(".status-each").forEach(function(eachStatus){
+                    eachStatus.addEventListener("click", (e)=>{
+                        e.stopPropagation();
+                        // console.log(eachStatus);
+                        // console.log(eachStatus.dataset.projectid); // ontrack_task에서는 task id만으로 쿼리 가능, 단 task_history에 저장하기 위해서 필요!!
+                        // console.log(eachStatus.dataset.taskid);
+                        // console.log(eachStatus.dataset.status);
+                        // console.log(eachStatus.dataset.updatedby);
+                        // console.log(eachStatus.children[1].innerHTML);
 
                         const taskHistory = {
                             projectId: eachStatus.dataset.projectid,
@@ -1447,29 +1450,33 @@ window.onload = function(){
                                 'Content-type': 'application/json'
                             },
                             body: JSON.stringify(taskHistory)
-                        })
-                            .then(response => response.json())
+                        }).then(response => response.json())
                             .then(data => {
+                                if(data[0] === undefined) {
+                                    alert(`${data["message"]}`);
+                                    return;
+                                }
                                 // console.log(data);
-                                // console.log(data[0])
-                                // console.log(prev(chosenOne)); // span
-                                // console.log(prev(prev(chosenOne))); // div.status-sign
-                                // console.log(prev(prev(chosenOne)).dataset.status);
-                                prev(chosenOne).innerText = data[0];
-                                prev(prev(chosenOne)).classList.remove(`${prev(prev(chosenOne)).dataset.status}`);
-                                prev(prev(chosenOne)).classList.add(data[1]);
+                                /**
+                                * Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
+                                * message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."*/
+                                // console.log(data[0]) // error일 경우, undefined
+
+                                prev(btn).innerText = data[0];
+                                prev(prev(btn)).classList.remove(`${prev(prev(btn)).dataset.status}`);
+                                prev(prev(btn)).classList.add(data[1]);
 
                                 // 열려있던 진행상태 목록 닫기
-                                next(chosenOne).classList.add("img-hidden")
-
-                            });
+                                next(btn).classList.add("img-hidden")
+                            }); // fetch ends
                     });
                 });
-            });
-        });
+            }); // chosenOne click evt ends
+        }); // btnEditTaskStatus.forEach ends
     } // 10-9 할 일 진행상태 수정 끝
     
     /* 10-10. 할 일 마감일 수정 */
+
 
     /*---------- 053A ------------*/
     // 추가된 담당자의 full name 요소 (table view: ①목록에서 담당자 추가, ②참여하기로 추가)

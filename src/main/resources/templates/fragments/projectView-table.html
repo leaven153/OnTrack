@@ -121,7 +121,9 @@
               <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
                 <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                 <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                <span class="btn-dropOut-task ml-3" data-view="table" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
+                <span class="btn-dropOut-task ml-3" data-view="table"
+                      th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}"
+                      th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
               </div>
             </div>
 
@@ -163,7 +165,7 @@
           <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
             <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
             <span class="status-remark" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
-            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span>
+            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span> <!--/*  and ${task.getAssigneeMids().size() > 0} */-->
             <div class="진행상태목록 tableView-status-list img-hidden">
               <th:block th:each="tStatus: ${statusMap}">
                 <div class="status-each" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-status=${tStatus.key}, data-updatedby=${myMid}">

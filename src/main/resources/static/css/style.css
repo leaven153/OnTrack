@@ -2224,7 +2224,7 @@ span.status-child-count {
 div.status-each {
     padding: 6px 0 0 10px;
     height: 23px;
-
+    cursor: pointer;
 }
 
 .status-each:hover {
