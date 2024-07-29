@@ -126,9 +126,11 @@
             </div>
 
             <th:block th:if="${!task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 3}">
-              <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-bePartOf-task" data-view="table" >
+              <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-bePartOf-task"
+                   data-view="table" th:attr="data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-nickname=${myNickname},
+                data-projectid=${projectId}, data-taskid=${task.getId()}">
                 <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
-                <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>
+                <span>이 일에 참여하기</span>
               </div>
             </th:block>
 
