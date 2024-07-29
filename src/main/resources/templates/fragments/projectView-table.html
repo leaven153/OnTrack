@@ -121,14 +121,18 @@
               <div class="개별담당자box assignee-fullname-box mb-7" th:each="assignee : ${task.getAssignees()}">
                 <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/* th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
                 <!--/* '진행중'일때까지만 담당자 본인 혹은 작성자만이 담당자를 해제할 수 있다 */-->
-                <span class="btn-dropOut-task ml-3" data-view="table" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}" th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
+                <span class="btn-dropOut-task ml-3" data-view="table"
+                      th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-taskid=${task.getId()}, data-projectid=${projectId}"
+                      th:if="(${assignee.value == myNickname} or ${myNickname == task.getAuthorName()}) and ${task.getTaskStatus() < 4}">&times;</span>
               </div>
             </div>
 
             <th:block th:if="${!task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 3}">
-              <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-bePartOf-task" data-view="table" >
+              <div class="참여하기 flex-row-center-center-nowrap top-line mt-5 mb-5 pd-t5 btn-bePartOf-task"
+                   data-view="table" th:attr="data-executormid=${myMid}, data-authormid=${task.getAuthorMid()}, data-nickname=${myNickname},
+                data-projectid=${projectId}, data-taskid=${task.getId()}">
                 <div class="iconBox-27"><img src="../../static/imgs/icon_participate.png" th:src="@{/imgs/icon_participate.png}" class="img-24" alt="participate this task"></div>
-                <span th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${task.getId()}">이 일에 참여하기</span>
+                <span>이 일에 참여하기</span>
               </div>
             </th:block>
 
@@ -150,7 +154,7 @@
                   <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">쉘든 쿠퍼</p>
                 </div>
               </div>
-              <div class="배정안된멤버검색결과"></div>
+<!--              <div class="배정안된멤버검색결과 search-member-result"></div>-->
             </div>
           </div>
         </div>
@@ -161,7 +165,7 @@
           <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
             <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
             <span class="status-remark" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
-            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span>
+            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span> <!--/*  and ${task.getAssigneeMids().size() > 0} */-->
             <div class="진행상태목록 tableView-status-list img-hidden">
               <th:block th:each="tStatus: ${statusMap}">
                 <div class="status-each" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-status=${tStatus.key}, data-updatedby=${myMid}">
@@ -197,10 +201,12 @@
         </div>
 
         <!-- due Date -->
-        <div class="tableview-column flex-row-center-center-nowrap">
-          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
-          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
-          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
+        <div class="tableview-column flex-row-center-center-nowrap task-dueDate">
+          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}">
+          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span>
+          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
+          <input type="date" class="opacity0 wh0" th:id="${task.getId()}">
+          <label th:for="${task.getId()}"><img src="../../static/imgs/icon_calendar.png" th:src="@{/imgs/icon_calendar.png}" class="img-10 edit-task-duedate" alt="edit due date"></label>
         </div>
 
         <!-- file -->

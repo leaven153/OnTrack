@@ -91,6 +91,7 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
+
         Map<Integer, String[]> statusMap = new LinkedHashMap<>();
         statusMap.put(0, new String[]{"보류", "pause"});
         statusMap.put(1, new String[]{"시작 안 함", "not-yet"});
@@ -99,13 +100,22 @@ public class TaskService {
         statusMap.put(4, new String[]{"검토중", "review"});
         statusMap.put(5, new String[]{"완료", "done"});
 
-        taskRepository.log(th);
-        Integer result = taskRepository.editTaskStatus(ter);
-        if(result == 1) {
-            return ResponseEntity.ok().body(statusMap.get(ter.getStatus()));
+
+        // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
+        Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
+        if(assignedNum != null) {
+            taskRepository.log(th);
+            Integer result = taskRepository.editTaskStatus(ter);
+            if(result == 1) {
+                return ResponseEntity.ok().body(statusMap.get(ter.getStatus()));
+            } else {
+                return ResponseEntity.ok().body(new ErrorResponse("진행상태 변경이 완료되지 않았습니다."));
+                // ErrorResponse.builder().message("진행상태 변경이 완료되지 않았습니다.").build()
+            }
         } else {
-            return ResponseEntity.badRequest().body("진행상태 수정에 오류가 발생했습니다.");
+            return ResponseEntity.ok().body(new ErrorResponse("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."));
         }
+
     }
 
     /*

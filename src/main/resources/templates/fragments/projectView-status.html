@@ -83,11 +83,11 @@
                                       th:attr="data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}">검색</button>
                             </div>
                             <div class="배정안된멤버목록 unassigned-member-list hide">
-                              <div class="개별멤버box unassigned-member" data-view="status"
-                                   th:attr="data-executormid=${myMid}, data-taskid=${t.getId()}, data-projectid=${projectId}, data-authormid=${t.getAuthorMid()}"
-                                   th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">
-                                <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>
-                              </div>
+<!--                              <div class="개별멤버box unassigned-member" data-view="status"-->
+<!--                                   th:attr="data-executormid=${myMid}, data-taskid=${t.getId()}, data-projectid=${projectId}, data-authormid=${t.getAuthorMid()}"-->
+<!--                                   th:each="unassingedMember : ${t.unassignedMember(memberList, t.getAssignees())}">-->
+<!--                                <p class="div-inline-block" th:text="${unassingedMember.value}" th:attr="data-mid=${unassingedMember.key}">브래드 피트</p>-->
+<!--                              </div>-->
                             </div>
                           </div>
                         </div>
