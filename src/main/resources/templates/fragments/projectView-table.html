@@ -201,10 +201,12 @@
         </div>
 
         <!-- due Date -->
-        <div class="tableview-column flex-row-center-center-nowrap">
-          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}"> <!-- vertical-ctrl005 ml_12 -->
-          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span><!-- vertical-ctrl_018L -->
-          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span> <!-- vertical-ctrl_018L-->
+        <div class="tableview-column flex-row-center-center-nowrap task-dueDate">
+          <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}">
+          <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span>
+          <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
+          <input type="date" class="opacity0 wh0" th:id="${task.getId()}">
+          <label th:for="${task.getId()}"><img src="../../static/imgs/icon_calendar.png" th:src="@{/imgs/icon_calendar.png}" class="img-10 edit-task-duedate" alt="edit due date"></label>
         </div>
 
         <!-- file -->

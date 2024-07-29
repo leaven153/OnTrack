@@ -1452,11 +1452,14 @@ window.onload = function(){
                             body: JSON.stringify(taskHistory)
                         }).then(response => response.json())
                             .then(data => {
+                                console.log(data);
                                 if(data[0] === undefined) {
                                     alert(`${data["message"]}`);
+                                    // 열려있던 진행상태 목록 닫기
+                                    next(btn).classList.add("img-hidden")
                                     return;
                                 }
-                                // console.log(data);
+
                                 /**
                                 * Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
                                 * message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."*/
@@ -1476,6 +1479,17 @@ window.onload = function(){
     } // 10-9 할 일 진행상태 수정 끝
     
     /* 10-10. 할 일 마감일 수정 */
+    if(elExists(document.querySelector(".edit-task-duedate"))){
+        const btnEditTaskDueDate = document.querySelectorAll(".edit-task-duedate");
+        btnEditTaskDueDate.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
+                console.log(parents(btn, ".task-dueDate")[0].querySelector("input"));
+                // 아래처럼 하면 안됨...ㅋㅋㅋ
+                parents(btn, ".task-dueDate")[0].querySelector("input").classList.remove("wh0");
+                parents(btn, ".task-dueDate")[0].querySelector("input").classList.remove("opacity0");
+            });
+        });
+    }
 
 
     /*---------- 053A ------------*/
