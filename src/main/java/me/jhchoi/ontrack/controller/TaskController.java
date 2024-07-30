@@ -174,7 +174,7 @@ public class TaskController {
 
             log.info("마감일 수정할 내용: {}", editTaskDueDate);
 
-            if (th.getModContent() == ""){
+            if (Objects.equals(th.getModContent(), "")){
                 th.setModContent("마감일 삭제");
                 editTaskDueDate.setDueDate(null);
             } else {
