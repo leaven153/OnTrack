@@ -201,7 +201,7 @@
         </div>
 
         <!-- due Date -->
-        <div class="tableview-column flex-row-center-center-nowrap" th:classappend="${task.chkEditAuth(myMid, task)}?'btn-edit-task-duedate'">
+        <div class="tableview-column flex-row-center-center-nowrap" th:classappend="${task.chkEditAuth(myMid, task) and task.getTaskStatus() < 5}?'btn-edit-task-duedate'">
           <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}">
           <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span>
           <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
@@ -210,7 +210,7 @@
 <!--            <label th:for="${task.getId()}">-->
 <!--              <img src="../../static/imgs/icon_calendar.png" th:src="@{/imgs/icon_calendar.png}" class="img-10" alt="edit due date">-->
 <!--            </label>-->
-            <button type="button" class="btn-submit-task-duedate" data-view="table" th:attr="data-projectid=${task.getProjectId()}, data-taskid=${task.getId()}, data-updatedBy=${myMid}">반영하기</button>
+            <button type="button" class="btn-submit-task-duedate" data-view="table" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-updatedBy=${myMid}">반영하기</button>
           </div>
 
         </div>

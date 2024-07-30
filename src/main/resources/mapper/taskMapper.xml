@@ -112,6 +112,14 @@
         WHERE id = #{taskId}
     </update>
 
+    <update id="editTaskDueDate" parameterType="TaskEditRequest">
+        UPDATE ontrack_task
+        SET task_dueDate = #{dueDate}
+        , updatedAt = #{updatedAt}
+        , updatedBy = #{updatedBy}
+        WHERE id = #{taskId}
+    </update>
+
     <delete id="delAssignee" parameterType="TaskAssignment">
         DELETE
         FROM task_assignment

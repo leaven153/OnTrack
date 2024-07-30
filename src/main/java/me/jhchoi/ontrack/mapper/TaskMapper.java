@@ -30,6 +30,8 @@ public interface TaskMapper {
     // 할 일 수정: 할일명, 진행상태, 마감일, 중요도
     Integer editTaskStatus(TaskEditRequest ter);
 
+    Integer editTaskDueDate(TaskEditRequest ter);
+
     // 할 일 상세
     Optional<OnTrackTask> findByTaskId(Long taskId);
 

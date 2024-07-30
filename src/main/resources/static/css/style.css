@@ -937,8 +937,8 @@ span.statusview-type-name {
     color: #d1c9bb;
     margin: 2px 0;
     font-size: 12px;
-    /*status-vt-control1 font-12*/
 }
+
 .statusview-duedate-day {
     font-size: 12px;
     position: relative;
