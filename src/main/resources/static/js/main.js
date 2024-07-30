@@ -1564,56 +1564,6 @@ window.onload = function(){
                     }
                 });
 
-
-                /*
-                if(!beforeDueDate && (prev(btn).value.length !== 0 || prev(btn).value !== "")) {
-                    // 이전 마감일이 없는데, 새로운 값이 들어왔을 때
-
-                    // table view
-                    // B-1) 설정한 마감일이 오늘보다 이전이면 img icon_overDue.png 생성해서 prepend
-                    // B-2) span.dueDate에 있던 innerHTML('없음')값 지우고, .font-blur없애고 'MM.dd '값 넣는다.
-                    // B-3) span.day는 이미 생성되어 있으므로 요일 값만 출력
-
-                    // status view
-                    // B-1) 설정한 마감일이 오늘보다 이전이면 img icon_overDue.png 생성해서 prepend
-                    // B-2) 이전 값이 마감일 없음일 경우, innerHTML('마감일 없음') 없애고, .no-dueDate없애고,
-                    //      span.statusview-duedate에 'MM. dd' 값 넣는다.
-                    // B-3) span.statusview-duedate-day에 값 넣기 (요소 생성할 필요 없음)
-                }
-
-                // 화면에 반영 (div.btn-edit-task-duedate 안에 내용 출력)
-                // 0. 이전 마감일 유무 확인: beforeDueDate가 false면 마감일 없었음!
-                // 새로 변경한 값이 없고, 이전 마감일도 없었다면 아무것도 하지 않는다.
-                if(beforeDueDate && (prev(btn).value.length === 0 || prev(btn).value === "")){
-                    // 이전 마감일이 있는데 빈 값이 들어왔을 때 <empty string>
-
-                    // table view:
-                    // img있다면 hide
-                    // span.dueDate에 '없음' 넣고, .font-blur add
-                    // span.day는 hide
-
-                    // status view:
-                    // img있다면 hide
-                    // span.statusview-dueDate의 innerHTML('마감일 없음') 넣고, .no-dueDate add
-                    // span.statusview-duedate-day hide
-                }
-
-                if(beforeDueDate && (prev(btn).value.length !== 0 || prev(btn).value !== "")) {
-                    // 이전 마감일이 있는데, 새로운 값이 들어왔을 때
-
-                    // table view
-                    // 설정한 마감일이 오늘보다 이전이면 img icon_overDue.png 생성해서 prepend
-                    // 이전 마감일이 오늘보다 이전이었다면 img hide
-                    // span.dueDate에 새로운 값 'MM.dd ' 넣는다
-                    // span.day에 새로운 값 넣는다.
-
-                    // status view
-                    // 설정한 마감일이 오늘보다 이전이면 img icon_overDue.png 생성해서 prepend
-                    // 이전 마감일이 오늘보다 이전이었다면 img hide
-                    // span.statusview-duedate에 새로운 값 'MM. dd'형태로 넣는다.
-                    // span.statusview-duedate-day에 새로운 값 넣기
-
-                }*/
             });
         });
 
