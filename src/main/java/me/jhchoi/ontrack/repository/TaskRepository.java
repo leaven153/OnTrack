@@ -57,6 +57,9 @@ public class TaskRepository {
     // 할 일 수정: 진행상태
     public Integer editTaskStatus(TaskEditRequest ter) { return taskMapper.editTaskStatus(ter); }
 
+    // 할 일 수정: 마감일
+    public Integer editTaskDueDate(TaskEditRequest ter) { return taskMapper.editTaskDueDate(ter); }
+
     // 해당 멤버의 맡은 할 일
     public List<TaskAndAssignee> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
 

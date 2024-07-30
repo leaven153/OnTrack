@@ -1479,17 +1479,95 @@ window.onload = function(){
     } // 10-9 할 일 진행상태 수정 끝
     
     /* 10-10. 할 일 마감일 수정 */
-    if(elExists(document.querySelector(".edit-task-duedate"))){
-        const btnEditTaskDueDate = document.querySelectorAll(".edit-task-duedate");
+    // 1) 캘린더div 출력
+    let beforeDueDate = true; // 이전 마감일이 있는 것으로 기본 설정
+    if(elExists(document.querySelector(".btn-edit-task-duedate"))){
+        const btnEditTaskDueDate = document.querySelectorAll(".btn-edit-task-duedate");
         btnEditTaskDueDate.forEach(function(btn){
-            btn.addEventListener("click", ()=>{
-                console.log(parents(btn, ".task-dueDate")[0].querySelector("input"));
-                // 아래처럼 하면 안됨...ㅋㅋㅋ
-                parents(btn, ".task-dueDate")[0].querySelector("input").classList.remove("wh0");
-                parents(btn, ".task-dueDate")[0].querySelector("input").classList.remove("opacity0");
+            btn.addEventListener("click", (e)=>{
+                // e.stopImmediatePropagation();
+                console.log(`btn click!`);
+
+                
+                // console.log(btn.querySelector("span:nth-of-type(1)"));
+                // 이전 마감일이 없었다면 false 저장
+                if (btn.querySelector("span:nth-of-type(1)").classList.contains("font-blur") || btn.querySelector("span:nth-of-type(1)").classList.contains("no-dueDate")){
+                    beforeDueDate = false;
+                }
+
+                if(btn.querySelector(".edit-task-duedate").classList.contains("hide")) {
+                    // 열려 있는 다른 모든 캘린더 닫는다.
+                    document.querySelectorAll(".edit-task-duedate").forEach(function(everyCal){
+                        everyCal.classList.add("hide");
+                    });
+
+                    btn.querySelector(".edit-task-duedate").classList.remove("hide");
+                    // btn.querySelector(".input-edit-task-duedate").showPicker();
+                } else {
+                    btn.querySelector(".edit-task-duedate").classList.add("hide");
+                }
             });
         });
-    }
+    } // 1) 캘린더div 출력 ends
+
+    // 2) 캘린더div와 btn분리 및 반영하기 버튼 이벤트
+    if(elExists(document.querySelector(".edit-task-duedate"))){
+        const divEditTaskDueDate = document.querySelectorAll(".edit-task-duedate");
+        divEditTaskDueDate.forEach(function(div){
+           div.addEventListener("click", (e)=>{
+               e.stopPropagation();
+               console.log(`div click!`);
+           });
+        });
+    } // 2) 캘린더div와 btn분리 및 반영하기 버튼 이벤트 ends
+
+    // 3) 수정된 날짜 반영하기 버튼(.btn-submit-task-duedate) 클릭 이벤트
+    if(elExists(document.querySelector(".btn-submit-task-duedate"))) {
+        const btnSubmitTaskDueDate = document.querySelectorAll(".btn-submit-task-duedate");
+        btnSubmitTaskDueDate.forEach(function(btn){
+            btn.addEventListener("click", (e)=>{
+                e.stopPropagation();
+                console.log("btn submit (due date): clicked!");
+                console.log(prev(btn).value); // 2024-07-24
+                const datum = btn.dataset;
+
+                if (!beforeDueDate && (prev(btn).value.length === 0 || prev(btn).value === "")) {
+                    // 이전 마감일이 없고, 마감일도 없을 때
+                    console.log(`이전 마감일이 없고, 마감일도 없을 때`);
+                    return;
+                }  // if empty string chk ends
+
+
+                // 서버로 보낼 정보 생성
+                const taskHistory = {
+                    projectId: datum["projectid"],
+                    taskId: datum["taskid"],
+                    modItem: "dueDate",
+                    modType: "update",
+                    modContent: prev(btn).value,
+                    updatedBy: datum["updatedby"]
+                };
+                console.log(taskHistory);
+
+                // fetch
+                fetch(`http://localhost:8080/task/editTask?item=dueDate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskHistory)
+                }).then(response => {
+                    if(response.ok){
+                        location.reload();
+                    } else {
+                        alert(`마감일 수정이 완료되지 않았습니다.`);
+                    }
+                });
+
+            });
+        });
+
+    } // 3) 수정된 날짜 반영하기 버튼(.btn-submit-task-duedate) 클릭 이벤트 ends
 
 
     /*---------- 053A ------------*/

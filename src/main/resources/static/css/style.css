@@ -772,7 +772,34 @@ span.lastName {
     left: -0.05em;
     
 }
+/****** table: due date ******/
+.btn-edit-task-duedate {
+    position: relative;
+}
+.edit-task-duedate {
+    position: absolute;
+    top: 85%;
+    left: -3%; /*status: -3%*/
+    padding: 10px 7px;
+    z-index: 2;
+    background: #fff;
+    border: 1px solid #b6b6b688;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px 0 rgba(65,28,2,0.2);
 
+}
+input[type="date"].input-edit-task-duedate {
+    background-color: #fff;
+    font-size: 13px;
+}
+.btn-submit-task-duedate {
+    color: #fff5ec;
+    background-color: #533e47;
+    padding: 5px 14px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-top: 8px;
+}
 /****** table: parent task ******/
 
 .status-sign-hasChild-cntbox {
@@ -906,6 +933,12 @@ span.statusview-type-name {
     position: relative;
 }
 
+.no-dueDate {
+    color: #d1c9bb;
+    margin: 2px 0;
+    font-size: 12px;
+}
+
 .statusview-duedate-day {
     font-size: 12px;
     position: relative;
@@ -923,7 +956,7 @@ span.status-assignee {
     margin-bottom: 2px;
 }
 
-/*task box 내부 div 간 간격(마감일div)*/
+/*task box 내부 div 간 간격(마감일div) 추후 정리(삭제) 요망*/
 .status-vt-control1 {
     margin-top: 2px;
     margin-bottom: 2px;
@@ -1731,10 +1764,11 @@ input[type=date] {
 }
 
 
-/******** no-assignee, no-dueDate, no-file ********/
-.no-assignee, .no-dueDate, .no-file {
+/******** no-assignee, no-file ********/
+.no-assignee, .no-file {
     color: #d1c9bb;
 }
+
 
 /******** novisible, hide, hidden, opacity ********/
 .hide {

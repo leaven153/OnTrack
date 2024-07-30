@@ -11,6 +11,7 @@ import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.spring6.view.ThymeleafView;
 import java.net.URI;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -156,6 +160,29 @@ public class TaskController {
 
         } else if (th.getModItem().equals("dueDate")) {
             log.info("할 일 마감일 수정");
+
+            // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
+
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            TaskEditRequest editTaskDueDate = TaskEditRequest.builder()
+                    .taskId(th.getTaskId())
+                    .updatedAt(th.getUpdatedAt())
+                    .updatedBy(th.getUpdatedBy())
+                    .build();
+
+            log.info("마감일 수정할 내용: {}", editTaskDueDate);
+
+            if (Objects.equals(th.getModContent(), "")){
+                th.setModContent("마감일 삭제");
+                editTaskDueDate.setDueDate(null);
+            } else {
+                editTaskDueDate.setDueDate(LocalDate.parse(th.getModContent(), dateFormatter));
+            }
+
+            return taskService.editTaskDueDate(th, editTaskDueDate);
+
         } else if (th.getModItem().equals("status")) {
             log.info("할 일 진행상태 수정");
             log.info("변경된 진행상태: {}", statusNum);

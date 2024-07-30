@@ -84,10 +84,10 @@ public class TaskService {
     }
 
     /*
-     * created : 2024-05-
+     * created : 2024-07-29
      * param   :
      * return  :
-     * explain : 할 일 수정: 할일명, 중요도, 진행상태, 마감일
+     * explain : 할 일 수정: 진행상태
      * */
     @Transactional
     public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
@@ -115,7 +115,23 @@ public class TaskService {
         } else {
             return ResponseEntity.ok().body(new ErrorResponse("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."));
         }
+    }
 
+    /*
+     * created : 2024-07-30
+     * param   : TaskHistory, TaskEditRequest
+     * return  : ResponseEntity
+     * explain : 할 일 수정: 마감일
+     * */
+    @Transactional
+    public ResponseEntity<?> editTaskDueDate(TaskHistory th, TaskEditRequest ter){
+        taskRepository.log(th);
+        Integer result = taskRepository.editTaskDueDate(ter);
+        if(result == 1) {
+            return ResponseEntity.ok().body("");
+        } else {
+            return ResponseEntity.badRequest().body(new ErrorResponse("마감일 변경이 완료되지 않았습니다."));
+        }
     }
 
     /*
