@@ -49,10 +49,15 @@
                         <img src="../../static/imgs/enter.png" th:src="@{/imgs/enter.png}" class="img-20 btn-enter-new-title hide" alt="enter new title">
                       </div>
                       <!-- status view: 마감일 -->
-                      <div class="statusview-task">
-                        <span class="no-dueDate status-vt-control1 font-12" th:if="${t.getTaskDueDate() == null}">마감일 없음</span>
-                        <span class="statusview-dueDate altivo-regular" th:text="${t.getTaskDueDate() != null}?${#temporals.format(t.getTaskDueDate(), 'MM.dd ')}">03.29</span>
+                      <div class="statusview-task" th:classappend="${t.chkEditAuth(myMid, t)}?'btn-edit-task-duedate'">
+<!--                        <span class="no-dueDate status-vt-control1 font-12" th:if="${t.getTaskDueDate() == null}">마감일 없음</span>-->
+                        <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" class="img-18 mr-5" alt="overDue" th:if="${t.getTaskDueDate() le today} and ${t.getTaskDueDate() != null}">
+                        <span class="statusview-dueDate altivo-regular" th:text="${t.getTaskDueDate() != null}?${#temporals.format(t.getTaskDueDate(), 'MM.dd ')}:'마감일 없음'" th:classappend="${t.getTaskDueDate() == null}?'no-dueDate'">03.29</span>
                         <span class="statusview-duedate-day" th:text="${t.getTaskDueDate() != null}?'('+${#temporals.dayOfWeekNameShort(t.getTaskDueDate())}+')'">(월)</span>
+                          <div class="edit-task-duedate hide">
+                              <input type="date" class="input-edit-task-duedate" th:value="${t.getTaskDueDate() != null}?${t.getTaskDueDate()}">
+                              <button type="button" class="btn-submit-task-duedate" data-view="status" th:attr="data-projectid=${projectId}, data-taskid=${t.getId()}, data-updatedBy=${myMid}">반영하기</button>
+                          </div>
                       </div>
                       <!-- status view: 담당자 -->
                       <div class="status-assignee"><!-- statusview-task (flex 설정 다름..)-->

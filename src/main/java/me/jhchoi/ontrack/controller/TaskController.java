@@ -19,7 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.spring6.view.ThymeleafView;
 import java.net.URI;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -156,6 +159,21 @@ public class TaskController {
 
         } else if (th.getModItem().equals("dueDate")) {
             log.info("할 일 마감일 수정");
+            // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            TaskEditRequest editTaskDueDate = TaskEditRequest.builder()
+                    .taskId(th.getTaskId())
+                    .dueDate(LocalDateTime.parse(th.getModContent(), dateFormatter))
+                    .updatedAt(th.getUpdatedAt())
+                    .updatedBy(th.getUpdatedBy())
+                    .build();
+
+            log.info("마감일 수정할 내용: {}", editTaskDueDate);
+
+            return ResponseEntity.ok().body("마감일 수정ing");
+
         } else if (th.getModItem().equals("status")) {
             log.info("할 일 진행상태 수정");
             log.info("변경된 진행상태: {}", statusNum);
