@@ -119,7 +119,7 @@ public class ProjectController {
 
                     // 1) 할 일에 대한 기본 정보 (이미 있기 대문에, 굳이 서비스에 다녀오지 않고)
                     // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
-                    taskDetail = taskDetail.entityToDTO(project.getTaskList().get(i), projectId);
+                    taskDetail = TaskDetailResponse.entityToDTO(project.getTaskList().get(i), projectId);
 
                     // 2) comment 가져온다.
                     taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
