@@ -24,16 +24,18 @@ public class TaskDetailRequest {
     private String authorName;
     
     // 소통하기 등록
+    private Long commentId;
     private String comment;
-    private String commentType; // 모두 확인 요청/일반
+    private String commentType; // 중요/일반
     private String createdAt;
+    private String modifiedAt;
 
     // 파일 등록
     private String fileName;
     private List<MultipartFile> taskFiles;
 
 
-    public TaskComment toTaskComment(TaskDetailRequest tdr) throws ParseException {
+    public TaskComment toTaskComment(TaskDetailRequest tdr) {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
         LocalDateTime date = LocalDateTime.parse(tdr.createdAt, dateFormat);
 
@@ -48,4 +50,14 @@ public class TaskDetailRequest {
                 .build();
     }
 
+    public TaskComment toTaskCommentforEdit(TaskDetailRequest tdr) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yy.MM.dd HH:mm");
+        LocalDateTime date = LocalDateTime.parse(tdr.modifiedAt, dateFormat);
+
+        return TaskComment.builder()
+                .id(tdr.commentId)
+                .comment(tdr.comment)
+                .modifiedAt(date)
+                .build();
+    }
 }

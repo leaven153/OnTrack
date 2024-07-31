@@ -162,10 +162,10 @@
         <!-- status -->
         <div class="tableview-column flex-row-center-center-nowrap">
           <div class="w70pMin105 flex-row-justify-start-align-center-wrap">
-          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}">
+          <div class="flex-row-justify-start-align-center-wrap table-status-sign-noChild position-relative" th:if="${task.getTaskParentId() == null}" th:classappend="${task.chkEditAuth(myMid, task)}?'btn-edit-task-status'">
             <div class="status-sign" th:classappend="${task.switchStatusToEng(task.getTaskStatus())}" th:attr="data-status=${task.switchStatusToEng(task.getTaskStatus())}"></div>
             <span class="status-remark" th:attr="data-taskid=${task.getId()}" data-tab="history" th:text="${task.switchStatusToKor(task.getTaskStatus())}">진행중</span>
-            <span class="ml-5 opacity0 transit-250 font-12 btn-edit-task-status" th:if="${task.chkEditAuth(myMid, task)} and ${task.getTaskStatus() < 5}">변경</span> <!--/*  and ${task.getAssigneeMids().size() > 0} */-->
+            <!--<span class="ml-5 opacity0 transit-250 font-12 " >변경</span>--> <!--/*   and ${task.getTaskStatus() < 5}*/--> <!--/* btn-edit-task-status th:if="${task.chkEditAuth(myMid, task)}"*/-->
             <div class="진행상태목록 tableView-status-list img-hidden">
               <th:block th:each="tStatus: ${statusMap}">
                 <div class="status-each" th:attr="data-projectid=${projectId}, data-taskid=${task.getId()}, data-status=${tStatus.key}, data-updatedby=${myMid}">

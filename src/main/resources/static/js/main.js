@@ -227,7 +227,13 @@ window.onload = function(){
                         },
                         body: JSON.stringify(taskHistory)
                     })
-                        .then(response => response.text())
+                        .then(response => {
+                            if(response.ok) {
+                                return response.text();
+                            } else {
+                                alert(`수정이 완료되지 않았습니다.`);
+                            }
+                        })
                         .then(data => {
                             console.log(`span의 fetch 결과`);
                             console.log(data);
@@ -1409,10 +1415,71 @@ window.onload = function(){
     if(elExists(document.querySelector(".btn-edit-task-status"))){
         const btnEditTaskStatus = document.querySelectorAll(".btn-edit-task-status");
         btnEditTaskStatus.forEach(function(btn){
-            btn.addEventListener("click", ()=>{
+            btn.addEventListener("click", (e)=>{
+                e.stopPropagation();
                 console.log(`진행상태 변경을 click`);
-                // console.log(next(btn));
-                // 진행상태 목록 toggle
+
+                // 1) 진행상태 목록 toggle
+                if(btn.querySelector(".tableView-status-list").classList.contains("img-hidden")) {
+                    // 열려 있던 다른 task의 진행상태 목록들 닫고
+                    document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
+                        everyList.classList.add("img-hidden");
+                    });
+                    // 선택된 목록만 연다
+                    btn.querySelector(".tableView-status-list").classList.remove("img-hidden")
+                } else {
+                    btn.querySelector(".tableView-status-list").classList.add("img-hidden")
+                }
+
+                // 2) 바꾸려는 진행상태를 클릭했을 때
+                btn.querySelectorAll(".status-each").forEach(function(chosenStatus){
+                    chosenStatus.addEventListener("click", (e)=>{
+                        e.stopImmediatePropagation();
+                        // 변경 전 진행상태
+                        const beforeStatus = btn.querySelector(".status-sign").dataset.status;
+                        const datum = chosenStatus.dataset;
+                        console.log(beforeStatus);
+                        console.log(datum);
+                        // console.log(btn.querySelector(".status-sign").classList[1]);
+                        const taskHistory = {
+                            projectId: datum["projectid"],
+                            taskId: datum["taskid"],
+                            modItem: "status",
+                            modType: "update",
+                            modContent: chosenStatus.querySelector("p").innerHTML,
+                            updatedBy: datum["updatedby"]
+                        };
+                        console.log(taskHistory);
+
+                        fetch(`http://localhost:8080/task/editTask?item=status&statusNum=${datum["status"]}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json'
+                            },
+                            body: JSON.stringify(taskHistory)
+                        }).then(response => {
+                            if(response.ok){
+                                btn.querySelector(".status-remark").innerText = chosenStatus.querySelector("p").innerHTML;
+                                btn.querySelector(".status-sign").classList.remove(beforeStatus);
+                                btn.querySelector(".status-sign").classList.add(chosenStatus.querySelector(".status-sign").classList[1]);
+
+                                // 열려있던 진행상태 목록 닫기
+                                btn.querySelector(".tableView-status-list").classList.add("img-hidden")
+                                return ;
+                            } else {
+                                const err = response.json();
+                                console.log(err);
+                                err.then(warning => {
+                                    btn.querySelector(".tableView-status-list").classList.add("img-hidden")
+                                    alert(warning["message"]);
+                                });
+                            }
+                        }); // fetch ends
+                    });
+                });
+
+                /*
+                // 1) 진행상태 목록 toggle
                 if(next(btn).classList.contains("img-hidden")) {
                     // 열려 있던 다른 task의 진행상태 목록들 닫고
                     document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
@@ -1424,16 +1491,10 @@ window.onload = function(){
                     next(btn).classList.add("img-hidden")
                 }
 
-                // 변경하고자 하는 진행상태를 클릭했을 때
+                // 2) 변경하고자 하는 진행상태를 클릭했을 때
                 next(btn).querySelectorAll(".status-each").forEach(function(eachStatus){
                     eachStatus.addEventListener("click", (e)=>{
-                        e.stopPropagation();
-                        // console.log(eachStatus);
-                        // console.log(eachStatus.dataset.projectid); // ontrack_task에서는 task id만으로 쿼리 가능, 단 task_history에 저장하기 위해서 필요!!
-                        // console.log(eachStatus.dataset.taskid);
-                        // console.log(eachStatus.dataset.status);
-                        // console.log(eachStatus.dataset.updatedby);
-                        // console.log(eachStatus.children[1].innerHTML);
+                        e.stopImmediatePropagation();
 
                         const taskHistory = {
                             projectId: eachStatus.dataset.projectid,
@@ -1460,9 +1521,9 @@ window.onload = function(){
                                     return;
                                 }
 
-                                /**
-                                * Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
-                                * message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."*/
+
+                                // Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
+                                //  message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."
                                 // console.log(data[0]) // error일 경우, undefined
 
                                 prev(btn).innerText = data[0];
@@ -1474,6 +1535,7 @@ window.onload = function(){
                             }); // fetch ends
                     });
                 });
+                */
             }); // chosenOne click evt ends
         }); // btnEditTaskStatus.forEach ends
     } // 10-9 할 일 진행상태 수정 끝
@@ -1698,9 +1760,7 @@ window.onload = function(){
     /* 할 일 상세 모달 열기 */
     // 컨트롤러에 다녀와서 열리는 버전: 화면이 깜빡거리더라도 slide로 열린다면 좀 낫지 않을까.. ㅠㅠ
     if(elExists(document.querySelector(".z3")) && document.querySelector(".z3").classList.contains("open")) {
-        // console.log("does it work?");
         document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
-        // setTimeout(document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side"), 300)
     }
 
     /*---------- 012 ------------*/
@@ -1713,7 +1773,7 @@ window.onload = function(){
 
         btnTaskTabs.forEach(function(chosenTab){
             chosenTab.addEventListener("click", ()=>{
-                // 1. 선택된 탭메뉴 표시
+                // 1. 선택된 탭버튼 표시
                 chosenTab.classList.add("task-tab-chosen");
                 modalTaskTabChosen = chosenTab.id;
                 // console.log(modalTaskTabChosen);
@@ -1723,10 +1783,7 @@ window.onload = function(){
                 // 2. 선택된 탭 표시
                 modalTaskTabs.forEach(function(eachtab){
                     eachtab.classList.add("hide");
-                    if(eachtab.id === "task-tab-info"){ // 상세 보기(수정)의 id → 수정요망...
-                        eachtab.classList.remove("hide");
-                        modalTaskCommonArea.classList.add("hide");
-                    } else if (eachtab.classList.contains(modalTaskTabChosen)) {
+                    if (eachtab.classList.contains(modalTaskTabChosen)) {
                         eachtab.classList.remove("hide");
                         document.querySelector("#task-detail-common").classList.remove("hide");
                     }
@@ -2473,7 +2530,7 @@ window.onload = function(){
             const date = new Date();
 
             // 서버에 보낼 정보 입력
-            // ★★ comment_check에도 작성자는 확인함으로 입력해야 한다.
+            // (댓글확인상태는 취소: ★★ comment_check에도 작성자는 확인함으로 입력해야 한다.)
             // ★★ 작성한 글을 바로 출력할 것이기 때문에 작성한 시간을 javascript에서 보내줘야 한다.
             const taskDetailRequest = {
                 taskId: datum["taskid"],
@@ -2501,17 +2558,12 @@ window.onload = function(){
                 body: JSON.stringify(taskDetailRequest)
             }).then(response => response.text())
                 .then(data => {
-
                     console.log(data);
                     const commentId = data;
                     // 화면에 출력
                     const commentArea = document.querySelector("#task-tab-comment-list");
-
-
                     commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
-
                 });
-
         });
     }
 
@@ -2709,22 +2761,46 @@ window.onload = function(){
         // 3. 글 하단 버튼(수정 등록/취소) - hide
         // 모두확인요청인 comment의 '내용확인'버튼은 어차피 작성자에게는 노출되지 않도록 한다.
         // 댓글은 내가 작성한 글만 실시간으로 화면에 반영되도록 한다.
-        // 타인이 작성한 댓글이 실시간으로 화면으로 나올 필요는 없다. 
+        // 타인이 작성한 댓글이 실시간으로 화면으로 나올 필요는 없다.
+        const commentEditTimeNBtnBox = document.createElement("div");
+        commentEditTimeNBtnBox.classList.add("flex-row-between-nowrap");
+
+        const commentEditTimeBox = document.createElement("div");
+        commentEditTimeBox.classList.add("flex-row-justify-start-align-center", "time-of-edit", "img-hidden");
+
+        const commentEditTimeSpan = document.createElement("span");
+        commentEditTimeSpan.classList.add("font-12", "altivo-light", "time-of-edit");
+        const commentEditTimeSignSpan = document.createElement("span");
+        commentEditTimeSignSpan.classList.add("font-12", "edit-sign");
+        commentEditTimeSignSpan.innerText = "(수정됨)";
+
+        commentEditTimeBox.appendChild(commentEditTimeSpan);
+        commentEditTimeBox.appendChild(commentEditTimeSignSpan);
+
+        commentEditTimeNBtnBox.appendChild(commentEditTimeBox);
+
         const commentEditApplyBtnBox = document.createElement("div");
         const commentEditSubmitBtn = document.createElement("span");
         const commentEditCancelBtn = document.createElement("span");
 
-        commentEditApplyBtnBox.classList.add("flex-row-end-center-nowrap", "hide");
+        commentEditApplyBtnBox.classList.add("flex-row-end-center-nowrap", "confirm-edit", "hide");
         commentEditSubmitBtn.classList.add("btn-comment-edit-submit");
         commentEditCancelBtn.classList.add("btn-comment-edit-cancel");
+
+        commentEditSubmitBtn.setAttribute("data-taskid", commentId);
+
+        commentEditSubmitBtn.innerText = "등록";
+        commentEditCancelBtn.innerText = "취소";
 
         commentEditApplyBtnBox.appendChild(commentEditSubmitBtn);
         commentEditApplyBtnBox.appendChild(commentEditCancelBtn);
 
+        commentEditTimeNBtnBox.appendChild(commentEditApplyBtnBox);
+
         // 0. container에 부착 (3개요소)
         commentBox.appendChild(commentInfoBox);
         commentBox.appendChild(commentContentBox);
-        commentBox.appendChild(commentEditApplyBtnBox);
+        commentBox.appendChild(commentEditTimeNBtnBox);
 
         return commentBox;
 
@@ -2740,46 +2816,156 @@ window.onload = function(){
     // 소통하기 - (자신의 글)설정 버튼 눌렀을 때(수정하기/삭제하기 버튼 출력)
     // btncommentTool or btncommentSettings? 이름변경요망...
     // 새로운 글 동적으로 추가했을 때의 수정과 삭제는...
-    const btnCommentEditDel = document.querySelectorAll(".btn-comment-edit-del");
-    btnCommentEditDel.forEach(function(chosenBtn){
-        chosenBtn.addEventListener("click", ()=>{
-            // console.log(chosenBtn.children[1]);
-            chosenBtn.children[1].classList.toggle("img-hidden");
-        });
+    // const btnCommentEditDel = document.querySelectorAll(".btn-comment-edit-del");
+    // btnCommentEditDel.forEach(function(chosenBtn){
+    //     chosenBtn.addEventListener("click", ()=>{
+    //         // console.log(chosenBtn.children[1]);
+    //         chosenBtn.children[1].classList.toggle("img-hidden");
+    //     });
+    // });
+    let commentId;
+    onEvtListener(document, "click", ".btn-comment-edit-del", function(){
+        this.querySelector(".click-comment-edit-del").classList.toggle("img-hidden");
+        commentId = this.dataset.commentid;
+        // console.log(commentId);
     });
 
     /*---------- 041 ------------*/
-    // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 
+    // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때
+    onEvtListener(document, "click", ".btn-comment-edit", function(){
+        const btn3dot = parents(this, ".btn-comment-edit-del")[0]; // .parentElement.parentElement
+        btn3dot.classList.add("hide");
+
+        console.log(commentId);
+
+        const btnEdits = parents(this, ".modal-task-comment-read")[0].querySelector(".confirm-edit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2];
+        btnEdits.classList.remove("hide");
+
+        const textarea = parents(this, ".modal-task-comment-read")[0].querySelector("textarea"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0];
+        const beforeEdit = textarea.value;
+        textarea.removeAttribute("readonly");
+        textarea.focus();
+        textarea.classList.add("border-editable");
+
+        // 수정한 내용 등록·취소 버튼 클릭 시
+        const btnSubmitEdit = parents(this, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-submit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[0];
+        const btnCancelEdit = parents(this, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-cancel"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[1];
+
+        // 수정한 내용 등록
+        btnSubmitEdit.addEventListener("click", ()=>{
+            const datum = btnSubmitEdit.dataset;
+            const date = new Date();
+            // 서버에 보낼 정보
+            const taskDetailRequest = {
+                commentId: commentId,
+                comment: textarea.value,
+                modifiedAt: dateYYMMDD(date) + timeHHMM(date)
+            };
+
+            console.log(taskDetailRequest);
+
+            // fetch
+            fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(taskDetailRequest)
+            }).then(response => {
+                if(response.ok){
+                    // 3dot 버튼 나타내기
+                    btn3dot.classList.remove("hide");
+
+                    // 수정됨 div 나타내고, 수정 시간 입력
+                    parents(this, ".modal-task-comment-read")[0].querySelector("div.time-of-edit").classList.remove("img-hidden");
+                    parents(this, ".modal-task-comment-read")[0].querySelector("span.time-of-edit").innerText = dateYYMMDD(date) + timeHHMM(date);
+                    parents(this, ".modal-task-comment-read")[0].querySelector(".edit-sign").classList.remove("hide");
+
+                    // 등록/취소 버튼이 담긴div 숨기기
+                    btnEdits.classList.add("hide");
+
+                    // let afterEdit = textarea.value;
+                    // textarea.value = afterEdit;
+                    textarea.setAttribute("readonly", "readonly");
+                    textarea.classList.remove("border-editable");
+                } else {
+                    alert(`글 수정이 완료되지 않았습니다.`);
+                }
+            });
+
+        });
+
+        // 수정 취소
+        btnCancelEdit.addEventListener("click", ()=>{
+            // 3dot 버튼 나타내기
+            btn3dot.classList.remove("hide");
+            // 자신이담긴div 숨기기
+            btnEdits.classList.add("hide");
+
+            textarea.value = beforeEdit;
+            textarea.setAttribute("readonly", "readonly");
+            textarea.classList.remove("border-editable");
+        });
+    }); // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 끝
+
+    /*
     const btnCommentEdit = document.querySelectorAll(".btn-comment-edit");
     btnCommentEdit.forEach(function(chosenBtn){
         chosenBtn.addEventListener("click", ()=>{
-            const btn3dot = chosenBtn.parentElement.parentElement;
+            const btn3dot = parents(chosenBtn, ".btn-comment-edit-del")[0]; // .parentElement.parentElement
             btn3dot.classList.add("hide");
 
-            const btnEdits = chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2];
+            const btnEdits = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".confirm-edit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2];
             btnEdits.classList.remove("hide");
 
-            const textarea = chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0];
+            const textarea = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector("textarea"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0];
             const beforeEdit = textarea.value;
             textarea.removeAttribute("readonly");
             textarea.focus();
             textarea.classList.add("border-editable");
 
             // 수정한 내용 등록·취소 버튼 클릭 시
-            const btnSubmitEdit = chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[0];
-            const btnCancelEdit = chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[1];
+            const btnSubmitEdit = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-submit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[0];
+            const btnCancelEdit = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-cancel"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[1];
 
             // 수정한 내용 등록
             btnSubmitEdit.addEventListener("click", ()=>{
-                // 3dot 버튼 나타내기
-                btn3dot.classList.remove("hide");
-                // 자신이담긴div 숨기기
-                btnEdits.classList.add("hide");
+                const datum = btnSubmitEdit.dataset;
+                const date = new Date();
+                // 서버에 보낼 정보
+                const taskDetailRequest = {
+                    projectId: datum["projectid"],
+                    taskId: datum["taskid"],
+                    authorMid: datum["authormid"],
+                    authorName: datum["authorname"],
+                    comment: textarea.value,
+                    commentType: datum["type"],
+                    modifiedAt: dateYYMMDD(date) + timeHHMM(date)
+                };
 
-                let afterEdit = textarea.value;
-                textarea.value = afterEdit;
-                textarea.setAttribute("readonly", "readonly");
-                textarea.classList.remove("border-editable");
+                // fetch
+                fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=edit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskDetailRequest)
+                }).then(response => {
+                    if(response.ok){
+                        // 3dot 버튼 나타내기
+                        btn3dot.classList.remove("hide");
+                        // 자신이 담긴div 숨기기
+                        btnEdits.classList.add("hide");
+
+                        // let afterEdit = textarea.value;
+                        // textarea.value = afterEdit;
+                        textarea.setAttribute("readonly", "readonly");
+                        textarea.classList.remove("border-editable");
+                    } else {
+                        alert(`글 수정이 완료되지 않았습니다.`);
+                    }
+                });
+
             });
 
             // 수정 취소
@@ -2794,7 +2980,7 @@ window.onload = function(){
                 textarea.classList.remove("border-editable");
             });
         });
-    });  // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 끝
+    });  */
 
     /*---------- 042 ------------*/
     // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때

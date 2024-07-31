@@ -54,6 +54,9 @@ public class TaskRepository {
     // Status view: 진행상태별 할 일 목록
     public List<TaskAndAssignee> getStatusView(TaskAndAssignee statusViewRequest) { return taskMapper.getStatusView(statusViewRequest); }
 
+    // 할 일 수정: 할 일 명
+    public Integer editTaskTitle(TaskEditRequest ter) { return taskMapper.editTaskTitle(ter); }
+
     // 할 일 수정: 진행상태
     public Integer editTaskStatus(TaskEditRequest ter) { return taskMapper.editTaskStatus(ter); }
 
@@ -63,6 +66,7 @@ public class TaskRepository {
     // 해당 멤버의 맡은 할 일
     public List<TaskAndAssignee> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
 
+    // 할 일 조회: 할 일에 배정된 담당자 수
     public Integer cntAssigneeByTaskId(Long taskId) { return taskMapper.cntAssigneeByTaskId(taskId); }
 
     // 해당 할 일에 이미 배정된 담당자인지 확인
@@ -74,7 +78,14 @@ public class TaskRepository {
     // 할 일 상세: 소통하기 글 목록
     public List<TaskComment> getTaskComment(Long taskId) { return taskMapper.getTaskComment(taskId); }
 
-    // 할 일 상세: 모두확인요청한 소통글의 확인여부 등록
-    public Long saveCheckComment(CheckComment chkComment) { return taskMapper.saveCheckComment(chkComment); }
+    // 할 일 상세: 소통하기 글 수정
+    public Integer editTaskComment(TaskComment editComment) {
+        return taskMapper.editTaskComment(editComment);
+    }
+
+    // 할 일 상세: history 조회
+    public List<TaskHistory> getTaskHistory(Long taskId){
+        return taskMapper.getTaskHistory(taskId);
+    }
 
 }

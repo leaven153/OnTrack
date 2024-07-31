@@ -21,10 +21,6 @@
         VALUES (#{projectId}, #{taskId}, #{authorMid}, #{authorName}, #{type}, #{comment}, #{createdAt}, #{modifiedAt})
     </insert>
 
-    <insert id="saveCheckComment" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO check_comment(commentary_id, member_id, checked)
-        VALUES (#{commentId}, #{memberId}, #{checked})
-    </insert>
 
     <insert id="attachFile" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO task_file(project_id, task_id, member_id, file_origName, file_newName, file_type, file_size, file_path, createdAt)
@@ -98,11 +94,28 @@
     </select>
 
     <select id="getTaskComment" resultType="TaskComment">
-        SELECT task_id, author_mid, author_name, type, comment, createdAt
+        SELECT id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt
         FROM task_comment
         WHERE task_id = #{taskId}
         ORDER BY createdAt DESC;
     </select>
+
+    <select id="getTaskHistory" resultType="TaskHistory">
+        SELECT th.modItem, th.modType, th.modContent, th.updatedAt, pm.nickname as executorName
+        FROM task_history th
+        INNER JOIN project_member pm
+        ON th.updatedBy = pm.id
+        WHERE th.task_id = #{taskId}
+        ORDER BY updatedAt DESC
+    </select>
+
+    <update id="editTaskTitle" parameterType="TaskEditRequest">
+        UPDATE ontrack_task
+        SET task_title = #{title}
+        , updatedAt = #{updatedAt}
+        , updatedBy = #{updatedBy}
+        WHERE id = #{taskId}
+    </update>
 
     <update id="editTaskStatus" parameterType="TaskEditRequest">
         UPDATE ontrack_task
@@ -118,6 +131,13 @@
         , updatedAt = #{updatedAt}
         , updatedBy = #{updatedBy}
         WHERE id = #{taskId}
+    </update>
+
+    <update id="editTaskComment" parameterType="TaskComment">
+        UPDATE task_comment
+        SET comment = #{comment}
+        , modifiedAt = #{modifiedAt}
+        WHERE id = #{id}
     </update>
 
     <delete id="delAssignee" parameterType="TaskAssignment">

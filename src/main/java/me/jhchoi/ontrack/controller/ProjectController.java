@@ -119,17 +119,20 @@ public class ProjectController {
 
                     // 1) 할 일에 대한 기본 정보 (이미 있기 대문에, 굳이 서비스에 다녀오지 않고)
                     // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
-                    taskDetail = taskDetail.entityToDTO(project.getTaskList().get(i), projectId);
+                    taskDetail = TaskDetailResponse.entityToDTO(project.getTaskList().get(i), projectId);
 
                     // 2) comment 가져온다.
                     taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
-                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
-                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
+//                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
+//                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
+
+                    // 3) history 가져온다.
+
                 }
             }
 
             taskDetail.setTab((String) inputFlashMap.get("tab"));
-            log.info("task detail이 생성되었는지 확인: {}", taskDetail);
+//            log.info("task detail이 생성되었는지 확인: {}", taskDetail);
             // task detail이 생성되었는지 확인: TaskAndAssignee(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
 
 //            log.info("flashMap으로 잡은 flash attribute: {}", inputFlashMap);
