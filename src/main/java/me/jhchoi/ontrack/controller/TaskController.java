@@ -116,21 +116,23 @@ public class TaskController {
         // comment=Tigger can do everything, commentType=normal,
         // createdAt=24.07.19 14:16, updatedAt=24.07.19 14:16, fileName=null)
 
+        ResponseEntity<?> response = null;
         // 1. 새 글 등록인지, 수정인지 확인한다.
-        // entity로 변환 (컨트롤러에서? 아니면 서비스에서?)
-        // entity로 변환하는 과정(parsing string to localdatetime) 예외가 발생하는데
-        // 일단 컨트롤러 메소드에서 예외잡도록 하기 위해 컨트롤러에서 엔티티로 변환
-        TaskComment taskComment = taskDetailRequest.toTaskComment(taskDetailRequest);
+        if(Objects.equals(type, "add")) {
+            TaskComment taskComment = taskDetailRequest.toTaskComment(taskDetailRequest);
+            Long commentId = taskService.addTaskComment(taskComment);
+            response = ResponseEntity.ok(commentId);
+        } else if(Objects.equals(type, "edit")) {
+            log.info("소통하기 글 수정: {}", taskDetailRequest);
+            TaskComment editComment = taskDetailRequest.toTaskCommentforEdit(taskDetailRequest);
+            Integer result = taskService.editTaskComment(editComment);
+            if(result != 1) {
+                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
 
-        log.info(".이 어떻게 되는건지 확인: {}", taskDetailRequest);
-        // ↓ type과 comment만 getXxxXxx()로 하지 않고 그냥 .xxX로 입력해봤다.
-        // .이 어떻게 되는건지 확인: TaskComment(id=null, projectId=9, taskId=8, authorMid=14,
-        // authorName=공지철, type=normal, comment=Tigger can do everything,
-        // createdAt=2024-07-19T14:46, modifiedAt=null)
-
-        Long commentId = taskService.addTaskComment(taskComment);
-
-        return ResponseEntity.ok(commentId);
+        return response;
     }
     /**
      * 할 일의 내용 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate), 중요도(priority)
@@ -140,13 +142,13 @@ public class TaskController {
      * 담당자 배정/해제에 관한 변경사항은 별도의 컨트롤러에서 처리한다.(editAssignee)
      * */
     @PostMapping("/editTask")
-    public ResponseEntity<?> editTask(HttpSession session, @RequestParam String item, @RequestParam(required = false) String statusNum, @RequestBody TaskHistory th){
+    public ResponseEntity<?> editTask(HttpSession session, @RequestParam String item, @RequestParam(required = false) String statusNum, @RequestBody TaskHistory th) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
             URI location = URI.create("/login");
             return ResponseEntity.created(location).build();
         }
-        log.info("=================================editTask Controller 접근=================================");
+        log.info("=== editTask Controller 접근 ===");
         log.info("어떤 항목을 바꿀 건가요? {}", item);
         log.info("task history: {}", th);
 
@@ -155,15 +157,23 @@ public class TaskController {
         int nanosec = nowWithNano.getNano();
         th.setUpdatedAt(nowWithNano.minusNanos(nanosec));
 
-        if (th.getModItem().equals("title")){
+        // 각 수정 사항 반영 결과값 담을 ResponseEntity
+        ResponseEntity<?> response = null;
+
+        if (th.getModItem().equals("title")) {
             log.info("할 일 제목 수정");
+            TaskEditRequest editTaskTitle = TaskEditRequest.builder()
+                    .taskId(th.getTaskId())
+                    .title(th.getModContent())
+                    .updatedAt(th.getUpdatedAt())
+                    .updatedBy(th.getUpdatedBy())
+                    .build();
+            response = taskService.editTaskTitle(th, editTaskTitle);
 
         } else if (th.getModItem().equals("dueDate")) {
             log.info("할 일 마감일 수정");
 
             // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
-
-
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             TaskEditRequest editTaskDueDate = TaskEditRequest.builder()
@@ -172,16 +182,14 @@ public class TaskController {
                     .updatedBy(th.getUpdatedBy())
                     .build();
 
-            log.info("마감일 수정할 내용: {}", editTaskDueDate);
-
-            if (Objects.equals(th.getModContent(), "")){
+            if (Objects.equals(th.getModContent(), "")) {
                 th.setModContent("마감일 삭제");
                 editTaskDueDate.setDueDate(null);
             } else {
                 editTaskDueDate.setDueDate(LocalDate.parse(th.getModContent(), dateFormatter));
             }
 
-            return taskService.editTaskDueDate(th, editTaskDueDate);
+            response = taskService.editTaskDueDate(th, editTaskDueDate);
 
         } else if (th.getModItem().equals("status")) {
             log.info("할 일 진행상태 수정");
@@ -193,13 +201,10 @@ public class TaskController {
                     .updatedBy(th.getUpdatedBy())
                     .build();
 
-            return taskService.editTaskStatus(th, ter);
-//            log.info("진행상태 한글로: {}", TaskAndAssignee.switchStatusToKor(Integer.parseInt(th.getModContent())));
-
-
+            response = taskService.editTaskStatus(th, ter);
         }
 
-        return new ResponseEntity<>("결과스트링", HttpStatus.OK);
+        return response;
     }
 
     @PostMapping("/editAssignee")
@@ -210,6 +215,7 @@ public class TaskController {
             URI location = URI.create("/login");
             return ResponseEntity.created(location).build();
         }
+
         log.info("============= edit Assignee Controller 진입 =================");
         log.info("member id?: {}", mid);
         log.info("task history 객체: {}", th);
@@ -219,8 +225,11 @@ public class TaskController {
         int nanosec = nowWithNano.getNano();
         th.setUpdatedAt(nowWithNano.minusNanos(nanosec));
 
+        ResponseEntity<?> response = null;
+
         if (th.getModType().equals("register")){
             log.info("담당자 추가");
+
             // TaskAssignment 객체생성
             TaskAssignment ta = TaskAssignment.builder()
                     .projectId(th.getProjectId())
@@ -231,7 +240,7 @@ public class TaskController {
                     .assignedAt(nowWithNano.minusNanos(nanosec))
                     .build();
 
-            return taskService.addAssignee(ta, th);
+            response = taskService.addAssignee(ta, th);
 
         } else if (th.getModType().equals("delete")){
             log.info("담당자 삭제");
@@ -246,11 +255,11 @@ public class TaskController {
             int result = taskService.unassign(ta, th);
             if(result != 1) {
                 // 해당 task id나 member id가 없을 경우라 가정...
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("담당자 삭제가 이뤄지지 않았습니다.");
+                response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("담당자 삭제가 이뤄지지 않았습니다.");
             }
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return response;
     }
 
 

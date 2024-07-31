@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -80,7 +77,29 @@ public class TaskService {
                  * */
             }
         }
+
+        // 5. 마감일 유무 확인 후 history insert
+        if(taskFormRequest.getTaskDueDate() != null) {
+            taskRepository.log(TaskHistory.logDueDate(task));
+        }
+
         return task.getId();
+    }
+
+    /*
+     * created : 2024-07-31
+     * param   : TaskEditRequest
+     * return  : ResponseEntity
+     * explain : 할 일 수정: 할 일 명
+     * */
+    @Transactional
+    public ResponseEntity<?> editTaskTitle(TaskHistory th, TaskEditRequest ter){
+        taskRepository.log(th);
+        Integer result = taskRepository.editTaskTitle(ter);
+        if (result != 1){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok().body(ter.getTitle());
     }
 
     /*
@@ -92,28 +111,18 @@ public class TaskService {
     @Transactional
     public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
 
-        Map<Integer, String[]> statusMap = new LinkedHashMap<>();
-        statusMap.put(0, new String[]{"보류", "pause"});
-        statusMap.put(1, new String[]{"시작 안 함", "not-yet"});
-        statusMap.put(2, new String[]{"계획중", "planning"});
-        statusMap.put(3, new String[]{"진행중", "ing"});
-        statusMap.put(4, new String[]{"검토중", "review"});
-        statusMap.put(5, new String[]{"완료", "done"});
-
-
         // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
         Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
         if(assignedNum != null) {
-            taskRepository.log(th);
+            Long res = taskRepository.log(th);
             Integer result = taskRepository.editTaskStatus(ter);
             if(result == 1) {
-                return ResponseEntity.ok().body(statusMap.get(ter.getStatus()));
+                return ResponseEntity.ok().body(ter.getStatus());
             } else {
-                return ResponseEntity.ok().body(new ErrorResponse("진행상태 변경이 완료되지 않았습니다."));
-                // ErrorResponse.builder().message("진행상태 변경이 완료되지 않았습니다.").build()
+                return ResponseEntity.badRequest().body(new ErrorResponse("진행상태 변경이 완료되지 않았습니다."));
             }
         } else {
-            return ResponseEntity.ok().body(new ErrorResponse("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."));
+            return ResponseEntity.badRequest().body(new ErrorResponse("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."));
         }
     }
 
@@ -263,9 +272,25 @@ public class TaskService {
         return taskRepository.addComment(taskComment);
     }
 
+    /*
+     * created : 2024-07-19
+     * param   : Long taskId
+     * return  : List<TaskComment>
+     * explain : 할 일 상세: 소통하기 글 조회
+     * */
     public List<TaskComment> getTaskComment(Long taskId) {
         List<TaskComment> tcList = taskRepository.getTaskComment(taskId);
         return tcList;
+    }
+
+    /*
+     * created : 2024-07-31
+     * param   : TaskComment
+     * return  : Integer
+     * explain : 할 일 상세: 소통하기 글 수정
+     * */
+    public Integer editTaskComment(TaskComment editComment) {
+        return taskRepository.editTaskComment(editComment);
     }
 
 

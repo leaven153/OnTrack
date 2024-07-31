@@ -42,15 +42,6 @@
           <span class="font-14 c411 mr-10 noShrink mt-2">담당자</span>
           <div class="" th:each="assignee: ${taskDetail.getAssignees()}">
             <div class="assignee-chosen-box mr-3 mb-3" th:text="${assignee.value}">헬레나 본햄 카터</div>
-<!--            <div class="assignee-chosen-box mr-3 mb-3">크리스토퍼 놀란</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">로버트 다우니 주니어</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">에밀리 블런트</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">존 크래신스키</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">이적</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">김연우</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">윤종신</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">장항준</div>-->
-<!--            <div class="assignee-chosen-box mr-3 mb-3">제임스서버</div>-->
           </div>
         </div>
       </div><!-- 공통(소통·진행내역·파익): 할 일 명, 작성자, 담당자 끝 -->
@@ -59,24 +50,19 @@
       <!-- 소통하기 시작 -->
       <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10" th:classappend="${taskDetail.getTab() != 'comm'}?hide">
         <div class="modal-task-comment-write mb-20">
-<!--          <th:block th:with="taskId=9">-->
-<!--          <form th:object="${taskCommentForm}" th:action="@{|/task/${taskId}/comment|}" method="POST">-->
-<!--            <input type="hidden" th:field="${taskCommentForm.projectId}">-->
-<!--            <input type="hidden" th:field="${taskCommentForm.taskId}">-->
-<!--            <input type="hidden" name="authorMid" th:value="${myMid}">-->
-<!--            <input type="hidden" name="authorName" th:value="${myNickname}">-->
-            <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 일에 대한 진행상황을 간단히 공유합니다(400자 이내)"></textarea> <!--th:field="${taskCommentForm.comment}"-->
-            <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
-              <div class="flex-row-justify-start-align-center">
-                <span class="ml-3 mr-5 font-13 c411 bold">중요</span>
-                <label class="switch" for="task-comment-notice">
-                  <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">
-                  <span class="slider"></span>
-                </label>
-              </div>
-              <button type="button" id="btn-submit-comment" class="btn-submit-comment" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-authormid=${myMid}, data-authorname=${myNickname}, data-taskauthor=${taskDetail.getAuthorMid()}">입력</button>
+          <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 일에 대한 진행상황을 간단히 공유합니다(400자 이내)"></textarea> <!--th:field="${taskCommentForm.comment}"-->
+          <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5">
+            <div class="flex-row-justify-start-align-center">
+              <span class="ml-3 mr-5 font-13 c411 bold">중요</span>
+              <label class="switch" for="task-comment-notice">
+                <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">
+                <span class="slider"></span>
+              </label>
             </div>
-<!--          </form></th:block>-->
+            <button type="button" id="btn-submit-comment" class="btn-submit-comment"
+                    th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()},
+                    data-authormid=${myMid}, data-authorname=${myNickname}">입력</button>
+          </div>
         </div>
       </div> <!-- 소통하기: 글 입력 영역 끝 -->
 
@@ -130,12 +116,18 @@
         <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
           <textarea class="" maxlength="200" th:text="${comment.getComment()}" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
         </div><!-- commentContent 끝 -->
-        <div class="수정확인버튼박스 flex-row-end-center-nowrap hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
-          <div class="flex-row-justify-start-align-center mr-15">
-            <span class="btn-comment-edit-submit">등록</span>
-            <span class="btn-comment-edit-cancel">취소</span>
+        <div class="flex-row-between-nowrap">
+          <div class="flex-row-justify-start-align-center time-of-edit img-hidden">
+            <span class="font-12 altivo-light time-of-edit" th:text="${comment.getModifiedAt() != null}?${comment.getModifiedAt()}"></span>
+            <span class="font-12 edit-sign" th:classappend="${comment.getModifiedAt() == null}?'hide'">(수정됨)</span>
           </div>
-        </div><!-- commentBottomBtnBox: 수정확인버튼박스 끝-->
+          <div class="수정확인버튼박스 flex-row-end-center-nowrap confirm-edit hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
+            <div class="flex-row-justify-start-align-center mr-15">
+              <span class="btn-comment-edit-submit" th:attr="data-taskid=${taskDetail.getTaskId()}">등록</span>
+              <span class="btn-comment-edit-cancel">취소</span>
+            </div>
+          </div><!-- commentBottomBtnBox: 수정확인버튼박스 끝-->
+        </div>
       </div>
         <!-- 글 하나 박스 끝 -->
       </th:block>
@@ -149,12 +141,12 @@
         <div class="진행내역내용box flex-col-start-nowrap">
           <div class="진행내역info flex-row-between-nowrap">
             <div class="">
-              <span class="진행종류 bold">진행상태</span>
+              <span class="진행종류 bold">진행상태/할일명/마감일/담당자</span>
               <span class="진행자 bold">(이효리)</span>
             </div>
             <span class="진행일시 altivo-regular">24.03.31 17:30</span>
           </div>
-          <span class="진행내용 font-16">계획중으로 변경</span>
+          <span class="진행내용 font-16">계획중으로 등록/변경/삭제/배정/해제</span>
         </div>
       </div><!-- 진행내역하나box 끝-->
       <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">

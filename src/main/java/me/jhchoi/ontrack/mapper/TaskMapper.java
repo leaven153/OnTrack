@@ -16,6 +16,9 @@ public interface TaskMapper {
     // 기록(history): 새 할 일 등록(할일명), 담당자 배정,
     Long log(TaskHistory taskHistory);
 
+    // 할 일 조회
+    Optional<OnTrackTask> findByTaskId(Long taskId);
+    
     // 담당자 배정
     int assign(List<TaskAssignment> taskAssignment);
 
@@ -24,24 +27,26 @@ public interface TaskMapper {
 
     // 할 일: 파일 첨부
     void attachFile(List<TaskFile> taskFile);
-    
+
     // 할 일: 파일 삭제
 
-    // 할 일 수정: 할일명, 진행상태, 마감일, 중요도
+    // 할 일 수정: 할일명
+    Integer editTaskTitle(TaskEditRequest ter);
+
+    // 할 일 수정: 진행상태 수정
     Integer editTaskStatus(TaskEditRequest ter);
 
+    // 할 일 수정; 마감일 수정
     Integer editTaskDueDate(TaskEditRequest ter);
-
-    // 할 일 상세
-    Optional<OnTrackTask> findByTaskId(Long taskId);
+    
 
     // 할 일 상세: 소통하기 글 등록
     Long addComment(TaskComment taskComment);
 
-    // 할 일 상세: 모두확인요청한 소통글의 확인여부 등록
-    Long saveCheckComment(CheckComment chkComment);
+    // 할 일 상세: 소통하기 글 수정
+    Integer editTaskComment(TaskComment editComment);
 
-    // 할 일 상세: 소통하기 글 목록
+    // 할 일 상세: 소통하기 글 목록 조회
     List<TaskComment> getTaskComment(Long TaskId);
 
     // 각 할 일 담당자 목록
@@ -64,5 +69,8 @@ public interface TaskMapper {
 
     // 해당 할 일에 이미 배정된 담당자인지 확인
     Long chkAssigned(TaskAssignment ta);
+
+    // 할 일 상세: history 조회
+    List<TaskHistory> getTaskHistory(Long taskId);
 
 }
