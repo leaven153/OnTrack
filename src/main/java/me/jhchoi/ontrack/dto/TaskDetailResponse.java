@@ -53,4 +53,28 @@ public class TaskDetailResponse{
                 .assignees(taskList.getAssignees())
                 .build();
     }
+
+    public static void historyCnt(List<TaskHistory> historyList){
+        if(!historyList.isEmpty()){
+            for(int i = 0; i < historyList.size(); i++){
+                historyList.get(i).setCntN(historyList.size()-i);
+            }
+        }
+    } // historyCnt ends
+
+    // 파일 사이즈 출력 시 단위 전환하여 출력
+    public static String fileSizeFormatter(Long fileSize){
+
+        String result = "";
+        if(fileSize < 1048576) {
+            float size = fileSize;
+            result = String.format("%.1f", size/1024) + "KB";
+        } else if(fileSize >= 1048576) {
+            result = (int)(fileSize/1048576) + "MB";
+        } else if(fileSize > 1073700000) {
+            result = (int)(fileSize/1073700000) + "GB";
+        }
+        return result;
+    }
+
 }

@@ -84,14 +84,14 @@
         GROUP BY t.id
     </select>
 
-    <select id="commentChkMember" parameterType="CheckComment" resultType="CheckComment">
-        SELECT id, comment_id, member_id, checked
-        FROM check_comment
-        WHERE comment_id = #{commentId}
-        <if test="memberId != null">
-            AND member_id = #{memberId}
-        </if>
-    </select>
+<!--    <select id="commentChkMember" parameterType="CheckComment" resultType="CheckComment">-->
+<!--        SELECT id, comment_id, member_id, checked-->
+<!--        FROM check_comment-->
+<!--        WHERE comment_id = #{commentId}-->
+<!--        <if test="memberId != null">-->
+<!--            AND member_id = #{memberId}-->
+<!--        </if>-->
+<!--    </select>-->
 
     <select id="getTaskComment" resultType="TaskComment">
         SELECT id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt
@@ -106,7 +106,22 @@
         INNER JOIN project_member pm
         ON th.updatedBy = pm.id
         WHERE th.task_id = #{taskId}
-        ORDER BY updatedAt DESC
+        ORDER BY th.id DESC
+    </select>
+
+    <select id="getTaskFile" resultType="TaskFile">
+        SELECT tf.id, tf.file_origName, tf.file_newName, tf.file_type, tf.file_size, pm.id as memberId, pm.nickname as uploaderName, tf.createdAt
+        FROM task_file tf
+        INNER JOIN project_member pm
+        ON tf.member_id = pm.id
+        WHERE tf.task_id = #{taskId}
+        ORDER BY tf.createdAt DESC;
+    </select>
+
+    <select id="findFileById" parameterType="Long" resultType="TaskFile">
+        SELECT *
+        FROM task_file
+        WHERE id = #{fileId}
     </select>
 
     <update id="editTaskTitle" parameterType="TaskEditRequest">

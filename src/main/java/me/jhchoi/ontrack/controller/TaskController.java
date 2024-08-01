@@ -11,14 +11,20 @@ import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.UrlResource;
 import org.springframework.format.datetime.DateFormatter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 import org.thymeleaf.spring6.view.ThymeleafView;
+
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -34,13 +40,16 @@ public class TaskController {
     private final TaskService taskService;
     private final TaskRepository taskRepository;
     private final MemberService memberService;
+    private final FileStore fileStore;
 
     @PostMapping("/addTask")
-    public String addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
+    public ResponseEntity<?> addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
-            return "redirect:/login/login";
+            URI location = URI.create("/login");
+            return ResponseEntity.created(location).build();
+//            return "redirect:/login/login";
         }
         log.info("=============from 할일추가 form==================");
         log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
@@ -48,18 +57,24 @@ public class TaskController {
         log.info("작성자 이름 = {}", taskFormRequest.getAuthorName());
         log.info("할일 이름 = {}", taskFormRequest.getTaskTitle());
         log.info("전체 = {}", taskFormRequest);
-//        log.info("파일 = {}", taskFormRequest.getTaskFile().get(0).getOriginalFilename());
+        // 전체 = TaskAndAssignee(id=null, taskTitle=파일 테스트, authorMid=6, authorName=크러쉬,
+        // taskPriority=3, taskStatus=null, taskDueDate=2024-08-14, taskParentId=null,
+        // createdAt=null, updatedAt=null, updatedBy=null, projectId=11,
+        // assigneeNum=null, assigneeMid=null, assigneeName=null,
+        // assigneeMids=[6, 17], assigneeNames=[크러쉬, 토르], assignees=null,
+        // taskFiles=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1a2f2550])
+//        log.info("파일 = {}", taskFormRequest.getTaskFiles().get(0).getOriginalFilename());
 
-        // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(2)으로 설정하여 service로 넘긴다.
-        if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(2);
+        // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(3)으로 설정하여 service로 넘긴다.
+//        if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(3);
         taskService.addTask(taskFormRequest);
 
-        log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
+//        log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
-        String url = """
-                redirect:/project/%s
-                """.formatted(taskFormRequest.getProjectId());
-        return url;
+        return ResponseEntity.ok(HttpStatus.OK);
+//        return """
+//                redirect:/project/%s
+//                """.formatted(taskFormRequest.getProjectId());
     }
 
     // 할 일 상세 fragment만 rendering
@@ -303,5 +318,18 @@ public class TaskController {
         log.info("전달 직전 result: {}", result);
         return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
+
+    @GetMapping("/file/{fileId}")
+    public ResponseEntity<?> downloadFile(@PathVariable Long fileId) throws MalformedURLException {
+        log.info("************** 파일을 다운받으러 왔다 **************");
+        TaskFile file = taskRepository.findFileById(fileId);
+        UrlResource resource = new UrlResource("file:"+file.getFilePath()+"/"+file.getFileNewName());
+        String encodedOriginFileName = UriUtils.encode(file.getFileOrigName()+"."+file.getFileType(), StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=" + encodedOriginFileName;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
+    }
+
 
 }// class TaskController ends

@@ -214,8 +214,8 @@ window.onload = function(){
                     const taskHistory = {
                         projectId: currUrl[2],
                         taskId: titleInput.dataset.taskid,
-                        modItem: "title",
-                        modType: "update",
+                        modItem: "할 일 명",
+                        modType: "변경",
                         modContent: titleInput.value,
                         updatedBy: titleInput.dataset.mid
                     }
@@ -515,8 +515,8 @@ window.onload = function(){
         const taskHistory = {
             taskId: datum["taskid"],
             projectId: datum["projectid"],
-            modItem: "assignee",
-            modType: "delete",
+            modItem: "담당자",
+            modType: "해제",
             modContent: prev(this).innerText,
             updatedBy: datum["executormid"],
         }
@@ -648,8 +648,8 @@ window.onload = function(){
         const taskHistory = {
             projectId: datum["projectid"],
             taskId: datum["taskid"],
-            modItem: "assignee",
-            modType: "delete",
+            modItem: "담당자",
+            modType: "해제",
             modContent: datum["nickname"],
             updatedBy: datum["mid"]
         };
@@ -784,8 +784,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "assignee",
-                    modType: "register",
+                    modItem: "담당자",
+                    modType: "배정",
                     modContent: datum["nickname"],
                     updatedBy: datum["executormid"]
                 };
@@ -920,8 +920,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "assignee",
-                    modType: "register",
+                    modItem: "담당자",
+                    modType: "배정",
                     modContent: datum["nickname"],
                     updatedBy: datum["mid"]
                 };
@@ -1163,8 +1163,8 @@ window.onload = function(){
             const taskHistory = {
                 projectId: datum["projectid"],
                 taskId: datum["taskid"],
-                modItem: "assignee",
-                modType: "register",
+                modItem: "담당자",
+                modType: "배정",
                 modContent: newAssigneeName,
                 updatedBy: datum["executormid"]
             };
@@ -1444,8 +1444,8 @@ window.onload = function(){
                         const taskHistory = {
                             projectId: datum["projectid"],
                             taskId: datum["taskid"],
-                            modItem: "status",
-                            modType: "update",
+                            modItem: "진행상태",
+                            modType: "변경",
                             modContent: chosenStatus.querySelector("p").innerHTML,
                             updatedBy: datum["updatedby"]
                         };
@@ -1478,64 +1478,6 @@ window.onload = function(){
                     });
                 });
 
-                /*
-                // 1) 진행상태 목록 toggle
-                if(next(btn).classList.contains("img-hidden")) {
-                    // 열려 있던 다른 task의 진행상태 목록들 닫고
-                    document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
-                        everyList.classList.add("img-hidden");
-                    });
-                    // 선택된 목록만 연다
-                    next(btn).classList.remove("img-hidden")
-                } else {
-                    next(btn).classList.add("img-hidden")
-                }
-
-                // 2) 변경하고자 하는 진행상태를 클릭했을 때
-                next(btn).querySelectorAll(".status-each").forEach(function(eachStatus){
-                    eachStatus.addEventListener("click", (e)=>{
-                        e.stopImmediatePropagation();
-
-                        const taskHistory = {
-                            projectId: eachStatus.dataset.projectid,
-                            taskId: eachStatus.dataset.taskid,
-                            modItem: "status",
-                            modType: "update",
-                            modContent: eachStatus.children[1].innerHTML,
-                            updatedBy: eachStatus.dataset.updatedby
-                        };
-
-                        fetch(`http://localhost:8080/task/editTask?item=status&statusNum=${eachStatus.dataset.status}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-type': 'application/json'
-                            },
-                            body: JSON.stringify(taskHistory)
-                        }).then(response => response.json())
-                            .then(data => {
-                                console.log(data);
-                                if(data[0] === undefined) {
-                                    alert(`${data["message"]}`);
-                                    // 열려있던 진행상태 목록 닫기
-                                    next(btn).classList.add("img-hidden")
-                                    return;
-                                }
-
-
-                                // Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
-                                //  message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."
-                                // console.log(data[0]) // error일 경우, undefined
-
-                                prev(btn).innerText = data[0];
-                                prev(prev(btn)).classList.remove(`${prev(prev(btn)).dataset.status}`);
-                                prev(prev(btn)).classList.add(data[1]);
-
-                                // 열려있던 진행상태 목록 닫기
-                                next(btn).classList.add("img-hidden")
-                            }); // fetch ends
-                    });
-                });
-                */
             }); // chosenOne click evt ends
         }); // btnEditTaskStatus.forEach ends
     } // 10-9 할 일 진행상태 수정 끝
@@ -1604,8 +1546,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "dueDate",
-                    modType: "update",
+                    modItem: "마감일",
+                    modType: "변경",
                     modContent: prev(btn).value,
                     updatedBy: datum["updatedby"]
                 };
@@ -2252,7 +2194,7 @@ window.onload = function(){
         // // console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
         // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
         //
-        addTaskForm.elements.assigneesMid.forEach(function(eachOne){
+        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
                 chosenAssigneeMids.push(eachOne.id);
@@ -2264,14 +2206,17 @@ window.onload = function(){
             console.log(`파일 부분 삭제 후: `);
             console.log(rewriteCreateTaskFileList);
             for(let i = 0; i < rewriteCreateTaskFileList.length; i++) {
-                addTaskData.append("taskFile", rewriteCreateTaskFileList[i]);
+                addTaskData.append("taskFiles", rewriteCreateTaskFileList[i]);
             }
 
         } else {
             console.log(addTaskForm.elements.taskFile.files);
             const files = addTaskForm.elements.taskFile.files;
+            console.log(files);
             for(let i = 0; i < files.length; i++){
-                addTaskData.append("taskFile", files[i]);
+                console.log(`addTaskData에 파일 첨부 `);
+                console.log(files[i]);
+                addTaskData.append("taskFiles", files[i]);
             }
         // //     // FileList [ File ] 줄바꿈
         // //     //   0: File { name: "100자.txt", lastModified: 1712675372978, size: 250, … }
@@ -2282,30 +2227,35 @@ window.onload = function(){
         // //     //      webkitRelativePath: ""
         // //     //   length: 1
         }
-        // //
+        console.log(`==== 파일의 append가 된 후 FormData ====`);
+        console.log(addTaskData);
+
         addTaskData.append("projectId", addTaskForm.elements.projectId.value);
-        addTaskData.append("taskAuthorMid", addTaskForm.elements.taskAuthorMid.value);
+        addTaskData.append("authorMid", addTaskForm.elements.authorMid.value);
         addTaskData.append("authorName", addTaskForm.elements.authorName.value);
         addTaskData.append("taskTitle", addTaskForm.elements.taskTitle.value);
         addTaskData.append("taskPriority", addTaskForm.elements.taskPriority.value);
         addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
-        addTaskData.append("assigneesMid", chosenAssigneeMids);
+        addTaskData.append("assigneeMids", chosenAssigneeMids);
         addTaskData.append("assigneeNames", choosenAssigneeNames);
+
         //
         console.log(`------- addTaskData -------`);
         console.log(addTaskData);
+
         fetch('http://localhost:8080/task/addTask', {
             method:'POST',
             headers: {},
             body: addTaskData
         }).then(response => {
             afterAddTaskSubmit();
-            const chkTime = new Date();
-            console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+            // const chkTime = new Date();
+            // console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
             if (response.ok) {
                 location.reload();
             }
         });
+
 
 
 
@@ -3065,7 +3015,7 @@ window.onload = function(){
 
     /*---------- 045 ------------*/
     // 이미 생성된 할일의 파일 삭제
-    onEvtListener(document, "click", ".modal-task-file-del", function(){
+    onEvtListener(document, "click", ".btn-modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
         //console.log(this); // <span class="hoverBigger20 cursorP modal-task-file-del">
         //console.log(this.parentElement.parentElement); // <div class="파일박스 flex-row-between-nowrap hoverShadow">
@@ -3190,7 +3140,7 @@ window.onload = function(){
 
         fileDiv2.classList.add("flex-row-justify-start-align-center");
         fileSize.classList.add("modal-task-file-size");
-        fileDelBtn.classList.add("modal-task-file-del");
+        fileDelBtn.classList.add("btn-modal-task-file-del");
 
         fileDelBtn.innerHTML = `&times;`;
         fileName.innerText = name;
@@ -3198,7 +3148,7 @@ window.onload = function(){
         fileSize.innerText = size;
 
         fileDelBtn.classList.add("hoverBigger20");
-        fileDelBtn.classList.add("cursorP");
+        // fileDelBtn.classList.add("cursorP");
 
         fileDiv1.append(fileIcon, fileName, fileType);
         fileDiv2.append(fileSize, fileDelBtn);

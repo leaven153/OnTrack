@@ -42,6 +42,7 @@ public class TaskAndAssignee {
     private Map<Long, String> assignees;
 
     //  할 일의 파일
+    private Integer taskFileCnt;
     private List<MultipartFile> taskFiles;
 
     public OnTrackTask dtoToEntityTask(){

@@ -3,8 +3,10 @@ package me.jhchoi.ontrack.service;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
+import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.TaskAndAssignee;
+import me.jhchoi.ontrack.dto.TaskDetailResponse;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +58,7 @@ class TaskServiceTest {
 
         taskRepository.log(TaskHistory.logNewTask(task));
 
-        if (taskFormRequest.getAssigneeMids().size() > 0) {
+        if (!taskFormRequest.getAssigneeMids().isEmpty()) {
 
             // 3-1. 담당자 객체(TaskAssignment) 생성 및 DB 저장
             List<TaskAssignment> assignees = taskFormRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
@@ -68,5 +70,68 @@ class TaskServiceTest {
         }
     }
 
+    @Test @DisplayName("할 일의 진행내역(history) 조회")
+    void getTaskHistory(){
+        //given
+        Long taskId = 8L; // task history 있는 일
+        Long noHistroryTaskId = 7L;
+
+        //when
+        List<TaskHistory> hasTh = taskRepository.getTaskHistory(taskId);
+        List<TaskHistory> noTh = taskRepository.getTaskHistory(noHistroryTaskId);
+
+        log.info("히스토리가 있는 할 일의 List: {}", hasTh);
+        log.info("히스토리가 있는 할 일의 List isEmpty: {}", hasTh.isEmpty()); // 히스토리가 있는 할 일의 List isEmpty: false
+        log.info("히스토리가 있는 할 일의 List size: {}", hasTh.size()); // 히스토리가 있는 할 일의 List size: 53
+
+        log.info("히스토리가 없는 할 일의 List: {}", noTh); // 히스토리가 없는 할 일의 List: []
+        log.info("히스토리가 없는 할 일의 List isEmpty: {}", noTh.isEmpty()); // 히스토리가 없는 할 일의 List isEmpty: true
+        log.info("히스토리가 없는 할 일의 List size: {}", noTh.size()); // 히스토리가 없는 할 일의 List size: 0
+    }
+
+    @Test @DisplayName("할 일의 파일 목록 조회")
+    void getTaskFile(){
+        // given
+        Long taskId = 67L;
+        Long nofileCase = 72L;
+
+        // when
+        List<TaskFile> result1 = taskRepository.getTaskFile(taskId);
+        List<TaskFile> result2 = taskRepository.getTaskFile(nofileCase);
+
+        log.info("파일 있을 때: {}", result1);
+        // 파일 있을 때: [TaskFile(id=13, projectId=null, taskId=null, memberId=null, fileOrigName=200자,
+        // fileNewName=39d3c88f-05a5-4987-aef1-2966c89f7d9e.txt,
+        // fileType=txt, fileSize=null, filePath=null, createdAt=2024-06-06T00:00),
+        // TaskFile(id=14, projectId=null, taskId=null, memberId=null, fileOrigName=0416,
+        // fileNewName=4e780e43-5305-45f1-ac87-b1f752050248.txt, fileType=txt, fileSize=null,
+        // filePath=null, createdAt=2024-06-06T00:00)]
+        log.info("파일 있을 때 size: {}", result1.size()); // 파일 있을 때 size: 2
+        log.info("파일 있을 때 isEmpty: {}", result1.isEmpty()); // 파일 있을 때 isEmpty: false
+
+        log.info("파일 없을 때: {}", result2); // 파일 없을 때: []
+        log.info("파일 없을 때 size: {}", result2.size()); // 파일 없을 때 size: 0
+        log.info("파일 없을 때 isEmpty: {}", result2.isEmpty()); // 파일 없을 때 isEmpty: true
+
+        if(!result1.isEmpty()) {
+            for(int i = 0; i < result1.size(); i++){
+                result1.get(i).setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(result1.get(i).getFileSize()));
+            }
+        }
+
+        if(!result2.isEmpty()) {
+            for(int i = 0; i < result2.size(); i++){
+                result2.get(i).setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(result2.get(i).getFileSize()));
+            }
+        }
+        log.info("파일 있는 것의 사이즈 정리 후: {}", result1);
+        // 파일 있는 것의 사이즈 정리 후: [TaskFile(id=13, projectId=null, taskId=null, memberId=25,
+        // fileOrigName=200자, fileNewName=39d3c88f-05a5-4987-aef1-2966c89f7d9e.txt, fileType=txt,
+        // fileSize=504, filePath=null, createdAt=2024-06-06T00:00, uploaderName=공유,
+        // formattedFileSize=0.5KB),
+        // TaskFile(id=14, projectId=null, taskId=null, memberId=25, fileOrigName=0416,
+        // fileNewName=4e780e43-5305-45f1-ac87-b1f752050248.txt, fileType=txt, fileSize=997,
+        // filePath=null, createdAt=2024-06-06T00:00, uploaderName=공유, formattedFileSize=1.0KB)]
+    }
 
 }

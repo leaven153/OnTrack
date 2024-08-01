@@ -290,7 +290,7 @@
 
 <!--/* 모달: 할 일 상세 */-->
   <!--/* 모달 컨테이너 */-->
-  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
+  <th:block th:replace="~{/fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()}, myPosition=${project.position})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
   <!--/* 모달: 할 일 상세 끝 */-->
 
   <!--/* Modal Ends */-->

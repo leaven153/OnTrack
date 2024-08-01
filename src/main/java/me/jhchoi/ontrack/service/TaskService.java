@@ -63,7 +63,7 @@ public class TaskService {
 
         // 4. 파일첨부 여부 check 후 해당 프로젝트/할일 폴더에 저장 및 TaskFile 객체 생성
         // task 생성 후에 task Id를 가지고 file을 저장할 수 있다.
-
+        // Cannot invoke "java.util.List.isEmpty()" because the return value of "me.jhchoi.ontrack.dto.TaskAndAssignee.getTaskFiles()" is null
         if (taskFormRequest.getTaskFiles() != null && !taskFormRequest.getTaskFiles().isEmpty()) {
             try {
                 List<TaskFile> fList = fileStore.storeFile(taskFormRequest.getTaskFiles(), task.getProjectId(), task.getId(), task.getAuthorMid(), task.getCreatedAt());
@@ -114,7 +114,7 @@ public class TaskService {
         // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
         Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
         if(assignedNum != null) {
-            Long res = taskRepository.log(th);
+            taskRepository.log(th);
             Integer result = taskRepository.editTaskStatus(ter);
             if(result == 1) {
                 return ResponseEntity.ok().body(ter.getStatus());
@@ -196,7 +196,23 @@ public class TaskService {
         }
         return result;
     }
-    
+
+    /*
+     * created : 2024-08-01
+     * param   : Long taskId
+     * return  : List<TaskHistory>
+     * explain : 할 일 상세: history(진행내역) 조회
+     * */
+    public List<TaskFile> getTaskFile(Long taskId) {
+        List<TaskFile> files = taskRepository.getTaskFile(taskId);
+        if(!files.isEmpty()) {
+            for (TaskFile file : files) {
+                file.setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(file.getFileSize()));
+            }
+        }
+        return files;
+    }
+
     /*
      * created : 2024-05-
      * param   :
@@ -279,8 +295,7 @@ public class TaskService {
      * explain : 할 일 상세: 소통하기 글 조회
      * */
     public List<TaskComment> getTaskComment(Long taskId) {
-        List<TaskComment> tcList = taskRepository.getTaskComment(taskId);
-        return tcList;
+        return taskRepository.getTaskComment(taskId);
     }
 
     /*
@@ -293,5 +308,13 @@ public class TaskService {
         return taskRepository.editTaskComment(editComment);
     }
 
-
-}
+    /*
+     * created : 2024-08-01
+     * param   : Long taskId
+     * return  : List<TaskHistory>
+     * explain : 할 일 상세: history(진행내역) 조회
+     * */
+    public List<TaskHistory> getTaskHistory(Long taskId){
+        return taskRepository.getTaskHistory(taskId);
+    }
+} // class TaskService ends

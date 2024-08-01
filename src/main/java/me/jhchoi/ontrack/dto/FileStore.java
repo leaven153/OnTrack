@@ -29,7 +29,7 @@ public class FileStore {
 
         if(!uploadFolderPath.exists()) {
             uploadFolderPath.mkdirs();
-            log.info("폴더생성? {}", uploadFolderPath.exists());
+            log.info("폴더생성: {}", uploadFolderPath.exists());
         }
         return path.toAbsolutePath().toString();
     }
@@ -56,7 +56,8 @@ public class FileStore {
 
         for(MultipartFile file : multipartFiles) {
             if(!file.isEmpty()) {
-                String originalFileName = file.getOriginalFilename();
+                int idx = file.getOriginalFilename().lastIndexOf(".");
+                String originalFileName = file.getOriginalFilename().substring(0, idx);
                 String storeFileName = createFileName(originalFileName);
                 Path savePath = Paths.get(makeFolder(projectId, taskId), storeFileName);
                 log.info("저장경로(폴더, 파일이름): {}", savePath.toAbsolutePath()); // 저장경로(폴더, 파일이름)
@@ -67,7 +68,7 @@ public class FileStore {
                         .memberId(memberId)
                         .fileOrigName(originalFileName)
                         .fileNewName(storeFileName)
-                        .fileType(extractExt(originalFileName))
+                        .fileType(extractExt(file.getOriginalFilename()))
                         .fileSize(file.getSize())
                         .filePath(makeFolder(projectId, taskId))
                         .createdAt(createdAt)
@@ -77,4 +78,5 @@ public class FileStore {
 
         return fileList;
     }
+
 }

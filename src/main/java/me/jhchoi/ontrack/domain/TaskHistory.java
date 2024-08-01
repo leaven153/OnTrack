@@ -23,8 +23,11 @@ public class TaskHistory {
     private LocalDateTime updatedAt;
     private Long updatedBy; // member id
 
-    // entity로 바꾼다면 컬럼에 포함되지 않도록 할 필드
+    // entity로 바꾼다면 컬럼에 포함되지 않도록 할 필드1
     private String executorName;
+
+    // entity로 바꾼다면 컬럼에 포함되지 않도록 할 필드2
+    private Integer cntN;
 
 
     // 할 일 명 등록
@@ -32,8 +35,8 @@ public class TaskHistory {
         return TaskHistory.builder()
                 .projectId(newTask.getProjectId())
                 .taskId(newTask.getId())
-                .modItem("title")
-                .modType("register")
+                .modItem("할 일")
+                .modType("등록")
                 .modContent(newTask.getTaskTitle())
                 .updatedAt(newTask.getCreatedAt())
                 .updatedBy(newTask.getAuthorMid())
@@ -44,8 +47,8 @@ public class TaskHistory {
         return TaskHistory.builder()
                 .projectId(assignees.getProjectId())
                 .taskId(assignees.getTaskId())
-                .modItem("assignee")
-                .modType("register")
+                .modItem("담당자")
+                .modType("배정")
                 .modContent(assignees.getNickname())
                 .updatedAt(assignees.getAssignedAt())
                 .updatedBy(authorId)
@@ -56,26 +59,12 @@ public class TaskHistory {
         return TaskHistory.builder()
                 .projectId(newTask.getProjectId())
                 .taskId(newTask.getId())
-                .modItem("dueDate")
-                .modItem("register")
+                .modItem("마감일")
+                .modType("등록")
                 .modContent(String.valueOf(newTask.getTaskDueDate()))
+                .updatedAt(newTask.getUpdatedAt())
+                .updatedBy(newTask.getAuthorMid())
                 .build();
     }
-
-    /** history map ideation → DB에 한글로 저장하도록 하자!
-     * 할일명: register-등록, update-변경
-     * 마감일: register-등록, update-변경('마감일 삭제' 포함)
-     * 담당자: register-배정, delete-삭제
-     * 진행상태: update-변경
-     * */
-    //        Map<Integer, String[]> statusMap = new LinkedHashMap<>();
-//        statusMap.put(0, new String[]{"보류", "pause"});
-//        statusMap.put(1, new String[]{"시작 안 함", "not-yet"});
-//        statusMap.put(2, new String[]{"계획중", "planning"});
-//        statusMap.put(3, new String[]{"진행중", "ing"});
-//        statusMap.put(4, new String[]{"검토중", "review"});
-//        statusMap.put(5, new String[]{"완료", "done"});
-
-
 
 }

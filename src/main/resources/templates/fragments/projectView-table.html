@@ -67,7 +67,7 @@
       <!-- file -->
       <div class="tableview-column flex-row-center-center-nowrap">
         <button type="button" class="add-file flex-row-center-center-nowrap hide"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--img-20 vertical-ctrl05-->
-        <button type="button" class="more-file  flex-row-center-center-nowrap"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
+        <button type="button" class="more-file flex-row-center-center-nowrap"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20"></button><!--img-20 vertical-ctrl032-->
       </div>
 
       <!-- 공지 작성자 -->
@@ -217,8 +217,8 @@
 
         <!-- file -->
         <div class="tableview-column flex-row-center-center-nowrap">
-          <button type="button" class="add-file flex-row-center-center-nowrap" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|" th:attr="data-taskid=${task.getId()}" data-tab="file"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
-          <button type="button" class="more-file flex-row-center-center-nowrap hide" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
+          <button type="button" class="add-file flex-row-center-center-nowrap" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|" th:attr="data-taskid=${task.getId()}" data-tab="file" th:classappend="${task.getTaskFileCnt() != null}?'hide'"><img src="../../static/imgs/icon_upload(clip).png" th:src="@{/imgs/icon_upload(clip).png}" alt="add-file" class="img-20"></button><!--  vertical-ctrl015-->
+          <button type="button" class=" flex-row-center-center-nowrap" th:onclick="|location.href='@{|/task/detail/${task.getId()}?tab=file|}'|" th:attr="data-file=${task.getTaskFileCnt() != null}?${task.getTaskFileCnt()}" th:classappend="${task.getTaskFileCnt() != null}?'more-file':'hide'"><img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="more-file" class="img-20 vertical-ctrl015"></button>
         </div>
 
         <!-- author -->

@@ -40,8 +40,12 @@
     </select>
 
     <select id="allTasksInProject" parameterType="Long" resultType="TaskAndAssignee">
-        SELECT id, task_title, task_status, task_dueDate, task_priority, authorMid, authorName, createdAt, updatedAt, updatedBy
-        FROM ontrack_task
+        SELECT t.id, t.task_title, t.task_status, t.task_dueDate, t.task_priority, t.authorMid, t.authorName, t.createdAt, t.updatedAt, t.updatedBy, tf.taskFileCnt
+        FROM ontrack_task t
+        LEFT JOIN (SELECT task_id, count(task_id) taskFileCnt
+        FROM task_file
+        GROUP BY task_id) tf
+        ON t.id = tf.task_id
         WHERE project_id = #{projectId}
     </select>
 

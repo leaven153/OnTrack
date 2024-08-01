@@ -127,6 +127,13 @@ public class ProjectController {
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
 
                     // 3) history 가져온다.
+                    taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));
+                    if(taskDetail.getTaskHistories() != null && !taskDetail.getTaskHistories().isEmpty()){
+                        TaskDetailResponse.historyCnt(taskDetail.getTaskHistories());
+                    }
+
+                    // 4) file 가져온다.
+                    taskDetail.setTaskFiles(taskService.getTaskFile((Long) inputFlashMap.get("taskId")));
 
                 }
             }
