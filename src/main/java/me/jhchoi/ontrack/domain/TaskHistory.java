@@ -60,8 +60,10 @@ public class TaskHistory {
                 .projectId(newTask.getProjectId())
                 .taskId(newTask.getId())
                 .modItem("마감일")
-                .modItem("등록")
+                .modType("등록")
                 .modContent(String.valueOf(newTask.getTaskDueDate()))
+                .updatedAt(newTask.getUpdatedAt())
+                .updatedBy(newTask.getAuthorMid())
                 .build();
     }
 

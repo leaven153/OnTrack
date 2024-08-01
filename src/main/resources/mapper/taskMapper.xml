@@ -118,6 +118,12 @@
         ORDER BY tf.createdAt DESC;
     </select>
 
+    <select id="findFileById" parameterType="Long" resultType="TaskFile">
+        SELECT *
+        FROM task_file
+        WHERE id = #{fileId}
+    </select>
+
     <update id="editTaskTitle" parameterType="TaskEditRequest">
         UPDATE ontrack_task
         SET task_title = #{title}

@@ -68,7 +68,7 @@ public class FileStore {
                         .memberId(memberId)
                         .fileOrigName(originalFileName)
                         .fileNewName(storeFileName)
-                        .fileType(extractExt(originalFileName))
+                        .fileType(extractExt(file.getOriginalFilename()))
                         .fileSize(file.getSize())
                         .filePath(makeFolder(projectId, taskId))
                         .createdAt(createdAt)

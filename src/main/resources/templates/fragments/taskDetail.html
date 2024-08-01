@@ -191,7 +191,7 @@
             <div class="flex-row-justify-start-align-center">
               <img src="/imgs/icon_download4.png" alt="download" class="img-15 mr-5">
               <span class="modal-file-name" th:text="${file.getFileOrigName()}">보일듯말듯가물거리는</span>
-              <span class="font-14 modal-file-type" th:text="${file.getFileType()}">.pdf</span>
+              <span class="font-14 modal-file-type" th:text="|.${file.getFileType()}|">.pdf</span>
             </div>
             <div class="flex-row-justify-start-align-center">
               <!--/*저장된 사이즈는 바이트 단위임. */-->

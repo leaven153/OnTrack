@@ -76,4 +76,6 @@ public interface TaskMapper {
     // 할 일 상세: 파일 조회
     List<TaskFile> getTaskFile(Long taskId);
 
+    TaskFile findFileById(Long fildId);
+
 }
