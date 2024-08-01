@@ -2194,7 +2194,7 @@ window.onload = function(){
         // // console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
         // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
         //
-        addTaskForm.elements.assigneesMid.forEach(function(eachOne){
+        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
                 chosenAssigneeMids.push(eachOne.id);
@@ -2206,14 +2206,17 @@ window.onload = function(){
             console.log(`파일 부분 삭제 후: `);
             console.log(rewriteCreateTaskFileList);
             for(let i = 0; i < rewriteCreateTaskFileList.length; i++) {
-                addTaskData.append("taskFile", rewriteCreateTaskFileList[i]);
+                addTaskData.append("taskFiles", rewriteCreateTaskFileList[i]);
             }
 
         } else {
             console.log(addTaskForm.elements.taskFile.files);
             const files = addTaskForm.elements.taskFile.files;
+            console.log(files);
             for(let i = 0; i < files.length; i++){
-                addTaskData.append("taskFile", files[i]);
+                console.log(`addTaskData에 파일 첨부 `);
+                console.log(files[i]);
+                addTaskData.append("taskFiles", files[i]);
             }
         // //     // FileList [ File ] 줄바꿈
         // //     //   0: File { name: "100자.txt", lastModified: 1712675372978, size: 250, … }
@@ -2224,30 +2227,35 @@ window.onload = function(){
         // //     //      webkitRelativePath: ""
         // //     //   length: 1
         }
-        // //
+        console.log(`==== 파일의 append가 된 후 FormData ====`);
+        console.log(addTaskData);
+
         addTaskData.append("projectId", addTaskForm.elements.projectId.value);
-        addTaskData.append("taskAuthorMid", addTaskForm.elements.taskAuthorMid.value);
+        addTaskData.append("authorMid", addTaskForm.elements.authorMid.value);
         addTaskData.append("authorName", addTaskForm.elements.authorName.value);
         addTaskData.append("taskTitle", addTaskForm.elements.taskTitle.value);
         addTaskData.append("taskPriority", addTaskForm.elements.taskPriority.value);
         addTaskData.append("taskDueDate", addTaskForm.elements.taskDueDate.value);
-        addTaskData.append("assigneesMid", chosenAssigneeMids);
+        addTaskData.append("assigneeMids", chosenAssigneeMids);
         addTaskData.append("assigneeNames", choosenAssigneeNames);
+
         //
         console.log(`------- addTaskData -------`);
         console.log(addTaskData);
+
         fetch('http://localhost:8080/task/addTask', {
             method:'POST',
             headers: {},
             body: addTaskData
         }).then(response => {
             afterAddTaskSubmit();
-            const chkTime = new Date();
-            console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+            // const chkTime = new Date();
+            // console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
             if (response.ok) {
                 location.reload();
             }
         });
+
 
 
 
@@ -3007,7 +3015,7 @@ window.onload = function(){
 
     /*---------- 045 ------------*/
     // 이미 생성된 할일의 파일 삭제
-    onEvtListener(document, "click", ".modal-task-file-del", function(){
+    onEvtListener(document, "click", ".btn-modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
         //console.log(this); // <span class="hoverBigger20 cursorP modal-task-file-del">
         //console.log(this.parentElement.parentElement); // <div class="파일박스 flex-row-between-nowrap hoverShadow">
@@ -3132,7 +3140,7 @@ window.onload = function(){
 
         fileDiv2.classList.add("flex-row-justify-start-align-center");
         fileSize.classList.add("modal-task-file-size");
-        fileDelBtn.classList.add("modal-task-file-del");
+        fileDelBtn.classList.add("btn-modal-task-file-del");
 
         fileDelBtn.innerHTML = `&times;`;
         fileName.innerText = name;
@@ -3140,7 +3148,7 @@ window.onload = function(){
         fileSize.innerText = size;
 
         fileDelBtn.classList.add("hoverBigger20");
-        fileDelBtn.classList.add("cursorP");
+        // fileDelBtn.classList.add("cursorP");
 
         fileDiv1.append(fileIcon, fileName, fileType);
         fileDiv2.append(fileSize, fileDelBtn);

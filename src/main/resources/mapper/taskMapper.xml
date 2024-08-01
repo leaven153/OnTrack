@@ -109,6 +109,15 @@
         ORDER BY th.id DESC
     </select>
 
+    <select id="getTaskFile" resultType="TaskFile">
+        SELECT tf.id, tf.file_origName, tf.file_newName, tf.file_type, tf.file_size, pm.id as memberId, pm.nickname as uploaderName, tf.createdAt
+        FROM task_file tf
+        INNER JOIN project_member pm
+        ON tf.member_id = pm.id
+        WHERE tf.task_id = #{taskId}
+        ORDER BY tf.createdAt DESC;
+    </select>
+
     <update id="editTaskTitle" parameterType="TaskEditRequest">
         UPDATE ontrack_task
         SET task_title = #{title}

@@ -83,9 +83,11 @@ public class TaskRepository {
         return taskMapper.editTaskComment(editComment);
     }
 
-    // 할 일 상세: history 조회
+    // 할 일 상세: history(진행내역) 조회
     public List<TaskHistory> getTaskHistory(Long taskId){
         return taskMapper.getTaskHistory(taskId);
     }
 
+    // 할 일 상세: file(파일) 조회
+    public List<TaskFile> getTaskFile(Long taskId) { return taskMapper.getTaskFile(taskId); }
 }

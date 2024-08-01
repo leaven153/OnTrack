@@ -128,7 +128,12 @@ public class ProjectController {
 
                     // 3) history 가져온다.
                     taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));
-                    if(!taskDetail.getTaskHistories().isEmpty()){ TaskDetailResponse.historyCnt(taskDetail.getTaskHistories()); }
+                    if(taskDetail.getTaskHistories() != null && !taskDetail.getTaskHistories().isEmpty()){
+                        TaskDetailResponse.historyCnt(taskDetail.getTaskHistories());
+                    }
+
+                    // 4) file 가져온다.
+                    taskDetail.setTaskFiles(taskService.getTaskFile((Long) inputFlashMap.get("taskId")));
 
                 }
             }

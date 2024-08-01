@@ -1765,7 +1765,7 @@ input[type=date] {
 
 
 /******** no-assignee, no-file ********/
-.no-assignee, .no-file {
+.no-assignee, .no-file, .no-comment {
     color: #d1c9bb;
 }
 
@@ -2652,6 +2652,7 @@ div.container-pw {
     flex-direction: row;
     align-items: center;
 }
+.no-comment,
 div[class*=signup-no] {
     text-align: center;
 }
@@ -3565,7 +3566,7 @@ div.btn-comment-edit-del .popupYN {
     text-align: center;
 }
 
-.modal-task-file-list-col > div {
+.modal-task-file-list-col > div:nth-of-type(2) {
     width: 240px;
     padding-right: 10px;
     padding-left: 5px;
