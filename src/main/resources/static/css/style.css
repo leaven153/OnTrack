@@ -411,7 +411,7 @@ div.btn-open-settings {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    margin: 12px 0 3px 0;
+    margin: 12px 0 4px 0;
 }
 
 .view-box, .search-n-add-task {
@@ -812,7 +812,7 @@ input[type="date"].input-edit-task-duedate {
 
 /****** table: more-file ******/
 .more-file::after {
-    content: "2";
+    content: attr(data-file);
     border-radius: 2px;
     background-color: #451f46;
     color: #fff5ec;

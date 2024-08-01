@@ -206,8 +206,8 @@ public class TaskService {
     public List<TaskFile> getTaskFile(Long taskId) {
         List<TaskFile> files = taskRepository.getTaskFile(taskId);
         if(!files.isEmpty()) {
-            for(int i = 0; i < files.size(); i++){
-                files.get(i).setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(files.get(i).getFileSize()));
+            for (TaskFile file : files) {
+                file.setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(file.getFileSize()));
             }
         }
         return files;

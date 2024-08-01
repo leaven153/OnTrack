@@ -312,4 +312,11 @@ public class TaskController {
         return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
 
+    @GetMapping("/file/{fileId}")
+    public ResponseEntity<?> downloadFile(@PathVariable Long fileId){
+        log.info("************** 파일을 다운받으러 왔다 **************");
+        return ResponseEntity.ok("일단ok");
+    }
+
+
 }// class TaskController ends
