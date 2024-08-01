@@ -53,4 +53,12 @@ public class TaskDetailResponse{
                 .assignees(taskList.getAssignees())
                 .build();
     }
+
+    public static void historyCnt(List<TaskHistory> historyList){
+        if(!historyList.isEmpty()){
+            for(int i = 0; i < historyList.size(); i++){
+                historyList.get(i).setCntN(historyList.size()-i);
+            }
+        }
+    };
 }

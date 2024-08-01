@@ -293,5 +293,13 @@ public class TaskService {
         return taskRepository.editTaskComment(editComment);
     }
 
-
-}
+    /*
+     * created : 2024-08-01
+     * param   : Long taskId
+     * return  : List<TaskHistory>
+     * explain : 할 일 상세: history(진행내역) 조회
+     * */
+    public List<TaskHistory> getTaskHistory(Long taskId){
+        return taskRepository.getTaskHistory(taskId);
+    }
+} // class TaskService ends

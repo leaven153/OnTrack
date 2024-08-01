@@ -68,5 +68,23 @@ class TaskServiceTest {
         }
     }
 
+    @Test @DisplayName("할 일의 진행내역(history) 조회")
+    void getTaskHistory(){
+        //given
+        Long taskId = 8L; // task history 있는 일
+        Long noHistroryTaskId = 7L;
+
+        //when
+        List<TaskHistory> hasTh = taskRepository.getTaskHistory(taskId);
+        List<TaskHistory> noTh = taskRepository.getTaskHistory(noHistroryTaskId);
+
+        log.info("히스토리가 있는 할 일의 List: {}", hasTh);
+        log.info("히스토리가 있는 할 일의 List isEmpty: {}", hasTh.isEmpty()); // 히스토리가 있는 할 일의 List isEmpty: false
+        log.info("히스토리가 있는 할 일의 List size: {}", hasTh.size()); // 히스토리가 있는 할 일의 List size: 53
+
+        log.info("히스토리가 없는 할 일의 List: {}", noTh); // 히스토리가 없는 할 일의 List: []
+        log.info("히스토리가 없는 할 일의 List isEmpty: {}", noTh.isEmpty()); // 히스토리가 없는 할 일의 List isEmpty: true
+        log.info("히스토리가 없는 할 일의 List size: {}", noTh.size()); // 히스토리가 없는 할 일의 List size: 0
+    }
 
 }

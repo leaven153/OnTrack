@@ -135,215 +135,31 @@
     <!-- 소통하기 끝 -->
 
     <!-- 진행내역 시작 -->
-    <div class="진행내역컨테이너 task-tab-history modal-task-tab modal-task-history-container flex-col-start-nowrap scroll" th:classappend="${taskDetail.getTab() != 'history'}?hide">
+    <div class="진행내역컨테이너 task-tab-history modal-task-tab modal-task-history-container flex-col-start-nowrap" th:classappend="${taskDetail.getTab() != 'history'}?hide">
+      <th:block th:if="${!taskDetail.getTaskHistories().isEmpty()}" th:each="history : ${taskDetail.getTaskHistories()}">
       <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">100</div>
+        <div class="진행내역num altivo-regular" th:text="${history.getCntN()}">100</div>
         <div class="진행내역내용box flex-col-start-nowrap">
           <div class="진행내역info flex-row-between-nowrap">
             <div class="">
-              <span class="진행종류 bold">진행상태/할일명/마감일/담당자</span>
-              <span class="진행자 bold">(이효리)</span>
+              <span class="진행종류 bold" th:text="${history.getModItem()}">진행상태</span>
+              <span class="진행자 bold" th:text="|(${history.getExecutorName()})|">(이효리)</span>
             </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
+            <div>
+              <span class="진행일시 altivo-regular" th:text="${#temporals.format(history.getUpdatedAt(), 'yy.MM.dd ')}">24.03.31 </span>
+              <span class="진행일시 font-14" th:text="|(${#temporals.dayOfWeekNameShort(history.getUpdatedAt())})|"></span>
+              <span class="진행일시 altivo-regular" th:text="${#temporals.format(history.getUpdatedAt(), 'HH:mm')}">17:30</span>
+            </div>
           </div>
-          <span class="진행내용 font-16">계획중으로 등록/변경/삭제/배정/해제</span>
+          <div>
+            <span class="진행내용 font-16" th:text="${history.getModContent()}">계획중</span>
+            <span class="font-16" th:if="${history.getModType() == '변경'}">(으)로</span>
+            <span class="font-16" th:text="${history.getModType()}">등록</span>
+          </div>
         </div>
       </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">99</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">마감일</span>
-              <span class="진행자 bold">(올리초이)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">4/30(화)(으)로 변경</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">98</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(이상순)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">이효리 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">97</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">할일명</span>
-              <span class="진행자 bold">(이상순)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">다시 여기 바닷가(으)로 변경</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">96</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">이상순 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">95</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">유희열 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">94</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">이적 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">93</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">윤종신 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">92</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">정재형 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">91</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">황광희 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">90</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">정형돈 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">89</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(유재석)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">하동훈 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">88</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">담당자</span>
-              <span class="진행자 bold">(김태호)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">유재석 배정</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">87</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">할일명</span>
-              <span class="진행자 bold">(김태호)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">2024여름프로젝트(으)로 변경</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">86</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">할일명</span>
-              <span class="진행자 bold">(김태호)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">다시여기바닷가2024 등록</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
-      <div class="진행내역하나box modal-task-history-box flex-row-justify-start-align-center">
-        <div class="진행내역num altivo-regular">85</div>
-        <div class="진행내역내용box flex-col-start-nowrap">
-          <div class="진행내역info flex-row-between-nowrap">
-            <div class="">
-              <span class="진행종류 bold">진행상태</span>
-              <span class="진행자 bold">(이효리)</span>
-            </div>
-            <span class="진행일시 altivo-regular">24.03.31 17:30</span>
-          </div>
-          <span class="진행내용 font-16">계획중으로 변경</span>
-        </div>
-      </div><!-- 진행내역하나box 끝-->
+      </th:block>
+
     </div>
     <!-- 진행내역 끝 -->
 

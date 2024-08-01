@@ -3215,6 +3215,9 @@ div#childTasks-list_temp{
     color: #411c02;
 }
 
+div[class*=task-tab] {
+    overflow-y: scroll;
+}
 /******** Modal: Task comment(소통하기) ********/
 
 .modal-task-comment-write {

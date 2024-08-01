@@ -84,14 +84,14 @@
         GROUP BY t.id
     </select>
 
-    <select id="commentChkMember" parameterType="CheckComment" resultType="CheckComment">
-        SELECT id, comment_id, member_id, checked
-        FROM check_comment
-        WHERE comment_id = #{commentId}
-        <if test="memberId != null">
-            AND member_id = #{memberId}
-        </if>
-    </select>
+<!--    <select id="commentChkMember" parameterType="CheckComment" resultType="CheckComment">-->
+<!--        SELECT id, comment_id, member_id, checked-->
+<!--        FROM check_comment-->
+<!--        WHERE comment_id = #{commentId}-->
+<!--        <if test="memberId != null">-->
+<!--            AND member_id = #{memberId}-->
+<!--        </if>-->
+<!--    </select>-->
 
     <select id="getTaskComment" resultType="TaskComment">
         SELECT id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt
@@ -106,7 +106,7 @@
         INNER JOIN project_member pm
         ON th.updatedBy = pm.id
         WHERE th.task_id = #{taskId}
-        ORDER BY updatedAt DESC
+        ORDER BY th.id DESC
     </select>
 
     <update id="editTaskTitle" parameterType="TaskEditRequest">

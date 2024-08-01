@@ -214,8 +214,8 @@ window.onload = function(){
                     const taskHistory = {
                         projectId: currUrl[2],
                         taskId: titleInput.dataset.taskid,
-                        modItem: "title",
-                        modType: "update",
+                        modItem: "할 일 명",
+                        modType: "변경",
                         modContent: titleInput.value,
                         updatedBy: titleInput.dataset.mid
                     }
@@ -515,8 +515,8 @@ window.onload = function(){
         const taskHistory = {
             taskId: datum["taskid"],
             projectId: datum["projectid"],
-            modItem: "assignee",
-            modType: "delete",
+            modItem: "담당자",
+            modType: "해제",
             modContent: prev(this).innerText,
             updatedBy: datum["executormid"],
         }
@@ -648,8 +648,8 @@ window.onload = function(){
         const taskHistory = {
             projectId: datum["projectid"],
             taskId: datum["taskid"],
-            modItem: "assignee",
-            modType: "delete",
+            modItem: "담당자",
+            modType: "해제",
             modContent: datum["nickname"],
             updatedBy: datum["mid"]
         };
@@ -784,8 +784,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "assignee",
-                    modType: "register",
+                    modItem: "담당자",
+                    modType: "배정",
                     modContent: datum["nickname"],
                     updatedBy: datum["executormid"]
                 };
@@ -920,8 +920,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "assignee",
-                    modType: "register",
+                    modItem: "담당자",
+                    modType: "배정",
                     modContent: datum["nickname"],
                     updatedBy: datum["mid"]
                 };
@@ -1163,8 +1163,8 @@ window.onload = function(){
             const taskHistory = {
                 projectId: datum["projectid"],
                 taskId: datum["taskid"],
-                modItem: "assignee",
-                modType: "register",
+                modItem: "담당자",
+                modType: "배정",
                 modContent: newAssigneeName,
                 updatedBy: datum["executormid"]
             };
@@ -1444,8 +1444,8 @@ window.onload = function(){
                         const taskHistory = {
                             projectId: datum["projectid"],
                             taskId: datum["taskid"],
-                            modItem: "status",
-                            modType: "update",
+                            modItem: "진행상태",
+                            modType: "변경",
                             modContent: chosenStatus.querySelector("p").innerHTML,
                             updatedBy: datum["updatedby"]
                         };
@@ -1478,64 +1478,6 @@ window.onload = function(){
                     });
                 });
 
-                /*
-                // 1) 진행상태 목록 toggle
-                if(next(btn).classList.contains("img-hidden")) {
-                    // 열려 있던 다른 task의 진행상태 목록들 닫고
-                    document.querySelectorAll(".tableView-status-list").forEach(function(everyList){
-                        everyList.classList.add("img-hidden");
-                    });
-                    // 선택된 목록만 연다
-                    next(btn).classList.remove("img-hidden")
-                } else {
-                    next(btn).classList.add("img-hidden")
-                }
-
-                // 2) 변경하고자 하는 진행상태를 클릭했을 때
-                next(btn).querySelectorAll(".status-each").forEach(function(eachStatus){
-                    eachStatus.addEventListener("click", (e)=>{
-                        e.stopImmediatePropagation();
-
-                        const taskHistory = {
-                            projectId: eachStatus.dataset.projectid,
-                            taskId: eachStatus.dataset.taskid,
-                            modItem: "status",
-                            modType: "update",
-                            modContent: eachStatus.children[1].innerHTML,
-                            updatedBy: eachStatus.dataset.updatedby
-                        };
-
-                        fetch(`http://localhost:8080/task/editTask?item=status&statusNum=${eachStatus.dataset.status}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-type': 'application/json'
-                            },
-                            body: JSON.stringify(taskHistory)
-                        }).then(response => response.json())
-                            .then(data => {
-                                console.log(data);
-                                if(data[0] === undefined) {
-                                    alert(`${data["message"]}`);
-                                    // 열려있던 진행상태 목록 닫기
-                                    next(btn).classList.add("img-hidden")
-                                    return;
-                                }
-
-
-                                // Object { message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다." }
-                                //  message: "담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."
-                                // console.log(data[0]) // error일 경우, undefined
-
-                                prev(btn).innerText = data[0];
-                                prev(prev(btn)).classList.remove(`${prev(prev(btn)).dataset.status}`);
-                                prev(prev(btn)).classList.add(data[1]);
-
-                                // 열려있던 진행상태 목록 닫기
-                                next(btn).classList.add("img-hidden")
-                            }); // fetch ends
-                    });
-                });
-                */
             }); // chosenOne click evt ends
         }); // btnEditTaskStatus.forEach ends
     } // 10-9 할 일 진행상태 수정 끝
@@ -1604,8 +1546,8 @@ window.onload = function(){
                 const taskHistory = {
                     projectId: datum["projectid"],
                     taskId: datum["taskid"],
-                    modItem: "dueDate",
-                    modType: "update",
+                    modItem: "마감일",
+                    modType: "변경",
                     modContent: prev(btn).value,
                     updatedBy: datum["updatedby"]
                 };
