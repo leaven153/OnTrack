@@ -3592,7 +3592,72 @@ div.btn-comment-edit-del .popupYN {
     font-family: 'NanumSquareNeo-Bold', sans-serif;
 }
 
+.alert-not-attach-container {
+    width: 600px;
+    height: 200px;
+    padding: 20px 15px 15px 25px;
+    background-color: #fff5ec;
+    border: 3px solid #411c02;
+    border-radius: 12px;
+    z-index: 4;
+    position: fixed;
+    top: 14%;
+    right: 35%;
+}
+.alert-not-attach-list {
+    border: 1px solid;
+    width: 580px;
+    margin-bottom: 20px;
+}
+.alert-not-attach-col:nth-of-type(1) {
+    flex-basis: 30%;
+    margin-left: 12px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+.alert-not-attach-col:nth-of-type(2) {
+    flex-basis: 70%;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
 
+span.alert-not-attach-col {
+    font-size: 13px;
+}
+.alert-not-attach-scroll {
+    height: 100px;
+    overflow-y: scroll;
+}
+.alert-not-attach-content {
+    box-shadow: 0 1px 2px 0 rgba(65, 28, 2, 0.3);
+    margin-top: 5px;
+    padding: 3px 0;
+    font-size: 13px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+.alert-not-attach-content > div:nth-of-type(1){
+    flex-basis: 30%;
+    margin: 3px 0 3px 12px;
+}
+.alert-not-attach-content > div:nth-of-type(1) > span {
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+}
+.alert-not-attach-content > div:nth-of-type(2){
+    flex-basis: 70%;
+    margin: 3px 0 3px 10px;
+
+}
+.alert-not-attach-content > div:nth-of-type(2) > p {
+    margin-bottom: 3px;
+}
+.alert-not-attach-btn-box {
+    text-align: center;
+}
 /************************************/
 /************ 12. MyPage - My Tasks ***********/
 /************************************/

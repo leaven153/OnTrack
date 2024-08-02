@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -214,11 +215,28 @@ public class TaskService {
     }
 
     /*
-     * created : 2024-05-
+     * created : 2024-08-02
      * param   :
      * return  :
      * explain : 할 일 수정: 파일 추가
      * */
+    public ResponseEntity<?> attachFile(TaskDetailRequest tdr) {
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+        LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
+
+        ResponseEntity<?> result;
+        try {
+            List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
+            Long fileId = taskRepository.attachFile(taskFiles);
+            log.info("insert한 후에 id를 줘야지!: {}", fileId);
+            result = ResponseEntity.ok().body(fileId);
+        } catch (IOException e) {
+            log.info("파일 저장 에러: {}", e.getMessage());
+            result = ResponseEntity.badRequest().body("파일 저장이 완료되지 않았습니다.");
+        }
+        return result;
+    }
 
     /*
      * created : 2024-05-

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 import org.thymeleaf.spring6.view.ThymeleafView;
@@ -77,6 +78,7 @@ public class TaskController {
 //                """.formatted(taskFormRequest.getProjectId());
     }
 
+    // 시도
     // 할 일 상세 fragment만 rendering
     @Bean(name="taskDetail")
     @Scope("prototype")
@@ -91,6 +93,12 @@ public class TaskController {
     }
 
 
+    /*
+     * @created : 2024-07-
+     * @param   : @PathVariable: Long taskId, @RequestParam: String tab
+     * @return  : String(redirect - getProject)
+     * @explain : 할 일 상세 모달(탭) 열기
+     * */
     @GetMapping("/detail/{taskId}")
     public String getTaskDetail(@PathVariable Long taskId, @RequestParam String tab, HttpSession session, RedirectAttributes redirectAttributes){
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
@@ -121,6 +129,12 @@ public class TaskController {
     } // getTask ends
 
 
+    /*
+     * @created : 2024-07-
+     * @param   : @PathVariable: Long taskId, @RequestParam: String type(등록/수정), @RequestBody: TaskDetailRequest- 내용
+     * @return  : ResponseEntity
+     * @explain : 할 일 상세: 소통하기 글 등록·수정
+     * */
     @PostMapping("/{taskId}/comment")
     public ResponseEntity<?> taskComment(@PathVariable Long taskId, @RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
         log.info("**************comment controller enter :) ***************");
@@ -149,12 +163,59 @@ public class TaskController {
 
         return response;
     }
-    /**
-     * 할 일의 내용 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate), 중요도(priority)
-     * 리퀘스트 파라미터로 어떤 항목(item)을 바꾸는지 받고
-     * 리퀘스트 바디로 해당 항목의 새 내용을 받는다.
-     * ontrack_task와 task_history 테이블에 해당 내용을 반영한 후, return 값으로 해당 내용을 보낸다.
-     * 담당자 배정/해제에 관한 변경사항은 별도의 컨트롤러에서 처리한다.(editAssignee)
+
+    /*
+     * @created : 2024-08-02
+     * @param   :
+     * @return  : ResponseEntity
+     * @explain : 파일 업로드
+     * */
+    @PostMapping("/file/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId, @RequestBody List<MultipartFile> files){
+        // @RequestBody TaskDetailRequest fileUpload
+        log.info("******** 파일을 업로드하려고 해 ********");
+        log.info("어떻게 받아와지나: {}", pId);
+        log.info("어떻게 받아와지나: {}", tId);
+        log.info("어떻게 받아와지나: {}", mId);
+        log.info("어떻게 받아와지나: {}", files);
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+
+        TaskDetailRequest tdr = TaskDetailRequest.builder()
+                .projectId(pId)
+                .taskId(tId)
+                .authorMid(mId)
+                .taskFiles(files)
+                .build();
+
+        return taskService.attachFile(tdr);
+        // 어떻게 받아와지나: [org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@682c75cc, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@6c29a498, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@3e52955f]
+//        return ResponseEntity.ok("file upload ing");
+    }
+
+    /*
+     * @created : 2024-08-01
+     * @param   : Long fileId
+     * @return  : ResponseEntity
+     * @explain : 파일 다운로드
+     * */
+    @GetMapping("/file/{fileId}")
+    public ResponseEntity<?> downloadFile(@PathVariable Long fileId) throws MalformedURLException {
+        log.info("************** 파일을 다운받으러 왔다 **************");
+        TaskFile file = taskRepository.findFileById(fileId);
+        UrlResource resource = new UrlResource("file:"+file.getFilePath()+"/"+file.getFileNewName());
+        String encodedOriginFileName = UriUtils.encode(file.getFileOrigName()+"."+file.getFileType(), StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=" + encodedOriginFileName;
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
+    }
+
+    /*
+     * @created : 2024-0567-
+     * @param   : @RequestParam: item- 어떤 항목을 바꾸는가, @RequestBody: taskHistory- 바꾸는 내용
+     * @return  : ResponseEntity
+     * @explain : 할 일 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate)(, 중요도(priority))
      * */
     @PostMapping("/editTask")
     public ResponseEntity<?> editTask(HttpSession session, @RequestParam String item, @RequestParam(required = false) String statusNum, @RequestBody TaskHistory th) {
@@ -222,6 +283,12 @@ public class TaskController {
         return response;
     }
 
+    /*
+     * @created : 2024-0567-
+     * @param   : @RequestParam: mid- 배정/해제되는 멤버id, @RequestBody: taskHistory
+     * @return  : ResponseEntity
+     * @explain : 담당자 배정/해제
+     * */
     @PostMapping("/editAssignee")
     @ResponseBody
     public ResponseEntity<?> editAssignee(HttpSession session, @RequestParam Long mid, @RequestBody TaskHistory th) {
@@ -277,7 +344,12 @@ public class TaskController {
         return response;
     }
 
-
+    /*
+     * @created : 2024-07-
+     * @param   : @RequestParam: String object- 찾는 항목(member/task/...), @RequestBody: SearchCond- 찾을 내용
+     * @return  : ResponseEntity
+     * @explain : 검색: ① 미배정멤버
+     * */
     @PostMapping("/search")
     public ResponseEntity<?> search(@RequestParam String object, @RequestBody SearchCond searchCond){
         log.info("무엇을 찾는가: {}", object); // 무엇을 찾는가: member
@@ -319,17 +391,7 @@ public class TaskController {
         return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
 
-    @GetMapping("/file/{fileId}")
-    public ResponseEntity<?> downloadFile(@PathVariable Long fileId) throws MalformedURLException {
-        log.info("************** 파일을 다운받으러 왔다 **************");
-        TaskFile file = taskRepository.findFileById(fileId);
-        UrlResource resource = new UrlResource("file:"+file.getFilePath()+"/"+file.getFileNewName());
-        String encodedOriginFileName = UriUtils.encode(file.getFileOrigName()+"."+file.getFileType(), StandardCharsets.UTF_8);
-        String contentDisposition = "attachment; filename=" + encodedOriginFileName;
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-                .body(resource);
-    }
+    
 
 
 }// class TaskController ends

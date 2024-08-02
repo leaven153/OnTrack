@@ -35,7 +35,7 @@ public class TaskRepository {
     public int delAssignee(TaskAssignment ta) { return taskMapper.delAssignee(ta); }
 
     // 할 일 별 첨부파일 등록
-    public void attachFile(List<TaskFile> taskFile) { taskMapper.attachFile(taskFile); }
+    public Long attachFile(List<TaskFile> taskFile) { return taskMapper.attachFile(taskFile); }
 
     // 할 일 상세 조회
     public Optional<OnTrackTask> findByTaskId(@Param("taskId") Long taskId){

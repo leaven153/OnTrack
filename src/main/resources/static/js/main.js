@@ -2157,20 +2157,23 @@ window.onload = function(){
     /*---------- 028 ------------*/
     // 파일 유효성검사(파일명 공백, 특수문자 금지, 사이즈 5MB 이하, 첨부불가 유형 여부)
     function validateFile(fullfilename, filesize){
-        // 파일명 안에 특수기호는 +, _, -, .만 허용
+        // ver.1. 파일명 안에 특수기호는 +, _, -, .만 허용
         const regFileName = /[{}\[\]()\/?,'";:`~<>!@#$%^&*=|\s]/g;
+        // ver.2. 윈도우가 허하지 않는 특수기호만 잡는 표현식 (\ / : * ? < > | 9개)
+        const regWinFileName = /[\\/:*?"<>|]/g;
         const regFileType = /(ade|adp|apk|appx|appxbundle|aspx|bat|bin|cab|cmd|com|cpl|dll|dmg|exe|gadget|hta|inf1|ins|ipa|iso|isp|isu|jar|js|jse|jsp|jsx|lib|lnk|mde|msc|msi|msix|msixbundle|msp|mst|nsh|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|sys|tar|u3p|vb|vbe|vbs|vbscript|vxd|ws|wsc|wsf|wsh)$/i;
+
         const filename = fullfilename.substring(0, fullfilename.lastIndexOf("."));
         const filetype = fullfilename.substring(fullfilename.lastIndexOf(".")+1);
         
         // 정규표현식에 있는 특수기호/공백/문자와 일치하는 글자가 파일명에 있을 경우 true 반환됨
-        const nameResult = regFileName.test(filename)? 1: 0;
-        const typeResult = regFileType.test(filetype)? 2: 0;
-        const sizeResult = filesize > 5242880 ? 4: 0;
+        const nameResult = regFileName.test(filename)? 'n': 'ok';
+        const typeResult = regFileType.test(filetype)? 't': 'a';
+        const sizeResult = filesize > 5242880 ? 's': 'y';
 
 
         
-        return (nameResult + typeResult + sizeResult === 0) ? true: (nameResult + typeResult + sizeResult);
+        return (nameResult + typeResult + sizeResult);
     }
 
     /*---- ▲ Modal(Create Task;할일추가) 파일첨부 끝 ▲ ----*/
@@ -2474,6 +2477,7 @@ window.onload = function(){
         const newCommentContent = document.querySelector("textarea#task-comment-write-content");
 
         btnSubmitComment.addEventListener("click", ()=>{
+
             console.log(newCommentContent);
             const content = newCommentContent.value;
             const datum = btnSubmitComment.dataset;
@@ -2510,6 +2514,12 @@ window.onload = function(){
                 .then(data => {
                     console.log(data);
                     const commentId = data;
+
+                    // 등록된 글이 없었을 경우, '등록된 글이 없습니다' 요소 삭제
+                    if(elExists(parents(btnSubmitComment, "#task-tab-comment-list")[0].querySelector("p.no-comment"))) {
+                        parents(btnSubmitComment, "#task-tab-comment-list")[0].querySelector("p.no-comment").remove();
+                    }
+
                     // 화면에 출력
                     const commentArea = document.querySelector("#task-tab-comment-list");
                     commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
@@ -2997,21 +3007,161 @@ window.onload = function(){
     });
     ModalTaskFileDropZone.addEventListener("drop", (e)=>{
         e.preventDefault();
+        const datum = ModalTaskFileDropZone.dataset;
+        console.log(datum);
+        // DOMStringMap(4) { taskid → "8", projectid → "9", uploadername → "공지철", uploademid → "14" }
+
         if(ModalTaskFileDropZone.classList.contains("dropzone")){
             ModalTaskFileDropZone.classList.remove("dragover");
-            const file = e.dataTransfer.files[0];
-            const result = validateFile(file.name, parseInt(file.size));
-            if (result === true) {
-                const name = file.name.substring(0, file.name.lastIndexOf("."));
-                const type = file.name.substring(file.name.lastIndexOf(".")+1);
-                modalTaskFileListContainer.append(fileHistoryRow("아이유", addFileBox(name, type, returnFileSize(parseInt(file.size)))));
-            } else if (result === 2 || result === 3 || result === 6) {
-                alert(`첨부가 불가능한 유형의 파일입니다.`);
-            } else if (result === 1 || result === 4 || result === 5 || result === 7) {
-                alert(`파일 첨부에 실패했습니다. 다음 사항을 확인해주시기 바랍니다. \n 1. 파일명에는 특수기호와 여백이 포함될 수 없습니다.\n(단, +, _, -, .은 포함가능) \n 2. 5MB이하의 파일만 첨부할 수 있습니다.\n ${file.name}의 크기: ${returnFileSize(parseInt(file.size))} \n`);
+            console.log(e.dataTransfer.files);
+            // FileList(3) [ File, File, File ] length: 3
+            // 0: File { name: "backup_0404.txt", lastModified: 1712237338042, size: 4711, … }
+            // lastModified: 1712237338042
+            // name: "backup_0404.txt"
+            // size: 4711
+            // type: "text/plain"
+            // webkitRelativePath: ""
+            // 1: File { name: "backup_0405.txt", lastModified: 1712319431021, size: 2500, … }
+
+            const fileData = new FormData();
+            const file = e.dataTransfer.files;
+            let result = new Map();
+            let typeErr = [];
+            let otherErr = [];
+            if(e.dataTransfer.files.length < 11){
+                for(let i = 0; i < e.dataTransfer.files.length; i++){
+
+                    // 파일 유형 검사 후 append
+                    if(validateFile(file[i].name, parseInt(file[i].size)) === 'okay') {
+                        fileData.append("files", e.dataTransfer.files[i]);
+                    } else {
+                        result.set(e.dataTransfer.files[i].name, validateFile(file[i].name, parseInt(file[i].size)));
+                    }
+
+                }
+            } else {
+                alert(`파일 첨부는 10개 이하로 가능합니다.`);
+            }
+
+            // fetch
+            fetch(`http://localhost:8080/task/file/upload?pId=${datum["projectid"]}&tId=${datum["taskid"]}&mId=${datum["uploadermid"]}`, {
+                method: 'POST',
+                headers: {},
+                body: fileData
+            }).then(response => {
+                if(response.ok){
+                    const result = response.text();
+                    result.then(fileId => {
+                        console.log(fileId)
+                        console.log("파일 업로드 작업중");
+                        // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
+                        if(parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelector("p.no-file")){
+                            [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid === datum["taskid"])[0].remove();
+                        }
+                        // 화면에 출력
+                        for(let i = 0; i < fileData.getAll("files").length; i++){ //
+                            const name = fileData.getAll("files")[i]["name"].substring(0, fileData.getAll("files")[i]["name"].lastIndexOf("."));
+                            const type = fileData.getAll("files")[i]["name"].substring(fileData.getAll("files")[i]["name"].lastIndexOf(".")+1);
+                            modalTaskFileListContainer.append(fileHistoryRow(datum["uploadername"], addFileBox(name, type, returnFileSize(parseInt(fileData.getAll("files")[i]["size"])), fileId)));
+                        }
+                    });
+                } else {
+                    const err = response.text();
+                    err.then(msg => alert(msg));
+                }
+            });
+            
+            // const result = validateFile(file.name, parseInt(file.size));
+            if(result.size !== 0){
+
+                let notAttachList = new Map();
+                let warning = [];
+                result.forEach((v, k) => {
+                    console.log(k, v); // #$%^.txt nay
+                    if(v.includes('t')){
+                        warning.push("첨부가 불가능한 유형의 파일입니다.");
+                    }
+                    if(v.includes('n')){
+                        warning.push(`파일명에는 특수기호와 여백이 포함될 수 없습니다.<br/> (단, +, _, -, .은 포함가능)`);
+                    }
+                    if(v.includes('s')){
+                        warning.push("5MB이하의 파일만 첨부할 수 있습니다.");
+                    }
+                    notAttachList.set(k, warning);
+                    warning = [];
+                });
+
+                if(elExists(document.querySelector(".alert-not-attach-container"))){
+
+                    const modalNotAttachGuide = document.querySelector(".alert-not-attach-container");
+                    modalNotAttachGuide.classList.remove("hide");
+
+                    for(const entry of notAttachList){
+                        modalNotAttachGuide.querySelector(".alert-not-attach-scroll").appendChild(notAttachedGuide(entry));
+                    }
+
+                    document.querySelector("#btn-alert-not-attach").addEventListener("click", ()=>{
+                        // 안에 내용 비운다.
+                        [...modalNotAttachGuide.querySelector(".alert-not-attach-scroll").children].forEach(function(item){
+                            item.remove();
+                        });
+
+                        // 창 닫는다.
+                        modalNotAttachGuide.classList.add("hide");
+                    });
+                }
+
+                console.log(notAttachList);
+                // console.log(notAttachList.get("login.js").length); // 1
+                // console.log(notAttachList.get("login.js")[0]); // 첨부가 불가능한 유형의 파일입니다.
+                //
+                // notAttachList.forEach((v, k) => {
+                //     console.log(k);
+                //     for (let i = 0; i < v.length; i++){
+                //         console.log(v[i]);
+                //     }
+                // })
+                // Map { "login.js" → (1) […], "#$%^.txt" → (1) […] }
+                // 0: "login.js" → Array [ "첨부가 불가능한 유형의 파일입니다." ]
+                // <key>: "login.js"
+                // <value>: Array [ "첨부가 불가능한 유형의 파일입니다." ]
+                // 0: "첨부가 불가능한 유형의 파일입니다."
+                // length: 1
+
+                // 1: "#$%^.txt" → Array [ "파일명에는 특수기호와 여백이 포함될 수 없습니다. (단, +, _, -, .은 포함가능)" ]
             }
         }
-    });
+    }); // 파일 drag and drop 끝
+
+    /*---------- 061 ------------*/
+    // 첨부 실패한 파일 설명 div 생성
+    function notAttachedGuide(notAttachList){
+
+        const contentBox = document.createElement("div");
+        contentBox.classList.add("alert-not-attach-content");
+        const fileNameBox = document.createElement("div");
+        const reasonBox = document.createElement("div");
+
+        const fileNameSpan = document.createElement("span");
+        const spanArr = [];
+        const reasonSpan1 = document.createElement("span");
+        const reasonSpan2 = document.createElement("span");
+        const reasonSpan3 = document.createElement("span");
+        spanArr.push(reasonSpan1);
+        spanArr.push(reasonSpan2);
+        spanArr.push(reasonSpan3);
+
+        fileNameSpan.innerText = notAttachList[0];
+        fileNameBox.appendChild(fileNameSpan);
+        for(let i = 0; i < notAttachList[1].length; i++) {
+            spanArr[i].innerHTML = notAttachList[1][i];
+            reasonBox.appendChild(spanArr[i]);
+        }
+        contentBox.appendChild(fileNameBox);
+        contentBox.appendChild(reasonBox);
+
+        return contentBox;
+    }
 
     /*---------- 045 ------------*/
     // 이미 생성된 할일의 파일 삭제
@@ -3071,6 +3221,7 @@ window.onload = function(){
     // 이미 생성된 할일의 파일 추가: 파일내역Row 동적생성
     function fileHistoryRow(uploader, addFileBox){
         const fileRow = document.createElement("div");
+        const fileRowDateBox = document.createElement("div");
         const fileRowDate = document.createElement("span");
         const fileRowUploader = document.createElement("span");
         const deletedByAdminBox = document.createElement("div");
@@ -3085,6 +3236,8 @@ window.onload = function(){
         fileRow.classList.add("flex-row-center-center-nowrap");
         fileRow.classList.add("modal-task-file-history-row");
 
+        fileRowDateBox.classList.add("flex-row-justify-start-align-center");
+
         deletedByAdminBox.classList.add("deletedByAdminBox");
         deletedByAdminBox.classList.add("hide");
 
@@ -3095,7 +3248,7 @@ window.onload = function(){
         
 
         fileRowDate.classList.add("altivo-light");
-        fileRowDate.classList.add("font-13");
+        fileRowDate.classList.add("font-12");
 
         fileRowUploader.className = "font-14";
 
@@ -3104,7 +3257,9 @@ window.onload = function(){
         fileDeletedByAdmin.innerText = "관리자에 의해 삭제되었습니다."
 
         deletedByAdminBox.append(fileDeletedByAdmin);
-        fileRow.append(fileRowDate, fileRowUploader, addFileBox, deletedByAdminBox);
+        fileRowDateBox.appendChild(fileRowDate);
+
+        fileRow.append(fileRowDateBox, fileRowUploader, addFileBox, deletedByAdminBox);
 
         return fileRow;
     }
@@ -3112,7 +3267,7 @@ window.onload = function(){
     /*---------- 048 ------------*/
     // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 첨부된 파일 정보담을 div 동적생성
-    function addFileBox(name, type, size) {
+    function addFileBox(name, type, size, fileId) {
         const fileBox = document.createElement("div");
 
         const fileDiv1 = document.createElement("div");
@@ -3129,18 +3284,20 @@ window.onload = function(){
 
         fileDiv1.classList.add("flex-row-justify-start-align-center");
         
-        fileIcon.src = "../../static/imgs/icon_download4.png";
+        fileIcon.src = "/imgs/icon_download4.png";
+        fileIcon.setAttribute("th:src", "@{/imgs/icon_download4.png}");
         fileIcon.alt = "download";
         fileIcon.classList.add("img-15");
         fileIcon.classList.add("mr-5");
 
         fileName.classList.add("modal-file-name");
-        fileType.classList.add("font-14");
+        fileType.classList.add("font-13");
         fileType.classList.add("modal-file-type");
 
         fileDiv2.classList.add("flex-row-justify-start-align-center");
         fileSize.classList.add("modal-task-file-size");
         fileDelBtn.classList.add("btn-modal-task-file-del");
+        fileDelBtn.setAttribute("data-fileid", fileId);
 
         fileDelBtn.innerHTML = `&times;`;
         fileName.innerText = name;
