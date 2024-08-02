@@ -293,6 +293,23 @@
   <th:block th:replace="~{/fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()}, myPosition=${project.position})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
   <!--/* 모달: 할 일 상세 끝 */-->
 
+  <!--/*모달: 첨부되지 않은 파일 안내*/-->
+  <div class="첨부되지않은파일안내경고창컨테이너 alert-not-attach-container hide">
+    <div class="첨부되지않음안내문구 mb-10 ">
+      <span class="font-20 bold">파일 첨부 실패</span>
+    </div>
+    <div class="첨부되지않은사유컨테이너 alert-not-attach-list">
+      <div class="컬럼헤더 flex-row-justify-start-align-center bottom-line">
+        <span class="alert-not-attach-col">파일명</span>
+        <span class="alert-not-attach-col">사유</span>
+      </div>
+      <div class="스크롤범위 alert-not-attach-scroll">
+      </div>
+    </div>
+    <div class="버튼컨테이너 alert-not-attach-btn-box">
+      <button type="button" id="btn-alert-not-attach" class="btn-confirm-yes">확인</button>
+    </div>
+  </div>
   <!--/* Modal Ends */-->
 
  </body>

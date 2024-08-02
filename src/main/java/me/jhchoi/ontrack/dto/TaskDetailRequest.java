@@ -31,7 +31,10 @@ public class TaskDetailRequest {
     private String modifiedAt;
 
     // 파일 등록
-    private String fileName;
+//    private String fileOrigName;
+//    private String fileType;
+//    private String fileSize;
+//    private String uploadedAt;
     private List<MultipartFile> taskFiles;
 
 

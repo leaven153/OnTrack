@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Task - 상세</title>
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
-
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 </head>
 <body>
   <div id="container-task-detail" class="z3" th:classappend="${!hide}?open" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, myPosition)"> <!--/*loginMember, , taskCommentForm*/-->
@@ -68,7 +68,7 @@
 
       <!-- 파일첨부(drag and drop) 시작 (sticky 영역 내부)--><!--flex-row-justify-start-align-center-->
       <div id="task-tab-file-upload" class="파일첨부컨테이너 task-tab-file modal-task-tab flex-row-center-center-nowrap bottom-line-subtle" th:classappend="${taskDetail.getTab() != 'file'}?hide">
-        <div class="파일첨부영역 dropzone " id="upload-drop-zone">
+        <div class="파일첨부영역 dropzone " id="upload-drop-zone" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-uploaderName=${myNickname}, data-uploaderMid=${myMid}">
           <input type="file" id="upload" class="opacity0 wh0">
           <label for="upload" class="flex-col-center">
             <img src="/imgs/upload.png" alt="" class="img-15em mb-5">
@@ -167,7 +167,7 @@
 
     <!-- 파일 목록 시작(sticky 외부) -->
     <!-- 첨부한 사람이 아닌 사람(관리자)이 지운 기록만 history에 남긴다. -->
-    <div id="task-tab-file-list" class="파일목록컨테이너 task-tab-file modal-task-tab modal-task-file-list-container flex-col-start-center-nowrap scroll" th:classappend="${taskDetail.getTab() != 'file'}?hide">
+    <div id="task-tab-file-list" class="파일목록컨테이너 task-tab-file modal-task-tab modal-task-file-list-container flex-col-start-center-nowrap" th:classappend="${taskDetail.getTab() != 'file'}?hide">
       <div class="파일공유내역목록 modal-task-file-list-col flex-row-center-center-nowrap c411 mb-3">
         <span class="font-11">첨부일시</span>
         <span class="font-11">올린이</span>
@@ -175,14 +175,14 @@
       </div>
       <!-- 파일내역row 시작 -->
       <th:block th:if="${taskDetail.getTaskFiles() != null} and ${taskDetail.getTaskFiles().isEmpty()}">
-        <p class="mt-10 no-file">등록된 파일이 없습니다.</p>
+        <p class="mt-10 no-file" th:attr="data-taskid=${taskDetail.getTaskId()}">등록된 파일이 없습니다.</p>
       </th:block>
       <th:block th:if="${taskDetail.getTaskFiles() != null}" th:each="file : ${taskDetail.getTaskFiles()}">
         <div class="파일내역row modal-task-file-history-row modal-task-file-list-col flex-row-center-center-nowrap">
-          <div>
-            <span class="altivo-light font-13" th:text="${#temporals.format(file.getCreatedAt(), 'yy.MM.dd ')}">24.04.11</span>
-            <span class="font-12" th:text="|(${#temporals.dayOfWeekNameShort(file.getCreatedAt())})|">(목)</span>
-            <span class="altivo-light font-13" th:text="${#temporals.format(file.getCreatedAt(), ' hh:MM')}"> 11:01</span>
+          <div class="flex-row-justify-start-align-center">
+            <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), 'yy.MM.dd ')}">24.04.11</span>
+            <span class="altivo-light font-12" th:text="|&nbsp(${#temporals.dayOfWeekNameShort(file.getCreatedAt())})&nbsp|">(목)</span>
+            <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), ' hh:MM')}"> 11:01</span>
           </div>
           <span class="font-14" th:text="${file.getUploaderName()}">제시카 차스테인</span>
 <!--          <a th:href="@{|/task/file/${file.getId()}|}">-->
@@ -210,7 +210,6 @@
     </div> <!-- 할 일 상세(수정, 소통하기, 진행내역, 파일) 끝 -->
 
   </div><!-- 모달 감싸는 컨테이너 끝 -->
-
 
 </body>
 </html>
