@@ -225,7 +225,7 @@ public class TaskService {
         int nanoSec = nowWithNano.getNano();
         LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
 
-        ResponseEntity<?> result = null;
+        ResponseEntity<?> result;
         try {
             List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
             Long fileId = taskRepository.attachFile(taskFiles);

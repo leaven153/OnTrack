@@ -3056,7 +3056,7 @@ window.onload = function(){
                         console.log("파일 업로드 작업중");
                         // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
                         if(parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelector("p.no-file")){
-                            [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid == datum["taskid"])[0].remove();
+                            [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid === datum["taskid"])[0].remove();
                         }
                         // 화면에 출력
                         for(let i = 0; i < fileData.getAll("files").length; i++){ //
