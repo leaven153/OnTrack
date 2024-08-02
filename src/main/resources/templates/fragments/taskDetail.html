@@ -196,7 +196,7 @@
             <div class="flex-row-justify-start-align-center">
               <!--/*저장된 사이즈는 바이트 단위임. */-->
               <span class="modal-task-file-size" th:text="${file.getFormattedFileSize()}">192KB</span>
-              <span class="hoverBigger20 btn-modal-task-file-del" th:if="${file.getMemberId() == myMid} or ${myPosition == 'admin'} or ${myPosition == 'creator'}">&times;</span>
+              <span class="hoverBigger20 btn-modal-task-file-del" th:attr="data-fileid=${file.getId()}" th:if="${file.getMemberId() == myMid} or ${myPosition == 'admin'} or ${myPosition == 'creator'}">&times;</span>
             </div>
           </div>
 <!--          </a>-->

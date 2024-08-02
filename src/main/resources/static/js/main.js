@@ -3050,17 +3050,24 @@ window.onload = function(){
                 body: fileData
             }).then(response => {
                 if(response.ok){
-                    console.log("파일 업로드 작업중");
-                    // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
-                    if(parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelector("p.no-file")){
-                        [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid == datum["taskid"])[0].remove();
-                    }
-                    // 화면에 출력
-                    for(let i = 0; i < fileData.getAll("files").length; i++){ //
-                        const name = fileData.getAll("files")[i]["name"].substring(0, fileData.getAll("files")[i]["name"].lastIndexOf("."));
-                        const type = fileData.getAll("files")[i]["name"].substring(fileData.getAll("files")[i]["name"].lastIndexOf(".")+1);
-                        modalTaskFileListContainer.append(fileHistoryRow(datum["uploadername"], addFileBox(name, type, returnFileSize(parseInt(fileData.getAll("files")[i]["size"])))));
-                    }
+                    const result = response.text();
+                    result.then(fileId => {
+                        console.log(fileId)
+                        console.log("파일 업로드 작업중");
+                        // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
+                        if(parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelector("p.no-file")){
+                            [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid == datum["taskid"])[0].remove();
+                        }
+                        // 화면에 출력
+                        for(let i = 0; i < fileData.getAll("files").length; i++){ //
+                            const name = fileData.getAll("files")[i]["name"].substring(0, fileData.getAll("files")[i]["name"].lastIndexOf("."));
+                            const type = fileData.getAll("files")[i]["name"].substring(fileData.getAll("files")[i]["name"].lastIndexOf(".")+1);
+                            modalTaskFileListContainer.append(fileHistoryRow(datum["uploadername"], addFileBox(name, type, returnFileSize(parseInt(fileData.getAll("files")[i]["size"])), fileId)));
+                        }
+                    });
+                } else {
+                    const err = response.text();
+                    err.then(msg => alert(msg));
                 }
             });
             
@@ -3085,13 +3092,12 @@ window.onload = function(){
                 });
 
                 if(elExists(document.querySelector(".alert-not-attach-container"))){
-                    console.log("찾아라");
+
                     const modalNotAttachGuide = document.querySelector(".alert-not-attach-container");
                     modalNotAttachGuide.classList.remove("hide");
 
                     for(const entry of notAttachList){
                         modalNotAttachGuide.querySelector(".alert-not-attach-scroll").appendChild(notAttachedGuide(entry));
-                        // console.log(entry);
                     }
 
                     document.querySelector("#btn-alert-not-attach").addEventListener("click", ()=>{
@@ -3261,7 +3267,7 @@ window.onload = function(){
     /*---------- 048 ------------*/
     // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 첨부된 파일 정보담을 div 동적생성
-    function addFileBox(name, type, size) {
+    function addFileBox(name, type, size, fileId) {
         const fileBox = document.createElement("div");
 
         const fileDiv1 = document.createElement("div");
@@ -3291,6 +3297,7 @@ window.onload = function(){
         fileDiv2.classList.add("flex-row-justify-start-align-center");
         fileSize.classList.add("modal-task-file-size");
         fileDelBtn.classList.add("btn-modal-task-file-del");
+        fileDelBtn.setAttribute("data-fileid", fileId);
 
         fileDelBtn.innerHTML = `&times;`;
         fileName.innerText = name;

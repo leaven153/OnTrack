@@ -178,8 +178,19 @@ public class TaskController {
         log.info("어떻게 받아와지나: {}", tId);
         log.info("어떻게 받아와지나: {}", mId);
         log.info("어떻게 받아와지나: {}", files);
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+
+        TaskDetailRequest tdr = TaskDetailRequest.builder()
+                .projectId(pId)
+                .taskId(tId)
+                .authorMid(mId)
+                .taskFiles(files)
+                .build();
+
+        return taskService.attachFile(tdr);
         // 어떻게 받아와지나: [org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@682c75cc, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@6c29a498, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@3e52955f]
-        return ResponseEntity.ok("file upload ing");
+//        return ResponseEntity.ok("file upload ing");
     }
 
     /*

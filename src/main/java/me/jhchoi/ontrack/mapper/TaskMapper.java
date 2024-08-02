@@ -26,7 +26,7 @@ public interface TaskMapper {
     int delAssignee(TaskAssignment taskAssignment);
 
     // 할 일: 파일 첨부
-    void attachFile(List<TaskFile> taskFile);
+    Long attachFile(List<TaskFile> taskFile);
 
     // 할 일: 파일 삭제
 

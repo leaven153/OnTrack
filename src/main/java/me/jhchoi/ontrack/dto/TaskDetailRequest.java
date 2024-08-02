@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor @Builder
 public class TaskDetailRequest {
 
     private Long projectId;
