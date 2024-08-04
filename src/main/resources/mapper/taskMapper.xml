@@ -124,6 +124,21 @@
         WHERE id = #{fileId}
     </select>
 
+    <select id="cntAssigneeByTaskId" parameterType="Long" resultType="Integer">
+        SELECT count(task_id)
+        FROM task_assignment
+        WHERE task_id = #{taskId}
+        GROUP BY task_id;
+    </select>
+
+
+    <select id="chkAssigned" parameterType="TaskAssignment" resultType="Long">
+        SELECT task_id
+        FROM task_assignment
+        WHERE task_id = #{taskId}
+        AND member_id = #{memberId}
+    </select>
+
     <update id="editTaskTitle" parameterType="TaskEditRequest">
         UPDATE ontrack_task
         SET task_title = #{title}
@@ -162,18 +177,6 @@
         AND member_id = #{memberId}
     </delete>
 
-    <select id="cntAssigneeByTaskId" parameterType="Long" resultType="Integer">
-        SELECT count(task_id)
-        FROM task_assignment
-        WHERE task_id = #{taskId}
-        GROUP BY task_id;
-    </select>
 
 
-    <select id="chkAssigned" parameterType="TaskAssignment" resultType="Long">
-        SELECT task_id
-        FROM task_assignment
-        WHERE task_id = #{taskId}
-        AND member_id = #{memberId}
-    </select>
 </mapper>

@@ -5,6 +5,7 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.dto.TaskAndAssignee;
 import me.jhchoi.ontrack.dto.TaskDetailResponse;
 import me.jhchoi.ontrack.repository.TaskRepository;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -115,13 +118,13 @@ class TaskServiceTest {
 
         if(!result1.isEmpty()) {
             for(int i = 0; i < result1.size(); i++){
-                result1.get(i).setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(result1.get(i).getFileSize()));
+                result1.get(i).setFormattedFileSize(FileStore.fileSizeFormatter(result1.get(i).getFileSize()));
             }
         }
 
         if(!result2.isEmpty()) {
             for(int i = 0; i < result2.size(); i++){
-                result2.get(i).setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(result2.get(i).getFileSize()));
+                result2.get(i).setFormattedFileSize(FileStore.fileSizeFormatter(result2.get(i).getFileSize()));
             }
         }
         log.info("파일 있는 것의 사이즈 정리 후: {}", result1);
@@ -132,6 +135,37 @@ class TaskServiceTest {
         // TaskFile(id=14, projectId=null, taskId=null, memberId=25, fileOrigName=0416,
         // fileNewName=4e780e43-5305-45f1-ac87-b1f752050248.txt, fileType=txt, fileSize=997,
         // filePath=null, createdAt=2024-06-06T00:00, uploaderName=공유, formattedFileSize=1.0KB)]
+    }
+
+    @Test @DisplayName("파일 업로드 후 얻어지는 결과")
+    void attachFile(){
+        // given
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+        LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
+
+        // when
+        List<TaskFile> taskFiles = new ArrayList<>();
+        taskFiles.add(TaskFile.builder()
+                .projectId(9L)
+                .taskId(9L)
+                .memberId(14L)
+                .fileOrigName("원래이름")
+                .fileNewName("uuid이름")
+                .fileType("txt")
+                .fileSize(250L)
+                .filePath("파일경로")
+                .createdAt(createdAt)
+                .build());
+        taskRepository.attachFile(taskFiles);
+
+        // then
+        log.info("파일 저장 후, dto에 fileId 담겼나요?: {}", taskFiles);
+        // 파일 저장 후, dto에 fileId 담겼나요?: [TaskFile(id=23, projectId=9, taskId=9, memberId=14,
+        // fileOrigName=원래이름, fileNewName=uuid이름, fileType=txt, fileSize=250,
+        // filePath=파일경로, createdAt=2024-08-04T19:40:47, uploaderName=null,
+        // formattedFileSize=null)]
+
     }
 
 }

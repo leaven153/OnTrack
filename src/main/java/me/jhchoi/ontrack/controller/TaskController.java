@@ -189,6 +189,7 @@ public class TaskController {
                 .build();
 
         return taskService.attachFile(tdr);
+        //ResponseEntity.ok().body(testFileList);
         // 어떻게 받아와지나: [org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@682c75cc, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@6c29a498, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@3e52955f]
 //        return ResponseEntity.ok("file upload ing");
     }
@@ -211,6 +212,30 @@ public class TaskController {
                 .body(resource);
     }
 
+    /*
+     * @created : 2024-08-04
+     * @param   : Long fileId
+     * @return  : ResponseEntity
+     * @explain : 파일 삭제
+     * */
+    @GetMapping("/file/delete")
+    public ResponseEntity<?> deleteFile(@RequestParam Long fId){
+        log.info("올린이에 의한 파일 삭제: {}", fId);
+        return ResponseEntity.ok().body("파일 삭제 완료");
+    }
+
+    /*
+     * @created : 2024-08-04
+     * @param   : Long fileId, Long executorMid
+     * @return  : ResponseEntity
+     * @explain : 관리자에 의햔 파일 삭제
+     * */
+    @GetMapping("/file/deletedByAdmin")
+    public ResponseEntity<?> deleteFileByAdmin(@RequestParam Long fId, @RequestParam Long executorMid){
+        log.info("관리자에 의한 파일 삭제: {}", fId);
+        log.info("관리자에 의한 파일 삭제: {}", executorMid);
+        return ResponseEntity.ok("관리자에 의한 삭제(업데이트)");
+    }
     /*
      * @created : 2024-0567-
      * @param   : @RequestParam: item- 어떤 항목을 바꾸는가, @RequestBody: taskHistory- 바꾸는 내용

@@ -71,6 +71,7 @@ public class FileStore {
                         .fileType(extractExt(file.getOriginalFilename()))
                         .fileSize(file.getSize())
                         .filePath(makeFolder(projectId, taskId))
+                        .formattedFileSize(fileSizeFormatter(file.getSize()))
                         .createdAt(createdAt)
                         .build());
             }
@@ -79,4 +80,18 @@ public class FileStore {
         return fileList;
     }
 
+    // 파일 사이즈 출력 시 단위 전환하여 출력
+    public static String fileSizeFormatter(Long fileSize){
+
+        String result = "";
+        if(fileSize < 1048576) {
+            float size = fileSize;
+            result = String.format("%.1f", size/1024) + "KB";
+        } else if(fileSize >= 1048576) {
+            result = (int)(fileSize/1048576) + "MB";
+        } else if(fileSize > 1073700000) {
+            result = (int)(fileSize/1073700000) + "GB";
+        }
+        return result;
+    }
 }

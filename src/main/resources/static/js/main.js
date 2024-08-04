@@ -3050,24 +3050,48 @@ window.onload = function(){
                 body: fileData
             }).then(response => {
                 if(response.ok){
-                    const result = response.text();
-                    result.then(fileId => {
-                        console.log(fileId)
-                        console.log("파일 업로드 작업중");
+                    const result = response.json();
+                    result.then(data => {
+                        console.log(data)
+                        console.log(data.length)
+                        console.log(data[0]["id"])
+                        //  Array [ {…} ]
+                        //
+                        /**
+                         * 0: Object { id: 2, projectId: 9, memberId: 14, … }
+                         * createdAt: "2024-08-04T19:35:06"
+                         * fileNewName: null
+                         * fileOrigName: "원래파일이름"
+                         * filePath: null
+                         * fileSize: 24
+                         * fileType: "txt"
+                         * formattedFileSize: null
+                         * id: 2
+                         * memberId: 14
+                         * projectId: 9
+                         * taskId: null
+                         * uploaderName: null*/
+
+
                         // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
                         if(parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelector("p.no-file")){
                             [...parents(ModalTaskFileDropZone, "#container-task-detail")[0].querySelectorAll("p.no-file")].filter(sign => sign.dataset.taskid === datum["taskid"])[0].remove();
                         }
+
                         // 화면에 출력
+                        for(let i = 0; i < data.length; i++) {
+                            modalTaskFileListContainer.append(fileHistoryRow(datum["uploadername"], addFileBox(data[i]["fileOrigName"], data[i]["fileType"], data[i]["formattedFileSize"], data[i]["id"])));
+                        }
+                        /*
                         for(let i = 0; i < fileData.getAll("files").length; i++){ //
                             const name = fileData.getAll("files")[i]["name"].substring(0, fileData.getAll("files")[i]["name"].lastIndexOf("."));
                             const type = fileData.getAll("files")[i]["name"].substring(fileData.getAll("files")[i]["name"].lastIndexOf(".")+1);
                             modalTaskFileListContainer.append(fileHistoryRow(datum["uploadername"], addFileBox(name, type, returnFileSize(parseInt(fileData.getAll("files")[i]["size"])), fileId)));
-                        }
+                        }*/
                     });
                 } else {
-                    const err = response.text();
-                    err.then(msg => alert(msg));
+                    const err = response.json();
+                    err.then(warning => alert(warning["message"]));
                 }
             });
             
@@ -3164,25 +3188,50 @@ window.onload = function(){
     }
 
     /*---------- 045 ------------*/
-    // 이미 생성된 할일의 파일 삭제
+    // 할일의 파일 삭제
     onEvtListener(document, "click", ".btn-modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
         //console.log(this); // <span class="hoverBigger20 cursorP modal-task-file-del">
         //console.log(this.parentElement.parentElement); // <div class="파일박스 flex-row-between-nowrap hoverShadow">
-        
-        
+
+        const data = this.dataset;
+        console.log(data);
+        console.log(data["deletedby"]);
+        console.log(data["deletedby"] === "uploader"); // false
+
+        // 현재 파일 개수
+        let cntFileRow = [...parents(this, ".modal-task-file-list-container")[0].querySelectorAll(".modal-task-file-history-row")].length;
+
+        // 파일 개수에서 차감한다.
+        cntFileRow--;
+
         // 관리자에 의해 삭제된 건지 알려면 userId까지 또 check 해야 하잖아!!
         // 추후 if문 추가 요망: 관리자에 의한 삭제 or 작성자에 의한 삭제
         if(confirm(`정말로 삭제하시겠습니까? \n 파일삭제는 복구가 불가능합니다`) === true) {
-            // 작성자 삭제
-            this.parentElement.parentElement.parentElement.remove();
 
-            // 관리자 삭제
-            // const guide = this.parentNode.parentNode.parentNode.children[3]
-            // this.parentElement.parentElement.remove();
-            // guide.classList.remove("hide");
-        } else {
-            return;
+            if(data["deletedby"] === "uploader"){ // 작성자 삭제
+                console.log("작성자에 의한 삭제");
+                // 서버 요청
+                fetch(`http://localhost:8080/task/file/delete?fId=${data["fileid"]}`, {
+                    // 작성자에 의해 삭제일 경우, delete
+                    method: 'GET'
+                }).then(response => {
+                    if(response.ok){
+                        parents(this, ".modal-task-file-history-row")[0].remove();
+                    }
+                });
+            } else { // 관리자 삭제
+                console.log("관리자에 의한 삭제");
+                // 서버 요청
+                fetch(`http://localhost:8080/task/file/deletedByAdmin?fId=${data["fileid"]}&executorMid=${data["deletedby"]}`, {
+                    method: 'GET'
+                }).then(response => {
+                    if(response.ok){
+                        parents(this, ".modal-task-file-history-row")[0].querySelector(".deletedByAdminBox").classList.remove("hide");
+                        parents(this, ".hoverShadow")[0].remove();
+                    }
+                });
+            }
         }
     });
 
@@ -3243,7 +3292,7 @@ window.onload = function(){
 
         fileDeletedByAdmin.classList.add("font-blur");
         fileDeletedByAdmin.classList.add("font-13");
-        fileDeletedByAdmin.classList.add("deletedByAdmin");
+        fileDeletedByAdmin.classList.add("deletedByAdmin"); // 지워도 될 듯?
         fileDeletedByAdmin.classList.add("hide");
         
 
@@ -3298,6 +3347,7 @@ window.onload = function(){
         fileSize.classList.add("modal-task-file-size");
         fileDelBtn.classList.add("btn-modal-task-file-del");
         fileDelBtn.setAttribute("data-fileid", fileId);
+        fileDelBtn.setAttribute("data-deletedby", "uploader"); // 파일 업로드 후 생성되는 요소이므로, 업로더로 고정
 
         fileDelBtn.innerHTML = `&times;`;
         fileName.innerText = name;
