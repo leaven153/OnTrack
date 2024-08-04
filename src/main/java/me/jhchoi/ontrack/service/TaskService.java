@@ -208,7 +208,7 @@ public class TaskService {
         List<TaskFile> files = taskRepository.getTaskFile(taskId);
         if(!files.isEmpty()) {
             for (TaskFile file : files) {
-                file.setFormattedFileSize(TaskDetailResponse.fileSizeFormatter(file.getFileSize()));
+                file.setFormattedFileSize(FileStore.fileSizeFormatter(file.getFileSize()));
             }
         }
         return files;
@@ -228,12 +228,12 @@ public class TaskService {
         ResponseEntity<?> result;
         try {
             List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
-            Long fileId = taskRepository.attachFile(taskFiles);
-            log.info("insert한 후에 id를 줘야지!: {}", fileId);
-            result = ResponseEntity.ok().body(fileId);
+            taskRepository.attachFile(taskFiles);
+//            log.info("파일 저장 후, dto에 fileId 담겼나요?: {}", taskFiles);
+            result = ResponseEntity.ok().body(taskFiles);
         } catch (IOException e) {
             log.info("파일 저장 에러: {}", e.getMessage());
-            result = ResponseEntity.badRequest().body("파일 저장이 완료되지 않았습니다.");
+            result = ResponseEntity.badRequest().body(new ErrorResponse("파일 저장이 완료되지 않았습니다."));
         }
         return result;
     }
