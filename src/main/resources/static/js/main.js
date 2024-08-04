@@ -1465,7 +1465,7 @@ window.onload = function(){
 
                                 // 열려있던 진행상태 목록 닫기
                                 btn.querySelector(".tableView-status-list").classList.add("img-hidden")
-                                return ;
+
                             } else {
                                 const err = response.json();
                                 console.log(err);
