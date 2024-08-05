@@ -2505,26 +2505,28 @@ window.onload = function(){
 
 
             // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
-            fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=add`, {
+            fetch(`http://localhost:8080/task/comment?type=add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(taskDetailRequest)
-            }).then(response => response.text())
-                .then(data => {
-                    console.log(data);
-                    const commentId = data;
+            }).then(response => {
+                if(response.ok){
+                    response.text().then(commentId => {
+                        // 등록된 글이 없었을 경우, '등록된 글이 없습니다' 요소 삭제
+                        if(elExists(parents(btnSubmitComment, "#container-task-detail")[0].querySelector("p.no-comment"))) {
+                            parents(btnSubmitComment, "#container-task-detail")[0].querySelector("p.no-comment").remove();
+                        }
 
-                    // 등록된 글이 없었을 경우, '등록된 글이 없습니다' 요소 삭제
-                    if(elExists(parents(btnSubmitComment, "#task-tab-comment-list")[0].querySelector("p.no-comment"))) {
-                        parents(btnSubmitComment, "#task-tab-comment-list")[0].querySelector("p.no-comment").remove();
-                    }
-
-                    // 화면에 출력
-                    const commentArea = document.querySelector("#task-tab-comment-list");
-                    commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
-                });
+                        // 화면에 출력
+                        const commentArea = document.querySelector("#task-tab-comment-list");
+                        commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
+                    });
+                } else {
+                    response.text().then(msg => alert(msg));
+                }
+            })
         });
     }
 
@@ -2610,7 +2612,7 @@ window.onload = function(){
         const commentDate = document.createElement("span");
         commentDate.classList.add("altivo-regular", "mr-5");
         commentDate.innerText = dateYYMMDD(date);
-        commentDate.innerText += dateDayEng(date);
+        // commentDate.innerText += dateDayEng(date);
         commentDate.innerText += timeHHMM(date);
 
         // 1-2-2. tool(수정/삭제) 버튼과 그에 따른 모달 2개 (3개요소 appendChild)
@@ -2775,15 +2777,6 @@ window.onload = function(){
     /*---- ▼ Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 ▼ ----*/
 
     // 소통하기 - (자신의 글)설정 버튼 눌렀을 때(수정하기/삭제하기 버튼 출력)
-    // btncommentTool or btncommentSettings? 이름변경요망...
-    // 새로운 글 동적으로 추가했을 때의 수정과 삭제는...
-    // const btnCommentEditDel = document.querySelectorAll(".btn-comment-edit-del");
-    // btnCommentEditDel.forEach(function(chosenBtn){
-    //     chosenBtn.addEventListener("click", ()=>{
-    //         // console.log(chosenBtn.children[1]);
-    //         chosenBtn.children[1].classList.toggle("img-hidden");
-    //     });
-    // });
     let commentId;
     onEvtListener(document, "click", ".btn-comment-edit-del", function(){
         this.querySelector(".click-comment-edit-del").classList.toggle("img-hidden");
@@ -2826,7 +2819,7 @@ window.onload = function(){
             console.log(taskDetailRequest);
 
             // fetch
-            fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=edit`, {
+            fetch(`http://localhost:8080/task/comment?type=edit`, { //${datum["taskid"]}/
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2869,102 +2862,64 @@ window.onload = function(){
         });
     }); // 소통하기 - (자신의 글)수정하기 버튼 눌렀을 때 끝
 
-    /*
-    const btnCommentEdit = document.querySelectorAll(".btn-comment-edit");
-    btnCommentEdit.forEach(function(chosenBtn){
-        chosenBtn.addEventListener("click", ()=>{
-            const btn3dot = parents(chosenBtn, ".btn-comment-edit-del")[0]; // .parentElement.parentElement
-            btn3dot.classList.add("hide");
-
-            const btnEdits = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".confirm-edit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2];
-            btnEdits.classList.remove("hide");
-
-            const textarea = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector("textarea"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[1].children[0];
-            const beforeEdit = textarea.value;
-            textarea.removeAttribute("readonly");
-            textarea.focus();
-            textarea.classList.add("border-editable");
-
-            // 수정한 내용 등록·취소 버튼 클릭 시
-            const btnSubmitEdit = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-submit"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[0];
-            const btnCancelEdit = parents(chosenBtn, ".modal-task-comment-read")[0].querySelector(".btn-comment-edit-cancel"); // chosenBtn.parentNode.parentNode.parentNode.parentNode.parentNode.children[2].children[0].children[1];
-
-            // 수정한 내용 등록
-            btnSubmitEdit.addEventListener("click", ()=>{
-                const datum = btnSubmitEdit.dataset;
-                const date = new Date();
-                // 서버에 보낼 정보
-                const taskDetailRequest = {
-                    projectId: datum["projectid"],
-                    taskId: datum["taskid"],
-                    authorMid: datum["authormid"],
-                    authorName: datum["authorname"],
-                    comment: textarea.value,
-                    commentType: datum["type"],
-                    modifiedAt: dateYYMMDD(date) + timeHHMM(date)
-                };
-
-                // fetch
-                fetch(`http://localhost:8080/task/${datum["taskid"]}/comment?type=edit`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(taskDetailRequest)
-                }).then(response => {
-                    if(response.ok){
-                        // 3dot 버튼 나타내기
-                        btn3dot.classList.remove("hide");
-                        // 자신이 담긴div 숨기기
-                        btnEdits.classList.add("hide");
-
-                        // let afterEdit = textarea.value;
-                        // textarea.value = afterEdit;
-                        textarea.setAttribute("readonly", "readonly");
-                        textarea.classList.remove("border-editable");
-                    } else {
-                        alert(`글 수정이 완료되지 않았습니다.`);
-                    }
-                });
-
-            });
-
-            // 수정 취소
-            btnCancelEdit.addEventListener("click", ()=>{
-                // 3dot 버튼 나타내기
-                btn3dot.classList.remove("hide");
-                // 자신이담긴div 숨기기
-                btnEdits.classList.add("hide");
-                
-                textarea.value = beforeEdit;
-                textarea.setAttribute("readonly", "readonly");
-                textarea.classList.remove("border-editable");
-            });
-        });
-    });  */
 
     /*---------- 042 ------------*/
     // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때
-    const btnCommentDel = document.querySelectorAll(".btn-comment-del");
-    btnCommentDel.forEach(function(chosenBtn){
-        chosenBtn.addEventListener("click", ()=>{
-            const confirmBox = chosenBtn.parentElement.parentElement.children[2];
-            confirmBox.classList.remove("img-hidden");
-            const myComment = chosenBtn.parentElement.parentElement.parentElement.parentElement.parentElement;
-            const btnYes = chosenBtn.parentElement.parentElement.children[2].children[1].children[0];
-            const btnNo = chosenBtn.parentElement.parentElement.children[2].children[1].children[1];
+    if(elExists(document.querySelectorAll(".btn-comment-del"))){
+        const btnCommentDel = document.querySelectorAll(".btn-comment-del");
+        btnCommentDel.forEach(function(chosenBtn){
+            chosenBtn.addEventListener("click", ()=>{
+                const confirmBox = parents(chosenBtn, ".btn-comment-edit-del")[0]; //chosenBtn.parentElement.parentElement.children[2];
+                confirmBox.classList.remove("img-hidden");
+                const myComment = parents(chosenBtn, ".modal-task-comment-read")[0];// chosenBtn.parentElement.parentElement.parentElement.parentElement.parentElement;
+                const btnYes = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-yes");// chosenBtn.parentElement.parentElement.children[2].children[1].children[0];
+                const btnNo = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-no");// chosenBtn.parentElement.parentElement.children[2].children[1].children[1];
 
-            btnYes.addEventListener("click", (e)=>{
-                e.stopPropagation();
-                confirmBox.classList.add("img-hidden");
-                myComment.remove();
-            });
-            btnNo.addEventListener("click", (e)=>{
-                e.stopPropagation();
-                confirmBox.classList.add("img-hidden");
+                btnYes.addEventListener("click", (e)=>{
+                    e.stopPropagation();
+                    const data = btnYes.dataset;
+
+                    if(btnYes.dataset.deletedby === 'author'){ // 작성자에 의해 삭제
+                        console.log("작성자에 의한 소통글 삭제");
+                        // 서버 요청
+                        /*
+                        fetch(``, {}).then(response => {
+                            if(response.ok){
+                                confirmBox.classList.add("img-hidden");
+                                myComment.remove();
+                            }
+                        });*/
+                    } else { // 관리자에 의해 삭제
+                        console.log("관리자에 의한 소통글 삭제");
+                        // 서버 요청
+                        const taskDetailRequest = {
+                            commentId: data["commentid"],
+                            comment: "관리자에 의해 삭제된 글입니다."
+                            // task_comment에도 deletedBy 컬럼 추가
+                            // modifiedAt에 삭제 시간 넣을 것인지, 컬럼 추가할지 고민
+                            // 삭제된 시간도 넣어야 할까? no...
+                        }
+                        fetch(`http://localhost:8080/task/comment?type=deletedByAdmin`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify()
+                        }).then(response => {
+                            if(response.ok){
+
+                            }
+                        });
+                    }
+
+                });
+                btnNo.addEventListener("click", (e)=>{
+                    e.stopPropagation();
+                    confirmBox.classList.add("img-hidden");
+                });
             });
         });
-    }); // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때 끝
+    }// 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때 끝
     /*---- ▲  Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 끝 ▲ ----*/
 
     /*---------- 043 ------------*/

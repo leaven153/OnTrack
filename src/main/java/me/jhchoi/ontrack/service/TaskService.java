@@ -300,7 +300,7 @@ public class TaskService {
      * return  : int
      * explain : 할 일 상세: 소통하기 글 등록
      * */
-    public Long addTaskComment(TaskComment taskComment) {
+    public ResponseEntity<?> addTaskComment(TaskComment taskComment) {
 
         // 1. comment 등록 후,
 //        Long commentId = taskRepository.addComment(taskComment);
@@ -334,7 +334,11 @@ public class TaskService {
             }
         }
         */
-        return taskRepository.addComment(taskComment);
+        int result = taskRepository.addComment(taskComment);
+        if(result != 1) {
+            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
+        }
+        return ResponseEntity.ok(taskComment.getId());
     }
 
     /*

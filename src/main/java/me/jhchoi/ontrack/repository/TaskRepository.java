@@ -35,7 +35,7 @@ public class TaskRepository {
     public int delAssignee(TaskAssignment ta) { return taskMapper.delAssignee(ta); }
 
     // 할 일 별 첨부파일 등록
-    public Long attachFile(List<TaskFile> taskFile) { return taskMapper.attachFile(taskFile); }
+    public int attachFile(List<TaskFile> taskFile) { return taskMapper.attachFile(taskFile); }
 
     // 할 일 상세 조회
     public Optional<OnTrackTask> findByTaskId(@Param("taskId") Long taskId){
@@ -73,7 +73,7 @@ public class TaskRepository {
     public Long chkAssigned(TaskAssignment ta) { return taskMapper.chkAssigned(ta); }
 
     // 할 일 상세: 소통하기 글 등록
-    public Long addComment(TaskComment taskComment) { return taskMapper.addComment(taskComment); }
+    public int addComment(TaskComment taskComment) { return taskMapper.addComment(taskComment); }
 
     // 할 일 상세: 소통하기 글 목록
     public List<TaskComment> getTaskComment(Long taskId) { return taskMapper.getTaskComment(taskId); }

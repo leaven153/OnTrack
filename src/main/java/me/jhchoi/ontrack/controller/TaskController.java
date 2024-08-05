@@ -135,10 +135,10 @@ public class TaskController {
      * @return  : ResponseEntity
      * @explain : 할 일 상세: 소통하기 글 등록·수정
      * */
-    @PostMapping("/{taskId}/comment")
-    public ResponseEntity<?> taskComment(@PathVariable Long taskId, @RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
+    @PostMapping("/comment")
+    public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
         log.info("**************comment controller enter :) ***************");
-        log.info("task id: {}", taskId);
+//        log.info("task id: {}", taskId); // @PathVariable Long taskId,
         log.info("등록이요 수정이요: {}", type);
         log.info("무엇이 작성되어 왔나: {}", taskDetailRequest);
         // 무엇이 작성되어 왔나: TaskDetailRequest(projectId=9, taskId=8, authorMid=14, authorName=공지철,
@@ -149,8 +149,7 @@ public class TaskController {
         // 1. 새 글 등록인지, 수정인지 확인한다.
         if(Objects.equals(type, "add")) {
             TaskComment taskComment = taskDetailRequest.toTaskComment(taskDetailRequest);
-            Long commentId = taskService.addTaskComment(taskComment);
-            response = ResponseEntity.ok(commentId);
+            response = taskService.addTaskComment(taskComment);
         } else if(Objects.equals(type, "edit")) {
             log.info("소통하기 글 수정: {}", taskDetailRequest);
             TaskComment editComment = taskDetailRequest.toTaskCommentforEdit(taskDetailRequest);
@@ -159,10 +158,13 @@ public class TaskController {
                 response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             response = new ResponseEntity<>(HttpStatus.OK);
+        } else if(Objects.equals(type, "deletedByAdmin")) {
+            log.info("관리자에 의한 소통하기 글 삭제(수정): {}", taskDetailRequest);
         }
 
         return response;
     }
+
 
     /*
      * @created : 2024-08-02
@@ -237,6 +239,7 @@ public class TaskController {
         TaskFile deleteItem = TaskFile.builder().id(fId).deletedBy(executorMid).build();
         return taskService.deleteFileByAdmin(deleteItem);
     }
+
     /*
      * @created : 2024-0567-
      * @param   : @RequestParam: item- 어떤 항목을 바꾸는가, @RequestBody: taskHistory- 바꾸는 내용
