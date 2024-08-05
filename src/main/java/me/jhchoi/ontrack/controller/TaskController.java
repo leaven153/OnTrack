@@ -250,7 +250,7 @@ public class TaskController {
         log.info("관리자에 의한 파일 삭제: {}", executorMid);
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
-        ;
+
         TaskFile deleteItem = TaskFile.builder()
                 .id(fId)
                 .deletedBy(executorMid)
