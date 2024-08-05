@@ -165,6 +165,17 @@ public class TaskController {
         return response;
     }
 
+    /*
+     * @created : 2024-08-
+     * @param   : @PathVariable: Long commentId
+     * @return  : ResponseEntity
+     * @explain : 할 일 상세: 소통하기 글 삭제
+     * */
+    @DeleteMapping("/comment")
+    public ResponseEntity<?> deleteComment(@RequestParam Long cId){
+        log.info("작성자에 의한 글삭제: {}", cId);
+        return ResponseEntity.ok("작성자에 의한 글삭제");
+    }
 
     /*
      * @created : 2024-08-02
@@ -223,6 +234,7 @@ public class TaskController {
     @GetMapping("/file/delete")
     public ResponseEntity<?> deleteFile(@RequestParam Long fId){
         log.info("올린이에 의한 파일 삭제: {}", fId);
+
         return taskService.delFile(fId);
     }
 
@@ -236,7 +248,14 @@ public class TaskController {
     public ResponseEntity<?> deleteFileByAdmin(@RequestParam Long fId, @RequestParam Long executorMid){
         log.info("관리자에 의한 파일 삭제: {}", fId);
         log.info("관리자에 의한 파일 삭제: {}", executorMid);
-        TaskFile deleteItem = TaskFile.builder().id(fId).deletedBy(executorMid).build();
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+        ;
+        TaskFile deleteItem = TaskFile.builder()
+                .id(fId)
+                .deletedBy(executorMid)
+                .deletedAt(nowWithNano.minusNanos(nanosec))
+                .build();
         return taskService.deleteFileByAdmin(deleteItem);
     }
 

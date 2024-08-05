@@ -2882,29 +2882,28 @@ window.onload = function(){
                     if(btnYes.dataset.deletedby === 'author'){ // 작성자에 의해 삭제
                         console.log("작성자에 의한 소통글 삭제");
                         // 서버 요청
-                        /*
-                        fetch(``, {}).then(response => {
+
+                        fetch(`http://localhost:8080/task/comment?cId=${data["commentid"]}`, {
+                            method: 'DELETE'
+                        }).then(response => {
                             if(response.ok){
                                 confirmBox.classList.add("img-hidden");
                                 myComment.remove();
                             }
-                        });*/
+                        });
                     } else { // 관리자에 의해 삭제
                         console.log("관리자에 의한 소통글 삭제");
                         // 서버 요청
                         const taskDetailRequest = {
                             commentId: data["commentid"],
-                            comment: "관리자에 의해 삭제된 글입니다."
-                            // task_comment에도 deletedBy 컬럼 추가
-                            // modifiedAt에 삭제 시간 넣을 것인지, 컬럼 추가할지 고민
-                            // 삭제된 시간도 넣어야 할까? no...
+                            deletedBy: data["deletedby"]
                         }
                         fetch(`http://localhost:8080/task/comment?type=deletedByAdmin`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify()
+                            body: JSON.stringify(taskDetailRequest)
                         }).then(response => {
                             if(response.ok){
 
@@ -3144,7 +3143,7 @@ window.onload = function(){
     }
 
     /*---------- 045 ------------*/
-    // 할일의 파일 삭제
+    // 할 일의 파일 삭제
     onEvtListener(document, "click", ".btn-modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
         //console.log(this); // <span class="hoverBigger20 cursorP modal-task-file-del">
