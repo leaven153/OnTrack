@@ -96,11 +96,11 @@
             <div class="btn-comment-edit-del" th:attr="data-commentid=${comment.getId()}"><!-- tool버튼과 기능 시작. 여기에 comment id 넣으면 될까? -->
               <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
               <div class="click-comment-edit-del img-hidden">
-                <p class="btn-comment-edit">
+                <p class="" th:classappend="${comment.getAuthorMid() == myMid}?'btn-comment-edit'">
                   <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
                   <span>수정하기</span>
                 </p>
-                <p class="flex-row-center-center-nowrap btn-comment-del">
+                <p class="flex-row-center-center-nowrap" th:classappend="${comment.getAuthorMid() == myMid or myPosition == 'admin'}?'btn-comment-del'">
                   <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
                   <span>삭제하기</span>
                 </p>
@@ -108,7 +108,7 @@
               <div class="popupYN img-hidden"> <!-- 삭제 confirm 창-->
                 <span class="">정말로 삭제하시겠습니까?</span>
                 <div class="flex-row-center-center-nowrap mt-20">
-                  <p class="btn-confirm-yes">확인</p>
+                  <p class="btn-confirm-yes" th:attr="data-commentid=${comment.getId()}, data-deletedby=${comment.getAuthorMid() == myMid}?'author':${myMid}">확인</p>
                   <p class="btn-confirm-no">취소</p>
                 </div>
               </div><!-- 삭제 confirm 창 끝 -->
@@ -116,11 +116,11 @@
           </div><!-- 작성일시와tool 끝 -->
         </div> <!-- commentInfoBox: 작성자(+중요)+작성일시+tool box 끝-->
         <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
-          <textarea class="" maxlength="200" th:text="${comment.getComment()}" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
+          <textarea class="" maxlength="400" th:text="${comment.getComment()}" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
         </div><!-- commentContent 끝 -->
         <div class="flex-row-between-nowrap">
-          <div class="flex-row-justify-start-align-center time-of-edit img-hidden">
-            <span class="font-12 altivo-light time-of-edit" th:text="${comment.getModifiedAt() != null}?${comment.getModifiedAt()}"></span>
+          <div class="flex-row-justify-start-align-center time-of-edit">
+            <span class="font-12 altivo-light time-of-edit" th:text="${comment.getModifiedAt() != null}?${#temporals.format(comment.getModifiedAt(), 'yyyy-MM-dd HH:mm')}"></span>
             <span class="font-12 edit-sign" th:classappend="${comment.getModifiedAt() == null}?'hide'">(수정됨)</span>
           </div>
           <div class="수정확인버튼박스 flex-row-end-center-nowrap confirm-edit hide"><!-- commentBottomBtnBox: 등록/취소, RR내용확인 btn-->
@@ -175,19 +175,17 @@
       </div>
       <!-- 파일내역row 시작 -->
       <th:block th:if="${taskDetail.getTaskFiles() != null} and ${taskDetail.getTaskFiles().isEmpty()}">
-        <p class="mt-10 no-file" th:attr="data-taskid=${taskDetail.getTaskId()}">등록된 파일이 없습니다.</p>
+        <p class="mt-10 no-file" th:attr="data-taskid=${taskDetail.getTaskId()}">등록된 파일이 없습니다.</p><!--/**/-->
       </th:block>
       <th:block th:if="${taskDetail.getTaskFiles() != null}" th:each="file : ${taskDetail.getTaskFiles()}">
-        <div class="파일내역row modal-task-file-history-row modal-task-file-list-col flex-row-center-center-nowrap">
+        <div class="파일내역row modal-task-file-history-row modal-task-file-list-col flex-row-center-center-nowrap" >
           <div class="flex-row-justify-start-align-center">
             <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), 'yy.MM.dd ')}">24.04.11</span>
             <span class="altivo-light font-12" th:text="|&nbsp(${#temporals.dayOfWeekNameShort(file.getCreatedAt())})&nbsp|">(목)</span>
             <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), ' hh:MM')}"> 11:01</span>
           </div>
           <span class="font-14" th:text="${file.getUploaderName()}">제시카 차스테인</span>
-<!--          <a th:href="@{|/task/file/${file.getId()}|}">-->
-          <div class="파일박스 flex-row-between-nowrap hoverShadow" > <!--/*th:onclick="|location.href='@{|/task/file/${file.getId()}|}'|"*/-->
-<!--            <span class="deletedByAdmin font-blur font-13 hide">관리자에 의해 삭제되었습니다.</span>-->
+          <div class="파일박스 flex-row-between-nowrap hoverShadow" th:if="${file.getDeletedBy() == null}">
             <div class="flex-row-justify-start-align-center" th:onclick="|location.href='@{|/task/file/${file.getId()}|}'|">
               <img src="/imgs/icon_download4.png" alt="download" class="img-15 mr-5">
               <span class="modal-file-name" th:text="${file.getFileOrigName()}">보일듯말듯가물거리는</span>
@@ -198,8 +196,7 @@
               <span class="hoverBigger20 btn-modal-task-file-del" th:attr="data-fileid=${file.getId()}, data-deletedBy=${file.getMemberId()==myMid}?'uploader':${myMid}" th:if="${file.getMemberId() == myMid} or ${myPosition == 'admin'} or ${myPosition == 'creator'}">&times;</span>
             </div>
           </div>
-<!--          </a>-->
-          <div class="deletedByAdminBox hide">
+          <div class="deletedByAdminBox" th:classappend="${file.getDeletedBy() == null}?'hide'">
             <span class="deletedByAdmin font-blur font-13">관리자에 의해 삭제되었습니다.</span>
           </div>
         </div> <!-- 파일내역row 끝 -->

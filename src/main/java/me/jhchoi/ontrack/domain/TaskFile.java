@@ -23,7 +23,8 @@ public class TaskFile {
     private Long fileSize;
     private String filePath;
     private LocalDateTime createdAt;
-    private String deletedBy;
+    private Long deletedBy;
+    private LocalDateTime deletedAt; // 관리자 화면에서 출력할 용도.
 
     // entity로 바꾼다면 컬럼에 포함되지 않도록 할 필드1
     private String uploaderName;

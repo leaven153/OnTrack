@@ -20,4 +20,6 @@ public class TaskComment {
     private String comment;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long deletedBy;
+    private LocalDateTime deletedAt; // 관리자 화면에서 출력.
 }

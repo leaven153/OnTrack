@@ -26,9 +26,13 @@ public interface TaskMapper {
     int delAssignee(TaskAssignment taskAssignment);
 
     // 할 일: 파일 첨부
-    Long attachFile(List<TaskFile> taskFile);
+    int attachFile(List<TaskFile> taskFile);
 
-    // 할 일: 파일 삭제
+    // 할 일: (작성자에 의한) 파일 삭제
+    int delFile(Long fileId);
+
+    // 할 일: (관리자에 의한) 파일 삭제
+    int deleteFileByAdmin(TaskFile deleteItem);
 
     // 할 일 수정: 할일명
     Integer editTaskTitle(TaskEditRequest ter);
@@ -41,7 +45,7 @@ public interface TaskMapper {
     
 
     // 할 일 상세: 소통하기 글 등록
-    Long addComment(TaskComment taskComment);
+    int addComment(TaskComment taskComment);
 
     // 할 일 상세: 소통하기 글 수정
     Integer editTaskComment(TaskComment editComment);
