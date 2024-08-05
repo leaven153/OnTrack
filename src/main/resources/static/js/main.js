@@ -176,6 +176,7 @@ window.onload = function(){
         btnCloseModalTaskDetail.addEventListener("click", ()=>{
             document.querySelector("#container-task-detail .modal-Right").classList.remove("slide-side");
             containerTaskDetail.classList.add("hide");
+            location.reload(); // 파일 개수 동적으로 설정하기 대체...
         });
 
     }
@@ -1492,7 +1493,7 @@ window.onload = function(){
                 // e.stopImmediatePropagation();
                 console.log(`btn click!`);
 
-                
+
                 // console.log(btn.querySelector("span:nth-of-type(1)"));
                 // 이전 마감일이 없었다면 false 저장
                 if (btn.querySelector("span:nth-of-type(1)").classList.contains("font-blur") || btn.querySelector("span:nth-of-type(1)").classList.contains("no-dueDate")){
@@ -3199,9 +3200,11 @@ window.onload = function(){
         console.log(data["deletedby"]);
         console.log(data["deletedby"] === "uploader"); // false
 
+
         // 현재 파일 개수
         let cntFileRow = [...parents(this, ".modal-task-file-list-container")[0].querySelectorAll(".modal-task-file-history-row")].length;
 
+        console.log(cntFileRow);
         // 파일 개수에서 차감한다.
         cntFileRow--;
 
@@ -3217,7 +3220,17 @@ window.onload = function(){
                     method: 'GET'
                 }).then(response => {
                     if(response.ok){
+                        if(cntFileRow === 0) {
+                            const noFileP = document.createElement("p");
+                            noFileP.classList.add("mt-10", "no-file");
+                            noFileP.innerHTML = "등록된 파일이 없습니다.";
+                            console.log(parents(this, ".modal-task-file-history-row")[0]);
+                            parents(this, ".modal-task-file-history-row")[0].before(noFileP);
+                        }
                         parents(this, ".modal-task-file-history-row")[0].remove();
+                    } else {
+                        const warning = response.text();
+                        warning.then(msg => alert(msg));
                     }
                 });
             } else { // 관리자 삭제
@@ -3229,6 +3242,10 @@ window.onload = function(){
                     if(response.ok){
                         parents(this, ".modal-task-file-history-row")[0].querySelector(".deletedByAdminBox").classList.remove("hide");
                         parents(this, ".hoverShadow")[0].remove();
+                    } else {
+                        // const warning = response.body; // ReadableStream { locked: false }
+                        const warning = response.text();
+                        warning.then(msg => alert(msg));
                     }
                 });
             }

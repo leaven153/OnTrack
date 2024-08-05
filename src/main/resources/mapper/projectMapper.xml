@@ -44,6 +44,7 @@
         FROM ontrack_task t
         LEFT JOIN (SELECT task_id, count(task_id) taskFileCnt
         FROM task_file
+        WHERE deletedBy IS NULL
         GROUP BY task_id) tf
         ON t.id = tf.task_id
         WHERE project_id = #{projectId}

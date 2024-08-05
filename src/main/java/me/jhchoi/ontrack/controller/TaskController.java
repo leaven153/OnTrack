@@ -221,7 +221,7 @@ public class TaskController {
     @GetMapping("/file/delete")
     public ResponseEntity<?> deleteFile(@RequestParam Long fId){
         log.info("올린이에 의한 파일 삭제: {}", fId);
-        return ResponseEntity.ok().body("파일 삭제 완료");
+        return taskService.delFile(fId);
     }
 
     /*
@@ -234,7 +234,8 @@ public class TaskController {
     public ResponseEntity<?> deleteFileByAdmin(@RequestParam Long fId, @RequestParam Long executorMid){
         log.info("관리자에 의한 파일 삭제: {}", fId);
         log.info("관리자에 의한 파일 삭제: {}", executorMid);
-        return ResponseEntity.ok("관리자에 의한 삭제(업데이트)");
+        TaskFile deleteItem = TaskFile.builder().id(fId).deletedBy(executorMid).build();
+        return taskService.deleteFileByAdmin(deleteItem);
     }
     /*
      * @created : 2024-0567-

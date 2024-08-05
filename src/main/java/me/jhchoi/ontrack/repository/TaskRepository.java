@@ -93,4 +93,10 @@ public class TaskRepository {
 
     // 할 일 상세: file 다운
     public TaskFile findFileById(Long fileId) { return taskMapper.findFileById(fileId); }
+
+    // 할 일 상세: (작성자에 의한)file 삭제
+    public int delFile(Long fileId) { return taskMapper.delFile(fileId); }
+
+    // 할 일 상세: (관리자에 의한)file 삭제
+    public int deleteFileByAdmin(TaskFile deleteItem) { return taskMapper.deleteFileByAdmin(deleteItem); }
 }

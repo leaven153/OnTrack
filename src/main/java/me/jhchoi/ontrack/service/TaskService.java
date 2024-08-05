@@ -220,6 +220,7 @@ public class TaskService {
      * return  :
      * explain : 할 일 수정: 파일 추가
      * */
+    @Transactional
     public ResponseEntity<?> attachFile(TaskDetailRequest tdr) {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanoSec = nowWithNano.getNano();
@@ -239,11 +240,41 @@ public class TaskService {
     }
 
     /*
-     * created : 2024-05-
-     * param   :
-     * return  :
-     * explain : 할 일 수정: 파일 삭제
+     * created : 2024-08-05
+     * param   : Long fileId
+     * return  : ResponseEntity
+     * explain : 할 일 수정: (작성자에 의한) 파일 삭제
      * */
+    @Transactional
+    public ResponseEntity<?> delFile(Long fileId) {
+        ResponseEntity<?> response;
+        int result = taskRepository.delFile(fileId);
+        if(result != 1) {
+            response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
+        }
+
+        response = new ResponseEntity<>(HttpStatus.OK);
+
+        return response;
+    }
+
+    /*
+     * created : 2024-08-05
+     * param   : Long fileId, Long executorMid
+     * return  : ResponseEntity
+     * explain : 할 일 수정: (관리자에 의한) 파일 삭제
+     * */
+    @Transactional
+    public ResponseEntity<?> deleteFileByAdmin(TaskFile deleteItem){
+        ResponseEntity<?> response;
+        int result = taskRepository.deleteFileByAdmin(deleteItem);
+        if(result != 1){
+            response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
+        }
+        response = new ResponseEntity<>(HttpStatus.OK);
+
+        return response;
+    }
 
     /*
      * created : 2024-05-

@@ -110,7 +110,7 @@
     </select>
 
     <select id="getTaskFile" resultType="TaskFile">
-        SELECT tf.id, tf.file_origName, tf.file_newName, tf.file_type, tf.file_size, pm.id as memberId, pm.nickname as uploaderName, tf.createdAt
+        SELECT tf.id, tf.file_origName, tf.file_newName, tf.file_type, tf.file_size, pm.id as memberId, pm.nickname as uploaderName, tf.createdAt, tf.deletedBy
         FROM task_file tf
         INNER JOIN project_member pm
         ON tf.member_id = pm.id
@@ -170,6 +170,16 @@
         WHERE id = #{id}
     </update>
 
+    <update id="deleteFileByAdmin" parameterType="TaskFile">
+        UPDATE task_file
+        SET file_newName = ""
+        , file_type = ""
+        , file_size = 0
+        , file_path = ""
+        , deletedBy = #{deletedBy}
+        WHERE id = #{id}
+    </update>
+
     <delete id="delAssignee" parameterType="TaskAssignment">
         DELETE
         FROM task_assignment
@@ -177,6 +187,10 @@
         AND member_id = #{memberId}
     </delete>
 
-
+    <delete id="delFile" parameterType="Long">
+        DELETE
+        FROM task_file
+        WHERE id = #{fileId}
+    </delete>
 
 </mapper>
