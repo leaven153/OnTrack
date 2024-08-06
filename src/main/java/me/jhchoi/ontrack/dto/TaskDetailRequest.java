@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -18,19 +19,22 @@ public class TaskDetailRequest {
 
     private Long projectId;
     private Long taskId;
+    private Map<Long, Long> taskIds;
 
     // task 작성자가 아닌, 소통/파일 작성자의 멤버 정보
     private Long authorMid;
     private String authorName;
     
-    // 소통하기 등록
+    // 소통하기
     private Long commentId;
     private String comment;
     private String commentType; // 중요/일반
     private String createdAt;
     private String modifiedAt;
+    private Long blockedBy;
+    private LocalDateTime blockedAt;
 
-    // 파일 등록
+    // 파일
 //    private String fileOrigName;
 //    private String fileType;
 //    private String fileSize;

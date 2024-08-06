@@ -1351,6 +1351,10 @@ input[type=date] {
     margin-top: 5px;
 }
 
+.mt-6 {
+    margin-top: 6px;
+}
+
 .mt-10 {
     margin-top: 10px;
 }
@@ -3087,9 +3091,13 @@ div#edit-assignee-list {
     /* background-color: #fff; */
     width: 345px;
     margin-left: 10px;
-    height: 28px;
-    padding: 3px 0 2px 4px;
-    vertical-align: center;
+    height: 33px;
+    padding: 4px 0 2px 7px;
+    /*vertical-align: center;*/
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /*justify-content: flex-start;*/
 }
 
 /* .modal-files {
@@ -3305,7 +3313,7 @@ div[class*=task-tab] {
     align-content: flex-start;
     border-radius: 3px;
     padding: 12px 0 10px 12px;
-    border-bottom: 1px solid #c7b6aa;
+    /*border-bottom: 1px solid #c7b6aa;*/
 }
 
 .modal-task-comment-info-box {
@@ -3347,6 +3355,7 @@ div[class*=task-tab] {
     border-radius: 2px;
 }
 
+
 .btn-confirm-no {
     /*w70 btn-sort btn-border*/
     width: 70px;
@@ -3356,6 +3365,17 @@ div[class*=task-tab] {
     font-size: 14px;
 }
 
+.btn-delete-task {
+    width: 60px;
+    padding: 4px 0;
+    margin-left: 5px;
+    border-radius: 3px;
+    /*border: 2px solid #533e47;*/
+    /*box-shadow: 1px 1px 1px #c7b6aa77;*/
+    background-color: #fff5ec;
+    font-size: 14px;
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+}
 
 /* test용 */
 /*.modal-task-comment-read:nth-child(3) {*/

@@ -78,7 +78,7 @@
     <!-- 테이블뷰: 할 일 목록Row 시작 Begin Task List(table) Contents -->
     <th:block th:each="task : ${tasks}">
       <div class="tableview-taskrow bottom-line ">
-        <div class="tableview-column content-chkbox"><input type="checkbox" th:value="${task.getId()}"></div>
+        <div class="tableview-column content-chkbox"><input type="checkbox" class="task-checkbox" name="" th:value="${task.getId()}"></div>
 
         <!-- child mark: create or has-->
         <div class="tableview-column flex-row-center-center-nowrap">
@@ -103,7 +103,7 @@
         <!-- assignee -->
         <div class="flex-row-center-center-nowrap tableview-column table-assignee"> <!-- vertical-ctrl01 -->
           <div class="담당자요약box assignee-brief-box">
-            <span class="no-assignee btn-more-assignInfo" data-view="table" th:attr="data-test=${!#strings.equals(myNickname, task.getAuthorName())}" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span>
+            <span class="no-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().isEmpty()}" th:text="'담당자 없음'">담당자 없음</span> <!--/*th:attr="data-test=${!#strings.equals(myNickname, task.getAuthorName())}"*/-->
             <span class="one-assignee btn-more-assignInfo" data-view="table" th:if="${task.getAssigneeMids().size() == 1}" th:attr="data-mid=${task.getAssigneeMids()[0]}" th:text="${task.getAssigneeNames()[0]}">서머싯 몸</span> <!--/* table-assignee-alone */-->
           <!--/*
           <th:block th:if="${task.getAssigneeNames().size() == 1} and ${task.getTaskStatus() < 3}">

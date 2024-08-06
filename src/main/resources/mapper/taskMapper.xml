@@ -94,7 +94,7 @@
 <!--    </select>-->
 
     <select id="getTaskComment" resultType="TaskComment">
-        SELECT id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt
+        SELECT id, task_id, author_mid, author_name, type, comment, createdAt, modifiedAt, blockedBy
         FROM task_comment
         WHERE task_id = #{taskId}
         ORDER BY createdAt DESC;
@@ -122,6 +122,12 @@
         SELECT *
         FROM task_file
         WHERE id = #{fileId}
+    </select>
+
+    <select id="findCommentById" parameterType="Long" resultType="TaskComment">
+        SELECT *
+        FROM task_comment
+        WHERE id = #{id}
     </select>
 
     <select id="cntAssigneeByTaskId" parameterType="Long" resultType="Integer">
@@ -170,9 +176,18 @@
         WHERE id = #{id}
     </update>
 
+    <update id="blockComment" parameterType="TaskDetailRequest">
+        UPDATE task_comment
+        SET blockedBy = #{blockedBy}
+        , blockedAt = #{blockedAt}
+        WHERE id = #{commentId}
+    </update>
+
     <update id="deleteFileByAdmin" parameterType="TaskFile">
         UPDATE task_file
-        SET deletedBy = #{deletedBy}
+        SET file_newName = ""
+        , file_path = ""
+        , deletedBy = #{deletedBy}
         , deletedAt = #{deletedAt}
         WHERE id = #{id}
     </update>
@@ -188,6 +203,12 @@
         DELETE
         FROM task_file
         WHERE id = #{fileId}
+    </delete>
+
+    <delete id="delComment" parameterType="Long">
+        DELETE
+        FROM task_comment
+        WHERE id = #{id}
     </delete>
 
 </mapper>

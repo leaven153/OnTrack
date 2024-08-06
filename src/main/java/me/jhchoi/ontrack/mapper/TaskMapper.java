@@ -47,11 +47,19 @@ public interface TaskMapper {
     // 할 일 상세: 소통하기 글 등록
     int addComment(TaskComment taskComment);
 
+    // 할 일 상세: 소통하기 글 목록 조회
+    List<TaskComment> getTaskComment(Long TaskId);
+
+    //소통하기 글 조회
+    TaskComment findCommentById(Long commentId);
+
     // 할 일 상세: 소통하기 글 수정
     Integer editTaskComment(TaskComment editComment);
 
-    // 할 일 상세: 소통하기 글 목록 조회
-    List<TaskComment> getTaskComment(Long TaskId);
+    // 할 일 상세: 소통하기 글 차단(관리자에 의한)
+    Integer blockComment(TaskDetailRequest taskDetailRequest);
+
+    Integer delComment(Long commentId);
 
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
@@ -77,9 +85,10 @@ public interface TaskMapper {
     // 할 일 상세: history 조회
     List<TaskHistory> getTaskHistory(Long taskId);
 
-    // 할 일 상세: 파일 조회
+    // 할 일 상세: 파일 목록 조회
     List<TaskFile> getTaskFile(Long taskId);
 
-    TaskFile findFileById(Long fildId);
+    // 파일id로 파일 조회
+    TaskFile findFileById(Long fileId);
 
 }

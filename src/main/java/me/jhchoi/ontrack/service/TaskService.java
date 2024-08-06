@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -44,8 +46,9 @@ public class TaskService {
         taskRepository.log(TaskHistory.logNewTask(task));
         
         // 3. 담당자 유무 확인
-        if (taskFormRequest.getAssigneeMid() != null && !taskFormRequest.getAssigneeMid().isEmpty()) {
+        if (taskFormRequest.getAssigneeMids() != null && !taskFormRequest.getAssigneeMids().isEmpty()) {
 
+            /*
             taskFormRequest.setAssigneeNames(new ArrayList<>());
             // 3-1. 담당자 nickname 가져오기
             for(int i= 0; i < taskFormRequest.getAssigneeMids().size(); i++){
@@ -53,7 +56,7 @@ public class TaskService {
                 List<MemberInfo> mList = projectRepository.getMemberInfo(MemberInfo.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneeMids().get(i)).build());
                 taskFormRequest.getAssigneeNames().add(mList.get(0).getNickname());
             }
-
+            */
             // 3-2. 담당자 객체(TaskAssignment) 생성 및 DB 저장
             List<TaskAssignment> assignees = taskFormRequest.dtoToEntityTaskAssignment(task.getId(), task.getCreatedAt());
             taskRepository.assign(assignees);
@@ -247,9 +250,27 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> delFile(Long fileId) {
+
         ResponseEntity<?> response;
-        int result = taskRepository.delFile(fileId);
-        if(result != 1) {
+        // 실제 파일 삭제 후
+        TaskFile file = taskRepository.findFileById(fileId);
+        String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
+        File delFile = new File(path);
+        Boolean deleted = false;
+        if(delFile.exists()){
+             deleted = delFile.delete();
+        } else {
+            response = ResponseEntity.badRequest().body("존재하지 않는 파일입니다.");
+        }
+
+        // DB 기록 삭제
+        int dbResult = 0;
+
+        if(deleted){
+            dbResult = taskRepository.delFile(fileId);
+        }
+
+        if(!deleted || dbResult != 1) {
             response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
         }
 
@@ -267,8 +288,23 @@ public class TaskService {
     @Transactional
     public ResponseEntity<?> deleteFileByAdmin(TaskFile deleteItem){
         ResponseEntity<?> response;
-        int result = taskRepository.deleteFileByAdmin(deleteItem);
-        if(result != 1){
+
+        // 실제 파일 삭제 후
+        TaskFile file = taskRepository.findFileById(deleteItem.getId());
+        String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
+        File delFile = new File(path);
+        Boolean deleted = false;
+        if(delFile.exists()){
+            deleted = delFile.delete();
+        } else {
+            response = ResponseEntity.badRequest().body("존재하지 않는 파일입니다.");
+        }
+
+        // DB 기록 수정
+        int result = 0;
+        if(deleted) result = taskRepository.deleteFileByAdmin(deleteItem);
+        
+        if(!deleted || result != 1){
             response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
         }
         response = new ResponseEntity<>(HttpStatus.OK);
@@ -357,8 +393,52 @@ public class TaskService {
      * return  : Integer
      * explain : 할 일 상세: 소통하기 글 수정
      * */
-    public Integer editTaskComment(TaskComment editComment) {
-        return taskRepository.editTaskComment(editComment);
+    @Transactional
+    public ResponseEntity<String> editTaskComment(TaskComment editComment) {
+        TaskComment chkExists = taskRepository.findCommentById(editComment.getId());
+        ResponseEntity<String> response = ResponseEntity.ok().body("글 수정이 완료되었습니다.");
+        if(chkExists == null) {
+            return ResponseEntity.badRequest().body("해당 글이 존재하지 않습니다.");
+        }
+        Integer result = taskRepository.editTaskComment(editComment);
+        if(result != 1) {
+            response = ResponseEntity.badRequest().body("글 수정이 완료되지 않았습니다.");
+        }
+        return response;
+    }
+
+    /*
+     * created : 2024-08-06
+     * param   : TaskDetailRequest
+     * return  : ResonseEntity
+     * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단
+     * */
+    @Transactional
+    public ResponseEntity<String> blockTaskComment(TaskDetailRequest blockComment){
+        TaskComment chkExists = taskRepository.findCommentById(blockComment.getCommentId());
+
+        if(chkExists == null) {
+            return ResponseEntity.badRequest().body("해당 글이 존재하지 않습니다.");
+        }
+        Integer result = taskRepository.blockComment(blockComment);
+        if(result != 1) {
+            return ResponseEntity.badRequest().body("글 삭제가 완료되지 않았습니다.");
+        }
+        return ResponseEntity.ok("글 삭제가 완료되었습니다.");
+    }
+
+    /*
+     * created : 2024-08-06
+     * param   : TaskDetailRequest
+     * return  : ResonseEntity
+     * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단
+     * */
+    public ResponseEntity<Void> delComment(Long commentId) {
+        Integer result = taskRepository.delComment(commentId);
+        if(result != 1){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /*

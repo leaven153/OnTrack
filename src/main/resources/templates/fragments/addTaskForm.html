@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>addTaskForm</title>
-    <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <meta charset="UTF-8">
+  <title>addTaskForm</title>
+  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 </head>
 <body>
   <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(taskFormRequest, myNickname, myMid, myPosition, memberList)">
@@ -11,7 +12,7 @@
   <div class="modal-center flex-col-start-nowrap">
     <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
       <div class="flex-row-justify-start-align-center modal-create-task-parent-title img-hidden">
-        <img src="/imgs/icon_blur_parentTask1817.png" alt="parentTask" class="">
+        <img src="../../static/imgs/icon_blur_parentTask1817.png" th:src="@{/imgs/icon_blur_parentTask1817.png}" alt="parentTask" class="">
         <span class="font-blur ml-5">바다와 나비</span>
       </div>
       <span class="btn-close-modal-createTask font-24">&times;</span>
@@ -21,8 +22,8 @@
       <input type="hidden" th:field="${taskFormRequest.authorMid}">
       <input type="hidden" name="authorName" th:value="${myNickname}">
       <div class="할일제목 flex-row-justify-start-align-center bottom-line mt-14 mb-30 pd-b5">
-        <img src="/imgs/icon_blur_childTask24.png" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
-        <img src="/imgs/icon_childTask24.png" alt="childTask" class="icon-child-task hide">
+        <img src="../../static/imgs/icon_blur_childTask24.png" th:src="@{/imgs/icon_blur_childTask24.png}" alt="childTask" class="hide"><!-- blur는 사용하지 말까. 추후 정리요망-->
+        <img src="../../static/imgs/icon_childTask24.png" th:src="@{/imgs/icon_childTask24.png}" alt="childTask" class="icon-child-task hide">
         <input type="text" class="modal-add-task" name="taskTitle" maxlength="20" placeholder="할 일을 입력하세요">
       </div><!--/* 할일제목 끝 */-->
 
@@ -75,18 +76,18 @@
             </div>
           </div>
         </div>
-        <img src="/imgs/icon_down127.png" alt="show list" class="alignCenter cursorP" id="show-assignee-list">
+        <img src="../../static/imgs/icon_down127.png" th:src="@{/imgs/icon_down127.png}" alt="show list" class="alignCenter cursorP" id="show-assignee-list">
       </div><!-- 담당자배정 끝 -->
 
       <div class="할일파일첨부 flex-row-justify-start-align-center">
         <div class="filebox flex-row-justify-start-align-center">
           <input type="file" id="create-task-attach-file" name="taskFile" class="opacity0 wh0" multiple>
           <label for="create-task-attach-file" class="flex-row-justify-start-align-center btn-attach">
-            <img src="/imgs/icon_upload1519.png" alt="upload" class="">
+            <img src="../../static/imgs/icon_upload1519.png" th:src="@{/imgs/icon_upload1519.png}" alt="upload" class="">
             <span class="ml-5">파일첨부</span>
           </label>
           <div id="create-task-files" class="flex-col-start-nowrap scroll modal-create-task-files-box">
-            <p id="no-file-placeholder" class="no-file vertical-ctrl032">첨부된 파일이 없습니다.</p>
+            <p id="no-file-placeholder" class="no-file mt-6">첨부된 파일이 없습니다.</p>
           </div>
         </div>
         <div class="btn-guide">?</div>
