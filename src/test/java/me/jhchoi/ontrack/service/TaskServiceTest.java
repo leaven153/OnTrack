@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -165,6 +167,30 @@ class TaskServiceTest {
         // fileOrigName=원래이름, fileNewName=uuid이름, fileType=txt, fileSize=250,
         // filePath=파일경로, createdAt=2024-08-04T19:40:47, uploaderName=null,
         // formattedFileSize=null)]
+
+    }
+
+    @Test @DisplayName("파일 삭제")
+    void deleteFile(){
+        // given
+        Long fileId = 30L;
+
+        // when
+        TaskFile file = taskRepository.findFileById(fileId);
+        String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
+        log.info("path로?: {}", path);
+//        File deleteFile = new File(file.getFilePath() + file.getFileNewName());
+        File removeFile = new File(path);
+        log.info("파일 경로 맞게 들어갔는가? remove: {}", removeFile);
+        log.info("경로가 맞는가 remove: {}", removeFile.exists());
+//        log.info("파일 경로 맞게 들어갔는가? delete: {}", deleteFile);
+//        log.info("경로가 맞는가 delete: {}", deleteFile.exists());
+        if(removeFile.exists()){
+            Boolean result = removeFile.delete();
+            log.info("파일 지워졌나요?: {}", result);
+        }
+
+
 
     }
 

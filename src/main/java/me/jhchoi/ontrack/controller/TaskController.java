@@ -43,7 +43,13 @@ public class TaskController {
     private final MemberService memberService;
     private final FileStore fileStore;
 
-    @PostMapping("/addTask")
+    /*
+     * @created : 2024-05-
+     * @param   : @ModelAttribute TaskAndAssignee
+     * @return  : ResponseEntity
+     * @explain : 할 일 추가
+     * */
+    @PostMapping
     public ResponseEntity<?> addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
@@ -53,10 +59,10 @@ public class TaskController {
 //            return "redirect:/login/login";
         }
         log.info("=============from 할일추가 form==================");
-        log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
-        log.info("작성자아이디 = {}", taskFormRequest.getAuthorMid());
-        log.info("작성자 이름 = {}", taskFormRequest.getAuthorName());
-        log.info("할일 이름 = {}", taskFormRequest.getTaskTitle());
+//        log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
+//        log.info("작성자아이디 = {}", taskFormRequest.getAuthorMid());
+//        log.info("작성자 이름 = {}", taskFormRequest.getAuthorName());
+//        log.info("할일 이름 = {}", taskFormRequest.getTaskTitle());
         log.info("전체 = {}", taskFormRequest);
         // 전체 = TaskAndAssignee(id=null, taskTitle=파일 테스트, authorMid=6, authorName=크러쉬,
         // taskPriority=3, taskStatus=null, taskDueDate=2024-08-14, taskParentId=null,
@@ -68,7 +74,7 @@ public class TaskController {
 
         // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(3)으로 설정하여 service로 넘긴다.
 //        if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(3);
-        taskService.addTask(taskFormRequest);
+//        taskService.addTask(taskFormRequest);
 
 //        log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
@@ -78,20 +84,17 @@ public class TaskController {
 //                """.formatted(taskFormRequest.getProjectId());
     }
 
-    // 시도
-    // 할 일 상세 fragment만 rendering
-    @Bean(name="taskDetail")
-    @Scope("prototype")
-    public ThymeleafView taskDetailViewBean(HttpSession session){
-        ThymeleafView projectView = new ThymeleafView("taskDetail");
-        projectView.setMarkupSelector("#container-task-detail");
-        log.info("이게 언제 불려지나? === fragment bean"); // WebConfig에 있어도, 현 컨트롤러 안에 있어도 2번 출력된다.
-        log.info("fragment안에서 session: {}", session.getServletContext());
-        // fragment안에서 session: session ☞ Current HttpSession
-        // session.getServletContext() ☞ org.apache.catalina.core.ApplicationContextFacade@c0ce5b6
-        return projectView;
+    /*
+     * @created : 2024-08-06
+     * @param   : @ModelAttribute TaskAndAssignee
+     * @return  : ResponseEntity
+     * @explain : 할 일 삭제
+     * */
+    @DeleteMapping
+    public ResponseEntity<?> deleteTask(@RequestBody TaskDetailRequest taskDetailRequest){
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDetailRequest);
+        return ResponseEntity.ok("할 일 삭제중");
     }
-
 
     /*
      * @created : 2024-07-
@@ -153,20 +156,20 @@ public class TaskController {
         } else if(Objects.equals(type, "edit")) {
             log.info("소통하기 글 수정: {}", taskDetailRequest);
             TaskComment editComment = taskDetailRequest.toTaskCommentforEdit(taskDetailRequest);
-            Integer result = taskService.editTaskComment(editComment);
-            if(result != 1) {
-                response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            response = new ResponseEntity<>(HttpStatus.OK);
-        } else if(Objects.equals(type, "deletedByAdmin")) {
-            log.info("관리자에 의한 소통하기 글 삭제(수정): {}", taskDetailRequest);
+            response = taskService.editTaskComment(editComment);
+        } else if(Objects.equals(type, "blocked")) {
+            log.info("관리자에 의한 소통하기 글 차단(수정): {}", taskDetailRequest);
+            LocalDateTime nowWithNano = LocalDateTime.now();
+            int nanosec = nowWithNano.getNano();
+            taskDetailRequest.setBlockedAt(nowWithNano.minusNanos(nanosec));
+            response = taskService.blockTaskComment(taskDetailRequest);
         }
 
         return response;
     }
 
     /*
-     * @created : 2024-08-
+     * @created : 2024-08-06
      * @param   : @PathVariable: Long commentId
      * @return  : ResponseEntity
      * @explain : 할 일 상세: 소통하기 글 삭제
@@ -174,7 +177,7 @@ public class TaskController {
     @DeleteMapping("/comment")
     public ResponseEntity<?> deleteComment(@RequestParam Long cId){
         log.info("작성자에 의한 글삭제: {}", cId);
-        return ResponseEntity.ok("작성자에 의한 글삭제");
+        return taskService.delComment(cId);
     }
 
     /*
@@ -183,16 +186,14 @@ public class TaskController {
      * @return  : ResponseEntity
      * @explain : 파일 업로드
      * */
-    @PostMapping("/file/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId, @RequestBody List<MultipartFile> files){
-        // @RequestBody TaskDetailRequest fileUpload
+    @PostMapping("/file") // /upload
+    public ResponseEntity<?> uploadFile(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId, @RequestBody List<MultipartFile> files){ //
         log.info("******** 파일을 업로드하려고 해 ********");
+//        log.info("어떻게 받아와지나: {}", tdr);
         log.info("어떻게 받아와지나: {}", pId);
         log.info("어떻게 받아와지나: {}", tId);
         log.info("어떻게 받아와지나: {}", mId);
         log.info("어떻게 받아와지나: {}", files);
-        LocalDateTime nowWithNano = LocalDateTime.now();
-        int nanoSec = nowWithNano.getNano();
 
         TaskDetailRequest tdr = TaskDetailRequest.builder()
                 .projectId(pId)
@@ -231,33 +232,29 @@ public class TaskController {
      * @return  : ResponseEntity
      * @explain : 파일 삭제
      * */
-    @GetMapping("/file/delete")
-    public ResponseEntity<?> deleteFile(@RequestParam Long fId){
-        log.info("올린이에 의한 파일 삭제: {}", fId);
+    @DeleteMapping("/file")
+    public ResponseEntity<?> deleteFile(@RequestParam Long fId, @RequestParam(required = false) Long executorMid){
 
-        return taskService.delFile(fId);
+        ResponseEntity<?> response;
+        if(executorMid != null) {
+            log.info("관리자에 의한 파일 삭제: {}", fId);
+            log.info("관리자에 의한 파일 삭제: {}", executorMid);
+            LocalDateTime nowWithNano = LocalDateTime.now();
+            int nanosec = nowWithNano.getNano();
+
+            TaskFile deleteItem = TaskFile.builder()
+                    .id(fId)
+                    .deletedBy(executorMid)
+                    .deletedAt(nowWithNano.minusNanos(nanosec))
+                    .build();
+            response = taskService.deleteFileByAdmin(deleteItem);
+        } else {
+            log.info("올린이에 의한 파일 삭제: {}", fId);
+            response = taskService.delFile(fId);
+        }
+        return response; // ResponseEntity.ok("확인중");
     }
 
-    /*
-     * @created : 2024-08-04
-     * @param   : Long fileId, Long executorMid
-     * @return  : ResponseEntity
-     * @explain : 관리자에 의햔 파일 삭제
-     * */
-    @GetMapping("/file/deletedByAdmin")
-    public ResponseEntity<?> deleteFileByAdmin(@RequestParam Long fId, @RequestParam Long executorMid){
-        log.info("관리자에 의한 파일 삭제: {}", fId);
-        log.info("관리자에 의한 파일 삭제: {}", executorMid);
-        LocalDateTime nowWithNano = LocalDateTime.now();
-        int nanosec = nowWithNano.getNano();
-
-        TaskFile deleteItem = TaskFile.builder()
-                .id(fId)
-                .deletedBy(executorMid)
-                .deletedAt(nowWithNano.minusNanos(nanosec))
-                .build();
-        return taskService.deleteFileByAdmin(deleteItem);
-    }
 
     /*
      * @created : 2024-0567-

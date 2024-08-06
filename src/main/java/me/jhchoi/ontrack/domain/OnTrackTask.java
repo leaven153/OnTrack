@@ -28,4 +28,6 @@ public class OnTrackTask {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long updatedBy;
+    private Long deletedBy;
+    private LocalDateTime deletedAt;
 }

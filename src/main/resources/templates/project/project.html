@@ -53,8 +53,8 @@
         <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=table|}'|" id="btn-table-view" data-view="table-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'table' or view == null}?'btn-view-choosen'"><img src="/imgs/icon_table.png" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
         <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=status|}'|" id="btn-status-view" data-view="status-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'status'}?'btn-view-choosen'"><img src="/imgs/icon_blur_status.png" alt="status" class="img-19 vertical-ctrl015"><span class="saffran-regular">Status</span></button>
         <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=assignee|}'|" id="btn-assignee-view" data-view="assignee-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'assignee'}?'btn-view-choosen'"><img src="/imgs/icon_blur_assignee.png" alt="assignee" class="img-2418 "><span class="saffran-regular">Assignee</span></button>
-        <button type="button" class="hide">삭제</button> <!-- 우선순위: 하하하 마지막에 해라 -->
-        <button type="button" class="hide">일괄변경</button> <!-- 우선순위: 하하하 마지막에 해라 -->
+        <button type="button" class="hide" th:classappend="${project.position == 'creator' or project.position == 'admin'}?'btn-delete-task'" th:attr="data-executormid=${project.memberId}">삭제</button>
+<!--        <button type="button" class="hide">일괄변경</button> -->
       </div>
 
       <div class="search-n-add-task">

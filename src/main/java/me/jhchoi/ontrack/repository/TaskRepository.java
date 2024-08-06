@@ -78,10 +78,19 @@ public class TaskRepository {
     // 할 일 상세: 소통하기 글 목록
     public List<TaskComment> getTaskComment(Long taskId) { return taskMapper.getTaskComment(taskId); }
 
+    // 소통하기 글 조회
+    public TaskComment findCommentById(Long commentId) { return taskMapper.findCommentById(commentId); }
+
     // 할 일 상세: 소통하기 글 수정
     public Integer editTaskComment(TaskComment editComment) {
         return taskMapper.editTaskComment(editComment);
     }
+
+    // 할 일 상세: (관리자에 의한) 소통하기 글 차단
+    public Integer blockComment(TaskDetailRequest taskDetailRequest) { return taskMapper.blockComment(taskDetailRequest); }
+
+    // 할 일 상세: 소통하기 글 삭제
+    public Integer delComment(Long commentId) { return taskMapper.delComment(commentId); }
 
     // 할 일 상세: history(진행내역) 조회
     public List<TaskHistory> getTaskHistory(Long taskId){

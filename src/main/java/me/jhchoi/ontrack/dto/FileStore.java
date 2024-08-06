@@ -58,7 +58,7 @@ public class FileStore {
             if(!file.isEmpty()) {
                 int idx = file.getOriginalFilename().lastIndexOf(".");
                 String originalFileName = file.getOriginalFilename().substring(0, idx);
-                String storeFileName = createFileName(originalFileName);
+                String storeFileName = createFileName(file.getOriginalFilename());
                 Path savePath = Paths.get(makeFolder(projectId, taskId), storeFileName);
                 log.info("저장경로(폴더, 파일이름): {}", savePath.toAbsolutePath()); // 저장경로(폴더, 파일이름)
                 file.transferTo(new File(String.valueOf(savePath)));

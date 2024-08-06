@@ -86,10 +86,11 @@
       </th:block>
       <!-- 글 하나 박스 시작 -->
       <th:block th:each="comment : ${taskDetail.getTaskComments()}">
-      <div class="modal-task-comment-read" th:classappend="${comment.getType() == 'notice'}?'task-comment-notice'">
+      <div class="modal-task-comment-read" th:classappend="${comment.getType() == 'notice'}?'task-comment-notice':'bottom-line-subtle'" th:if="${comment.getBlockedBy() == null}">
         <div class="modal-task-comment-info-box"><!-- commentInfoBox: 작성자+RR cnt+작성일시+tool box -->
           <div class="작성자와중요 flex-row-justify-start-align-center">
             <span class="작성자 commentWriter" th:text="${comment.getAuthorName()}">고윤정</span>
+<!--            <img src="../../static/imgs/icon_chatRR2520.png" th:src="@{/imgs/icon_chatRR2520.png}" th:if="${comment.getType() == 'notice'}">-->
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
             <span class="날짜 altivo-regular mr-5" th:text="${#temporals.format(comment.getCreatedAt(), 'yy.MM.dd HH:mm')}">24.02.14 17:50</span>
@@ -100,7 +101,7 @@
                   <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
                   <span>수정하기</span>
                 </p>
-                <p class="flex-row-center-center-nowrap" th:classappend="${comment.getAuthorMid() == myMid or myPosition == 'admin'}?'btn-comment-del'">
+                <p class="flex-row-center-center-nowrap" th:classappend="${comment.getAuthorMid() == myMid or myPosition == 'creator' or myPosition == 'admin'}?'btn-comment-del'">
                   <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
                   <span>삭제하기</span>
                 </p>
