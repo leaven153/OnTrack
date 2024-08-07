@@ -3455,9 +3455,10 @@ window.onload = function(){
     /*---- ▲  프로젝트뷰(assignee): 각 담당자의 진행상태별 task 목록 상세 열기 끝 ▲ ----*/
 
 
-    /*---------- 062 할 일 삭제(체크박스 클릭) ------------*/
+    /*---------- 062 할 일 체크박스 클릭(삭제 버튼 출력) ------------*/
     let cntChkBox = 0;
-    let checkedTask = new Map();
+
+    let checkedTaskList = [];
     if(elExists(document.querySelector(".task-checkbox"))){
         document.querySelectorAll(".task-checkbox").forEach(function(chkbox){
 
@@ -3466,15 +3467,11 @@ window.onload = function(){
                 if(chkbox.checked === true) {
                     console.log(`체크된 박스가 생겼다`);
                     cntChkBox++;
-                    checkedTask.set(chkbox.value, chkbox.value);
                     console.log(cntChkBox);
-                    console.log(checkedTask);
                 } else {
                     console.log(`체크 해제`);
                     cntChkBox--;
-                    checkedTask.delete(chkbox.value);
                     console.log(cntChkBox);
-                    console.log(checkedTask);
                 }
                 if(cntChkBox > 0) {
                     document.querySelector(".btn-delete-task").classList.remove("hide");
@@ -3490,27 +3487,42 @@ window.onload = function(){
             });
         });
     }
-    
+
+    /*---------- 063 할 일 삭제 버튼 클릭 ------------*/
     if(elExists(document.querySelector(".btn-delete-task"))){
         document.querySelector(".btn-delete-task").addEventListener("click", ()=>{
             console.log(`삭제버튼 클릭됨`);
             console.log(cntChkBox);
-            console.log(checkedTask);
+            document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
+                if(chkBox.checked === true) {
+                    checkedTaskList.push(chkBox.value);
+                }
+            });
+            console.log(checkedTaskList);
+
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
 
-            const taskDetailRequest = {
-                taskIds: checkedTask,
+            const taskDeleteRequest = {
+                taskIds: checkedTaskList,
                 deletedBy: executorMid
             };
 
             console.log(taskDetailRequest);
+            // Object { taskIds: Map(4), deletedBy: "14" }
+            // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
+            // size: 4
+            // <entries>
+            // 0: 8 → "8"
+            // 1: 9 → "9"
+            // 2: 11 → "11"
+            // 3: 12 → "12"
 
             fetch(`http://localhost:8080/task`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(taskDetailRequest)
+                body: JSON.stringify(taskDeleteRequest)
             }).then(response => {
                 if(response.ok){
                     console.log(`할 일 삭제ing`);
@@ -3522,6 +3534,22 @@ window.onload = function(){
         });
     }
 
+    /*---------- 064 할 일 테이블 뷰: 맨 위 체크박스 클릭 ------------*/
+    // check-all, task-checkbox
+    if(elExists(document.querySelector(".tableview-check-all"))){
+        const btnCheckAll = document.querySelector(".tableview-check-all");
+        btnCheckAll.addEventListener("click", ()=>{
+            if(btnCheckAll.checked === true){
+                parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
+                    eachChkBox.checked = true;
+                });
+            } else {
+                parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
+                    eachChkBox.checked = false;
+                });
+            }
+        });
+    }
     /*---------- 050 ------------*/
     // next
     function next(el, selector) {

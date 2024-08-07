@@ -33,6 +33,10 @@ public class TaskAndAssignee {
     // taskForm에서 사용
     private Long projectId;
 
+    private List<Long> taskIds; // 할 일 삭제 시 사용
+    private Long deletedBy; // 할 일 삭제 시 사용
+    private LocalDateTime deletedAt; // 할 일 삭제 시 사용
+
     // 할 일의 담당자
     private Integer assigneeNum;
     private String assigneeMid; // DB에서 concat으로 가져오는 값

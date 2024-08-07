@@ -86,8 +86,13 @@ public class TaskController {
      * @explain : 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<?> deleteTask(@RequestBody TaskDetailRequest taskDetailRequest){
-        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDetailRequest);
+    public ResponseEntity<?> deleteTask(@RequestBody TaskDeleteRequest taskDeleteRequest){
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest);
+        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskDeleteRequest(taskIds=[8, 9, 11], deletedBy=14,
+        // deletedAt=null)
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+        taskDeleteRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
         return ResponseEntity.ok("할 일 삭제중");
     }
 

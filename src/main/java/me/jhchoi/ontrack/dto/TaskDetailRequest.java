@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ public class TaskDetailRequest {
 
     private Long projectId;
     private Long taskId;
-    private Map<Long, Long> taskIds;
 
     // task 작성자가 아닌, 소통/파일 작성자의 멤버 정보
     private Long authorMid;
