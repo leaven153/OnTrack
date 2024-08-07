@@ -69,7 +69,7 @@
       <!-- 파일첨부(drag and drop) 시작 (sticky 영역 내부)--><!--flex-row-justify-start-align-center-->
       <div id="task-tab-file-upload" class="파일첨부컨테이너 task-tab-file modal-task-tab flex-row-center-center-nowrap bottom-line-subtle" th:classappend="${taskDetail.getTab() != 'file'}?hide">
         <div class="파일첨부영역 dropzone " id="upload-drop-zone" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-uploaderName=${myNickname}, data-uploaderMid=${myMid}">
-          <input type="file" id="upload" class="opacity0 wh0">
+          <input type="file" id="upload" class="opacity0 wh0" multiple>
           <label for="upload" class="flex-col-center">
             <img src="/imgs/upload.png" alt="" class="img-15em mb-5">
             <span class="">클릭하면 파일 첨부 창이 열립니다.</span>
@@ -183,7 +183,7 @@
           <div class="flex-row-justify-start-align-center">
             <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), 'yy.MM.dd ')}">24.04.11</span>
             <span class="altivo-light font-12" th:text="|&nbsp(${#temporals.dayOfWeekNameShort(file.getCreatedAt())})&nbsp|">(목)</span>
-            <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), ' hh:MM')}"> 11:01</span>
+            <span class="altivo-light font-12" th:text="${#temporals.format(file.getCreatedAt(), ' HH:MM')}"> 11:01</span>
           </div>
           <span class="font-14" th:text="${file.getUploaderName()}">제시카 차스테인</span>
           <div class="파일박스 flex-row-between-nowrap hoverShadow" th:if="${file.getDeletedBy() == null}">

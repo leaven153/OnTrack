@@ -367,9 +367,11 @@ window.onload = function(){
                     currUnassignedMembers.set(eachMember.dataset.mid, eachMember.innerHTML);
                 });
 
+                console.log(cntAssignee);
+                console.log(parents(chosenOne, "[class$=-assignee]")[0].children[1]);
                 // 담당자가 없는 경우, 참여하기/담당차추가하기 div의 top-line과 padding값을 뺀다.
                 if(cntAssignee === 0) {
-                    parents(chosenOne, "[class$=-assignee]")[0].children[1].classList.remove("top-line", "pd-t10");
+                    parents(chosenOne, "[class$=-assignee]")[0].querySelector(".btn-add-member-to-assignee").classList.remove("top-line", "pd-t10");
                 }
 
                 // console.log(cntAssignee);
@@ -2046,7 +2048,7 @@ window.onload = function(){
     const createTasknofile = document.querySelector("#no-file-placeholder");
     let cntFiles = 0;
     let rewriteCreateTaskFileList = [];
-    let createTaskFileDelCnt = 0;
+    // let createTaskFileDelCnt = 0;
 
     createTaskAttachedFiles.addEventListener("change", ()=>{
 
@@ -2065,18 +2067,13 @@ window.onload = function(){
                     createTaskFiles.appendChild(createAndAttachFileBox(name, type, returnFileSize(parseInt(files[i].size))));
                     cntFiles++;
                     rewriteCreateTaskFileList.push(files[i]);
-                    console.log(rewriteCreateTaskFileList);
-                    rewriteCreateTaskFileList.forEach(file => {
-                        console.log(rewriteCreateTaskFileList.indexOf(file));
-                        console.log(file["name"]); // 100자.txt
-                    });
+                    // console.log(rewriteCreateTaskFileList);
+                    // rewriteCreateTaskFileList.forEach(file => {
+                    //     console.log(rewriteCreateTaskFileList.indexOf(file));
+                    //     console.log(file["name"]); // 100자.txt
+                    // });
                 } else {
-                    // formData에 파일 다시 첨부해야 함
-                    createTaskFileDelCnt++;
                     invalidFile.set(name, result);
-                    // console.log(rewriteCreateTaskFileList.indexOf(files[i])); // -1
-                    // console.log(rewriteCreateTaskFileList[rewriteCreateTaskFileList.indexOf(files[i])]); // undefined
-                    // alert(`첨부가 불가능한 유형의 파일입니다.`);
                 }
             }
 
@@ -2126,7 +2123,7 @@ window.onload = function(){
         if (cntFiles !== 0) {
             createTasknofile.classList.add("hide");
         }
-    });
+    }); // 할 일 추가 모달: 파일 첨부 끝
 
     /*---------- 025 ------------*/
     // create task or notice
@@ -2164,7 +2161,7 @@ window.onload = function(){
 
 
     /*---------- 026 ------------*/
-    // 모달(공지, 할 일): 첨부했던 파일 삭제
+    // 모달(공지, 할 일): 서버 전송 전, 첨부했던 파일 삭제
     // createAndAttachFileBox 안의 btnDel을 클릭했을 때
     onEvtListener(document, "click", ".btn-del-file", function(){
 
@@ -2174,7 +2171,7 @@ window.onload = function(){
         // notice인지 task인지 구별
         if (tellNociteOrTask === "create-task-files") {
             cntFiles--;
-            createTaskFileDelCnt++;
+            // createTaskFileDelCnt++;
             const idx = [...parents(this, "#create-task-files")[0].children].indexOf(parents(this, ".modal-create-and-attach-file")[0]); // [...this.parentNode.parentNode.children].indexOf(this.parentNode);
             rewriteCreateTaskFileList.splice(idx-1, 1); // p요소(첨부된 파일이 없습니다)로 인해 인덱스가 하나씩 밀려있다!
             // setTimeout(console.log(rewriteCreateTaskFileList), 300);
@@ -2262,7 +2259,8 @@ window.onload = function(){
                 choosenAssigneeNames.push(eachOne.dataset.nickname);
             }
         });
-
+        // 파일 첨부 수정 여부와 상관 없이, rewriteCreateTaskFileList를 사용한다.
+        // ∵ 파일 첨부 이후 추가했을 때, 새로 추가된 파일만 formData에 남게 된다.(이전 파일을 덮어버린다..)
         for(let i = 0; i < rewriteCreateTaskFileList.length; i++) {
             addTaskData.append("taskFiles", rewriteCreateTaskFileList[i]);
         }
@@ -2317,11 +2315,9 @@ window.onload = function(){
             headers: {},
             body: addTaskData
         }).then(response => {
-            // afterAddTaskSubmit();
-            // const chkTime = new Date();
-            // console.log(`fetch 후 어떻게 되는가: ${chkTime.getHours()}:${chkTime.getMinutes()}:${chkTime.getSeconds()}:${chkTime.getMilliseconds()}`);
+            afterAddTaskSubmit();
             if (response.ok) {
-                // location.reload();
+                location.reload();
             }
         });
 
@@ -2376,7 +2372,7 @@ window.onload = function(){
 
         // 첨부된 파일 fileList array 비우기
         // addTaskForm.elements.taskFile.files = [];
-        createTaskFileDelCnt = 0;
+        // createTaskFileDelCnt = 0;
         rewriteCreateTaskFileList = [];
 
         // 모달 닫기
@@ -2939,11 +2935,12 @@ window.onload = function(){
                 const myComment = parents(chosenBtn, ".modal-task-comment-read")[0];// chosenBtn.parentElement.parentElement.parentElement.parentElement.parentElement;
                 const btnYes = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-yes");// chosenBtn.parentElement.parentElement.children[2].children[1].children[0];
                 const btnNo = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-no");// chosenBtn.parentElement.parentElement.children[2].children[1].children[1];
-
+                let cntComment = parents(chosenBtn, ".modal-task-comment-read")[0].children.length;
+                console.log(cntComment);
                 btnYes.addEventListener("click", (e)=>{
                     e.stopPropagation();
                     const data = btnYes.dataset;
-
+                    cntComment--;
                     if(btnYes.dataset.deletedby === 'author'){ // 작성자에 의해 삭제
                         console.log("작성자에 의한 소통글 삭제");
                         // 서버 요청
@@ -2977,6 +2974,13 @@ window.onload = function(){
                             if(response.ok){
                                 confirmBox.classList.add("img-hidden");
                                 myComment.remove();
+                                if(cntComment === 0) {
+                                    const pNoComment = document.createElement("p");
+                                    p.classList.add("no-comment");
+                                    p.innerText = "등록된 글이 없습니다.";
+                                    parents(chosenBtn, ".modal-task-comment-read")[0].prepend(pNoComment);
+
+                                }
                             }
                         });
                     }
@@ -2991,30 +2995,10 @@ window.onload = function(){
     }// 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때 끝
     /*---- ▲  Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 끝 ▲ ----*/
 
-    /*---------- 043 ------------*/
+
     /*---- ▼ Modal(File): 파일 시작 ▼ ----*/
-
-    // 이미 생성된 할일의 파일 추가 1/2: input type="file" 
-    const modalTaskFileUploadInput = document.querySelector("#upload");
-    const modalTaskFileListContainer = document.querySelector(".modal-task-file-list-container");
-    modalTaskFileUploadInput.addEventListener("change", ()=>{
-        
-        const file = modalTaskFileUploadInput.files[0];
-        const result = validateFile(file.name, parseInt(file.size));
-        if( result === true){
-            const name = file.name.substring(0, file.name.lastIndexOf("."));
-            const type = file.name.substring(file.name.lastIndexOf(".")+1);
-            modalTaskFileListContainer.append(fileHistoryRow("공효진", addFileBox(name, type, returnFileSize(parseInt(file.size)))));
-        } else if (result === 2 || result === 3 || result === 6) {
-            alert(`첨부가 불가능한 유형의 파일입니다.`);
-        } else if (result === 1 || result === 4 || result === 5 || result === 7) {
-            alert(`파일 첨부에 실패했습니다. 다음 사항을 확인해주시기 바랍니다. \n 1. 파일명에는 특수기호와 여백이 포함될 수 없습니다.\n(단, +, _, -, .은 포함가능) \n 2. 5MB이하의 파일만 첨부할 수 있습니다.\n ${file.name}의 크기: ${returnFileSize(parseInt(file.size))} \n`);
-        }
-                
-    });
-
-    /*---------- 044 ------------*/
-    // 이미 생성된 할일의 파일 추가 2/2: Drag and Drop
+    /*---------- 043 ------------*/
+    // 이미 생성된 할일의 파일 추가 1/2: Drag and Drop
     const ModalTaskFileDropZone = document.querySelector("#upload-drop-zone");
     ModalTaskFileDropZone.addEventListener("dragover", (evt)=>{
         evt.preventDefault();
@@ -3051,16 +3035,14 @@ window.onload = function(){
             const fileData = new FormData();
             const file = e.dataTransfer.files;
             let result = new Map();
-            let typeErr = [];
-            let otherErr = [];
             if(e.dataTransfer.files.length < 6){
                 for(let i = 0; i < e.dataTransfer.files.length; i++){
 
                     // 파일 유형 검사 후 append
                     if(validateFile(file[i].name, parseInt(file[i].size)) === 'okay') {
-                        fileData.append("files", e.dataTransfer.files[i]);
+                        fileData.append("files", file[i]); // e.dataTransfer.files[i]
                     } else {
-                        result.set(e.dataTransfer.files[i].name, validateFile(file[i].name, parseInt(file[i].size)));
+                        result.set(files[i].name, validateFile(file[i].name, parseInt(file[i].size))); // e.dataTransfer.
                     }
 
                 }
@@ -3183,6 +3165,55 @@ window.onload = function(){
         }
     }); // 파일 drag and drop 끝
 
+    /*---------- 044 ------------*/
+    // 이미 생성된 할일의 파일 추가 2/2: input type="file"
+    const modalTaskFileUploadInput = document.querySelector("#upload");
+    const modalTaskFileListContainer = document.querySelector(".modal-task-file-list-container");
+    modalTaskFileUploadInput.addEventListener("change", ()=>{
+
+        const fileData = new FormData();
+        const files = modalTaskFileUploadInput.files;
+        const data = parents(modalTaskFileUploadInput)[0].dataset;
+        console.log(data);
+        let invalidFile = new Map();
+
+        if(files.length < 6) {
+            for(let i = 0; i < files.length; i++) {
+                const result = validateFile(files[i].name, parseInt(files[i].size));
+                if(result === 'okay'){
+                    createTasknofile.classList.remove("hide");
+                    const name = files[i].name.substring(0, files[i].name.lastIndexOf("."));
+                    const type = files[i].name.substring(files[i].name.lastIndexOf(".")+1);
+                    fileData.append("files", files[i]);
+                } else {
+                    invalidFile.set(name, result);
+                }
+            }
+        } else {
+            alert(`파일 첨부는 5개 이하로 가능합니다.`);
+        }
+
+        // 서버 전송
+        fetch(`http://localhost:8080/task/file?pId=${data["projectid"]}&tId=${data["taskid"]}&mId=${data["uploadermid"]}`, {
+            method: 'POST',
+            headers: {},
+            body: fileData
+        }).then(response => {
+            if(response.ok){
+                response.json().then(file => {
+                    if(modalTaskFileListContainer.querySelector("p.no-file")){
+                        modalTaskFileListContainer.querySelector("p.no-file").remove();
+                    }
+
+                    for(let i = 0; i < file.length; i++) {
+                        modalTaskFileListContainer.append(fileHistoryRow(data["uploadername"], addFileBox(file[i]["fileOrigName"], file[i]["fileType"], file[i]["formattedFileSize"], file[i]["id"])));
+                    }
+                });
+
+            }
+        });
+    }); // 이미 생성된 할 일에 파일 추가(input) 끝
+
     /*---------- 061 ------------*/
     // 첨부 실패한 파일 설명 div 생성
     function notAttachedGuide(notAttachList){
@@ -3214,7 +3245,7 @@ window.onload = function(){
     }
 
     /*---------- 045 ------------*/
-    // 할 일의 파일 삭제
+    // 할 일 상세에서의 파일 삭제
     onEvtListener(document, "click", ".btn-modal-task-file-del", function(){
         //console.log(`this: ${this}`); //this: [object HTMLSpanElement]
         //console.log(this); // <span class="hoverBigger20 cursorP modal-task-file-del">
@@ -3308,7 +3339,6 @@ window.onload = function(){
     }
 
     /*---------- 047 ------------*/
-    // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 파일내역Row 동적생성
     function fileHistoryRow(uploader, addFileBox){
         const fileRow = document.createElement("div");
@@ -3356,7 +3386,6 @@ window.onload = function(){
     }
 
     /*---------- 048 ------------*/
-    // 사용자 id로 파일 삭제 버튼 부착여부 판별하는 코드 추가요망
     // 이미 생성된 할일의 파일 추가: 첨부된 파일 정보담을 div 동적생성
     function addFileBox(name, type, size, fileId) {
         const fileBox = document.createElement("div");
@@ -3426,9 +3455,10 @@ window.onload = function(){
     /*---- ▲  프로젝트뷰(assignee): 각 담당자의 진행상태별 task 목록 상세 열기 끝 ▲ ----*/
 
 
-    /*---------- 062 할 일 삭제(체크박스 클릭) ------------*/
+    /*---------- 062 할 일 체크박스 클릭(삭제 버튼 출력) ------------*/
     let cntChkBox = 0;
-    let checkedTask = new Map();
+
+    let checkedTaskList = [];
     if(elExists(document.querySelector(".task-checkbox"))){
         document.querySelectorAll(".task-checkbox").forEach(function(chkbox){
 
@@ -3437,15 +3467,11 @@ window.onload = function(){
                 if(chkbox.checked === true) {
                     console.log(`체크된 박스가 생겼다`);
                     cntChkBox++;
-                    checkedTask.set(chkbox.value, chkbox.value);
                     console.log(cntChkBox);
-                    console.log(checkedTask);
                 } else {
                     console.log(`체크 해제`);
                     cntChkBox--;
-                    checkedTask.delete(chkbox.value);
                     console.log(cntChkBox);
-                    console.log(checkedTask);
                 }
                 if(cntChkBox > 0) {
                     document.querySelector(".btn-delete-task").classList.remove("hide");
@@ -3461,27 +3487,42 @@ window.onload = function(){
             });
         });
     }
-    
+
+    /*---------- 063 할 일 삭제 버튼 클릭 ------------*/
     if(elExists(document.querySelector(".btn-delete-task"))){
         document.querySelector(".btn-delete-task").addEventListener("click", ()=>{
             console.log(`삭제버튼 클릭됨`);
             console.log(cntChkBox);
-            console.log(checkedTask);
+            document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
+                if(chkBox.checked === true) {
+                    checkedTaskList.push(chkBox.value);
+                }
+            });
+            console.log(checkedTaskList);
+
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
 
-            const taskDetailRequest = {
-                taskIds: checkedTask,
+            const taskDeleteRequest = {
+                taskIds: checkedTaskList,
                 deletedBy: executorMid
             };
 
             console.log(taskDetailRequest);
+            // Object { taskIds: Map(4), deletedBy: "14" }
+            // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
+            // size: 4
+            // <entries>
+            // 0: 8 → "8"
+            // 1: 9 → "9"
+            // 2: 11 → "11"
+            // 3: 12 → "12"
 
             fetch(`http://localhost:8080/task`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(taskDetailRequest)
+                body: JSON.stringify(taskDeleteRequest)
             }).then(response => {
                 if(response.ok){
                     console.log(`할 일 삭제ing`);
@@ -3493,6 +3534,22 @@ window.onload = function(){
         });
     }
 
+    /*---------- 064 할 일 테이블 뷰: 맨 위 체크박스 클릭 ------------*/
+    // check-all, task-checkbox
+    if(elExists(document.querySelector(".tableview-check-all"))){
+        const btnCheckAll = document.querySelector(".tableview-check-all");
+        btnCheckAll.addEventListener("click", ()=>{
+            if(btnCheckAll.checked === true){
+                parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
+                    eachChkBox.checked = true;
+                });
+            } else {
+                parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
+                    eachChkBox.checked = false;
+                });
+            }
+        });
+    }
     /*---------- 050 ------------*/
     // next
     function next(el, selector) {

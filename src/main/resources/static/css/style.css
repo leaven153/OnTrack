@@ -492,6 +492,7 @@ div.btn-open-settings {
 .tableview-colName{
     position: sticky;
     top: 128px;
+    height: 19px;
     font-size: 12px;
     background-color: #ffffff;
     z-index: 3;
@@ -499,7 +500,7 @@ div.btn-open-settings {
 
 .tableview-notice {
     position: sticky;
-    top: 148px;
+    top: 145px;
     background-color: #ffffff;
     z-index: 1;
 }
@@ -638,24 +639,79 @@ div.task-detail-history {
     height: 27px;
 }
 
-
+div.content-chkbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 /*img.btn-edit-task-title,*/
-div.content-chkbox > input {
+div.content-chkbox input {
+    position: absolute;
     opacity: 0;
+    height: 0;
+    width: 0;
 }
 
 .status-assignee:hover div[class*=btn-],
 span[class*=edit-task-title]:hover ~ img.btn-edit-task-title,
 span.status-remark:hover ~ span.transit-250,
 span.transit-250:hover,
-img.btn-edit-task-title:hover,
-div.content-chkbox:hover > input {
+img.btn-edit-task-title:hover{ /* div.content-chkbox:hover span.chkmark ,
+div.content-chkbox:hover input*/
     transition-duration: 250ms;
     opacity: 1; 
 }
 
-.content-chkbox > input:checked{
-    opacity: 1; 
+
+div.content-chkbox:hover input ~ span.chkmark {
+    transition-duration: 250ms;
+    opacity: 1;
+}
+
+.content-chkbox input:checked ~ span.chkmark{
+    opacity: 1;
+    background-color: #533e47;
+}
+
+.content-chkbox input:checked ~ span.chkmark:after{
+    display: block;
+}
+/* 체크박스 css */
+.chkbox-container {
+    position: relative;
+    display: block;
+    padding: 1px;
+    padding-left: 12px;
+    margin-bottom: 15px;
+}
+
+span.chkmark {
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border: 2px solid;
+    border-radius: 2px;
+    opacity: 0;
+    top: 0;
+    left: 0;
+}
+
+span.chkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.chkbox-container span.chkmark:after{
+    left: 3px;
+    top: -1px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 img.btn-create-child-task {
