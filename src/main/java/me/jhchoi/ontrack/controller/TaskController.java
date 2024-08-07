@@ -52,17 +52,13 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<?> addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        MemberInfo member = (MemberInfo) session.getAttribute("loginMember");
         if (loginUser == null) {
             URI location = URI.create("/login");
             return ResponseEntity.created(location).build();
 //            return "redirect:/login/login";
         }
         log.info("=============from 할일추가 form==================");
-//        log.info("프로젝트아이디 = {}", taskFormRequest.getProjectId());
-//        log.info("작성자아이디 = {}", taskFormRequest.getAuthorMid());
-//        log.info("작성자 이름 = {}", taskFormRequest.getAuthorName());
-//        log.info("할일 이름 = {}", taskFormRequest.getTaskTitle());
+
         log.info("전체 = {}", taskFormRequest);
         // 전체 = TaskAndAssignee(id=null, taskTitle=파일 테스트, authorMid=6, authorName=크러쉬,
         // taskPriority=3, taskStatus=null, taskDueDate=2024-08-14, taskParentId=null,
@@ -70,11 +66,10 @@ public class TaskController {
         // assigneeNum=null, assigneeMid=null, assigneeName=null,
         // assigneeMids=[6, 17], assigneeNames=[크러쉬, 토르], assignees=null,
         // taskFiles=[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@1a2f2550])
-//        log.info("파일 = {}", taskFormRequest.getTaskFiles().get(0).getOriginalFilename());
 
         // admin이나 creator가 아닌 member가 생성한 할 일의 중요도는 null값임. 고로, 일반(3)으로 설정하여 service로 넘긴다.
 //        if (taskFormRequest.getTaskPriority() == null) taskFormRequest.setTaskPriority(3);
-//        taskService.addTask(taskFormRequest);
+        taskService.addTask(taskFormRequest);
 
 //        log.info("컨트롤러에서 넘어가는 시점: {}", LocalDateTime.now()); // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:50:39.535349900
         // fetch 에서 response 없애고 2024-06-05T21:45:00.923132600
@@ -281,7 +276,7 @@ public class TaskController {
         // 각 수정 사항 반영 결과값 담을 ResponseEntity
         ResponseEntity<?> response = null;
 
-        if (th.getModItem().equals("title")) {
+        if (th.getModItem().equals("할 일 명")) {
             log.info("할 일 제목 수정");
             TaskEditRequest editTaskTitle = TaskEditRequest.builder()
                     .taskId(th.getTaskId())
@@ -291,7 +286,7 @@ public class TaskController {
                     .build();
             response = taskService.editTaskTitle(th, editTaskTitle);
 
-        } else if (th.getModItem().equals("dueDate")) {
+        } else if (th.getModItem().equals("마감일")) {
             log.info("할 일 마감일 수정");
 
             // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
@@ -312,7 +307,7 @@ public class TaskController {
 
             response = taskService.editTaskDueDate(th, editTaskDueDate);
 
-        } else if (th.getModItem().equals("status")) {
+        } else if (th.getModItem().equals("진행상태")) {
             log.info("할 일 진행상태 수정");
             log.info("변경된 진행상태: {}", statusNum);
             TaskEditRequest ter = TaskEditRequest.builder()
@@ -354,7 +349,7 @@ public class TaskController {
 
         ResponseEntity<?> response = null;
 
-        if (th.getModType().equals("register")){
+        if (Objects.equals(th.getModType(), "배정")){
             log.info("담당자 추가");
 
             // TaskAssignment 객체생성
@@ -369,7 +364,7 @@ public class TaskController {
 
             response = taskService.addAssignee(ta, th);
 
-        } else if (th.getModType().equals("delete")){
+        } else if (Objects.equals(th.getModType(), "해제")){
             log.info("담당자 삭제");
             TaskAssignment ta = TaskAssignment.builder()
                     .projectId(th.getProjectId())
