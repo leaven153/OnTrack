@@ -36,8 +36,7 @@ public class OnTrackProject {
     private LocalDate projectDueDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt; // 프로젝트 정보(기준 성립 요망)가 업데이트 된 일자
-    private Long deletedBy;
-    private LocalDateTime deletedAt;
+
 
 
 }

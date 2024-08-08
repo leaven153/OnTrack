@@ -3801,18 +3801,9 @@ span.alert-not-attach-col {
     flex-shrink: 0;
     padding-left: 10px;
 }
+
 .my-tasks-col-names > div:nth-child(3),
 .my-tasks-col > div:nth-child(3) {
-    flex-basis: 200px;
-    flex-shrink: 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    padding: 0 10px 0 0;
-}
-
-.my-tasks-col-names > div:nth-child(4),
-.my-tasks-col > div:nth-child(4) {
     flex-basis: 350px;
     flex-shrink: 0;
     text-overflow: ellipsis;
@@ -3820,23 +3811,31 @@ span.alert-not-attach-col {
     white-space: nowrap;
     padding: 0 20px 0 15px;
 }
-.my-tasks-col-names > div:nth-child(5),
-.my-tasks-col > div:nth-child(5) {
+.my-tasks-col-names > div:nth-child(4),
+.my-tasks-col > div:nth-child(4) {
     flex-basis: 80px;
     flex-shrink: 0;
     padding: 0 10px;
 }
+.my-tasks-col-names > div:nth-child(5),
+.my-tasks-col > div:nth-child(5) {
+    flex-basis: 130px;
+    flex-shrink: 0;
+}
 .my-tasks-col-names > div:nth-child(6),
 .my-tasks-col > div:nth-child(6) {
-    flex-basis: 130px;
+    flex-basis: 110px;
     flex-shrink: 0;
 }
 .my-tasks-col-names > div:nth-child(7),
 .my-tasks-col > div:nth-child(7) {
-    flex-basis: 110px;
+    flex-basis: 200px;
     flex-shrink: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 0 0 10px;
 }
-
 /************************************/
 /************ 13. MyPage - Bin ***********/
 /************************************/

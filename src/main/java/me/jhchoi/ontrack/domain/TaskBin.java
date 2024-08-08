@@ -8,26 +8,26 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-// 새 할 일
-// 자동: project id, author(user_id), createdAt, updatedAt, updatedBy(user_id)
-// 필수입력: task title
-//
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class OnTrackTask {
+public class TaskBin {
     private Long id;
     private Long projectId;
+    private Long taskId;
     private String taskTitle;
     private Long authorMid;
     private String authorName;
-    private Integer taskPriority; // vip: 0, ip: 1, norm: 2
-    private Integer taskStatus; // not-yet: 1, planning: 2, ing: 3, review: 4, done: 5
+    private Integer taskPriority;
+    private Integer taskStatus;
     private LocalDate taskDueDate;
-    private Boolean hasChild;
     private Long taskParentId;
+    private Boolean hasChild;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long updatedBy;
+    private Long deletedBy;
+    private LocalDateTime deletedAt;
 
 }

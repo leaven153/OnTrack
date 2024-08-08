@@ -1742,6 +1742,7 @@ window.onload = function(){
     const btnOpenModalCreateChildTask = document.querySelectorAll(".btn-create-child-task");
     const modalCreateTaskParentTitle = document.querySelector(".modal-create-task-parent-title");
     const iconChildTaskTitle = document.querySelector(".icon-child-task");
+    const containerCreateTask = document.querySelector("#container-create-task");
     btnOpenModalCreateChildTask.forEach(function(chosenBtn){
         chosenBtn.addEventListener("click", ()=>{
             const id = chosenBtn.parentElement.parentElement.id;
@@ -3507,7 +3508,7 @@ window.onload = function(){
                 deletedBy: executorMid
             };
 
-            console.log(taskDetailRequest);
+            console.log(taskDeleteRequest);
             // Object { taskIds: Map(4), deletedBy: "14" }
             // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
             // size: 4
@@ -3526,6 +3527,10 @@ window.onload = function(){
             }).then(response => {
                 if(response.ok){
                     console.log(`할 일 삭제ing`);
+                    // 삭제할 task id array clear
+                    checkedTaskList = [];
+
+                    // 화면 리로드?
                 } else {
                     alert(`할 일 삭제가 완료되지 않았습니다.`);
                 }

@@ -79,7 +79,6 @@ public class ProjectController {
         log.info("==============================개별 프로젝트 controller 진입==============================");
         log.info("project id: {}", projectId);
         log.info("선택한 view: {}", view);
-//        log.info("path variable member id: {}", memberId); // 추후
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {

@@ -26,16 +26,18 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final FileStore fileStore;
+
     /**
      * created  : 2024-05-14
      * updated  : 2024-05-23, 24
-     * param    :
-     * return   :
+     * param    : TaskAndAssignee taskFormRequest
+     * return   : Long
      * explain  : 새 할 일 등록 (할 일 정보, 담당자(nullable), 파일(nullable))
      * */
     @Transactional
     public Long addTask(TaskAndAssignee taskFormRequest) {
 
+        projectRepository.findByProjectId(taskFormRequest.getProjectId());
         // 1. 할 일 객체 생성
         OnTrackTask task = taskFormRequest.dtoToEntityTask();
 
@@ -90,9 +92,19 @@ public class TaskService {
         return task.getId();
     }
 
-    /*
+    /**
+     * created : 2024-07-18
+     * param   : Long taskId
+     * return  : TaskDetailResponse
+     * explain : 할 일 상세 조회 (TaskController에서 repository 불러서 proejctController로 리다이렉트)
+     * */
+    public void getTaskDetail(Long taskId) {
+        Optional<OnTrackTask> taskDetail = taskRepository.findByTaskId(taskId);
+    }
+
+    /**
      * created : 2024-07-31
-     * param   : TaskEditRequest
+     * param   : TaskHistory, TaskEditRequest
      * return  : ResponseEntity
      * explain : 할 일 수정: 할 일 명
      * */
@@ -106,10 +118,10 @@ public class TaskService {
         return ResponseEntity.ok().body(ter.getTitle());
     }
 
-    /*
+    /**
      * created : 2024-07-29
-     * param   :
-     * return  :
+     * param   : TaskHistory, TaskEditRequest
+     * return  : ResponseEntity.ok().body(들어온진행상태값)/ResponseEntity.badRequest().body(new ErrorResponse("")
      * explain : 할 일 수정: 진행상태
      * */
     @Transactional
@@ -130,7 +142,7 @@ public class TaskService {
         }
     }
 
-    /*
+    /**
      * created : 2024-07-30
      * param   : TaskHistory, TaskEditRequest
      * return  : ResponseEntity
@@ -147,12 +159,12 @@ public class TaskService {
         }
     }
 
-    /*
+    /**
      * created : 2024-06-18
      * param   : TaskAssignment, TaskHistory
-     * return  : void
+     * return  : ResponseEntity
      * explain : 할 일 수정: 담당자 추가
-     * */
+     */
     @Transactional
     public ResponseEntity<?> addAssignee(TaskAssignment ta, TaskHistory th){
 
@@ -184,10 +196,10 @@ public class TaskService {
 
     }
 
-    /*
+    /**
      * created : 2024-07-16
      * param   : TaskAssignment, TaskHistory
-     * return  : void
+     * return  : int
      * explain : 할 일 수정: 담당자 삭제
      * */
     @Transactional
@@ -201,11 +213,11 @@ public class TaskService {
         return result;
     }
 
-    /*
+    /**
      * created : 2024-08-01
      * param   : Long taskId
-     * return  : List<TaskHistory>
-     * explain : 할 일 상세: history(진행내역) 조회
+     * return  : List<TaskFile>
+     * explain : 할 일 상세: 파일 조회
      * */
     public List<TaskFile> getTaskFile(Long taskId) {
         List<TaskFile> files = taskRepository.getTaskFile(taskId);
@@ -217,10 +229,10 @@ public class TaskService {
         return files;
     }
 
-    /*
+    /**
      * created : 2024-08-02
-     * param   :
-     * return  :
+     * param   : TaskDetailRequest
+     * return  : ResponseEntity
      * explain : 할 일 수정: 파일 추가
      * */
     @Transactional
@@ -242,7 +254,7 @@ public class TaskService {
         return result;
     }
 
-    /*
+    /**
      * created : 2024-08-05
      * param   : Long fileId
      * return  : ResponseEntity
@@ -279,7 +291,7 @@ public class TaskService {
         return response;
     }
 
-    /*
+    /**
      * created : 2024-08-05
      * param   : Long fileId, Long executorMid
      * return  : ResponseEntity
@@ -312,28 +324,11 @@ public class TaskService {
         return response;
     }
 
-    /*
-     * created : 2024-05-
-     * param   :
-     * return  :
-     * explain : 할 일 삭제
-     * */
 
-    /*
-     * created : 2024-07-18
-     * param   : Long taskId
-     * return  : TaskDetailResponse
-     * explain : 할 일 상세
-     * */
-    public void getTaskDetail(Long taskId) {
-        taskRepository.findByTaskId(taskId);
-    }
-
-
-    /*
+    /**
      * created : 2024-07-19
      * param   : TaskComment
-     * return  : int
+     * return  : ResponseEntity
      * explain : 할 일 상세: 소통하기 글 등록
      * */
     public ResponseEntity<?> addTaskComment(TaskComment taskComment) {
@@ -377,7 +372,7 @@ public class TaskService {
         return ResponseEntity.ok(taskComment.getId());
     }
 
-    /*
+    /**
      * created : 2024-07-19
      * param   : Long taskId
      * return  : List<TaskComment>
@@ -387,10 +382,10 @@ public class TaskService {
         return taskRepository.getTaskComment(taskId);
     }
 
-    /*
+    /**
      * created : 2024-07-31
      * param   : TaskComment
-     * return  : Integer
+     * return  : ResponseEntity<String>
      * explain : 할 일 상세: 소통하기 글 수정
      * */
     @Transactional
@@ -407,10 +402,10 @@ public class TaskService {
         return response;
     }
 
-    /*
+    /**
      * created : 2024-08-06
      * param   : TaskDetailRequest
-     * return  : ResonseEntity
+     * return  : ResponseEntity<String>
      * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단
      * */
     @Transactional
@@ -427,11 +422,11 @@ public class TaskService {
         return ResponseEntity.ok("글 삭제가 완료되었습니다.");
     }
 
-    /*
+    /**
      * created : 2024-08-06
      * param   : TaskDetailRequest
-     * return  : ResonseEntity
-     * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단
+     * return  : ResonseEntity<Void>
+     * explain : 할 일 상세: 작성자에 의한 소통하기 글 차단
      * */
     public ResponseEntity<Void> delComment(Long commentId) {
         Integer result = taskRepository.delComment(commentId);
@@ -441,7 +436,7 @@ public class TaskService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /*
+    /**
      * created : 2024-08-01
      * param   : Long taskId
      * return  : List<TaskHistory>
@@ -450,4 +445,21 @@ public class TaskService {
     public List<TaskHistory> getTaskHistory(Long taskId){
         return taskRepository.getTaskHistory(taskId);
     }
+
+    /*
+     * created : 2024-08-
+     * param   : Long taskId
+     * return  : ResponseEntity
+     * explain : 할 일 삭제
+     * */
+    public ResponseEntity<?> deleteTask(TaskDeleteRequest deleteRequest) {
+
+        // 1. ontrack_task 테이블에서 해당 task 정보를 모두 가져온다. Optional<List<OnTrackTask>> task
+        // 2. ontrack_task 테이블에서 해당 task id를 삭제한다. (deletedRequest List<Long> taskIDs)
+        // 3. task_bin 테이블에 해당 task 정보를 입력한다.
+
+        return ResponseEntity.ok("할 일 삭제 중");
+    }
+
+
 } // class TaskService ends

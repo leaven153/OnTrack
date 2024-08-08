@@ -79,22 +79,6 @@ public class TaskController {
 //                """.formatted(taskFormRequest.getProjectId());
     }
 
-    /*
-     * @created : 2024-08-06
-     * @param   : @ModelAttribute TaskAndAssignee
-     * @return  : ResponseEntity
-     * @explain : 할 일 삭제
-     * */
-    @DeleteMapping
-    public ResponseEntity<?> deleteTask(@RequestBody TaskDeleteRequest taskDeleteRequest){
-        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest);
-        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskDeleteRequest(taskIds=[8, 9, 11], deletedBy=14,
-        // deletedAt=null)
-        LocalDateTime nowWithNano = LocalDateTime.now();
-        int nanosec = nowWithNano.getNano();
-        taskDeleteRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
-        return ResponseEntity.ok("할 일 삭제중");
-    }
 
     /*
      * @created : 2024-07-
@@ -127,8 +111,6 @@ public class TaskController {
 //        return TaskAndAssignee.builder().authorName("testAuthor").build();
 //        return "fragments/taskDetail :: editForm";
 //        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
-//        return """
-//                redirect:/project/%s/%s/%s/%s""".formatted(loginMember.getProjectId(), loginMember.getMemberId(), encodedName, loginMember.getPosition());
     } // getTask ends
 
 
@@ -398,15 +380,11 @@ public class TaskController {
     @PostMapping("/search")
     public ResponseEntity<?> search(@RequestParam String object, @RequestBody SearchCond searchCond){
         log.info("무엇을 찾는가: {}", object); // 무엇을 찾는가: member
-//        log.info("무엇을 위해 찾는가: {}", purpose); // 무엇을 위해 찾는가: toassign
         log.info("검색할 이름: {}", searchCond); //검색할 이름:
 
-        // 검색한 사람이 이미 담당자인 경우
-
-        // 검색한 사람이 없는 경우
 
         // member service에서 해당 이름을 가진 멤버가 해당 프로젝트에 존재하는지 먼저 검색
-        ResponseEntity<?> existsMember = memberService.findByName(searchCond);
+        ResponseEntity<List<ProjectMember>> existsMember = memberService.findByName(searchCond);
         log.info("task controller - exists member: {}", existsMember);
 
         if(existsMember.getStatusCode().is4xxClientError()){
@@ -417,7 +395,7 @@ public class TaskController {
 
         // 해당 이름을 가진 멤버가 존재한다면
         // 해당 task에 배정됐는지 확인한다.
-        List<ProjectMember> member = (List<ProjectMember>) existsMember.getBody();
+        List<ProjectMember> member = existsMember.getBody(); // (List<ProjectMember>)
         log.info("해당 이름을 가진 멤버 존재: {}",member);
 
         for (ProjectMember projectMember : member) {
@@ -436,7 +414,24 @@ public class TaskController {
         return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
 
-    
+    /*
+     * @created : 2024-08-06
+     * @param   : @ModelAttribute TaskAndAssignee
+     * @return  : ResponseEntity
+     * @explain : 할 일 삭제
+     * */
+    @DeleteMapping
+    public ResponseEntity<?> deleteTask(@RequestBody TaskDeleteRequest taskDeleteRequest){
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest);
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest.getTaskIds().size());
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest.getTaskIds().get(0));
+        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskDeleteRequest(taskIds=[8, 9, 11], deletedBy=14,
+        // deletedAt=null)
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
+        taskDeleteRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
+        return ResponseEntity.ok("할 일 삭제중");
+    }
 
 
 }// class TaskController ends
