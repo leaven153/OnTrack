@@ -8,6 +8,7 @@ import me.jhchoi.ontrack.domain.TaskHistory;
 import me.jhchoi.ontrack.dto.FileStore;
 import me.jhchoi.ontrack.dto.TaskAndAssignee;
 import me.jhchoi.ontrack.dto.TaskDetailResponse;
+import me.jhchoi.ontrack.dto.TaskEditRequest;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -189,9 +190,30 @@ class TaskServiceTest {
             Boolean result = removeFile.delete();
             log.info("파일 지워졌나요?: {}", result);
         }
+    } // deleteFile() 테스트 끝
+
+    @Test @DisplayName("삭제된 할 일을 수정할 때 어떤 에러가 발생하는가")
+    void editTaskNotExists(){
+        // given
+        Long notExistsTaskId = 7L;
+
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanosec = nowWithNano.getNano();
 
 
+        TaskEditRequest editTaskTitle = TaskEditRequest.builder()
+                .taskId(notExistsTaskId)
+                .title("존재하지 않는 할일을 수정하려고 할 때 ")
+                .updatedAt(nowWithNano.minusNanos(nanosec))
+                .updatedBy(14L)
+                .build();
 
-    }
+        // when
+        Integer result = taskRepository.editTaskTitle(editTaskTitle);
+
+        log.info("존재하지 않는 할 일을 수정한다면, result는?: {}", result);
+        // 존재하지 않는 할 일을 수정한다면, result는?: 0
+    } // editTaskTitle test ends
+
 
 }

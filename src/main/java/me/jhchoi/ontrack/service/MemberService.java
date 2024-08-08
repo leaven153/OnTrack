@@ -18,7 +18,7 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public ResponseEntity<?> findByName(SearchCond searchCond){
+    public ResponseEntity<List<ProjectMember>> findByName(SearchCond searchCond){
         ProjectMember pm = ProjectMember.builder()
                 .projectId(searchCond.getProjectId())
                 .nickname(searchCond.getNickname()).build();
