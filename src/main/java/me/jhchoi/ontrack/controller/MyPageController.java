@@ -61,7 +61,7 @@ public class MyPageController {
     }
 
     @GetMapping("/bin")
-    public String myBin(HttpSession session){
+    public String myBin(HttpSession session, Model model){
         log.info("=================bin====================");
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
@@ -70,6 +70,7 @@ public class MyPageController {
         }
 
         // 영구 삭제의 권한은 누구에게? >> 할 일 작성자 only? (생성자creator, 관리자admin??)
+        model.addAttribute("loginUser", loginUser);
 
         return "/mypage/bin";
     }

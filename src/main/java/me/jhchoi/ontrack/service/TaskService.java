@@ -474,16 +474,18 @@ public class TaskService {
      * created : 2024-08-
      * param   :
      * return  : ResponseEntity
-     * explain : 휴지통 조회
+     * explain : 휴지통 조회(at My page. cf. 관리자가 프로젝트 내 휴지통 조회)
      * */
-    public List<OnTrackTask> getBin(Long userId) {
-        // project_member: 내 userId의 memberId list 조회
-
-        // task_assignment: 내 member id가 있는 task id list
-
+    public List<OnTrackTask> getMyBin(Long userId) {
+        // 1. project_member: 내 userId의 memberId, projectId list 조회
 
         List<OnTrackTask> taskList = new ArrayList<>();
-        // ontrack_task: deletedBy가 null이 아니고, deletedAt이 7일 경과하지 않은, task id의 row list
+        // 2. ontrack_task: deletedBy가 null이 아니고, deletedAt이 7일 경과하지 않은, task id의 row list
+
+        // 3. task_assignment: 내 member id가 있는 task id list
+        // + ontrack_task: author_mid == myMid
+
+        // 4. taskList에 taskIdList join
 
 
         return taskList;
@@ -500,11 +502,11 @@ public class TaskService {
 
         // 할 일 영구 삭제 ⓣ 담당 내역 삭제
         // 할 일 영구 삭제 ② 소통 내역 삭제
-        // 할 일 영구 삭제 ③ 진행 내역 삭제
+        // 할 일 영구 삭제 ③ 진행 내역 삭제 (영구 삭제 기록은 어떻게 할 것인가...?)
         // 할 일 영구 삭제 ④ 파일 삭제
         // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
 
-        return ResponseEntity.ok("할 일 복원 중");
+        return ResponseEntity.ok("할 일 영구삭제 중");
     }
 
 } // class TaskService ends

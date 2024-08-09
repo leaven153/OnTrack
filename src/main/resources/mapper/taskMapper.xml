@@ -41,10 +41,12 @@
         WHERE id = #{id}
     </select>
 
-    <select id="">
-        SELECT
-        FROM
-        WHERE
+    <select id="getBin" parameterType="Long">
+        SELECT *
+        FROM ontrack_task
+        WHERE project_id = #{projectId}
+        AND deletedBy IS NOT NULL
+        AND deletedAt > date_sub(curdate(), interval 7 day)
     </select>
 
     <select id="getAssigneeList" resultType="TaskAssignment">
