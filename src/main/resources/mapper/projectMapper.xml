@@ -13,13 +13,6 @@
         WHERE id = #{id}
     </select>
 
-    <select id="oldAllMyProjects" resultType="MyProject">
-        SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, p.project_dueDate,p.createdAt, p.updatedAt, pm.id as memberId, pm.nickname, pm.position, pm.invitedAt, pm.invitedAs
-        FROM ontrack_project p INNER JOIN project_member pm
-        ON p.id = pm.project_id
-        WHERE pm.user_id = #{id}
-    </select>
-
     <select id="allMyProjects" resultType="MyProject">
         SELECT p.id as projectId, p.project_type, p.project_status, p.project_name, p.creator as creatorId, p.project_dueDate,p.createdAt, p.updatedAt, pm.position, pm.invitedAt, pm.invitedAs
         FROM ontrack_project p INNER JOIN project_member pm
@@ -41,7 +34,7 @@
 
     <select id="allTasksInProject" parameterType="Long" resultType="TaskAndAssignee">
         SELECT t.id, t.task_title, t.task_status, t.task_dueDate, t.task_priority, t.author_mid, t.author_name, t.createdAt, t.updatedAt, t.updatedBy, tf.taskFileCnt
-        FROM ontrack_task t
+        FROM (SELECT * FROM ontrack_task WHERE deletedBy IS NULL) t
         LEFT JOIN (SELECT task_id, count(task_id) taskFileCnt
         FROM task_file
         WHERE deletedBy IS NULL

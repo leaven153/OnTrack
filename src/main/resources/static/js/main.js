@@ -1506,12 +1506,15 @@ window.onload = function(){
                     // 열려 있는 다른 모든 캘린더 닫는다.
                     document.querySelectorAll(".edit-task-duedate").forEach(function(everyCal){
                         everyCal.classList.add("hide");
+                        everyCal.classList.add("opacity0")
                     });
 
                     btn.querySelector(".edit-task-duedate").classList.remove("hide");
+                    btn.querySelector(".edit-task-duedate").classList.remove("opacity0");
                     // btn.querySelector(".input-edit-task-duedate").showPicker();
                 } else {
                     btn.querySelector(".edit-task-duedate").classList.add("hide");
+                    btn.querySelector(".edit-task-duedate").classList.add("opacity0");
                 }
             });
         });
@@ -1523,7 +1526,7 @@ window.onload = function(){
         divEditTaskDueDate.forEach(function(div){
            div.addEventListener("click", (e)=>{
                e.stopPropagation();
-               console.log(`div click!`);
+               console.log(`캘린더 클릭됨`);
            });
         });
     } // 2) 캘린더div와 btn분리 및 반영하기 버튼 이벤트 ends
@@ -1949,7 +1952,7 @@ window.onload = function(){
         chosenName.addEventListener("click", ()=>{
             // 해당 input에 선택됨 표시(class="chosen")
             // console.log(this); // html...
-            // console.log(chosenName); // <input id="assignee1" class="hide" type="checkbox" name="taskAssignee" value="박종건">
+            console.log(chosenName); // <input id="assignee1" class="hide" type="checkbox" name="taskAssignee" value="박종건">
             chosenName.classList.add("chosen");
 
             // 2. '담당자 배정하기' 글씨 hide
@@ -3503,12 +3506,12 @@ window.onload = function(){
 
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
 
-            const taskDeleteRequest = {
+            const taskBinRequest = {
                 taskIds: checkedTaskList,
                 deletedBy: executorMid
             };
 
-            console.log(taskDeleteRequest);
+            console.log(taskBinRequest);
             // Object { taskIds: Map(4), deletedBy: "14" }
             // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
             // size: 4
@@ -3523,10 +3526,10 @@ window.onload = function(){
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(taskDeleteRequest)
+                body: JSON.stringify(taskBinRequest)
             }).then(response => {
                 if(response.ok){
-                    console.log(`할 일 삭제ing`);
+                    console.log(`할 일 (체크박스로) 삭제ing`);
                     // 삭제할 task id array clear
                     checkedTaskList = [];
 
@@ -3534,6 +3537,37 @@ window.onload = function(){
                 } else {
                     alert(`할 일 삭제가 완료되지 않았습니다.`);
                 }
+            });
+
+        });
+    } // 체크박스에 의한 할 일 삭제 end(.btn-delete-task)
+
+    /*---------- 065 할 일 삭제(개별row) ------------*/
+    if(elExists(document.querySelector(".btn-delete-eachTask"))){
+        const btnDelTaskEachRow = document.querySelectorAll(".btn-delete-eachTask");
+        btnDelTaskEachRow.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
+                console.log('개별 할 일 삭제 버튼 눌림');
+                const data = btn.dataset;
+                console.log(data);
+                checkedTaskList.push(data["taskid"]);
+                const taskBinRequest = {
+                    taskIds: checkedTaskList,
+                    deletedBy: data["executormid"]
+                };
+
+                fetch(`http://localhost:8080/task`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskBinRequest)
+                }).then(response => {
+                    if(response.ok){
+                        console.log(`할 일 개별 row 지우는 중`)
+                        checkedTaskList = [];
+                    }
+                });
             });
 
         });

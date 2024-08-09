@@ -17,8 +17,8 @@ public class TaskRepository {
     private final TaskMapper taskMapper;
 
     // 새 할 일 등록
-    public Long newTask(OnTrackTask task){
-        return taskMapper.newTask(task);
+    public Long addTask(OnTrackTask task){
+        return taskMapper.addTask(task);
     }
 
     // 기록(history): 새 할 일 등록, 담당자 추가
@@ -108,4 +108,12 @@ public class TaskRepository {
 
     // 할 일 상세: (관리자에 의한)file 삭제
     public int deleteFileByAdmin(TaskFile deleteItem) { return taskMapper.deleteFileByAdmin(deleteItem); }
+
+    // 할 일 삭제
+    public List<OnTrackTask> delTask(Long taskId) { return taskMapper.delTask(taskId); }
+
+    // 휴지통으로 이동 or 복원 (update deletedAt, deletedBy)
+    public Long taskBin(OnTrackTask binRequest) { return taskMapper.taskSwitchBin(binRequest); }
+
+
 }

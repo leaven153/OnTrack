@@ -5,10 +5,7 @@ import me.jhchoi.ontrack.domain.OnTrackTask;
 import me.jhchoi.ontrack.domain.TaskAssignment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
-import me.jhchoi.ontrack.dto.FileStore;
-import me.jhchoi.ontrack.dto.TaskAndAssignee;
-import me.jhchoi.ontrack.dto.TaskDetailResponse;
-import me.jhchoi.ontrack.dto.TaskEditRequest;
+import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +57,7 @@ class TaskServiceTest {
 
         OnTrackTask task = taskFormRequest.dtoToEntityTask();
 
-        taskRepository.newTask(task);
+        taskRepository.addTask(task);
 
         taskRepository.log(TaskHistory.logNewTask(task));
 
@@ -214,6 +211,50 @@ class TaskServiceTest {
         log.info("존재하지 않는 할 일을 수정한다면, result는?: {}", result);
         // 존재하지 않는 할 일을 수정한다면, result는?: 0
     } // editTaskTitle test ends
+
+    @Test @DisplayName("할 일 삭제(휴지통으로 이동)")
+    void deleteTask(){
+
+        // given
+        List<Long> taskIds = new ArrayList<>();
+        taskIds.add(21L);
+        taskIds.add(22L);
+
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+
+        TaskBinRequest deleteRequest = TaskBinRequest.builder()
+                .taskIds(taskIds)
+                .deletedBy(14L)
+                .deletedAt(nowWithNano.minusNanos(nanoSec))
+                .build();
+
+        List<OnTrackTask> taskList = new ArrayList<>();
+
+        // when
+        // 1. ontrack_task 테이블에서 해당 task 정보를 모두 가져온다. Optional<List<OnTrackTask>> task
+        /*
+        for(int i = 0; i < deleteRequest.getTaskIds().size(); i++) {
+            Optional<OnTrackTask> task = taskRepository.findByTaskId(deleteRequest.getTaskIds().get(i));
+            task.ifPresent(t -> {
+                t.setDeletedAt(deleteRequest.getDeletedAt());
+                t.setDeletedBy(deleteRequest.getDeletedBy());
+                taskList.add(t);
+            });
+            // task.ifPresent(taskList::add);
+        }
+
+        // 2. task_bin 테이블에 해당 task 정보를 입력한다.
+        for(int i = 0; i < taskList.size(); i++) {
+            taskRepository.insertIntoBin(taskList.get(i));
+        }
+
+        // 3. ontrack_task 테이블에서 해당 task id를 삭제한다. (deletedRequest List<Long> taskIDs)
+        for(int i = 0; i < deleteRequest.getTaskIds().size(); i++) {
+            taskRepository.delTask(deleteRequest.getTaskIds().get(i));
+        }
+        */
+    }
 
 
 }

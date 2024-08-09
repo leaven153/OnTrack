@@ -6,10 +6,10 @@
   <meta name="Keywords" content="mypage">
   <meta name="Description" content="all projects">
 
-  <title>MMOM -Mypage(bin)</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/bin.js"></script>
+  <title>OnTrack - 휴지통</title>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+  <script src="../../static/js/bin.js" th:src="@{/js/bin.js}"></script>
  </head>
  <body>
 
@@ -26,14 +26,14 @@
   <div class="flex-col-start-nowrap mypage-fixed-top" th:fragment="dunno">
     <div class="flex-row-end-center-nowrap wrapper">
       <div class="user-name flex-row-start-nowrap cursorP">
-        <span class="font-18 bold">최진화</span>
+        <span class="font-18 bold" th:text="${loginUser.getUserName()}">최진화</span>
         <!-- <div class="alarm review"></div>
         <div class="alarm done"></div> -->
       </div>
     </div>
     <div class="flex-row-justify-start-align-center wrapper mb-20 noShrink">
       <div class="flex-row-justify-start-align-center noShrink">
-        <img src="/imgs/icon_bin.png" alt="" class="img-40 mr-5">
+        <img src="../../static/imgs/icon_bin.png" th:src="@{/imgs/icon_bin.png}" alt="bin" class="img-40 mr-5">
         <span class="font-36 bold c411 noShrink">휴지통</span>
         <p class="bin-guide noShrink">휴지통에 있는 컨텐츠는 삭제일로부터 7일 후 <br/>완전히 삭제되며 복원이 불가능합니다. </p>
       </div>

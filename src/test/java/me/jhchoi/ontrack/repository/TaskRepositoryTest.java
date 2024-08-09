@@ -50,7 +50,7 @@ public class TaskRepositoryTest {
                 .updatedAt(new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .updatedBy(1L)
                 .build();
-        Long savedTaskId = taskRepository.newTask(task);
+        Long savedTaskId = taskRepository.addTask(task);
         assertThat(task.getId()).isEqualTo(savedTaskId);
     }// test: new task
 

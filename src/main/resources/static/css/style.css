@@ -653,21 +653,18 @@ div.content-chkbox input {
     width: 0;
 }
 
+div.btn-delete-eachTask:hover img.bin,
+img.bin:hover,
+div.content-chkbox:hover input ~ span.chkmark,
 .status-assignee:hover div[class*=btn-],
 span[class*=edit-task-title]:hover ~ img.btn-edit-task-title,
 span.status-remark:hover ~ span.transit-250,
 span.transit-250:hover,
-img.btn-edit-task-title:hover{ /* div.content-chkbox:hover span.chkmark ,
-div.content-chkbox:hover input*/
+img.btn-edit-task-title:hover{
     transition-duration: 250ms;
     opacity: 1; 
 }
 
-
-div.content-chkbox:hover input ~ span.chkmark {
-    transition-duration: 250ms;
-    opacity: 1;
-}
 
 .content-chkbox input:checked ~ span.chkmark{
     opacity: 1;
@@ -801,6 +798,12 @@ img.btn-create-child-task:hover ~ .hover-tip-child {
 /* 작성자 */
 .tableview-column:nth-child(8){
     flex-basis: 10%;
+    flex-shrink: 0;
+}
+
+/* 삭제버튼 */
+.tableview-column:nth-child(9){
+    flex-basis: 2%;
     flex-shrink: 0;
 }
 

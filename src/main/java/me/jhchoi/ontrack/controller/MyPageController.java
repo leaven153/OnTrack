@@ -7,6 +7,7 @@ import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.dto.MyProject;
 import me.jhchoi.ontrack.dto.ProjectRequest;
 import me.jhchoi.ontrack.service.ProjectService;
+import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/mypage")
 public class MyPageController {
     private final ProjectService projectService;
+    private final TaskService taskService;
 
     @GetMapping("/myProjects")
     public String myProjects(HttpSession session, Model model){
@@ -52,12 +54,24 @@ public class MyPageController {
     @GetMapping("/myTasks")
     public String myTasks(){
         log.info("=================myTasks====================");
+        // 최종수정일, 최종수정자를 보여주는데,
+        // ● 최종 수정 항목 출력 여부 & 무엇무엇을 출력할 것인가
+        // 진행상태, 할 일 명, 마감일, 담당자 배정/해제 + 소통, 파일, 담당자?
         return "/mypage/myTasks";
     }
 
     @GetMapping("/bin")
-    public String myBin(){
+    public String myBin(HttpSession session, Model model){
         log.info("=================bin====================");
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            log.info("로그인 정보 없음");
+            return "redirect:../login";
+        }
+
+        // 영구 삭제의 권한은 누구에게? >> 할 일 작성자 only? (생성자creator, 관리자admin??)
+        model.addAttribute("loginUser", loginUser);
+
         return "/mypage/bin";
     }
 }
