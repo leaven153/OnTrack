@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface TaskMapper {
     
     // 새 할 일 등록
-    Long newTask(OnTrackTask task);
+    Long addTask(OnTrackTask task);
 
     // 기록(history): 새 할 일 등록(할일명), 담당자 배정,
     Long log(TaskHistory taskHistory);
@@ -91,6 +91,17 @@ public interface TaskMapper {
     // 파일id로 파일 조회
     TaskFile findFileById(Long fileId);
 
+    // 할 일 ↔ 휴지통
+    Long taskSwitchBin(OnTrackTask binRequest);
+
+    // 휴지통 목록 조회(삭제된 할 일 조회)
+
+    // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
     List<OnTrackTask> delTask(Long taskId);
+
+    // 할 일 영구 삭제 ⓣ 담당 내역 삭제
+    // 할 일 영구 삭제 ② 소통 내역 삭제
+    // 할 일 영구 삭제 ③ 진행 내역 삭제
+    // 할 일 영구 삭제 ④ 파일 삭제
 
 }

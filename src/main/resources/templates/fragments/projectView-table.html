@@ -85,7 +85,7 @@
       <div class="tableview-taskrow bottom-line ">
         <div class="tableview-column content-chkbox">
           <label class="chkbox-container">
-            <input type="checkbox" class="task-checkbox" name="" th:value="${task.getId()}">
+            <input type="checkbox" class="task-checkbox" name="" th:value="${task.getId()}" th:if="${project.position == 'creator' or project.position == 'admin'}">
             <span class="chkmark"></span>
           </label>
         </div>
@@ -214,8 +214,8 @@
           <img src="../../static/imgs/icon_overDue.png" th:src="@{/imgs/icon_overDue.png}" alt="overDue" class="img-18 mr-5" th:if="${task.getTaskDueDate() le today} and ${task.getTaskDueDate() != null}">
           <span class="altivo-regular dueDate" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'MM.dd ')}" th:classappend="${task.getTaskDueDate() == null}?'font-blur'">03.29</span>
           <span class="ml-5 day" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
-          <div class="edit-task-duedate hide">
-            <input type="date" class="input-edit-task-duedate" th:id="${task.getId()}" th:value="${task.getTaskDueDate() != null}?${task.getTaskDueDate()}">
+          <div class="edit-task-duedate hide opacity0">
+            <input type="date" class="input-edit-task-duedate" th:value="${task.getTaskDueDate() != null}?${task.getTaskDueDate()}"> <!--/*th:attr="data-taskid=${task.getId()}"*/-->
 <!--            <label th:for="${task.getId()}">-->
 <!--              <img src="../../static/imgs/icon_calendar.png" th:src="@{/imgs/icon_calendar.png}" class="img-10" alt="edit due date">-->
 <!--            </label>-->
@@ -231,7 +231,13 @@
         </div>
 
         <!-- author -->
-        <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div> <!-- vertical-ctrl01-->
+        <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div>
+
+        <div class="tableview-column btn-delete-eachTask" th:attr="data-taskid=${task.getId()}, data-executormid=${myMid}">
+          <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" class="img-15 bin opacity0" alt="delete task"
+               th:if="${task.getAuthorMid() == myMid or project.position == 'creator' or project.position == 'admin'}">
+        </div>
+
       </div><!-- 테이블뷰: 할 일 목록Row 끝 Task List Contents Ends -->
     </th:block>
   </div>

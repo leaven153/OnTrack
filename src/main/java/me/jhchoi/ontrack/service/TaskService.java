@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
-import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -42,7 +41,7 @@ public class TaskService {
         OnTrackTask task = taskFormRequest.dtoToEntityTask();
 
         // 1-1. 할 일 등록
-        taskRepository.newTask(task);
+        taskRepository.addTask(task);
 
         // 2. history 등록 - ①할 일 명,
         taskRepository.log(TaskHistory.logNewTask(task));
@@ -446,43 +445,66 @@ public class TaskService {
         return taskRepository.getTaskHistory(taskId);
     }
 
+
     /**
      * created : 2024-08-
-     * param   : Long taskId
+     * param   : TaskBinRequest
      * return  : ResponseEntity
-     * explain : 할 일 삭제
+     * explain : 할 일 삭제 및 복원(deletedAt, deletedBy)
      * */
-    public ResponseEntity<?> deleteTask(TaskDeleteRequest deleteRequest) {
+    @Transactional
+    public ResponseEntity<?> taskSwitchBin(TaskBinRequest binRequest) {
 
-        // 1. ontrack_task 테이블에서 해당 task 정보를 모두 가져온다. Optional<List<OnTrackTask>> task
-        // 2. ontrack_task 테이블에서 해당 task id를 삭제한다. (deletedRequest List<Long> taskIDs)
-        // 3. task_bin 테이블에 해당 task 정보를 입력한다.
-
-        return ResponseEntity.ok("할 일 삭제 중");
+        // ontrack_task테이블의 deletedAt, deletedBy를 업데이트
+        // 복원일 경우, deletedAt과 deletedBy에는 null이 들어있다.
+        for(int i = 0; i < binRequest.getTaskIds().size(); i++){
+            OnTrackTask task = OnTrackTask.builder()
+                    .id(binRequest.getTaskIds().get(i))
+                    .deletedAt(binRequest.getDeletedAt())
+                    .deletedBy(binRequest.getDeletedBy())
+                    .build();
+            taskRepository.taskBin(task);
+        }
+        
+        return ResponseEntity.ok("할 일 삭제/복원 중");
+        
     }
 
     /**
      * created : 2024-08-
-     * param   : Long taskId
+     * param   :
      * return  : ResponseEntity
-     * explain : 휴지통에서 복원
+     * explain : 휴지통 조회
      * */
-    public ResponseEntity<?> restoreTask(TaskDeleteRequest deleteRequest) {
+    public List<OnTrackTask> getBin(Long userId) {
+        // project_member: 내 userId의 memberId list 조회
+
+        // task_assignment: 내 member id가 있는 task id list
+
 
         List<OnTrackTask> taskList = new ArrayList<>();
-        // 1. ontrack_task 테이블에서 해당 task 정보를 모두 가져온다. Optional<List<OnTrackTask>> task
-        for(int i = 0; i < deleteRequest.getTaskIds().size(); i++) {
-            Optional<OnTrackTask> task = taskRepository.findByTaskId(deleteRequest.getTaskIds().get(i));
-            task.ifPresent(taskList::add);
-        }
-
-        // 2. task_bin 테이블에 해당 task 정보를 입력한다.
+        // ontrack_task: deletedBy가 null이 아니고, deletedAt이 7일 경과하지 않은, task id의 row list
 
 
-        // 3. ontrack_task 테이블에서 해당 task id를 삭제한다. (deletedRequest List<Long> taskIDs)
+        return taskList;
+    }
 
+    /**
+     * created : 2024-08-
+     * param   :
+     * return  : ResponseEntity
+     * explain : 휴지통에서 영구삭제
+     * */
+    @Transactional
+    public ResponseEntity<?> deleteTask(Long taskId) {
 
-        return ResponseEntity.ok("할 일 삭제 중");
+        // 할 일 영구 삭제 ⓣ 담당 내역 삭제
+        // 할 일 영구 삭제 ② 소통 내역 삭제
+        // 할 일 영구 삭제 ③ 진행 내역 삭제
+        // 할 일 영구 삭제 ④ 파일 삭제
+        // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
+
+        return ResponseEntity.ok("할 일 복원 중");
     }
 
 } // class TaskService ends

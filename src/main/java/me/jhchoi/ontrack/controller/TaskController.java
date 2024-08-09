@@ -9,10 +9,7 @@ import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.UrlResource;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
-import org.thymeleaf.spring6.view.ThymeleafView;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,11 +38,11 @@ public class TaskController {
     private final MemberService memberService;
     private final FileStore fileStore;
 
-    /*
-     * @created : 2024-05-
-     * @param   : @ModelAttribute TaskAndAssignee
-     * @return  : ResponseEntity
-     * @explain : 할 일 추가
+    /**
+     * created : 2024-05-
+     * param   : @ModelAttribute TaskAndAssignee
+     * return  : ResponseEntity
+     * explain : 할 일 추가
      * */
     @PostMapping
     public ResponseEntity<?> addTaskSubmit(@ModelAttribute TaskAndAssignee taskFormRequest, HttpSession session) {
@@ -80,11 +75,11 @@ public class TaskController {
     }
 
 
-    /*
-     * @created : 2024-07-
-     * @param   : @PathVariable: Long taskId, @RequestParam: String tab
-     * @return  : String(redirect - getProject)
-     * @explain : 할 일 상세 모달(탭) 열기
+    /**
+     * created : 2024-07-
+     * param   : @PathVariable: Long taskId, @RequestParam: String tab
+     * return  : String(redirect - getProject)
+     * explain : 할 일 상세 모달(탭) 열기
      * */
     @GetMapping("/detail/{taskId}")
     public String getTaskDetail(@PathVariable Long taskId, @RequestParam String tab, HttpSession session, RedirectAttributes redirectAttributes){
@@ -114,11 +109,11 @@ public class TaskController {
     } // getTask ends
 
 
-    /*
-     * @created : 2024-07-
-     * @param   : @PathVariable: Long taskId, @RequestParam: String type(등록/수정), @RequestBody: TaskDetailRequest- 내용
-     * @return  : ResponseEntity
-     * @explain : 할 일 상세: 소통하기 글 등록·수정
+    /**
+     * created : 2024-07-
+     * param   : @PathVariable: Long taskId, @RequestParam: String type(등록/수정), @RequestBody: TaskDetailRequest- 내용
+     * return  : ResponseEntity
+     * explain : 할 일 상세: 소통하기 글 등록·수정
      * */
     @PostMapping("/comment")
     public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
@@ -150,11 +145,11 @@ public class TaskController {
         return response;
     }
 
-    /*
-     * @created : 2024-08-06
-     * @param   : @PathVariable: Long commentId
-     * @return  : ResponseEntity
-     * @explain : 할 일 상세: 소통하기 글 삭제
+    /**
+     * created : 2024-08-06
+     * param   : @PathVariable: Long commentId
+     * return  : ResponseEntity
+     * explain : 할 일 상세: 소통하기 글 삭제
      * */
     @DeleteMapping("/comment")
     public ResponseEntity<?> deleteComment(@RequestParam Long cId){
@@ -162,11 +157,11 @@ public class TaskController {
         return taskService.delComment(cId);
     }
 
-    /*
-     * @created : 2024-08-02
-     * @param   :
-     * @return  : ResponseEntity
-     * @explain : 파일 업로드
+    /**
+     * created : 2024-08-02
+     * param   :
+     * return  : ResponseEntity
+     * explain : 파일 업로드
      * */
     @PostMapping("/file") // /upload
     public ResponseEntity<?> uploadFile(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId, @RequestBody List<MultipartFile> files){ //
@@ -190,11 +185,11 @@ public class TaskController {
 //        return ResponseEntity.ok("file upload ing");
     }
 
-    /*
-     * @created : 2024-08-01
-     * @param   : Long fileId
-     * @return  : ResponseEntity
-     * @explain : 파일 다운로드
+    /**
+     * created : 2024-08-01
+     * param   : Long fileId
+     * return  : ResponseEntity
+     * explain : 파일 다운로드
      * */
     @GetMapping("/file/{fileId}")
     public ResponseEntity<?> downloadFile(@PathVariable Long fileId) throws MalformedURLException {
@@ -208,11 +203,11 @@ public class TaskController {
                 .body(resource);
     }
 
-    /*
-     * @created : 2024-08-04
-     * @param   : Long fileId
-     * @return  : ResponseEntity
-     * @explain : 파일 삭제
+    /**
+     * created : 2024-08-04
+     * param   : Long fileId
+     * return  : ResponseEntity
+     * explain : 파일 삭제
      * */
     @DeleteMapping("/file")
     public ResponseEntity<?> deleteFile(@RequestParam Long fId, @RequestParam(required = false) Long executorMid){
@@ -238,11 +233,11 @@ public class TaskController {
     }
 
 
-    /*
-     * @created : 2024-0567-
-     * @param   : @RequestParam: item- 어떤 항목을 바꾸는가, @RequestBody: taskHistory- 바꾸는 내용
-     * @return  : ResponseEntity
-     * @explain : 할 일 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate)(, 중요도(priority))
+    /**
+     * created : 2024-0567-
+     * param   : @RequestParam: item- 어떤 항목을 바꾸는가, @RequestBody: taskHistory- 바꾸는 내용
+     * return  : ResponseEntity
+     * explain : 할 일 수정: 할 일 명(title), 진행상태(status), 마감일(dueDate)(, 중요도(priority))
      * */
     @PostMapping("/editTask")
     public ResponseEntity<?> editTask(HttpSession session, @RequestParam String item, @RequestParam(required = false) String statusNum, @RequestBody TaskHistory th) {
@@ -310,11 +305,11 @@ public class TaskController {
         return response;
     }
 
-    /*
-     * @created : 2024-0567-
-     * @param   : @RequestParam: mid- 배정/해제되는 멤버id, @RequestBody: taskHistory
-     * @return  : ResponseEntity
-     * @explain : 담당자 배정/해제
+    /**
+     * created : 2024-0567-
+     * param   : @RequestParam: mid- 배정/해제되는 멤버id, @RequestBody: taskHistory
+     * return  : ResponseEntity
+     * explain : 담당자 배정/해제
      * */
     @PostMapping("/editAssignee")
     @ResponseBody
@@ -371,11 +366,11 @@ public class TaskController {
         return response;
     }
 
-    /*
-     * @created : 2024-07-
-     * @param   : @RequestParam: String object- 찾는 항목(member/task/...), @RequestBody: SearchCond- 찾을 내용
-     * @return  : ResponseEntity
-     * @explain : 검색: ① 미배정멤버
+    /**
+     * created : 2024-07-
+     * param   : @RequestParam: String object- 찾는 항목(member/task/...), @RequestBody: SearchCond- 찾을 내용
+     * return  : ResponseEntity
+     * explain : 검색: ① 미배정멤버
      * */
     @PostMapping("/search")
     public ResponseEntity<?> search(@RequestParam String object, @RequestBody SearchCond searchCond){
@@ -414,22 +409,23 @@ public class TaskController {
         return ResponseEntity.ok().body(result); //new ResponseEntity<>(listRs, HttpStatus.OK); // ResponseEntity.ok().body("none");
     }
 
-    /*
-     * @created : 2024-08-06
-     * @param   : @ModelAttribute TaskAndAssignee
-     * @return  : ResponseEntity
-     * @explain : 할 일 삭제
+    /**
+     * created : 2024-08-06
+     * param   : @ModelAttribute TaskAndAssignee
+     * return  : ResponseEntity
+     * explain : 프로젝트에서 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<?> deleteTask(@RequestBody TaskDeleteRequest taskDeleteRequest){
-        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest);
-        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest.getTaskIds().size());
-        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskDeleteRequest.getTaskIds().get(0));
-        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskDeleteRequest(taskIds=[8, 9, 11], deletedBy=14,
+    public ResponseEntity<?> deleteTask(@RequestBody TaskBinRequest taskBinRequest){
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest.getTaskIds().size());
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest.getTaskIds().get(0));
+        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskBinRequest(taskIds=[8, 9, 11], deletedBy=14,
         // deletedAt=null)
+        // 개별 row로 지울 땐:  TaskBinRequest(taskIds=[8], deletedBy=14, deletedAt=null)
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
-        taskDeleteRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
+        taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
         return ResponseEntity.ok("할 일 삭제중");
     }
 

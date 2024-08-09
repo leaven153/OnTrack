@@ -18,6 +18,7 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    // 해당 이름을 가진 멤버가 해당 프로젝트에 존재하는지 검색
     public ResponseEntity<List<ProjectMember>> findByName(SearchCond searchCond){
         ProjectMember pm = ProjectMember.builder()
                 .projectId(searchCond.getProjectId())

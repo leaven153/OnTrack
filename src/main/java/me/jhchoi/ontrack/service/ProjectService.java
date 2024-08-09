@@ -174,6 +174,26 @@ public class ProjectService {
     }
 
     /**
+     * started  : 24-08-
+     * updated  : 
+     * param    : Long userId
+     * return   : List<OnTrackProject>
+     * explain  : 휴지통 조회
+     * */
+    public List<OnTrackProject> getBin(Long userId){
+
+
+        // project_member: 내 userId의 projectId list 조회
+
+        List<OnTrackProject> projectList = new ArrayList<>();
+        // ontrack_project: deletedBy가 null이 아니고 deletedAt이 7일 비경과, project id row list
+
+
+        return projectList;
+    }
+
+    
+    /**
      * created  : 24-05
      * param    :
      * return   :
