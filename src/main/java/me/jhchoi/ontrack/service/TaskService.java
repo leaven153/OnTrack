@@ -446,7 +446,7 @@ public class TaskService {
         return taskRepository.getTaskHistory(taskId);
     }
 
-    /*
+    /**
      * created : 2024-08-
      * param   : Long taskId
      * return  : ResponseEntity
@@ -461,5 +461,28 @@ public class TaskService {
         return ResponseEntity.ok("할 일 삭제 중");
     }
 
+    /**
+     * created : 2024-08-
+     * param   : Long taskId
+     * return  : ResponseEntity
+     * explain : 휴지통에서 복원
+     * */
+    public ResponseEntity<?> restoreTask(TaskDeleteRequest deleteRequest) {
+
+        List<OnTrackTask> taskList = new ArrayList<>();
+        // 1. ontrack_task 테이블에서 해당 task 정보를 모두 가져온다. Optional<List<OnTrackTask>> task
+        for(int i = 0; i < deleteRequest.getTaskIds().size(); i++) {
+            Optional<OnTrackTask> task = taskRepository.findByTaskId(deleteRequest.getTaskIds().get(i));
+            task.ifPresent(taskList::add);
+        }
+
+        // 2. task_bin 테이블에 해당 task 정보를 입력한다.
+
+
+        // 3. ontrack_task 테이블에서 해당 task id를 삭제한다. (deletedRequest List<Long> taskIDs)
+
+
+        return ResponseEntity.ok("할 일 삭제 중");
+    }
 
 } // class TaskService ends

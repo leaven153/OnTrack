@@ -58,6 +58,8 @@ public class MyPageController {
     @GetMapping("/bin")
     public String myBin(){
         log.info("=================bin====================");
+        // deletedAt이 7일 지난 것은 출력하지 않는다.
+
         return "/mypage/bin";
     }
 }

@@ -91,4 +91,6 @@ public interface TaskMapper {
     // 파일id로 파일 조회
     TaskFile findFileById(Long fileId);
 
+    List<OnTrackTask> delTask(Long taskId);
+
 }

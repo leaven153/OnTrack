@@ -108,4 +108,7 @@ public class TaskRepository {
 
     // 할 일 상세: (관리자에 의한)file 삭제
     public int deleteFileByAdmin(TaskFile deleteItem) { return taskMapper.deleteFileByAdmin(deleteItem); }
+
+    // 할 일 삭제
+    public List<OnTrackTask> delTask(Long taskId) { return taskMapper.delTask(taskId); }
 }

@@ -35,8 +35,10 @@
         VALUES (#{projectId}, #{taskId}, #{modItem}, #{modType}, #{modContent}, #{updatedAt}, #{updatedBy})
     </insert>
 
+    <insert id="bin" useG
+
     <select id="findByTaskId" resultType="OnTrackTask">
-        SELECT project_id, task_title, author_mid, author_name, task_priority, task_status, task_dueDate, createdAt, updatedAt, updatedBy
+        SELECT project_id, task_title, author_mid, author_name, task_priority, task_status, task_dueDate, createdAt, updatedAt, updatedBy, task_parent_id, hasChild
         FROM ontrack_task
         WHERE id = #{id}
     </select>
@@ -208,6 +210,12 @@
     <delete id="delComment" parameterType="Long">
         DELETE
         FROM task_comment
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="delTask" parameterType="Long">
+        DELETE
+        FROM ontrack_task
         WHERE id = #{id}
     </delete>
 
