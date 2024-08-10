@@ -3492,25 +3492,49 @@ window.onload = function(){
         });
     }
 
-    /*---------- 063 할 일 삭제 버튼 클릭 ------------*/
+    /*---------- 063 (체크박스에 의해 노출된) 할 일 삭제 버튼 클릭 ------------*/
     if(elExists(document.querySelector(".btn-delete-task"))){
         document.querySelector(".btn-delete-task").addEventListener("click", ()=>{
             console.log(`삭제버튼 클릭됨`);
             console.log(cntChkBox);
+            let taskId;
             document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
                 if(chkBox.checked === true) {
                     checkedTaskList.push(chkBox.value);
+                    taskId = chkBox.value;
                 }
             });
             console.log(checkedTaskList);
 
+            let projectAndTaskIds = [];
+            let projectId = 9;
+            let testId1 = 10;
+            let testId = new Map();
+            testId.set(projectId, taskId);
+            let testId2 = new Map();
+            let testId3 = {
+                projectId: projectId,
+                taskId: testId1
+            };
+            testId2.set(projectId, taskId);
+            projectAndTaskIds.push(testId);
+            projectAndTaskIds.push(testId2);
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
 
             const taskBinRequest = {
-                taskIds: checkedTaskList,
+                // taskIds: checkedTaskList,
+                projectAndTaskId: projectAndTaskIds,
+                // projectAndTaskId: Array [ Map(1) ] // 0: Map { 9 → "13" }
+                testId: testId,
                 deletedBy: executorMid
             };
 
+            console.log(projectAndTaskIds);
+            // Array [ Map(1), Map(1) ]
+            // 0: Map { 9 → "13" }
+            // 1: Map { 9 → "13" }
+            // length: 2
+            console.log(testId2);
             console.log(taskBinRequest);
             // Object { taskIds: Map(4), deletedBy: "14" }
             // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
@@ -3526,7 +3550,11 @@ window.onload = function(){
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(taskBinRequest)
+                body: JSON.stringify({
+                    deletedBy: executorMid,
+                    projectAndTaskId: [{9:taskId}, {10:11}, {25: 12}, testId3] // [testId, testId2]는 또 [{}, {}] 형태로 넘어갔었다...
+                })
+                // JSON.stringify(taskBinRequest)
             }).then(response => {
                 if(response.ok){
                     console.log(`할 일 (체크박스로) 삭제ing`);
@@ -3542,7 +3570,7 @@ window.onload = function(){
         });
     } // 체크박스에 의한 할 일 삭제 end(.btn-delete-task)
 
-    /*---------- 065 할 일 삭제(개별row) ------------*/
+    /*---------- 064 (개별row의 삭제 버튼에 의한)할 일 삭제 ------------*/
     if(elExists(document.querySelector(".btn-delete-eachTask"))){
         const btnDelTaskEachRow = document.querySelectorAll(".btn-delete-eachTask");
         btnDelTaskEachRow.forEach(function(btn){
@@ -3573,7 +3601,7 @@ window.onload = function(){
         });
     }
 
-    /*---------- 064 할 일 테이블 뷰: 맨 위 체크박스 클릭 ------------*/
+    /*---------- 065 할 일 테이블 뷰: 맨 위 체크박스 클릭 ------------*/
     // check-all, task-checkbox
     if(elExists(document.querySelector(".tableview-check-all"))){
         const btnCheckAll = document.querySelector(".tableview-check-all");

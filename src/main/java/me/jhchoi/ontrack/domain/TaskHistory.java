@@ -30,7 +30,7 @@ public class TaskHistory {
     private Integer cntN;
 
 
-    // 할 일 명 등록
+    // 할 일 등록
     public static TaskHistory logNewTask(OnTrackTask newTask){
         return TaskHistory.builder()
                 .projectId(newTask.getProjectId())
@@ -43,6 +43,7 @@ public class TaskHistory {
                 .build();
     }
 
+    // 할 일 등록 시: 담당자 배정 (cf. 할 일 등록 이후 담당자 배정 때는 JS에서 객체생성해서전달)
     public static TaskHistory logAssignment(TaskAssignment assignees, Long authorId) {
         return TaskHistory.builder()
                 .projectId(assignees.getProjectId())
@@ -55,6 +56,7 @@ public class TaskHistory {
                 .build();
     }
 
+    // 할 일 등록 시: 마감일 등록 (cf. 할 일 등록 이후 마감일 변경 때는 JS에서 객체생성해서전달)
     public static TaskHistory logDueDate(OnTrackTask newTask){
         return TaskHistory.builder()
                 .projectId(newTask.getProjectId())

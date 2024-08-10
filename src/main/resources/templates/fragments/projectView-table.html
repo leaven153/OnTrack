@@ -92,8 +92,8 @@
         <!-- child mark: create or has-->
         <div class="tableview-column flex-row-center-center-nowrap">
           <img src="/imgs/icon_arrow_closed910.png" alt="has child task" class="ml-3 hide">
-          <img src="/imgs/icon_sub.png" alt="create child task" class="img-18 btn-create-child-task">
-          <span class="hover-tip-child">세부 항목으로 나누기</span>
+          <img src="/imgs/icon_sub.png" alt="create child task" class="img-18" th:classappend="${task.chkEditAuth(myMid, task)}?'btn-create-child-task':'hide'">
+          <span class="hover-tip-child" th:if="${task.chkEditAuth(myMid, task)}">세부 항목으로 나누기</span>
         </div>
 
         <!-- task title -->
@@ -233,6 +233,7 @@
         <!-- author -->
         <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div>
 
+        <!-- delete task -->
         <div class="tableview-column btn-delete-eachTask" th:attr="data-taskid=${task.getId()}, data-executormid=${myMid}">
           <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" class="img-15 bin opacity0" alt="delete task"
                th:if="${task.getAuthorMid() == myMid or project.position == 'creator' or project.position == 'admin'}">

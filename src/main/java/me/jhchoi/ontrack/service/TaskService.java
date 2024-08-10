@@ -405,7 +405,7 @@ public class TaskService {
      * created : 2024-08-06
      * param   : TaskDetailRequest
      * return  : ResponseEntity<String>
-     * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단
+     * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단 (DB에는 남아있음. 관리자 화면에서 조회 가능)
      * */
     @Transactional
     public ResponseEntity<String> blockTaskComment(TaskDetailRequest blockComment){
@@ -450,13 +450,28 @@ public class TaskService {
      * created : 2024-08-
      * param   : TaskBinRequest
      * return  : ResponseEntity
-     * explain : 할 일 삭제 및 복원(deletedAt, deletedBy)
+     * explain : 할 일 삭제/복원(update deletedAt, deletedBy)
      * */
     @Transactional
     public ResponseEntity<?> taskSwitchBin(TaskBinRequest binRequest) {
 
         // ontrack_task테이블의 deletedAt, deletedBy를 업데이트
         // 복원일 경우, deletedAt과 deletedBy에는 null이 들어있다.
+        if(binRequest.getDeletedBy() == null) { // 복원일 경우
+            for(int i = 0; i < binRequest.getTaskIds().size(); i++){
+                TaskHistory th = TaskHistory.builder()
+                        .taskId(binRequest.getTaskIds().get(i))
+                        .modItem("할 일")
+                        .modType("변경")
+                        .modContent("휴지통에서 프로젝트로 복원")
+                        .updatedBy(binRequest.getRestoredBy())
+                        .updatedAt(binRequest.getRestoredAt())
+                        .build();
+            }
+        } else { // 휴지통으로의 이동일 경우
+
+        }
+
         for(int i = 0; i < binRequest.getTaskIds().size(); i++){
             OnTrackTask task = OnTrackTask.builder()
                     .id(binRequest.getTaskIds().get(i))
