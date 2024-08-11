@@ -3461,8 +3461,6 @@ window.onload = function(){
 
     /*---------- 062 할 일 체크박스 클릭(삭제 버튼 출력) ------------*/
     let cntChkBox = 0;
-
-    let checkedTaskList = [];
     if(elExists(document.querySelector(".task-checkbox"))){
         document.querySelectorAll(".task-checkbox").forEach(function(chkbox){
 
@@ -3492,76 +3490,47 @@ window.onload = function(){
         });
     }
 
+    // 삭제할 할 일의 task id 담는 array
+    let checkedTaskList = [];
+
     /*---------- 063 (체크박스에 의해 노출된) 할 일 삭제 버튼 클릭 ------------*/
     if(elExists(document.querySelector(".btn-delete-task"))){
         document.querySelector(".btn-delete-task").addEventListener("click", ()=>{
             console.log(`삭제버튼 클릭됨`);
             console.log(cntChkBox);
-            let taskId;
+
             document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
                 if(chkBox.checked === true) {
                     checkedTaskList.push(chkBox.value);
-                    taskId = chkBox.value;
                 }
             });
             console.log(checkedTaskList);
 
-            let projectAndTaskIds = [];
-            let projectId = 9;
-            let testId1 = 10;
-            let testId = new Map();
-            testId.set(projectId, taskId);
-            let testId2 = new Map();
-            let testId3 = {
-                projectId: projectId,
-                taskId: testId1
-            };
-            testId2.set(projectId, taskId);
-            projectAndTaskIds.push(testId);
-            projectAndTaskIds.push(testId2);
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
+            const projectId = document.querySelector(".btn-delete-task").dataset.projectid;
 
             const taskBinRequest = {
-                // taskIds: checkedTaskList,
-                projectAndTaskId: projectAndTaskIds,
-                // projectAndTaskId: Array [ Map(1) ] // 0: Map { 9 → "13" }
-                testId: testId,
+                type: "remove",
+                projectId: projectId,
+                taskIds: checkedTaskList,
                 deletedBy: executorMid
-            };
+            }
 
-            console.log(projectAndTaskIds);
-            // Array [ Map(1), Map(1) ]
-            // 0: Map { 9 → "13" }
-            // 1: Map { 9 → "13" }
-            // length: 2
-            console.log(testId2);
             console.log(taskBinRequest);
-            // Object { taskIds: Map(4), deletedBy: "14" }
-            // taskIds: Map(4) { 8 → "8", 9 → "9", 11 → "11", … }
-            // size: 4
-            // <entries>
-            // 0: 8 → "8"
-            // 1: 9 → "9"
-            // 2: 11 → "11"
-            // 3: 12 → "12"
 
             fetch(`http://localhost:8080/task`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    deletedBy: executorMid,
-                    projectAndTaskId: [{9:taskId}, {10:11}, {25: 12}, testId3] // [testId, testId2]는 또 [{}, {}] 형태로 넘어갔었다...
-                })
-                // JSON.stringify(taskBinRequest)
+                body: JSON.stringify(taskBinRequest)
+
             }).then(response => {
                 if(response.ok){
-                    console.log(`할 일 (체크박스로) 삭제ing`);
                     // 삭제할 task id array clear
                     checkedTaskList = [];
-
-                    // 화면 리로드?
+                    // 화면 리로드
+                    location.reload();
                 } else {
                     alert(`할 일 삭제가 완료되지 않았습니다.`);
                 }

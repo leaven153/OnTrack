@@ -1,12 +1,13 @@
 package me.jhchoi.ontrack.domain;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.jhchoi.ontrack.dto.BinRequest;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 // 할 일의 변경사항 저장
 // 할 일 탭 중 '내역'에 출력
@@ -27,6 +28,7 @@ public class TaskHistory {
     private String executorName;
 
     // entity로 바꾼다면 컬럼에 포함되지 않도록 할 필드2
+    // 진행내역 출력 시 총 개수를 역순으로 출력한다.
     private Integer cntN;
 
 

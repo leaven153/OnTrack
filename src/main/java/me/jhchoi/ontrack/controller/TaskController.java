@@ -1,9 +1,6 @@
 package me.jhchoi.ontrack.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +9,6 @@ import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
-import org.springframework.asm.TypeReference;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -420,58 +416,23 @@ public class TaskController {
      * explain : 프로젝트에서 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<?> deleteTask(@RequestBody TaskBinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
-         log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
-         // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskBinRequest(projectAndTaskId=[{9=13}, {10=11}, {25=12}, {projectId=9, taskId=10}], taskIds=null, deletedBy=14, deletedAt=null, testId=null, projectId=null, taskId=null, restoredBy=null, restoredAt=null)
-//        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest.getTestId());
-
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            JsonNode node = mapper.readTree(taskBinRequest.toString());
-//            JsonNode node2 = mapper.readTree(taskBinRequest.getProjectAndTaskId().toString());
-//            log.info("mapper를 이용한 readTree: {}", node);
-//        } catch (Exception e){
-//            log.info("에러: {}", e.getMessage());
-//        }
-
-
-//        log.info("내 일 모아보기에서 지울 때(size): {}", taskBinRequest.getProjectAndTaskId().size());
-//        log.info("내 일 모아보기에서 지울 때(project id and task id): {}", taskBinRequest.getProjectAndTaskId().get(0).get(0));
-
-        // TaskBinRequest(projectAndTaskId=[{}], taskIds=null, deletedBy=14, deletedAt=null,
-        // testId={}, restoredBy=null, restoredAt=null)
-        // get(0).get(0) ☞ null
-        // toString() ☞ [{}]
-        // get(0) ☞ 내 일 모아보기에서 지울 때(project id and task id): {}
-        // get(0).entrySet() ☞ 내 일 모아보기에서 지울 때(project id and task id): []
-        // get(0).keySet() ☞ 내 일 모아보기에서 지울 때(project id and task id): []
-
-//        for(int i = 0; i < taskBinRequest.getProjectAndTaskId().size(); i++){
-//            Map<Long, Long> testMap2 = taskBinRequest.getProjectAndTaskId().get(i);
-//            log.info("왜 안되냐: {}", testMap2); // 왜 안되냐: {}
-//            for(Map.Entry<Long, Long> ids : testMap2.entrySet()){
-//                log.info("프로젝트 아이디: {}", ids.getKey());
-//                log.info("할 일 아이디: {}", ids.getValue());
-//            }
-//        }
-
-//        log.info("프로젝트 내에서 할 일을 여러 개 지울 때(size): {}", taskBinRequest.getTaskIds().size());
-//        log.info("프로젝트 내에서 할 일을 여러 개 지울 때(ids): {}", taskBinRequest.getTaskIds().get(0));
-        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까: TaskBinRequest(taskIds=[8, 9, 11], deletedBy=14,
-        // deletedAt=null)
-        // 개별 row로 지울 땐:  TaskBinRequest(taskIds=[8], deletedBy=14, deletedAt=null)
-
-        //        log.info("바디 두개 받아오기가 돼?: {}", testMap); // 2개 받아오기는 안됨..
-//        log.info("바디 두개 받아오기가 돼?: {}", testId1); // , @RequestBody Long testId1
+    public ResponseEntity<?> deleteTask(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
+        log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
+        // 할 일을 여러 개 지우려면 어떻게 받아오면 될까:
+        // BinRequest(
+        // projectAndTaskId=[{}, {}, {projectId=9, taskId=10}],
+        // taskIds=null, deletedBy=14, deletedAt=null, testId=null, projectId=null,
+        // taskId=null, restoredBy=null, restoredAt=null)
 
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
-//        taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
+        taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
+        taskService.taskSwitchBin(taskBinRequest);
         return ResponseEntity.ok("할 일 삭제중");
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteTaskTest(@RequestBody Map<Long, Long> testId) { // @RequestBody TaskBinRequest taskBinRequest
+    public ResponseEntity<?> deleteTaskTest(@RequestBody Map<Long, Long> testId) { // @RequestBody BinRequest taskBinRequest
         //그냥 map으로만 받아오기
         log.info("testId: {}", testId);
         log.info("size: {}", testId.size());
@@ -489,7 +450,7 @@ public class TaskController {
      * explain : 할 일 복원(휴지통 → 프로젝트)
      * */
     @PostMapping("/restore")
-    public ResponseEntity<?> restoreTask(@RequestBody TaskBinRequest taskBinRequest){
+    public ResponseEntity<?> restoreTask(@RequestBody BinRequest taskBinRequest){
         log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest);
         log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().size());
         log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().get(0));

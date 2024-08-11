@@ -113,7 +113,7 @@ public class TaskRepository {
     public List<OnTrackTask> delTask(Long taskId) { return taskMapper.delTask(taskId); }
 
     // 휴지통으로 이동 or 복원 (update deletedAt, deletedBy)
-    public Long taskBin(OnTrackTask binRequest) { return taskMapper.taskSwitchBin(binRequest); }
+    public Long taskSwitchBin(OnTrackTask task) { return taskMapper.taskSwitchBin(task); }
 
 
 }

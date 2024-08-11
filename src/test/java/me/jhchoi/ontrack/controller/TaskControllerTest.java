@@ -1,9 +1,6 @@
 package me.jhchoi.ontrack.controller;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.dto.TaskBinRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +12,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -73,7 +68,7 @@ class TaskControllerTest {
 //        String jsonInput = "{\"testId\": \"value\"}";
 //        ObjectMapper mapper = new ObjectMapper();
 //
-//        Map<String, String> map = (Map<String, String>) mapper.readValue(jsonInput, TaskBinRequest.class);
+//        Map<String, String> map = (Map<String, String>) mapper.readValue(jsonInput, BinRequest.class);
 //        log.info("뭘까 이건: {}", map);
 //    }
 }

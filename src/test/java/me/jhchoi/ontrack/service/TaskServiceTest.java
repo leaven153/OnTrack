@@ -223,7 +223,7 @@ class TaskServiceTest {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanoSec = nowWithNano.getNano();
 
-        TaskBinRequest deleteRequest = TaskBinRequest.builder()
+        BinRequest deleteRequest = BinRequest.builder()
                 .taskIds(taskIds)
                 .deletedBy(14L)
                 .deletedAt(nowWithNano.minusNanos(nanoSec))
