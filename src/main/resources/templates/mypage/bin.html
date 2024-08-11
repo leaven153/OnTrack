@@ -45,25 +45,13 @@
       -->
       <div class="flex-row-start-nowrap ml-24 noShrink">
         <div class="my-bin-btn-after-checked flex-row-justify-start-align-center noShrink">
-          <img src="/imgs/icon_bin4(red).png" alt="" class="img-24">
+          <img src="../../static/imgs/icon_bin4(red).png" th:src="@{/imgs/icon_bin4(red).png}" alt="" class="img-24">
           <span class="cRed bold">영구삭제</span>
         </div>
         <div class="my-bin-btn-after-checked flex-row-justify-start-align-center noShrink ml-10">
-          <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-24">
+          <img src="../../static/imgs/icon_history(boldBrown).png" th:src="@{/imgs/icon_history(boldBrown).png}" alt="" class="img-24">
           <span class="c411 bold">복원</span>
         </div>
-      </div>
-    </div>
-
-    <div class="컬럼명 my-bin-col-names flex-row-justify-start-align-center">
-      <div class="content-chkbox"><input type="checkbox" data-id="binChkAll"></div>
-      <div class=""><span class="">삭제일시</span></div>
-      <div class=""><span class="">유형</span></div>
-      <div class=""><span class="">이름</span></div>
-      <div class=""><span class="">위치</span></div>
-      <div class=""><span class="">삭제한 사람</span></div>
-      <div class="flex-row-justify-start-align-center">
-        <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
       </div>
     </div>
   </div>
@@ -73,9 +61,28 @@
   <div class="nextfixedWrapper">
     
     <!-- 버려진것들 목록 시작 -->
-    <!-- 최종수정일(정렬기준), 최종수정자, 프로젝트명, 할일명, 진행상태, 마감일, 작성일 -->
-    <div class="wrapper flex-col-start-center-nowrap">
-      <div class="각row my-bin-col flex-row-justify-start-align-center">
+    <div class="wrapper">
+      <!-- 프로젝트: 삭제일(정렬기준), 유형(팀/개인), 프로젝트이름 -->
+      <div class="삭제된프로젝트">
+
+      </div>
+      <!-- 할 일: 삭제일(정렬기준), 할 일 명, 삭제한 사람(작성자/관리자/생성자) -->
+      <div class="삭제된할일들컨테이너 ">
+        <div class="삭제된할일들제목">
+          <p class="">삭제된 할 일들</p>
+        </div>
+        <div class="컬럼명 my-bin-col-names flex-row-justify-start-align-center">
+          <div class="content-chkbox"><input type="checkbox" data-id="binChkAll"></div>
+          <div class=""><span class="">삭제일시</span></div>
+          <div class=""><span class="">유형</span></div>
+          <div class=""><span class="">이름</span></div>
+          <div class=""><span class="">위치</span></div>
+          <div class=""><span class="">삭제한 사람</span></div>
+          <div class="flex-row-justify-start-align-center">
+            <img src="../../static/imgs/icon_3dot(h).png" th:src="@{/imgs/icon_3dot(h).png}" alt="" class="img-20">
+          </div>
+        </div>
+        <div class="각row my-bin-col flex-row-justify-start-align-center">
         <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
         <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
         <div class="유형"><span class="" data-project-id="project99" data-task-id="">프로젝트</span></div>
@@ -83,20 +90,20 @@
         <div class="위치"><span class="">-</span></div>
         <div class="삭제한사람"><span class="">해리슨 포드</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="../../static/imgs/icon_3dot(h).png" th:src="@{/imgs/icon_3dot(h).png}" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="../../static/imgs/icon_bin4(red).png" th:src="@{/imgs/icon_bin4(red).png}" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="../../static/imgs/icon_history(boldBrown).png" th:src="@{/imgs/icon_history(boldBrown).png}" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
         </div>
       </div><!-- 각 row 끝 -->
-      <div class="각row my-bin-col flex-row-justify-start-align-center">
+        <div class="각row my-bin-col flex-row-justify-start-align-center">
         <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
         <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
         <div class="유형"><span class="" data-project-id="" data-task-id="">할 일</span></div>
@@ -104,20 +111,20 @@
         <div class="위치"><span class="">Essential;</span></div>
         <div class="삭제한사람"><span class="">신디 크로포드</span></div>
         <div class="flex-row-justify-start-align-center bin-btn-box-del-back">
-          <img src="/imgs/icon_3dot(h).png" alt="" class="img-20">
+          <img src="../../static/imgs/icon_3dot(h).png" th:src="@{/imgs/icon_3dot(h).png}" alt="" class="img-20">
           <div class="bin-del-back-box hide">
             <div class="flex-row-center-center-nowrap mb-5 btn-bin-del-permanent">
-              <img src="/imgs/icon_bin4(red).png" alt="" class="img-15">
+              <img src="../../static/imgs/icon_bin4(red).png" th:src="@{/imgs/icon_bin4(red).png}" alt="" class="img-15">
               <span class="">영구삭제</span>
             </div>
             <div class="flex-row-center-center-nowrap btn-bin-restore">
-              <img src="/imgs/icon_history(boldBrown).png" alt="" class="img-15">
+              <img src="../../static/imgs/icon_history(boldBrown).png" th:src="@{/imgs/icon_history(boldBrown).png}" alt="" class="img-15">
               <span class="">복원하기</span>
             </div>
           </div>
         </div>
       </div><!-- 각 row 끝 -->
-      <div class="각row my-bin-col flex-row-justify-start-align-center">
+        <div class="각row my-bin-col flex-row-justify-start-align-center">
         <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
         <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
         <div class="유형"><span class="" data-project-id="" data-task-id="">할 일</span></div>
@@ -138,7 +145,7 @@
           </div>
         </div>
       </div><!-- 각 row 끝 -->
-      <div class="각row my-bin-col flex-row-justify-start-align-center">
+        <div class="각row my-bin-col flex-row-justify-start-align-center">
         <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
         <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
         <div class="유형"><span class="" data-project-id="" data-task-id="">할 일</span></div>
@@ -159,7 +166,7 @@
           </div>
         </div>
       </div><!-- 각 row 끝 -->
-      <div class="각row my-bin-col flex-row-justify-start-align-center">
+        <div class="각row my-bin-col flex-row-justify-start-align-center">
         <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
         <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
         <div class="유형"><span class="" data-project-id="" data-task-id="">할 일</span></div>
@@ -180,6 +187,7 @@
           </div>
         </div>
       </div><!-- 각 row 끝 -->
+      </div>
     </div><!-- wrapper 끝 -->
     <!-- 버려진것들 목록 끝 -->
   </div>

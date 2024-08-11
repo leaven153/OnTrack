@@ -234,7 +234,7 @@
         <div class="tableview-column" th:text="${task.getAuthorName()}">올리초이</div>
 
         <!-- delete task -->
-        <div class="tableview-column btn-delete-eachTask" th:attr="data-taskid=${task.getId()}, data-executormid=${myMid}">
+        <div class="tableview-column btn-delete-eachTask" th:attr="data-projectid=${task.getProjectId()}, data-taskid=${task.getId()}, data-executormid=${myMid}">
           <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" class="img-15 bin opacity0" alt="delete task"
                th:if="${task.getAuthorMid() == myMid or project.position == 'creator' or project.position == 'admin'}">
         </div>

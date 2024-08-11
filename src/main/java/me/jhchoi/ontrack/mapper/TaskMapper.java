@@ -92,7 +92,7 @@ public interface TaskMapper {
     TaskFile findFileById(Long fileId);
 
     // 할 일 ↔ 휴지통
-    Long taskSwitchBin(OnTrackTask binRequest);
+    Long taskSwitchBin(OnTrackTask task);
 
     // 휴지통 목록 조회(삭제된 할 일 조회)
 

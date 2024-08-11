@@ -197,7 +197,7 @@
         UPDATE ontrack_task
         SET deletedBy = #{deletedBy}
         , deletedAt = #{deletedAt}
-        WHERE id = #{taskId}
+        WHERE id = #{id}
     </update>
 
     <delete id="delAssignee" parameterType="TaskAssignment">
