@@ -77,9 +77,9 @@ public class TaskService {
             } catch (IOException e) {
                 log.info("파일 저장 에러: {}", e.getMessage());
                 // 파일 저장 에러: java.io.FileNotFoundException:
-                /**
-                 * C:\Users/user\AppData\Local\Temp\tomcat.8080.2139694289704046896\work\Tomcat\localhost\ROOT\9\14\9bba9073-0957-4dd9-acb4-0e3103105f27.txt (지정된 경로를 찾을 수 없습니다)
-                 * */
+                /*
+                  C:\Users/user\AppData\Local\Temp\tomcat.8080.2139694289704046896\work\Tomcat\localhost\ROOT\9\14\9bba9073-0957-4dd9-acb4-0e3103105f27.txt (지정된 경로를 찾을 수 없습니다)
+                  */
             }
         }
 

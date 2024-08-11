@@ -258,48 +258,46 @@ public class TaskController {
         // 각 수정 사항 반영 결과값 담을 ResponseEntity
         ResponseEntity<?> response = null;
 
-        if (th.getModItem().equals("할 일 명")) {
-            log.info("할 일 제목 수정");
-            TaskEditRequest editTaskTitle = TaskEditRequest.builder()
-                    .taskId(th.getTaskId())
-                    .title(th.getModContent())
-                    .updatedAt(th.getUpdatedAt())
-                    .updatedBy(th.getUpdatedBy())
-                    .build();
-            response = taskService.editTaskTitle(th, editTaskTitle);
-
-        } else if (th.getModItem().equals("마감일")) {
-            log.info("할 일 마감일 수정");
-
-            // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            TaskEditRequest editTaskDueDate = TaskEditRequest.builder()
-                    .taskId(th.getTaskId())
-                    .updatedAt(th.getUpdatedAt())
-                    .updatedBy(th.getUpdatedBy())
-                    .build();
-
-            if (Objects.equals(th.getModContent(), "")) {
-                th.setModContent("마감일 삭제");
-                editTaskDueDate.setDueDate(null);
-            } else {
-                editTaskDueDate.setDueDate(LocalDate.parse(th.getModContent(), dateFormatter));
+        switch (th.getModItem()) {
+            case "할 일 명" -> {
+                log.info("할 일 제목 수정");
+                TaskEditRequest editTaskTitle = TaskEditRequest.builder()
+                        .taskId(th.getTaskId())
+                        .title(th.getModContent())
+                        .updatedAt(th.getUpdatedAt())
+                        .updatedBy(th.getUpdatedBy())
+                        .build();
+                response = taskService.editTaskTitle(th, editTaskTitle);
             }
+            case "마감일" -> {
+                log.info("할 일 마감일 수정");
 
-            response = taskService.editTaskDueDate(th, editTaskDueDate);
-
-        } else if (th.getModItem().equals("진행상태")) {
-            log.info("할 일 진행상태 수정");
-            log.info("변경된 진행상태: {}", statusNum);
-            TaskEditRequest ter = TaskEditRequest.builder()
-                    .taskId(th.getTaskId())
-                    .status(Integer.valueOf(statusNum))
-                    .updatedAt(th.getUpdatedAt())
-                    .updatedBy(th.getUpdatedBy())
-                    .build();
-
-            response = taskService.editTaskStatus(th, ter);
+                // TaskHistory(id=null, taskId=14, projectId=9, modItem=dueDate, modType=update, modContent=2024-07-31, updatedAt=null, updatedBy=14)
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                TaskEditRequest editTaskDueDate = TaskEditRequest.builder()
+                        .taskId(th.getTaskId())
+                        .updatedAt(th.getUpdatedAt())
+                        .updatedBy(th.getUpdatedBy())
+                        .build();
+                if (Objects.equals(th.getModContent(), "")) {
+                    th.setModContent("마감일 삭제");
+                    editTaskDueDate.setDueDate(null);
+                } else {
+                    editTaskDueDate.setDueDate(LocalDate.parse(th.getModContent(), dateFormatter));
+                }
+                response = taskService.editTaskDueDate(th, editTaskDueDate);
+            }
+            case "진행상태" -> {
+                log.info("할 일 진행상태 수정");
+                log.info("변경된 진행상태: {}", statusNum);
+                TaskEditRequest ter = TaskEditRequest.builder()
+                        .taskId(th.getTaskId())
+                        .status(Integer.valueOf(statusNum))
+                        .updatedAt(th.getUpdatedAt())
+                        .updatedBy(th.getUpdatedBy())
+                        .build();
+                response = taskService.editTaskStatus(th, ter);
+            }
         }
 
         return response;
