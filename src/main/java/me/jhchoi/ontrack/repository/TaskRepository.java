@@ -115,5 +115,11 @@ public class TaskRepository {
     // 휴지통으로 이동 or 복원 (update deletedAt, deletedBy)
     public Long taskSwitchBin(OnTrackTask task) { return taskMapper.taskSwitchBin(task); }
 
+    // 휴지통 목록 조회(프로젝트 내 삭제된 모든 할 일 조회)
+    public List<OnTrackTask> getAllRemovedTask(Long projectId) { return taskMapper.getAllRemovedTask(projectId); }
+
+    // 휴지통 목록 조회(내가 담당자이거나 작성자인 할 일 중, 삭제일이 7일 미만 전인 할 일)
+    public List<BinResponse> getBin(Long memberId) { return taskMapper.getBin(memberId); }
+
 
 }

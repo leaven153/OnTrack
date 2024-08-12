@@ -3506,12 +3506,13 @@ window.onload = function(){
             });
             console.log(checkedTaskList);
 
+            let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
             const executorMid = document.querySelector(".btn-delete-task").dataset.executormid;
-            const projectId = document.querySelector(".btn-delete-task").dataset.projectid;
+            // const projectId = document.querySelector(".btn-delete-task").dataset.projectid;
+
 
             const taskBinRequest = {
-                type: "remove",
-                projectId: projectId,
+                projectId: currUrl[2],
                 taskIds: checkedTaskList,
                 deletedBy: executorMid
             }
@@ -3527,6 +3528,10 @@ window.onload = function(){
 
             }).then(response => {
                 if(response.ok){
+                    // 모든 체크박스 false 처리
+                    document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
+                        chkBox.checked = false;
+                    });
                     // 삭제할 task id array clear
                     checkedTaskList = [];
                     // 화면 리로드
@@ -3545,10 +3550,12 @@ window.onload = function(){
         btnDelTaskEachRow.forEach(function(btn){
             btn.addEventListener("click", ()=>{
                 console.log('개별 할 일 삭제 버튼 눌림');
+                let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
                 const data = btn.dataset;
                 console.log(data);
                 checkedTaskList.push(data["taskid"]);
                 const taskBinRequest = {
+                    projectId: currUrl[2],
                     taskIds: checkedTaskList,
                     deletedBy: data["executormid"]
                 };
@@ -3563,6 +3570,7 @@ window.onload = function(){
                     if(response.ok){
                         console.log(`할 일 개별 row 지우는 중`)
                         checkedTaskList = [];
+                        location.reload();
                     }
                 });
             });

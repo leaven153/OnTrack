@@ -2742,7 +2742,7 @@ div.login-nomatch{
     align-self: flex-end;
 }
 
-
+/* project.html - 별칭 edit div */
 .h31 {
     height: 31px;
     padding-bottom: 3px;
@@ -3859,13 +3859,47 @@ span.alert-not-attach-col {
     color: #9e3f3b;
 }
 
-
-
 .bin-guide {
-    /* ml-15 font-13 */
-    font-size: 15px;
-    line-height: 1.4em;
+    font-size: 14px;
+    line-height: 1.5em;
     margin-left: 15px;
+}
+
+mark.highlight {
+    background-color: rgba(255, 166, 0, 0.42);
+    border-radius: 12px;
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+}
+
+div.bin-category-title {
+    height: 50px;
+    /*border-radius: 5px;*/
+    /*background-color: #efe6d7;*/
+    box-shadow: 0 0 3px #c7b6aa77;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+p.bin-category-title {
+    font-family: 'NanumSquareNeo-bold', sans-serif;
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+img.bin-category-title {
+    margin-right: 10px;
+}
+
+.bin-list {
+    box-shadow: 1px 1px 3px #d1c9bb inset;
+    padding: 10px 5px;
+}
+
+.bin-list-content{
+    height: 200px;
+    overflow-y: scroll;
 }
 
 .my-bin-col-names {
@@ -3874,7 +3908,7 @@ span.alert-not-attach-col {
     font-size: 12px;
     color: #2d1300;
     text-align: center;
-    border-top: 1px solid #b6b6b6;
+    /*border-top: 1px solid #b6b6b6;*/
     border-bottom: 1px solid #b6b6b6;
     /* padding: 3px 0; */
 }
@@ -3900,13 +3934,13 @@ span.alert-not-attach-col {
     flex-shrink: 0;
     padding: 0 10px 0 0;
 }
+/*.my-bin-col-names > div:nth-child(3),*/
+/*.my-bin-col > div:nth-child(3) {*/
+/*    flex-basis: 70px;*/
+/*    flex-shrink: 0;*/
+/*}*/
 .my-bin-col-names > div:nth-child(3),
 .my-bin-col > div:nth-child(3) {
-    flex-basis: 70px;
-    flex-shrink: 0;
-}
-.my-bin-col-names > div:nth-child(4),
-.my-bin-col > div:nth-child(4) {
     flex-basis: 300px;
     flex-shrink: 0;
     /* padding: 0 10px 0 20px; */
@@ -3915,8 +3949,8 @@ span.alert-not-attach-col {
     overflow: hidden;
     white-space: nowrap;
 }
-.my-bin-col-names > div:nth-child(5),
-.my-bin-col > div:nth-child(5) {
+.my-bin-col-names > div:nth-child(4),
+.my-bin-col > div:nth-child(4) {
     flex-basis: 250px;
     flex-shrink: 0;
     margin: 0 20px;
@@ -3925,43 +3959,49 @@ span.alert-not-attach-col {
     white-space: nowrap;
 }
 
-.my-bin-col-names > div:nth-child(6),
-.my-bin-col > div:nth-child(6) {
-    flex-basis: 100px;
+.my-bin-col-names > div:nth-child(5),
+.my-bin-col > div:nth-child(5) {
+    flex-basis: 150px;
     flex-shrink: 0;
     margin: 0 20px 0 10px;
 }
 
-.my-bin-col-names > div:nth-child(7),
-.my-bin-col > div:nth-child(7) {
+.my-bin-col-names > div:nth-child(6),
+.my-bin-col > div:nth-child(6) {
     flex-basis: 20px;
     flex-shrink: 0;
     margin: 0 0 0 20px;
 }
 
-.bin-btn-box-del-back {
+.btn-bin-disposal { /*바꾸기 전 이름 bin-btn-box-del-back*/
     position: relative;
-    cursor: pointer;
 }
-.bin-btn-box-del-back:hover {
+.btn-bin-disposal:hover {
     background-color: #411c0233;
 }
 
-.bin-del-back-box {
+.bin-disposal-box { /*바꾸기 전 이름: bin-del-back-box*/
     position: absolute;
     top: 18px;
     right: 0;
-    width: 95px;
-    padding: 5px 0;
+    width: 80px;
+    padding: 5px 0 5px 0;
     background-color: #fff;
     box-shadow: 0 0 3px #00000022;
     z-index: 2;
 }
 
-.bin-del-back-box > div {
+.bin-disposal-box > button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     padding: 5px 0;
+    font-size: 15px;
 }
-.bin-del-back-box > div:hover {
+
+.bin-disposal-box > button:hover{
     background-color: #fff5ec;
 }
 
@@ -4068,6 +4108,7 @@ button[class*=login-find]:hover {
     color: #451f46;
 }
 /********  ********/
+
 
 /**********************************/
 /************* item *************/
