@@ -3,6 +3,7 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.dto.BinResponse;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.dto.MyProject;
 import me.jhchoi.ontrack.dto.ProjectRequest;
@@ -71,6 +72,10 @@ public class MyPageController {
 
         // 영구 삭제의 권한은 누구에게? >> 할 일 작성자 only? (생성자creator, 관리자admin??)
         model.addAttribute("loginUser", loginUser);
+        log.info("컨트롤러에서 넘기는 userId: {}", loginUser.getUserId());
+        List<BinResponse> binTaskList = taskService.getMyBin(loginUser.getUserId());
+        log.info("컨트롤러에서 받은 binTaskList: {}", binTaskList);
+        model.addAttribute("binTaskList", binTaskList);
 
         return "/mypage/bin";
     }

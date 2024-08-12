@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.stream.IntStream;
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final MemberRepository memberRepository;
     private final FileStore fileStore;
 
     /**
@@ -453,83 +455,38 @@ public class TaskService {
      * explain : 할 일 삭제/복원(update deletedAt, deletedBy)
      * */
     @Transactional
-    public ResponseEntity<?> taskSwitchBin(BinRequest binRequest) {
+    public ResponseEntity<String> moveToBin(BinRequest binRequest) {
 
-        ResponseEntity<String> response = null;
-        switch (binRequest.getType()){
-            case "remove": response = ResponseEntity.ok("할 일 삭제가 완료되었습니다.");
-            break;
-            case "restore": response = ResponseEntity.ok("할 일 복원이 완료되었습니다.");
-            break;
+        ResponseEntity<String> response = ResponseEntity.ok("할 일 삭제가 완료되었습니다.");
+
+        // remove(프로젝트 → 휴지통): 한 개의 projectId, n개의 taskIds(List<Long>)
+        // 1. history남긴다.
+        for(int i = 0; i < binRequest.getTaskIds().size(); i++){
+            TaskHistory th = TaskHistory.builder()
+                    .projectId(binRequest.getProjectId())
+                    .taskId(binRequest.getTaskIds().get(i))
+                    .modItem("할 일")
+                    .modType("삭제") // 변경
+                    .modContent("프로젝트에서") // 프로젝트에서 휴지통으로 이동
+                    .updatedAt(binRequest.getDeletedAt())
+                    .updatedBy(binRequest.getDeletedBy())
+                    .build();
+            Long result = taskRepository.log(th);
+            if(result != 1) {
+                response = ResponseEntity.internalServerError().body("삭제 기록이 완료되지 않았습니다.");
+            }
         }
-
-        // ontrack_task테이블의 deletedAt, deletedBy를 업데이트
-        // (복원일 경우, deletedAt과 deletedBy에는 null값)
-
-        if (Objects.equals(binRequest.getType(), "remove")){
-
-            // remove(프로젝트 → 휴지통): 한 개의 projectId, n개의 taskIds(List<Long>)
-            // 1. history남긴다.
-            for(int i = 0; i < binRequest.getTaskIds().size(); i++){
-                TaskHistory th = TaskHistory.builder()
-                        .projectId(binRequest.getProjectId())
-                        .taskId(binRequest.getTaskIds().get(i))
-                        .modItem("할 일")
-                        .modType("삭제") // 변경
-                        .modContent("프로젝트에서") // 프로젝트에서 휴지통으로 이동
-                        .build();
-                Long result = taskRepository.log(th);
-                if(result != 1) {
-                    response = ResponseEntity.internalServerError().body("삭제 기록이 완료되지 않았습니다.");
-                }
+        // 2. ontrack_task 컬럼 상태 update
+        for(int i = 0; i < binRequest.getTaskIds().size(); i++){
+            OnTrackTask task = OnTrackTask.builder()
+                    .id(binRequest.getTaskIds().get(i))
+                    .deletedAt(binRequest.getDeletedAt())
+                    .deletedBy(binRequest.getDeletedBy())
+                    .build();
+            Long result = taskRepository.taskSwitchBin(task);
+            if(result != 1) {
+                response = ResponseEntity.internalServerError().body("삭제가 완료되지 않았습니다.");
             }
-            // 2. ontrack_task 컬럼 상태 update
-            for(int i = 0; i < binRequest.getTaskIds().size(); i++){
-                OnTrackTask task = OnTrackTask.builder()
-                        .id(binRequest.getTaskIds().get(i))
-                        .deletedAt(binRequest.getDeletedAt())
-                        .deletedBy(binRequest.getDeletedBy())
-                        .build();
-                Long result = taskRepository.taskSwitchBin(task);
-                if(result != 1) {
-                    response = ResponseEntity.internalServerError().body("삭제가 완료되지 않았습니다.");
-                }
-            }
-
-        } else if (Objects.equals(binRequest.getType(), "restore")) {
-
-            // restore(휴지통 → 프로젝트): projectAndTaskId(List<Map<String, Long>>)
-            // 1. history 남긴다.
-            for(int i = 0; i < binRequest.getProjectAndTaskId().size(); i++) {
-                TaskHistory th = TaskHistory.builder()
-                        .projectId(binRequest.getProjectAndTaskId().get(i).get("projectId"))
-                        .taskId(binRequest.getProjectAndTaskId().get(i).get("taskId"))
-                        .modItem("할 일")
-                        .modType("복원") // 변경
-                        .modContent("휴지통에서 프로젝트로") // 이동
-                        .updatedBy(binRequest.getRestoredBy())
-                        .updatedAt(binRequest.getRestoredAt())
-                        .build();
-                Long result = taskRepository.log(th);
-                if (result != 1) {
-                    response = ResponseEntity.internalServerError().body("복원 기록이 완료되지 않았습니다.");
-                }
-            }
-
-            // 2. ontrack_task 컬럼 상태 update
-            for(int i = 0; i < binRequest.getProjectAndTaskId().size(); i++){
-                OnTrackTask task = OnTrackTask.builder()
-                        .id(binRequest.getProjectAndTaskId().get(i).get("taskId"))
-                        .projectId(binRequest.getProjectAndTaskId().get(i).get("projectId"))
-                        .deletedBy(null)
-                        .deletedAt(null)
-                        .build();
-                Long result = taskRepository.taskSwitchBin(task);
-                if(result != 1) {
-                    response = ResponseEntity.internalServerError().body("복원이 완료되지 않았습니다.");
-                }
-            }
-
         }
 
         return response;
@@ -538,23 +495,101 @@ public class TaskService {
 
     /**
      * created : 2024-08-
+     * param   : BinRequest
+     * return  : ResponseEntity
+     * explain : 할 일 복원(휴지통 → 프로젝트)
+     * */
+    public ResponseEntity<String> restoreTask(BinRequest binRequest) {
+        ResponseEntity<String> response = ResponseEntity.ok("할 일 복원이 완료되었습니다.");
+        // restore(휴지통 → 프로젝트): projectAndTaskId(List<Map<String, Long>>)
+        // 1. history 남긴다.
+        for(int i = 0; i < binRequest.getProjectAndTaskId().size(); i++) {
+            TaskHistory th = TaskHistory.builder()
+                    .projectId(binRequest.getProjectAndTaskId().get(i).get("projectId"))
+                    .taskId(binRequest.getProjectAndTaskId().get(i).get("taskId"))
+                    .modItem("할 일")
+                    .modType("복원") // 변경
+                    .modContent("휴지통에서 프로젝트로") // 이동
+                    .updatedBy(binRequest.getRestoredBy())
+                    .updatedAt(binRequest.getRestoredAt())
+                    .build();
+            Long result = taskRepository.log(th);
+            if (result != 1) {
+                response = ResponseEntity.internalServerError().body("복원 기록이 완료되지 않았습니다.");
+            }
+        }
+
+        // 2. ontrack_task 컬럼 상태 update
+        for(int i = 0; i < binRequest.getProjectAndTaskId().size(); i++){
+            OnTrackTask task = OnTrackTask.builder()
+                    .id(binRequest.getProjectAndTaskId().get(i).get("taskId"))
+                    .projectId(binRequest.getProjectAndTaskId().get(i).get("projectId"))
+                    .deletedBy(null)
+                    .deletedAt(null)
+                    .build();
+            Long result = taskRepository.taskSwitchBin(task);
+            if(result != 1) {
+                response = ResponseEntity.internalServerError().body("복원이 완료되지 않았습니다.");
+            }
+        }
+
+        return response;
+    }
+
+    /**
+     * created : 2024-08-
      * param   :
      * return  : ResponseEntity
      * explain : 휴지통 조회(at My page. cf. 관리자가 프로젝트 내 휴지통 조회)
      * */
-    public List<OnTrackTask> getMyBin(Long userId) {
-        // 1. project_member: 내 userId의 memberId, projectId list 조회
+    public List<BinResponse> getMyBin(Long userId) {
 
-        List<OnTrackTask> taskList = new ArrayList<>();
-        // 2. ontrack_task: deletedBy가 null이 아니고, deletedAt이 7일 경과하지 않은, task id의 row list
+        List<BinResponse> binTaskList = new ArrayList<>();
 
-        // 3. task_assignment: 내 member id가 있는 task id list
-        // + ontrack_task: author_mid == myMid
+        // 1. project_member: 내 userId의 memberId, projectId
+        List<ProjectMember> memberInfo = memberRepository.findByUserId(userId);
 
-        // 4. taskList에 taskIdList join
+        log.info("서비스에서 찾아낸 memberInfo: {}", memberInfo);
 
+        // 소속된 프로젝트가 없다면 빈 리스트를 바로 보낸다.
+        if(memberInfo.isEmpty()) {
+            log.info("소속된 프로젝트가 없을리 없잖아?");
+            return binTaskList;
+        }
 
-        return taskList;
+        List<BinResponse> result = new ArrayList<>();
+        // 2-1. 내가 담당자이거나 작성자인 할 일 중, 삭제일이 7일 미만 전인 할 일
+        for (ProjectMember projectMember : memberInfo) {
+            binTaskList = taskRepository.getBin(projectMember.getId());
+
+            for (BinResponse binResponse : binTaskList) {
+                // 2-2. 해당 일마다 내 member id 입력
+                binResponse.setMemberId(projectMember.getId());
+                // 2-3. 프로젝트명 입력
+                binResponse.setProjectName(projectRepository.findByProjectId(projectMember.getProjectId()).getProjectName());
+
+                // 2-4. 삭제한 멤버의 이름 입력
+                binResponse.setDeleterName(memberRepository.findByMemberId(binResponse.getDeletedBy()).getNickname());
+
+                // 2-5. 내가 작성자인 할 일에는 authorized에 true값 입력
+                if (Objects.equals(binResponse.getAuthorMid(), projectMember.getId())) {
+                    binResponse.setAuthorized(true);
+                }
+            }
+
+            result.addAll(binTaskList);
+            /*
+             * 서비스에서 찾아낸 첫번째 쿼리, getBin: [BinResponse(projectId=9, projectName=null,
+             * taskId=20, memberId=null, taskTitle=고독한 산책자의 몽상, deletedBy=14,
+             * deleterName=null, deletedAt=2024-08-12T18:35:01, authorMid=14, authorized=null),
+             * BinResponse(projectId=9, projectName=null, taskId=33, memberId=null,
+             * taskTitle=완성할 수 있을까, deletedBy=14, deleterName=null,
+             * deletedAt=2024-08-12T18:43:45, authorMid=14, authorized=null)]*/
+        }
+
+        log.info("서비스에서 넘기는 result: {}", result);
+
+        return result;
     }
 
     /**
@@ -569,7 +604,7 @@ public class TaskService {
         // 할 일 영구 삭제 ⓣ 담당자 삭제: task_assignment, taskId
         // 할 일 영구 삭제 ② 소통 내역 삭제: task_comment, taskId
         // 할 일 영구 삭제 ③ 진행 내역 삭제 : task_history, taskId
-        // (영구 삭제 기록은 어떻게 할 것인가...?)
+        // (영구 삭제 기록은 어떻게 할 것인가...? → task id가 없는데 존재하는 진행내역이 바람직한가?)
         // 할 일 영구 삭제 ④ 파일 삭제: task_file, taskId
         // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
 

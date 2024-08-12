@@ -20,6 +20,12 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="findByMemberId" parameterType="Long" resultType="ProjectMember">
+        SELECT *
+        FROM project_member
+        WHERE id = #{id}
+    </select>
+
     <update id="acceptInvitation" parameterType="ResponseInvitation">
         UPDATE project_member
         SET nickname = #{userName}, position = #{invitedAs}, capacity = #{capacity}, joinedAt = #{joinedAt}

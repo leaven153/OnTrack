@@ -414,7 +414,7 @@ public class TaskController {
      * explain : 프로젝트에서 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<?> deleteTask(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
+    public ResponseEntity<String> moveToBin(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
         log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
         // 할 일을 여러 개 지우려면 어떻게 받아오면 될까:
         // BinRequest(
@@ -425,8 +425,7 @@ public class TaskController {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
         taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
-        taskService.taskSwitchBin(taskBinRequest);
-        return ResponseEntity.ok("할 일 삭제중");
+        return taskService.moveToBin(taskBinRequest);
     }
 
     @PostMapping("/delete")
@@ -443,15 +442,15 @@ public class TaskController {
 
     /**
      * created : 2024-08-
-     * param   : @ModelAttribute TaskAndAssignee
+     * param   : @RequestBody BinRequest
      * return  : ResponseEntity
-     * explain : 할 일 복원(휴지통 → 프로젝트)
+     * explain : 할 일 여러 개 복원(휴지통 → 프로젝트)
      * */
     @PostMapping("/restore")
-    public ResponseEntity<?> restoreTask(@RequestBody BinRequest taskBinRequest){
-        log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest);
-        log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().size());
-        log.info("할 일을 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().get(0));
+    public ResponseEntity<?> restoreMultiTasks(@RequestBody BinRequest taskBinRequest){
+        log.info("할 일 여러 개를 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest);
+        log.info("할 일 여러 개를 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().size());
+        log.info("할 일 여러 개를 휴지통에서 프로젝트로 복원할 때: {}", taskBinRequest.getProjectAndTaskId().get(0));
 
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
@@ -459,5 +458,35 @@ public class TaskController {
         return ResponseEntity.ok("할 일 삭제중");
     }
 
+    /**
+     * created : 2024-08-
+     * param   : @RequestParam
+     * return  : ResponseEntity
+     * explain : 할 일 1개 복원(휴지통 → 프로젝트)
+     * */
+    @GetMapping("/restore")
+    public String restoreTask(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId){
+        log.info("1개만 복원할 때 pid, {}", pId); // 1개만 복원할 때 pid, 9
+        log.info("1개만 복원할 때 tid, {}", tId); // 1개만 복원할 때 tid, 20
+        log.info("1개만 복원할 때 mid, {}", mId); // 1개만 복원할 때 mid, 14
+
+        LocalDateTime nowWithNano = LocalDateTime.now();
+        int nanoSec = nowWithNano.getNano();
+
+        // history 남긴다.
+        taskRepository.log(TaskHistory.builder()
+                .projectId(pId)
+                .taskId(tId)
+                .modItem("할 일")
+                .modType("복원")
+                .modContent("휴지통에서 프로젝트로")
+                .updatedBy(mId)
+                .updatedAt(nowWithNano.minusNanos(nanoSec))
+                .build());
+
+        // ontrack_task update
+        taskRepository.taskSwitchBin(OnTrackTask.builder().id(tId).deletedAt(null).deletedBy(null).build());
+        return "redirect:/mypage/bin";// ResponseEntity.ok("할 일 한 개 복원");
+    }
 
 }// class TaskController ends

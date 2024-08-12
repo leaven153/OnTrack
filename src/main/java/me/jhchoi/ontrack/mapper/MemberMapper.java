@@ -28,4 +28,10 @@ public interface MemberMapper {
     void acceptInvitation(ResponseInvitation newCrew);
 
     List<ProjectMember> findByName(ProjectMember pm);
+
+    // 유저의 멤버 정보 조회
+    List<ProjectMember> findByUserId(Long userId);
+
+    // 멤버 아이디로 멤버 정보 조회
+    ProjectMember findByMemberId(Long memberId);
 }

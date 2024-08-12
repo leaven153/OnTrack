@@ -41,7 +41,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="getBin" parameterType="Long">
+    <select id="getAllRemovedTask" parameterType="Long">
         SELECT *
         FROM ontrack_task
         WHERE project_id = #{projectId}
@@ -145,6 +145,14 @@
         AND member_id = #{memberId}
     </select>
 
+    <select id="getBin" parameterType="Long" resultType="BinResponse">
+        SELECT t.id as taskId, t.project_id, t.task_title, t.author_mid, t.deletedAt, t.deletedBy
+        FROM ontrack_task t
+        INNER JOIN (SELECT id FROM ontrack_task WHERE deletedAt > date_sub(curdate(), interval 7 day)) tt
+        ON t.id = tt.id
+        WHERE t.author_mid = #{memberId}
+        OR t.id in (SELECT task_id FROM task_assignment WHERE member_id = #{memberId})
+    </select>
 
     <update id="editTaskTitle" parameterType="TaskEditRequest">
         UPDATE ontrack_task

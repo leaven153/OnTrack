@@ -94,7 +94,11 @@ public interface TaskMapper {
     // 할 일 ↔ 휴지통
     Long taskSwitchBin(OnTrackTask task);
 
-    // 휴지통 목록 조회(삭제된 할 일 조회)
+    // 휴지통 목록 조회(프로젝트 내 삭제된 모든 할 일 조회)
+    List<OnTrackTask> getAllRemovedTask(Long projectId);
+
+    // 휴지통 목록 조회(프로젝트 내 내가 담당자이거나 작성자인 할 일 중, 삭제일이 7일 미만 전인 할 일)
+    List<BinResponse> getBin(Long memberId);
 
     // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
     List<OnTrackTask> delTask(Long taskId);
