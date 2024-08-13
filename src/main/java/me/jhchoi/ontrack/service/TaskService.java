@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final SseEmitters sseEmitters;
 
     /**
      * created  : 2024-05-14
@@ -332,21 +334,30 @@ public class TaskService {
      * return  : ResponseEntity
      * explain : 할 일 상세: 소통하기 글 등록
      * */
+    @Transactional
     public ResponseEntity<?> addTaskComment(TaskComment taskComment) {
 
         // 1. comment 등록 후,
-//        Long commentId = taskRepository.addComment(taskComment);
+        log.info("등록 전 taskCommentId는 null:{}", taskComment);
+        int result = taskRepository.addComment(taskComment);
+        if(result != 1) {
+            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
+        }
 
-        // 2. 모두확인요청일 경우,
-        /*
+        // 2. notice(중요;모두확인요청)일 경우,
+
+        log.info("등록 후 taskComment:{}", taskComment);
+        log.info("등록 후 taskCommentId는:{}", taskComment.getId());
         if(taskComment.getType().equals("notice")) {
             // 2-1. comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
             CheckComment chkCommentAuthor = CheckComment.builder()
-                    .commentId(commentId)
+                    .taskId(taskComment.getTaskId())
+                    .commentId(taskComment.getId())
                     .memberId(taskComment.getAuthorMid())
+                    .userId(memberRepository.findByMemberId(taskComment.getAuthorMid()).getUserId())
                     .checked(true)
                     .build();
-            taskRepository.saveCheckComment(chkCommentAuthor);
+            taskRepository.registerCheckComment(chkCommentAuthor);
 
             // 2-2. 해당 task의 assignees들은 확인하지 않은 것으로 check_comment 테이블에 저장한다.
             // 1) 해당 task의 assignee 목록을 가져온다.
@@ -356,20 +367,21 @@ public class TaskService {
 
             List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(taskComment.getTaskId());
 
-            for(int i = 0; i < assigneeList.size(); i++) {
-                CheckComment chkComment = CheckComment.builder()
-                        .commentId(commentId)
-                        .memberId(assigneeList.get(i).getMemberId())
-                        .checked(false)
-                        .build();
-                taskRepository.saveCheckComment(chkComment);
+            for (TaskAssignment taskAssignment : assigneeList) {
+                if (!Objects.equals(taskAssignment.getMemberId(), taskComment.getAuthorMid())) {
+                    CheckComment chkComment = CheckComment.builder()
+                            .taskId(taskComment.getTaskId())
+                            .commentId(taskComment.getId())
+                            .memberId(taskAssignment.getMemberId())
+                            .userId(memberRepository.findByMemberId(taskAssignment.getMemberId()).getUserId())
+                            .checked(false)
+                            .build();
+                    taskRepository.registerCheckComment(chkComment);
+                }
             }
         }
-        */
-        int result = taskRepository.addComment(taskComment);
-        if(result != 1) {
-            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
-        }
+
+
         return ResponseEntity.ok(taskComment.getId());
     }
 
@@ -381,6 +393,37 @@ public class TaskService {
      * */
     public List<TaskComment> getTaskComment(Long taskId) {
         return taskRepository.getTaskComment(taskId);
+    }
+
+    /**
+     * created : 2024-08-
+     * param   : CheckComment
+     * return  : List<CheckComment>
+     * explain : 할 일 상세: 중요 소통글 확인 여부 조회
+     * */
+    public CheckComment getCheckComment(CheckComment cc) {
+        log.info("서비스에서의 결과: {}", taskRepository.getCheckComment(cc));
+        return taskRepository.getCheckComment(cc);
+    }
+
+    /**
+     * created : 2024-08-
+     * param   : Long userId
+     * return  : List<CheckComment>
+     * explain : 중요 소통글 확인 여부 조회(내 일 모아보기, SSE)
+     * */
+    public ResponseEntity<SseEmitter> getUncheckedNoticeComment(Long userId) {
+        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
+        SseEmitter emitter = new SseEmitter();
+        sseEmitters.add(emitter);
+        try{
+            emitter.send(SseEmitter.event()
+                    .name("noticeComment")
+                    .data(taskRepository.findUnCheckedCommentByUserId(userId)));
+        } catch (IOException e){
+            log.info("sse error: {}", e.getMessage());
+        }
+        return ResponseEntity.ok(emitter);
     }
 
     /**

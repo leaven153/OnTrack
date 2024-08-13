@@ -5,8 +5,8 @@
     <title>nav</title>
 </head>
 <body>
-<nav>
-    <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
+    <nav>
+        <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
         <div class="nav-btn-list">
             <div class="nav-menu" data-id="" id="nav-btn-task">
                 <!-- task의 모두 확인 요청 사용여부 결정요망 -->
@@ -27,6 +27,9 @@
             <div class="" data-id=""><a href="#"><img src="/imgs/icon_question.png" alt="qna"></a></div>
         </div>
     </div>
-</nav>
+        <input type="hidden" id="userIdforSse" th:attr="data-userid=${loginUser.getUserId()}">
+        <th:block th:replace="~{/fragments/src}"></th:block>
+    </nav>
+
 </body>
 </html>

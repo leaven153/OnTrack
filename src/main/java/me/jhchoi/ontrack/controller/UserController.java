@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.SseEmitters;
 import me.jhchoi.ontrack.dto.NewUser;
 import me.jhchoi.ontrack.dto.ResponseInvitation;
 import me.jhchoi.ontrack.dto.LoginUser;
@@ -28,6 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final ProjectService projectService;
+    private final SseEmitters sseEmitters;
 
     /**
      * created  : 24-05

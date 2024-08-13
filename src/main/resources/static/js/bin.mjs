@@ -9,11 +9,14 @@ import * as fnc from './fnc.mjs'
             console.log("카테고리 목록 클릭");
             if(fnc.parents(btn, ".bin-category")[0].querySelector(".bin-list").classList.contains("hide")){
                 fnc.parents(btn, ".bin-category")[0].querySelector(".bin-list").classList.remove("hide");
-                fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.add("img-angle180");
-
+                if(fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.contains("img-angle180")){
+                    fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.remove("img-angle180");
+                }
             } else {
                 fnc.parents(btn, ".bin-category")[0].querySelector(".bin-list").classList.add("hide");
-                fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.remove("img-angle180");
+                if(!fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.contains("img-angle180")){
+                    fnc.parents(btn, ".bin-category")[0].querySelector("img").classList.add("img-angle180");
+                }
                 fnc.parents(btn, ".bin-category")[0].querySelectorAll(".bin-disposal-box").forEach(function(btnBox){
                     btnBox.classList.add("hide");
                 });

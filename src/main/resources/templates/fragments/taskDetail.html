@@ -5,6 +5,7 @@
     <title>Task - 상세</title>
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+  <script src="../../static/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body>
   <div id="container-task-detail" class="z3" th:classappend="${!hide}?open" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, myPosition)"> <!--/*loginMember, , taskCommentForm*/-->
@@ -27,14 +28,14 @@
       <div id="task-detail-common" class="공통내용(할일명작성자담당자)div modal-task-tab bottom-line-subtle mb-20">
         <div class="할일명 flex-row-between-nowrap mb-15 pd-b5 bottom-line-subtle">
           <div class="flex-row-justify-start-align-center">
-            <img src="/imgs/icon_parentTask24.png" alt="parentTask" class="ml-7 img-18 hide">
-            <img src="/imgs/icon_childTask24.png" alt="childTask" class="ml-7 img-18 hide">
+            <img src="../../static/imgs/icon_parentTask24.png" th:src="@{/imgs/icon_parentTask24.png}" alt="parentTask" class="ml-7 img-18 hide">
+            <img src="../../static/imgs/icon_childTask24.png" th:src="@{/imgs/icon_childTask24.png}" alt="childTask" class="ml-7 img-18 hide">
             <span class="ml-7 font-18 modal-task-title-small" th:text="${taskDetail.getTaskTitle()}">테이블을 따로 만들어야 하는가 안 만들어도 될 것 같은데 지금으로써는</span>
           </div>
           <div class="flex-row-end-center-nowrap">
             <span class="font-10 ml-5 c411">작성자</span>
             <span class="작성자 ml-5 font-11 modal-task-author" th:text="${taskDetail.getAuthorName()}">로버트 다우니 주니어</span>
-            <img src="/imgs/icon_bell.png" alt="task update alarm" class="mr-5 img-18 cursorP hide">
+            <img src="../../static/imgs/icon_bell.png" th:src="@{/imgs/icon_bell.png}" alt="task update alarm" class="mr-5 img-18 cursorP hide">
           </div>
         </div>
 
@@ -71,7 +72,7 @@
         <div class="파일첨부영역 dropzone " id="upload-drop-zone" th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()}, data-uploaderName=${myNickname}, data-uploaderMid=${myMid}">
           <input type="file" id="upload" class="opacity0 wh0" multiple>
           <label for="upload" class="flex-col-center">
-            <img src="/imgs/upload.png" alt="" class="img-15em mb-5">
+            <img src="../../static/imgs/upload.png" th:src="@{/imgs/upload.png}" alt="" class="img-15em mb-5">
             <span class="">클릭하면 파일 첨부 창이 열립니다.</span>
             <span class="">(파일을 끌어와도 첨부됩니다.)</span>
           </label>
@@ -91,18 +92,21 @@
           <div class="작성자와중요 flex-row-justify-start-align-center">
             <span class="작성자 commentWriter" th:text="${comment.getAuthorName()}">고윤정</span>
 <!--            <img src="../../static/imgs/icon_chatRR2520.png" th:src="@{/imgs/icon_chatRR2520.png}" th:if="${comment.getType() == 'notice'}">-->
+            <th:block th:if="${taskDetail.getNoticeCommentChk()}" th:each="chk: ${taskDetail.getNoticeCommentChk()}">
+              <button class="notice-chk" th:if="${chk.key == comment.getId() and chk.value == false}" th:attr="data-commentid=${comment.getId()}, data-chekedmember=${myMid}">미확인</button>
+            </th:block>
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
             <span class="날짜 altivo-regular mr-5" th:text="${#temporals.format(comment.getCreatedAt(), 'yy.MM.dd HH:mm')}">24.02.14 17:50</span>
             <div class="btn-comment-edit-del" th:attr="data-commentid=${comment.getId()}"><!-- tool버튼과 기능 시작. 여기에 comment id 넣으면 될까? -->
-              <img src="/imgs/icon_3dot.png" alt="mycomment edit or delete" class="">
+              <img src="../../static/imgs/icon_3dot.png" th:src="@{/imgs/icon_3dot.png}" alt="mycomment edit or delete" class="">
               <div class="click-comment-edit-del img-hidden">
                 <p class="" th:classappend="${comment.getAuthorMid() == myMid}?'btn-comment-edit'">
-                  <img src="/imgs/icon_write.png" alt="edit comment" class="img-1718 mr-3">
+                  <img src="../../static/imgs/icon_write.png" th:src="@{/imgs/icon_write.png}" alt="edit comment" class="img-1718 mr-3">
                   <span>수정하기</span>
                 </p>
                 <p class="flex-row-center-center-nowrap" th:classappend="${comment.getAuthorMid() == myMid or myPosition == 'creator' or myPosition == 'admin'}?'btn-comment-del'">
-                  <img src="/imgs/icon_bin98.png" alt="delete comment" class="img-1718 mr-3">
+                  <img src="../../static/imgs/icon_bin98.png" th:src="@{/imgs/icon_bin98.png}" alt="delete comment" class="img-1718 mr-3">
                   <span>삭제하기</span>
                 </p>
               </div>
@@ -188,7 +192,7 @@
           <span class="font-14" th:text="${file.getUploaderName()}">제시카 차스테인</span>
           <div class="파일박스 flex-row-between-nowrap hoverShadow" th:if="${file.getDeletedBy() == null}">
             <div class="flex-row-justify-start-align-center" th:onclick="|location.href='@{|/task/file/${file.getId()}|}'|">
-              <img src="/imgs/icon_download4.png" alt="download" class="img-15 mr-5">
+              <img src="../../static/imgs/icon_download4.png" th:src="@{/imgs/icon_download4.png}" alt="download" class="img-15 mr-5">
               <span class="modal-file-name" th:text="${file.getFileOrigName()}">보일듯말듯가물거리는</span>
               <span class="font-14 modal-file-type" th:text="|.${file.getFileType()}|">.pdf</span>
             </div>

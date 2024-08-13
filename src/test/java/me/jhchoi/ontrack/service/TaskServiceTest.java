@@ -257,4 +257,14 @@ class TaskServiceTest {
     }
 
 
+    @Test @DisplayName("확인 안 한 중요 소통 조회")
+    void getUncheckedNoticeComment(){
+        // given
+        Long userId = 45L;
+        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
+        /*
+        * 서비스에서의 결과: [CheckComment(id=2, taskId=22, commentId=24, memberId=4, userId=45, checked=false),
+        * CheckComment(id=5, taskId=22, commentId=26, memberId=4, userId=45, checked=false)]*/
+
+    }
 }

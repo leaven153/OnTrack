@@ -50,7 +50,7 @@ public interface TaskMapper {
     // 할 일 상세: 소통하기 글 목록 조회
     List<TaskComment> getTaskComment(Long TaskId);
 
-    //소통하기 글 조회
+    // 소통하기 글 조회
     TaskComment findCommentById(Long commentId);
 
     // 할 일 상세: 소통하기 글 수정
@@ -59,7 +59,17 @@ public interface TaskMapper {
     // 할 일 상세: 소통하기 글 차단(관리자에 의한)
     Integer blockComment(TaskDetailRequest taskDetailRequest);
 
+    // 할 일 상세: 소통하기 글 삭제(작성자에 의한)
     Integer delComment(Long commentId);
+
+    // 할 일 상세: 중요 소통하기 대상자 등록
+    Integer registerCheckComment(CheckComment cc);
+
+    // 할 일 상세: 중요 소통하기 확인여부 조회
+    CheckComment getCheckComment(CheckComment cc);
+
+    // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
+    List<CheckComment> findUnCheckedCommentByUserId(Long userId);
 
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
