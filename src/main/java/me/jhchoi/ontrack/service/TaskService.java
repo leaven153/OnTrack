@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final SseEmitters sseEmitters;
 
     /**
      * created  : 2024-05-14
@@ -365,13 +367,13 @@ public class TaskService {
 
             List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(taskComment.getTaskId());
 
-            for(int i = 0; i < assigneeList.size(); i++) {
-                if(!Objects.equals(assigneeList.get(i).getMemberId(), taskComment.getAuthorMid())){
+            for (TaskAssignment taskAssignment : assigneeList) {
+                if (!Objects.equals(taskAssignment.getMemberId(), taskComment.getAuthorMid())) {
                     CheckComment chkComment = CheckComment.builder()
                             .taskId(taskComment.getTaskId())
                             .commentId(taskComment.getId())
-                            .memberId(assigneeList.get(i).getMemberId())
-                            .userId(memberRepository.findByMemberId(assigneeList.get(i).getMemberId()).getUserId())
+                            .memberId(taskAssignment.getMemberId())
+                            .userId(memberRepository.findByMemberId(taskAssignment.getMemberId()).getUserId())
                             .checked(false)
                             .build();
                     taskRepository.registerCheckComment(chkComment);
@@ -390,7 +392,6 @@ public class TaskService {
      * explain : 할 일 상세: 소통하기 글 조회
      * */
     public List<TaskComment> getTaskComment(Long taskId) {
-
         return taskRepository.getTaskComment(taskId);
     }
 
@@ -403,6 +404,26 @@ public class TaskService {
     public CheckComment getCheckComment(CheckComment cc) {
         log.info("서비스에서의 결과: {}", taskRepository.getCheckComment(cc));
         return taskRepository.getCheckComment(cc);
+    }
+
+    /**
+     * created : 2024-08-
+     * param   : Long userId
+     * return  : List<CheckComment>
+     * explain : 중요 소통글 확인 여부 조회(내 일 모아보기, SSE)
+     * */
+    public ResponseEntity<SseEmitter> getUncheckedNoticeComment(Long userId) {
+        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
+        SseEmitter emitter = new SseEmitter();
+        sseEmitters.add(emitter);
+        try{
+            emitter.send(SseEmitter.event()
+                    .name("noticeComment")
+                    .data(taskRepository.findUnCheckedCommentByUserId(userId)));
+        } catch (IOException e){
+            log.info("sse error: {}", e.getMessage());
+        }
+        return ResponseEntity.ok(emitter);
     }
 
     /**

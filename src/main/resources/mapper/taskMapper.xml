@@ -156,6 +156,13 @@
         AND member_id = #{memberId}
     </select>
 
+    <select id="findUnCheckedCommentByUserId" parameterType="Long" resultType="CheckComment">
+        SELECT *
+        FROM check_comment
+        WHERE user_id = #{userId}
+        AND checked = false
+    </select>
+
     <select id="getBin" parameterType="Long" resultType="BinResponse">
         SELECT t.id as taskId, t.project_id, t.task_title, t.author_mid, t.deletedAt, t.deletedBy
         FROM ontrack_task t

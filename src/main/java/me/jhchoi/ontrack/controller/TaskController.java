@@ -131,6 +131,7 @@ public class TaskController {
         if(Objects.equals(type, "add")) {
             TaskComment taskComment = taskDetailRequest.toTaskComment(taskDetailRequest);
             response = taskService.addTaskComment(taskComment);
+
         } else if(Objects.equals(type, "edit")) {
             log.info("소통하기 글 수정: {}", taskDetailRequest);
             TaskComment editComment = taskDetailRequest.toTaskCommentforEdit(taskDetailRequest);

@@ -98,6 +98,9 @@ public class TaskRepository {
     // 할 일 상세: 중요 소통하기 확인여부 조회
     public CheckComment getCheckComment(CheckComment cc) { return taskMapper.getCheckComment(cc); }
 
+    // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
+    public List<CheckComment> findUnCheckedCommentByUserId(Long userId){ return taskMapper.findUnCheckedCommentByUserId(userId); }
+
     // 할 일 상세: history(진행내역) 조회
     public List<TaskHistory> getTaskHistory(Long taskId){
         return taskMapper.getTaskHistory(taskId);

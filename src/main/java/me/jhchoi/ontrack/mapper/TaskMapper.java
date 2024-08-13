@@ -68,6 +68,9 @@ public interface TaskMapper {
     // 할 일 상세: 중요 소통하기 확인여부 조회
     CheckComment getCheckComment(CheckComment cc);
 
+    // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
+    List<CheckComment> findUnCheckedCommentByUserId(Long userId);
+
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
 

@@ -11,12 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -28,6 +27,7 @@ public class SseController {
 
     @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(){
+        // 아래 내용을 로그인 메소드에 포함하도록 해보자.
         SseEmitter emitter = new SseEmitter();
         sseEmitters.add(emitter);
         try{
@@ -40,18 +40,23 @@ public class SseController {
         return ResponseEntity.ok(emitter);
     }
 
-    @GetMapping(value="/commentListener", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> noticeCommentListener(){
+    @GetMapping(value="/commentListener/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> noticeCommentListener(@PathVariable Long userId){
+
+        log.info("유저 아이디: {}", userId);
+
 
         Map<Long, Long> taskAndCommentId = new HashMap<>();
         taskAndCommentId.put(22L, 24L);
-        CheckComment cc = CheckComment.builder().commentId(24L).memberId(9L).build();
+        List<CheckComment> ccList = new ArrayList<>();
+        CheckComment cc = CheckComment.builder().commentId(24L).memberId(9L).userId(47L).build();
+        ccList.add(cc);
         SseEmitter emitter = new SseEmitter();
         sseEmitters.add(emitter);
         try{
             emitter.send(SseEmitter.event()
                     .name("noticeComment")
-                    .data(cc));
+                    .data(ccList));
         } catch (IOException e){
             log.info("sse error: {}", e.getMessage());
         }
