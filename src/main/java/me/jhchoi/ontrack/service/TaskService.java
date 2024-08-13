@@ -332,21 +332,30 @@ public class TaskService {
      * return  : ResponseEntity
      * explain : 할 일 상세: 소통하기 글 등록
      * */
+    @Transactional
     public ResponseEntity<?> addTaskComment(TaskComment taskComment) {
 
         // 1. comment 등록 후,
-//        Long commentId = taskRepository.addComment(taskComment);
+        log.info("등록 전 taskCommentId는 null:{}", taskComment);
+        int result = taskRepository.addComment(taskComment);
+        if(result != 1) {
+            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
+        }
 
-        // 2. 모두확인요청일 경우,
-        /*
+        // 2. notice(중요;모두확인요청)일 경우,
+
+        log.info("등록 후 taskComment:{}", taskComment);
+        log.info("등록 후 taskCommentId는:{}", taskComment.getId());
         if(taskComment.getType().equals("notice")) {
             // 2-1. comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
             CheckComment chkCommentAuthor = CheckComment.builder()
-                    .commentId(commentId)
+                    .taskId(taskComment.getTaskId())
+                    .commentId(taskComment.getId())
                     .memberId(taskComment.getAuthorMid())
+                    .userId(memberRepository.findByMemberId(taskComment.getAuthorMid()).getUserId())
                     .checked(true)
                     .build();
-            taskRepository.saveCheckComment(chkCommentAuthor);
+            taskRepository.registerCheckComment(chkCommentAuthor);
 
             // 2-2. 해당 task의 assignees들은 확인하지 않은 것으로 check_comment 테이블에 저장한다.
             // 1) 해당 task의 assignee 목록을 가져온다.
@@ -357,19 +366,20 @@ public class TaskService {
             List<TaskAssignment> assigneeList = taskRepository.getAssigneeList(taskComment.getTaskId());
 
             for(int i = 0; i < assigneeList.size(); i++) {
-                CheckComment chkComment = CheckComment.builder()
-                        .commentId(commentId)
-                        .memberId(assigneeList.get(i).getMemberId())
-                        .checked(false)
-                        .build();
-                taskRepository.saveCheckComment(chkComment);
+                if(!Objects.equals(assigneeList.get(i).getMemberId(), taskComment.getAuthorMid())){
+                    CheckComment chkComment = CheckComment.builder()
+                            .taskId(taskComment.getTaskId())
+                            .commentId(taskComment.getId())
+                            .memberId(assigneeList.get(i).getMemberId())
+                            .userId(memberRepository.findByMemberId(assigneeList.get(i).getMemberId()).getUserId())
+                            .checked(false)
+                            .build();
+                    taskRepository.registerCheckComment(chkComment);
+                }
             }
         }
-        */
-        int result = taskRepository.addComment(taskComment);
-        if(result != 1) {
-            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
-        }
+
+
         return ResponseEntity.ok(taskComment.getId());
     }
 
@@ -380,7 +390,19 @@ public class TaskService {
      * explain : 할 일 상세: 소통하기 글 조회
      * */
     public List<TaskComment> getTaskComment(Long taskId) {
+
         return taskRepository.getTaskComment(taskId);
+    }
+
+    /**
+     * created : 2024-08-
+     * param   : CheckComment
+     * return  : List<CheckComment>
+     * explain : 할 일 상세: 중요 소통글 확인 여부 조회
+     * */
+    public CheckComment getCheckComment(CheckComment cc) {
+        log.info("서비스에서의 결과: {}", taskRepository.getCheckComment(cc));
+        return taskRepository.getCheckComment(cc);
     }
 
     /**

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.CheckComment;
 import me.jhchoi.ontrack.domain.ProjectMember;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.ProjectService;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -86,7 +88,7 @@ public class ProjectController {
 //            return ResponseEntity.created(location).build();
             return "redirect:/login";
         }
-
+        model.addAttribute("loginUser", loginUser);
         // 2. project
         // 2-1. 프로젝트 정보 - OnTrackProject(프로젝트명, 생성자, 생성일, 유형, 마감일, 상태)
         // 2-2. 해당 프로젝트의 멤버들: List<MemberInfo>
@@ -104,7 +106,6 @@ public class ProjectController {
         model.addAttribute("taskFormRequest", TaskAndAssignee.builder().projectId(projectId).authorMid(project.getMemberId()).build());
 
 
-
         // 5. 할 일 상세 모달의 hide 여부
         Boolean detailOpen = true;
         TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
@@ -120,10 +121,24 @@ public class ProjectController {
                     // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
                     taskDetail = TaskDetailResponse.entityToDTO(project.getTaskList().get(i), projectId);
 
-                    // 2) comment 가져온다.
+                    // 2-1) comment 가져온다.
                     taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
+
+                    Map<Long, Boolean> cc = new HashMap<>();
+                    // 2-2) notice comment 확인여부 가져온다.
+                    for(int j = 0; j < taskDetail.getTaskComments().size(); j++){
+                        CheckComment ccRequest = CheckComment.builder()
+                                .commentId(taskDetail.getTaskComments().get(j).getId())
+                                .memberId(project.getMemberId()).build();
+                        log.info("ccRequest: {}", ccRequest);
+                        CheckComment resultCc = taskService.getCheckComment(ccRequest);
+                        if(resultCc != null) {
+                            cc.put(resultCc.getCommentId(), resultCc.getChecked());
+                        }
+                    }
+                    taskDetail.setNoticeCommentChk(cc);
 
                     // 3) history 가져온다.
                     taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));

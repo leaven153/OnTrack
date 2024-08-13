@@ -21,6 +21,10 @@
         VALUES (#{projectId}, #{taskId}, #{authorMid}, #{authorName}, #{type}, #{comment}, #{createdAt}, #{modifiedAt})
     </insert>
 
+    <insert id="registerCheckComment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO check_comment(comment_id, member_id, checked)
+        VALUES (#{commentId}, #{memberId}, #{checked})
+    </insert>
 
     <insert id="attachFile" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO task_file(project_id, task_id, member_id, file_origName, file_newName, file_type, file_size, file_path, createdAt)
@@ -142,6 +146,13 @@
         SELECT task_id
         FROM task_assignment
         WHERE task_id = #{taskId}
+        AND member_id = #{memberId}
+    </select>
+
+    <select id="getCheckComment" parameterType="CheckComment" resultType="CheckComment">
+        SELECT  *
+        FROM check_comment
+        WHERE comment_id = #{commentId}
         AND member_id = #{memberId}
     </select>
 

@@ -3000,6 +3000,20 @@ window.onload = function(){
     /*---- ▲  Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 끝 ▲ ----*/
 
 
+    /*---------- 066 ------------*/
+    // 할 일 상세: 중요 소통하기 '미확인'버튼 클릭 시
+    if(elExists(document.querySelector(".notice-chk"))){
+        const btnNoticeCommentChk = document.querySelectorAll(".notice-chk");
+        btnNoticeCommentChk.forEach(function(chkBtn){
+            chkBtn.addEventListener("click", ()=>{
+                console.log(`중요소통 미확인 버튼 클릭`);
+                const data = chkBtn.dataset;
+                console.log(data);
+            });
+        });
+    }
+
+
     /*---- ▼ Modal(File): 파일 시작 ▼ ----*/
     /*---------- 043 ------------*/
     // 이미 생성된 할일의 파일 추가 1/2: Drag and Drop
@@ -3586,10 +3600,13 @@ window.onload = function(){
             if(btnCheckAll.checked === true){
                 parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
                     eachChkBox.checked = true;
+                    document.querySelector(".btn-delete-task").classList.remove("hide");
+
                 });
             } else {
                 parents(btnCheckAll, "#table-view")[0].querySelectorAll(".task-checkbox").forEach(function(eachChkBox){
                     eachChkBox.checked = false;
+                    document.querySelector(".btn-delete-task").classList.add("hide");
                 });
             }
         });

@@ -3,18 +3,24 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.SseEmitters;
 import me.jhchoi.ontrack.dto.BinResponse;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.dto.MyProject;
 import me.jhchoi.ontrack.dto.ProjectRequest;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.TaskService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -23,8 +29,9 @@ import java.util.List;
 public class MyPageController {
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final SseEmitters sseEmitters;
 
-    @GetMapping("/myProjects")
+    @GetMapping(value = "/myProjects")
     public String myProjects(HttpSession session, Model model){
 
         log.info("=================myProjects====================");
@@ -43,6 +50,7 @@ public class MyPageController {
 //        log.info("projectList.size: {}", projectList.size()); // projectList.size: 2
 //        log.info("noProject: {}", noProject); // noProject: false
 
+
         model.addAttribute("noProject", noProject);
         model.addAttribute("myProjects", myProjects);
         model.addAttribute("loginUser", loginUser);
@@ -53,8 +61,14 @@ public class MyPageController {
 
 
     @GetMapping("/myTasks")
-    public String myTasks(){
+    public String myTasks(HttpSession session, Model model){
         log.info("=================myTasks====================");
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            log.info("로그인 정보 없음");
+            return "redirect:../login";
+        }
+        model.addAttribute("loginUser", loginUser);
         // 최종수정일, 최종수정자를 보여주는데,
         // ● 최종 수정 항목 출력 여부 & 무엇무엇을 출력할 것인가
         // 진행상태, 할 일 명, 마감일, 담당자 배정/해제 + 소통, 파일, 담당자?
@@ -69,7 +83,6 @@ public class MyPageController {
             log.info("로그인 정보 없음");
             return "redirect:../login";
         }
-
         // 영구 삭제의 권한은 누구에게? >> 할 일 작성자 only? (생성자creator, 관리자admin??)
         model.addAttribute("loginUser", loginUser);
         log.info("컨트롤러에서 넘기는 userId: {}", loginUser.getUserId());

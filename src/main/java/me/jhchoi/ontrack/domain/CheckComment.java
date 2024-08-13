@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @Builder
 public class CheckComment {
     private Long id;
+    private Long taskId;
     private Long commentId; // taskComment id
     private Long memberId; // member id
-    private boolean checked; // checker가 해당 '모두 읽기' 요청 글을 확인했는지 여부
+    private Long userId; // 내 일 모아보기에서 확인
+    private Boolean checked; // checker가 해당 '모두 읽기' 요청 글을 확인했는지 여부
 }

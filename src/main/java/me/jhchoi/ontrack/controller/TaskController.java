@@ -12,6 +12,7 @@ import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -115,7 +116,7 @@ public class TaskController {
      * return  : ResponseEntity
      * explain : 할 일 상세: 소통하기 글 등록·수정
      * */
-    @PostMapping("/comment")
+    @PostMapping(value = "/comment")
     public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
         log.info("**************comment controller enter :) ***************");
 //        log.info("task id: {}", taskId); // @PathVariable Long taskId,

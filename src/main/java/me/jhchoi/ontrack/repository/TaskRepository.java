@@ -92,6 +92,12 @@ public class TaskRepository {
     // 할 일 상세: 소통하기 글 삭제
     public Integer delComment(Long commentId) { return taskMapper.delComment(commentId); }
 
+    // 할 일 상세: 중요 소통하기 대상자 등록
+    public Integer registerCheckComment(CheckComment cc) { return taskMapper.registerCheckComment(cc); }
+
+    // 할 일 상세: 중요 소통하기 확인여부 조회
+    public CheckComment getCheckComment(CheckComment cc) { return taskMapper.getCheckComment(cc); }
+
     // 할 일 상세: history(진행내역) 조회
     public List<TaskHistory> getTaskHistory(Long taskId){
         return taskMapper.getTaskHistory(taskId);

@@ -8,6 +8,7 @@ import me.jhchoi.ontrack.domain.TaskComment;
 import me.jhchoi.ontrack.domain.TaskFile;
 import me.jhchoi.ontrack.domain.TaskHistory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public class TaskDetailResponse{
 
     // comment (소통)
     private List<TaskComment> taskComments;
+    // 중요 소통(notice) 확인 여부 (Long - commentId)
+    private Map<Long, Boolean> noticeCommentChk;
 
     // history (내역: 할일명, 진행상태, 배정, 마감일만 가져온다. )
     private List<TaskHistory> taskHistories;
