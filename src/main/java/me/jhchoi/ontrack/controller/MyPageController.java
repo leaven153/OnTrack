@@ -29,7 +29,6 @@ import java.util.Map;
 public class MyPageController {
     private final ProjectService projectService;
     private final TaskService taskService;
-    private final SseEmitters sseEmitters;
 
     @GetMapping(value = "/myProjects")
     public String myProjects(HttpSession session, Model model){
@@ -55,7 +54,7 @@ public class MyPageController {
         model.addAttribute("myProjects", myProjects);
         model.addAttribute("loginUser", loginUser);
         log.info("컨트롤러가 화면으로 넘기는 project list: {}", myProjects);
-        // 컨트롤러에서 넘어가는 시점: 2024-06-04T17:24:33.630980400
+
         return "mypage/myProjects";
     }
 

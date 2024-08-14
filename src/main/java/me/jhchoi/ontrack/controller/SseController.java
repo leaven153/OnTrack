@@ -24,11 +24,13 @@ public class SseController {
 
     private final SseEmitters sseEmitters;
     private final TaskService taskService;
+    private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-    @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect(){
-        // 아래 내용을 로그인 메소드에 포함하도록 해보자.
-        SseEmitter emitter = new SseEmitter();
+    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<SseEmitter> connect(@PathVariable Long userId){
+
+        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+
         sseEmitters.add(emitter);
         try{
             emitter.send(SseEmitter.event()
