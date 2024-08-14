@@ -15,10 +15,13 @@
 // }
 if(document.querySelector("#userIdforSse") !== undefined && document.querySelector("#userIdforSse") !== null){
     const userId = document.querySelector("#userIdforSse").dataset.userid;
-    const sse = await new EventSource(`http://localhost:8080/commentListener/${userId}`);
+    const sse = new EventSource(`http://localhost:8080/connect`); // http://localhost:8080/commentListener/${userId}
 // sse.onerror =  () => {
 //     console.log(`이렇게 하면?`);
 // };
+    sse.addEventListener("connect", (e)=>{
+        console.log(e.data);
+    });
 
     sse.addEventListener("noticeComment", (e)=>{
         const {data: receivedIdMap} = e;
@@ -26,8 +29,8 @@ if(document.querySelector("#userIdforSse") !== undefined && document.querySelect
         console.log(userId);
         console.log(e);
         console.log(`notice comment가 등록된 task: ${receivedIdMap}`);
-        const mapDataTest = JSON.parse(receivedIdMap);
-        console.log(mapDataTest);
+        // const mapDataTest = JSON.parse(receivedIdMap);
+        // console.log(mapDataTest);
         // console.log(mapDataTest["commentId"]);
         /**
          * Array [ {…} ]
@@ -41,7 +44,7 @@ if(document.querySelector("#userIdforSse") !== undefined && document.querySelect
          * id: null
          * memberId: 9*/
         // console.log(mapDataTest.size); // undefined
-        console.log(mapDataTest[0]); // undefined
+        // console.log(mapDataTest[0]); // undefined
 
 
         document.querySelectorAll("a").forEach(function(btn){
