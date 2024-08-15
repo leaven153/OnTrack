@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.EmitterRepository;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
@@ -28,7 +29,36 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
-    private final SseEmitters sseEmitters;
+//    private final SseEmitters sseEmitters;
+//    private final EmitterRepository emitterRepository;
+//    private final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
+//
+//    public SseEmitter createEmitter(Long userId) {
+//        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+//        emitterRepository.save(userId, emitter);
+//
+////        emitter.onCompletion(() -> {
+////            this.userEmitter.remove(userId);
+////        });
+//        emitter.onTimeout(emitter::complete);
+//        emitter.onCompletion(() -> emitterRepository.deleteById(userId));
+////        emitter.onTimeout(() -> emitterRepository.deleteById(userId));
+//
+//        return emitter;
+//    }
+//
+//    public void sendNotification(Long userId, String event, Object data){
+//        SseEmitter emitter = emitterRepository.get(userId);
+//        log.info("sendNotification이 불려졌다: {}", emitter);
+//        if(emitter != null){
+//            try{
+//                emitter.send(SseEmitter.event().name(event).data(data));
+//            } catch(IOException e){
+//                log.info("해당 유저의 emitter가 없습니다.", e.getMessage());
+//                emitterRepository.deleteById(userId);
+//            }
+//        }
+//    }
 
     /**
      * created  : 2024-05-14
@@ -58,7 +88,7 @@ public class TaskService {
             // 3-1. 담당자 nickname 가져오기
             for(int i= 0; i < taskFormRequest.getAssigneeMids().size(); i++){
                 log.info("task service에서 멤버 id: {}", taskFormRequest.getAssigneeMids().get(i));
-                List<MemberInfo> mList = projectRepository.getMemberInfo(MemberInfo.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneeMids().get(i)).build());
+                List<MemberInfo> mList = projectRepository.getMemberInfo(MemberInfo.builder().projectId(taskFormRequest.getProjectId()).memberId(taskFormRequest.getAssigneds().get(i)).build());
                 taskFormRequest.getAssigneeNames().add(mList.get(0).getNickname());
             }
             */
@@ -379,6 +409,13 @@ public class TaskService {
                     taskRepository.registerCheckComment(chkComment);
                 }
             }
+            Map<Long, Long> taskAndCommentId = new HashMap<>();
+            taskAndCommentId.put(22L, 24L);
+
+            // sse 전송
+//            createEmitter(9L);
+//            sendNotification(9L, "noticeComment", taskAndCommentId);
+
         }
 
 
@@ -412,19 +449,20 @@ public class TaskService {
      * return  : List<CheckComment>
      * explain : 중요 소통글 확인 여부 조회(내 일 모아보기, SSE)
      * */
-    public ResponseEntity<SseEmitter> getUncheckedNoticeComment(Long userId) {
-        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
-        SseEmitter emitter = new SseEmitter();
-        sseEmitters.add(emitter);
-        try{
-            emitter.send(SseEmitter.event()
-                    .name("noticeComment")
-                    .data(taskRepository.findUnCheckedCommentByUserId(userId)));
-        } catch (IOException e){
-            log.info("sse error: {}", e.getMessage());
-        }
-        return ResponseEntity.ok(emitter);
-    }
+//
+//    public ResponseEntity<SseEmitter> getUncheckedNoticeComment(Long userId) {
+//        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
+//        SseEmitter emitter = new SseEmitter();
+//        sseEmitters.add(emitter);
+//        try{
+//            emitter.send(SseEmitter.event()
+//                    .name("noticeComment")
+//                    .data(taskRepository.findUnCheckedCommentByUserId(userId)));
+//        } catch (IOException e){
+//            log.info("sse error: {}", e.getMessage());
+//        }
+//        return ResponseEntity.ok(emitter);
+//    }
 
     /**
      * created : 2024-07-31
