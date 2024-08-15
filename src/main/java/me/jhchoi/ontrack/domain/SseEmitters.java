@@ -43,9 +43,7 @@ public class SseEmitters {
         log.info("emitter 생성: {}", userEmitter);
 //        emitterRepository.save(userId, emitter);
 
-        emitter.onCompletion(() -> {
-            this.userEmitter.remove(userId);
-        });
+        emitter.onCompletion(() -> this.userEmitter.remove(userId));
         emitter.onTimeout(emitter::complete);
 //        emitter.onCompletion(() -> emitterRepository.deleteById(userId));
 //        emitter.onTimeout(() -> emitterRepository.deleteById(userId));
@@ -69,7 +67,7 @@ public class SseEmitters {
 
                 emitter.send(SseEmitter.event().name(event).data(data));
             } catch(IOException e){
-                log.info("해당 유저의 emitter가 없습니다.", e.getMessage());
+                log.info("해당 유저의 emitter가 없습니다.{}", e.getMessage());
                 userEmitter.remove(userId);
             }
         }
