@@ -22,8 +22,8 @@
     </insert>
 
     <insert id="registerCheckComment" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO check_comment(comment_id, member_id, checked)
-        VALUES (#{commentId}, #{memberId}, #{checked})
+        INSERT INTO check_comment(comment_id, member_id, checked, task_id, user_id)
+        VALUES (#{commentId}, #{memberId}, #{checked}, #{taskId}, #{userId})
     </insert>
 
     <insert id="attachFile" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">

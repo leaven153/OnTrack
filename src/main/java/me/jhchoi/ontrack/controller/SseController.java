@@ -22,16 +22,18 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SseController {
 
-    private final SseEmitters sseEmitters;
     private final TaskService taskService;
+    private final SseEmitters sseEmitters;
     private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(@PathVariable Long userId){
 
-        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 
-        sseEmitters.add(emitter);
+//        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+//        sseEmitters.add(emitter);
+        SseEmitter emitter = sseEmitters.createEmitter(userId);
+        log.info("connect가 찍히기 전에 save가 이뤄지는데 왜...?");
         try{
             emitter.send(SseEmitter.event()
                     .name("connect")

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.EmitterRepository;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
@@ -29,6 +30,35 @@ public class TaskService {
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
     private final SseEmitters sseEmitters;
+    private final EmitterRepository emitterRepository;
+    private final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
+
+    public SseEmitter createEmitter(Long userId) {
+        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
+        emitterRepository.save(userId, emitter);
+
+//        emitter.onCompletion(() -> {
+//            this.userEmitter.remove(userId);
+//        });
+        emitter.onTimeout(emitter::complete);
+        emitter.onCompletion(() -> emitterRepository.deleteById(userId));
+//        emitter.onTimeout(() -> emitterRepository.deleteById(userId));
+
+        return emitter;
+    }
+
+    public void sendNotification(Long userId, String event, Object data){
+        SseEmitter emitter = emitterRepository.get(userId);
+        log.info("sendNotification이 불려졌다: {}", emitter);
+        if(emitter != null){
+            try{
+                emitter.send(SseEmitter.event().name(event).data(data));
+            } catch(IOException e){
+                log.info("해당 유저의 emitter가 없습니다.", e.getMessage());
+                emitterRepository.deleteById(userId);
+            }
+        }
+    }
 
     /**
      * created  : 2024-05-14
@@ -379,6 +409,13 @@ public class TaskService {
                     taskRepository.registerCheckComment(chkComment);
                 }
             }
+            Map<Long, Long> taskAndCommentId = new HashMap<>();
+            taskAndCommentId.put(22L, 24L);
+
+            // sse 전송
+            createEmitter(9L);
+            sendNotification(9L, "noticeComment", taskAndCommentId);
+
         }
 
 

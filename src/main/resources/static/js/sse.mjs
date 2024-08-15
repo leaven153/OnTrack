@@ -15,7 +15,7 @@
 // }
 if(document.querySelector("#userIdforSse") !== undefined && document.querySelector("#userIdforSse") !== null){
     const userId = document.querySelector("#userIdforSse").dataset.userid;
-    const sse = new EventSource(`http://localhost:8080/connect`); // http://localhost:8080/commentListener/${userId}
+    const sse = new EventSource(`http://localhost:8080/task/connect/${userId}`); // http://localhost:8080/commentListener/${userId}
 // sse.onerror =  () => {
 //     console.log(`이렇게 하면?`);
 // };
@@ -32,17 +32,17 @@ if(document.querySelector("#userIdforSse") !== undefined && document.querySelect
         // const mapDataTest = JSON.parse(receivedIdMap);
         // console.log(mapDataTest);
         // console.log(mapDataTest["commentId"]);
-        /**
-         * Array [ {…} ]
-         * ​
-         * 0: Object { commentId: 24, memberId: 9, userId: 47, … }
-         * ​
-         * length: 1
-         * Object { id: null, commentId: 24, memberId: 9, checked: null }
-         * checked: null
-         * commentId: 24
-         * id: null
-         * memberId: 9*/
+
+         //Array [ {…} ]
+         //* ​
+         //* 0: Object { commentId: 24, memberId: 9, userId: 47, … }
+         //* ​
+         //* length: 1
+         //* Object { id: null, commentId: 24, memberId: 9, checked: null }
+         //* checked: null
+         //* commentId: 24
+         //* id: null
+         //* memberId: 9
         // console.log(mapDataTest.size); // undefined
         // console.log(mapDataTest[0]); // undefined
 
@@ -55,6 +55,19 @@ if(document.querySelector("#userIdforSse") !== undefined && document.querySelect
     });
 }
 
+// const ctrlTest = new EventSource(`http://localhost:8080/`);
+//
+// ctrlTest.addEventListener("noticeComment", (e)=>{
+//     console.log(`로컬전체를 리스닝`);
+//     console.log(e.data);
+// });
+//
+// const ctrlTest2 = new EventSource(`http://localhost:8080/comment`);
+//
+// ctrlTest2.addEventListener("noticeComment", (e)=>{
+//     console.log("task 컨트롤러를 리스닝");
+//     console.log(e.data);
+// });
 
 /*
 const testFncSse = async ()=>{
