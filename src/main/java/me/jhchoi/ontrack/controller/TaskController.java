@@ -111,26 +111,26 @@ public class TaskController {
 //        String encodedName = URLEncoder.encode(loginMember.getNickName(), StandardCharsets.UTF_8);
     } // getTask ends
 
-    private final SseEmitters sseEmitters;
-    private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
+//    private final SseEmitters sseEmitters;
+//    private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect(@PathVariable Long userId){
+//    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//    public ResponseEntity<SseEmitter> connect(@PathVariable Long userId){
 
 
 //        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 //        sseEmitters.add(emitter);
-        SseEmitter emitter = sseEmitters.createEmitter(userId);
-        log.info("sseEmitter에 add 후, {}", sseEmitters);
-        try{
-            emitter.send(SseEmitter.event()
-                    .name("connect")
-                    .data("connected!"));
-        } catch (IOException e){
-            log.info("sse error: {}", e.getMessage());
-        }
-        return ResponseEntity.ok(emitter);
-    }
+//        SseEmitter emitter = sseEmitters.createEmitter(userId);
+//        log.info("sseEmitter에 add 후, {}", sseEmitters);
+//        try{
+//            emitter.send(SseEmitter.event()
+//                    .name("connect")
+//                    .data("connected!"));
+//        } catch (IOException e){
+//            log.info("sse error: {}", e.getMessage());
+//        }
+//        return ResponseEntity.ok(emitter);
+//    }
 
     /**
      * created : 2024-07-

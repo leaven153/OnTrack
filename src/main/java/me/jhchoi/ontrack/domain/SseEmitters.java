@@ -40,6 +40,7 @@ public class SseEmitters {
     public SseEmitter createEmitter(Long userId) {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
         this.userEmitter.put(userId, emitter);
+        log.info("emitter 생성: {}", userEmitter);
 //        emitterRepository.save(userId, emitter);
 
         emitter.onCompletion(() -> {

@@ -26,14 +26,15 @@ public class SseController {
     private final SseEmitters sseEmitters;
     private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-//    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/connect/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(@PathVariable Long userId){
 
 
 //        SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
 //        sseEmitters.add(emitter);
         SseEmitter emitter = sseEmitters.createEmitter(userId);
-        log.info("connect가 찍히기 전에 save가 이뤄지는데 왜...?");
+        log.info("SseController에서 emitter가 생성되었다.{}", emitter);
+        // SseController에서 emitter가 생성되었다.SseEmitter@3e75a722
         try{
             emitter.send(SseEmitter.event()
                     .name("connect")
@@ -47,7 +48,7 @@ public class SseController {
     @GetMapping(value="/commentListener/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> noticeCommentListener(@PathVariable Long userId){
 
-        log.info("유저 아이디: {}", userId);
+        log.info("commentListner에 접근됨- 유저 아이디: {}", userId);
 
 
         Map<Long, Long> taskAndCommentId = new HashMap<>();
@@ -55,9 +56,13 @@ public class SseController {
         List<CheckComment> ccList = new ArrayList<>();
         CheckComment cc = CheckComment.builder().commentId(24L).memberId(9L).userId(47L).build();
         ccList.add(cc);
-        SseEmitter emitter = new SseEmitter();
-        sseEmitters.add(emitter);
+        SseEmitter emitter = sseEmitters.get(userId);
+        log.info("SseController: 생성된 emitter가 공유되는지 확인: {}", emitter);
+        // SseController: 생성된 emitter가 공유되는지 확인: SseEmitter@3e75a722
+//        SseEmitter emitter = new SseEmitter();
+//        sseEmitters.add(emitter);
         try{
+            log.info("왜 try가 됐다 안됐다 하지? {}", emitter);
             emitter.send(SseEmitter.event()
                     .name("noticeComment")
                     .data(ccList));
