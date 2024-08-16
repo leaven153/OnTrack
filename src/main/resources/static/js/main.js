@@ -1,10 +1,14 @@
 /*로컬에서 file:// 프로토콜을 사용해 웹페이지를 열면 import, export 지시자가 동작하지 않습니다.*/
 // import { elExists } from "./myprojects";
+import * as ws from './websocket.mjs'
+
 function elExists(el){
     return el !== undefined && el !== null;
 }
 
+
 window.onload = function(){
+    ws.connectWs();
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
     /*---------- 001 ------------*/
@@ -807,7 +811,7 @@ window.onload = function(){
                     if(response.ok) {
                         console.log("ok")
                         // 이전 담당자 수
-                        beforeCnt = cntAssignee;
+                        const beforeCnt = cntAssignee;
 
                         // 담당자 수 추가
                         cntAssignee++;
@@ -1184,7 +1188,7 @@ window.onload = function(){
             }).then(response => {
                 if(response.ok){
                     // 담당자를 추가하기 전 담당자 수를 담아둔다. (담당자 요약 목록 변화에 반영한다.)
-                    beforeCnt = cntAssignee;
+                    const beforeCnt = cntAssignee;
 
                     // 현재 담당자 수에 추가한다.
                     cntAssignee++;
@@ -2587,6 +2591,14 @@ window.onload = function(){
                         // 화면에 출력
                         const commentArea = document.querySelector("#task-tab-comment-list");
                         commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
+
+                        // web socket
+                        const dataTest = {
+                            commentId: commentId,
+                            taskId: 9
+                        };
+                        ws.socket.send(commentId+"string");
+
                     });
                 } else {
                     response.text().then(msg => alert(msg));

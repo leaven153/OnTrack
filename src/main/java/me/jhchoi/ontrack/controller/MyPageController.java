@@ -3,7 +3,6 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.SseEmitters;
 import me.jhchoi.ontrack.dto.BinResponse;
 import me.jhchoi.ontrack.dto.LoginUser;
 import me.jhchoi.ontrack.dto.MyProject;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 
 import java.io.IOException;
 import java.util.HashMap;

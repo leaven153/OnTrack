@@ -45,30 +45,41 @@ public class SseController {
         return ResponseEntity.ok(emitter);
     }
 
-    @GetMapping(value="/commentListener/{userId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> noticeCommentListener(@PathVariable Long userId){
+//    @GetMapping(value="/commentListener/{commentId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public void noticeCommentListener(@PathVariable Long commentId){ //@PathVariable Long userId
 
-        log.info("commentListner에 접근됨- 유저 아이디: {}", userId);
-
+//        log.info("commentListner에 접근됨- 유저 아이디: {}", userId);
 
         Map<Long, Long> taskAndCommentId = new HashMap<>();
         taskAndCommentId.put(22L, 24L);
+
+        Map<Long, SseEmitter> allMember = sseEmitters.getAllMember();
         List<CheckComment> ccList = new ArrayList<>();
         CheckComment cc = CheckComment.builder().commentId(24L).memberId(9L).userId(47L).build();
         ccList.add(cc);
-        SseEmitter emitter = sseEmitters.get(userId);
-        log.info("SseController: 생성된 emitter가 공유되는지 확인: {}", emitter);
-        // SseController: 생성된 emitter가 공유되는지 확인: SseEmitter@3e75a722
-//        SseEmitter emitter = new SseEmitter();
-//        sseEmitters.add(emitter);
-        try{
-            log.info("왜 try가 됐다 안됐다 하지? {}", emitter);
-            emitter.send(SseEmitter.event()
-                    .name("noticeComment")
-                    .data(ccList));
-        } catch (IOException e){
-            log.info("sse error: {}", e.getMessage());
+
+        for(Long userId: allMember.keySet()){
+            try{
+                allMember.get(userId).send(SseEmitter.event().name("noticeComment").data(ccList));
+            } catch (IOException e){
+                log.info("sse error: {}", e.getMessage());
+            }
         }
-        return ResponseEntity.ok(emitter);
+
+
+//        SseEmitter emitter = sseEmitters.get(userId);
+//        log.info("SseController: 생성된 emitter가 공유되는지 확인: {}", emitter);
+//        // SseController: 생성된 emitter가 공유되는지 확인: SseEmitter@3e75a722
+////        SseEmitter emitter = new SseEmitter();
+////        sseEmitters.add(emitter);
+//        try{
+//            log.info("왜 try가 됐다 안됐다 하지? {}", emitter);
+//            emitter.send(SseEmitter.event()
+//                    .name("noticeComment")
+//                    .data(ccList));
+//        } catch (IOException e){
+//            log.info("sse error: {}", e.getMessage());
+//        }
+//        return ResponseEntity.ok(emitter);
     }
 }
