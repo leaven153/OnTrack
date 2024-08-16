@@ -5,7 +5,9 @@
     <title>Task - 상세</title>
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
-  <script src="../../static/js/main.js" th:src="@{/js/main.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
+  <script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>
 </head>
 <body>
   <div id="container-task-detail" class="z3" th:classappend="${!hide}?open" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, myPosition)"> <!--/*loginMember, , taskCommentForm*/-->

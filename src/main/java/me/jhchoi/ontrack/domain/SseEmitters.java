@@ -59,6 +59,10 @@ public class SseEmitters {
         return userEmitter.get(userId);
     }
 
+    public Map<Long, SseEmitter> getAllMember(){
+        return userEmitter;
+    }
+
     public void sendNotification(Long userId, String event, Object data){
         SseEmitter emitter = userEmitter.get(userId);
         log.info("sendNotification이 불려졌다: {}", emitter);

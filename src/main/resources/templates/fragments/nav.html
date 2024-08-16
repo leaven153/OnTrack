@@ -5,8 +5,14 @@
     <title>nav</title>
 </head>
 <body>
-    <nav>
-        <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
+<nav>
+
+    <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
+<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+        <script type="module" src="../../static/js/websocket.mjs" th:src="@{/js/websocket.mjs}"></script>
+<!--        <script type="module" src="../../static/js/sse.mjs" th:src="@{/js/sse.mjs}"></script>-->
+<!--        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>-->
         <div class="nav-btn-list">
             <div class="nav-menu" data-id="" id="nav-btn-task">
                 <!-- task의 모두 확인 요청 사용여부 결정요망 -->
@@ -27,9 +33,9 @@
             <div class="" data-id=""><a href="#"><img src="/imgs/icon_question.png" alt="qna"></a></div>
         </div>
     </div>
-        <input type="hidden" id="userIdforSse" th:attr="data-userid=${loginUser.getUserId()}">
-        <th:block th:replace="~{/fragments/src}"></th:block>
-    </nav>
+    <input type="hidden" id="userIdforSse" th:attr="data-userid=${loginUser.getUserId()}">
+    <!--        <th:block th:replace="~{/fragments/src}"></th:block>-->
+</nav>
 
 </body>
 </html>
