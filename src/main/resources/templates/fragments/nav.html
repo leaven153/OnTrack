@@ -8,29 +8,30 @@
 <nav>
 
     <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
-<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
+        <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
         <script type="module" src="../../static/js/websocket.mjs" th:src="@{/js/websocket.mjs}"></script>
-<!--        <script type="module" src="../../static/js/sse.mjs" th:src="@{/js/sse.mjs}"></script>-->
-<!--        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>-->
         <div class="nav-btn-list">
             <div class="nav-menu" data-id="" id="nav-btn-task">
                 <!-- task의 모두 확인 요청 사용여부 결정요망 -->
-                <div class="task-alarm-comment-required-reading"></div>
-                <a th:href="@{/mypage/myTasks}"><img src="/imgs/icon_tasks2.png" alt="tasks" class=""></a>
+                <div id="icon-myTasks" class="alarm-notice-comment hide"></div>
+                <a th:href="@{/mypage/myTasks}"><img src="../../static/imgs/icon_tasks2.png" th:src="@{/imgs/icon_tasks2.png}" alt="tasks" class=""></a>
                 <span class="menu-tip">나의 모든일</span>
             </div>
             <div class="nav-menu" data-id="" id="nav-btn-project">
                 <div class="project-alarm-notice"></div>
                 <div class="project-alarm-invitation"></div>
-                <a th:href="@{/mypage/myProjects}"><img src="/imgs/icon_projects.png" alt="projects" ></a>
+                <a th:href="@{/mypage/myProjects}"><img src="../../static/imgs/icon_projects.png" th:src="@{/imgs/icon_projects.png}" alt="projects" ></a>
                 <span class="menu-tip">나의 모든 프로젝트</span>
             </div>
-            <div class="" data-id=""><a th:href="@{/mypage/bin}"><img src="/imgs/icon_bin2.png" alt="bin"></a></div>
+            <div class="nav-menu" data-id="">
+                <div class="alarm-bin"></div>
+                <a th:href="@{/mypage/bin}"><img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" alt="bin"></a>
+            </div>
         </div>
         <div class="nav-btn-list">
-            <div class="btn-modal-open-account-settings" data-id=""><img src="/imgs/icon_user_setting.png" alt="account"></div>
-            <div class="" data-id=""><a href="#"><img src="/imgs/icon_question.png" alt="qna"></a></div>
+            <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" th:src="@{/imgs/icon_user_setting.png}" alt="account"></div>
+            <div class="" data-id=""><a href="#"><img src="../../static/imgs/icon_question.png" th:src="@{/imgs/icon_question.png}" alt="qna"></a></div>
         </div>
     </div>
     <input type="hidden" id="userIdforSse" th:attr="data-userid=${loginUser.getUserId()}">

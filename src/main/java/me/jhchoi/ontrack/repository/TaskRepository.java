@@ -64,7 +64,7 @@ public class TaskRepository {
     public Integer editTaskDueDate(TaskEditRequest ter) { return taskMapper.editTaskDueDate(ter); }
 
     // 해당 멤버의 맡은 할 일
-    public List<TaskAndAssignee> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
+    public List<OnTrackTask> findTaskByMemberId(Long memberId) { return taskMapper.findTaskByMemberId(memberId); }
 
     // 할 일 조회: 할 일에 배정된 담당자 수
     public Integer cntAssigneeByTaskId(Long taskId) { return taskMapper.cntAssigneeByTaskId(taskId); }
@@ -100,6 +100,9 @@ public class TaskRepository {
 
     // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
     public List<CheckComment> findUnCheckedCommentByUserId(Long userId){ return taskMapper.findUnCheckedCommentByUserId(userId); }
+
+    // 중요 소통 확인하지 않은 user list
+    public List<CheckComment> findUncheckedCommentByCommentId(Long commentId) { return taskMapper.findUncheckedCommentByCommentId(commentId); }
 
     // 할 일 상세: history(진행내역) 조회
     public List<TaskHistory> getTaskHistory(Long taskId){

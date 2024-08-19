@@ -406,6 +406,27 @@ public class TaskService {
     }
 
     /**
+     * created : 2024-08-19
+     * param: Long commentId
+     * return: Map<해당 comment의 task id와 확인하지 않은 유저 id List>
+     * explain: 중요 소통글 등록 시 알림 출력할 대상 조회(웹소켓)
+     * */
+    public Map<Long, List<Long>> alarmNoticeComment(Long commentId) {
+        List<CheckComment> unchechkedList = taskRepository.findUncheckedCommentByCommentId(commentId);
+        Map<Long, List<Long>> taskIdAndUserList = new HashMap<>();
+        Long taskId = unchechkedList.get(0).getTaskId();
+        List<Long> userIdList = new ArrayList<>();
+
+        for (int i = 0; i < unchechkedList.size(); i++) {
+            userIdList.add(unchechkedList.get(i).getUserId());
+        }
+        taskIdAndUserList.put(taskId, userIdList);
+        log.info("task id and user id list 전송: {}", taskIdAndUserList);
+
+        return taskIdAndUserList;
+    }
+
+    /**
      * created : 2024-08-
      * param   : Long userId
      * return  : List<CheckComment>

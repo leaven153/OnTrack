@@ -68,14 +68,17 @@ public interface TaskMapper {
     // 할 일 상세: 중요 소통하기 확인여부 조회
     CheckComment getCheckComment(CheckComment cc);
 
-    // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
+    // 중요 소통하기 확인여부 조회(내 일 모아보기)
     List<CheckComment> findUnCheckedCommentByUserId(Long userId);
+
+    // 중요 소통 확인하지 않은 user list
+    List<CheckComment> findUncheckedCommentByCommentId(Long commentId);
 
     // 각 할 일 담당자 목록
     List<TaskAssignment> getAssigneeList(Long taskId);
 
     // 해당 멤버의 할 일
-    List<TaskAndAssignee> findTaskByMemberId(Long memberId);
+    List<OnTrackTask> findTaskByMemberId(Long memberId);
 
     // Assignee view: 담당자별 할 일 목록
     List<TaskAndAssignee> getAssigneeView(Long memberId);
