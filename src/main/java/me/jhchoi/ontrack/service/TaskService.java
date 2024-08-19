@@ -417,8 +417,8 @@ public class TaskService {
         Long taskId = unchechkedList.get(0).getTaskId();
         List<Long> userIdList = new ArrayList<>();
 
-        for (int i = 0; i < unchechkedList.size(); i++) {
-            userIdList.add(unchechkedList.get(i).getUserId());
+        for (CheckComment checkComment : unchechkedList) {
+            userIdList.add(checkComment.getUserId());
         }
         taskIdAndUserList.put(taskId, userIdList);
         log.info("task id and user id list 전송: {}", taskIdAndUserList);
@@ -426,26 +426,6 @@ public class TaskService {
         return taskIdAndUserList;
     }
 
-    /**
-     * created : 2024-08-
-     * param   : Long userId
-     * return  : List<CheckComment>
-     * explain : 중요 소통글 확인 여부 조회(내 일 모아보기, SSE)
-     * */
-//
-//    public ResponseEntity<SseEmitter> getUncheckedNoticeComment(Long userId) {
-//        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
-//        SseEmitter emitter = new SseEmitter();
-//        sseEmitters.add(emitter);
-//        try{
-//            emitter.send(SseEmitter.event()
-//                    .name("noticeComment")
-//                    .data(taskRepository.findUnCheckedCommentByUserId(userId)));
-//        } catch (IOException e){
-//            log.info("sse error: {}", e.getMessage());
-//        }
-//        return ResponseEntity.ok(emitter);
-//    }
 
     /**
      * created : 2024-07-31

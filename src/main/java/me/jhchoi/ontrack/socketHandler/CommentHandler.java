@@ -84,7 +84,7 @@ public class CommentHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         if(getUserId(session) != null){
             log.info("********after Connection Closed ***********");
-            loginUsers.remove(getUserId(session));
+            loginUsers.remove(getUserId(session))
         }
     }
 
@@ -98,8 +98,8 @@ public class CommentHandler extends TextWebSocketHandler {
 //        log.info("그렇다면, : {}", userInfo);
 //        log.info("userId: {}", userInfo.getUserId());
 
+        //        log.info("최종: {}", userId);
         Long userId = userInfo.getUserId();
-//        log.info("최종: {}", userId);
         return userId;
     }
 
