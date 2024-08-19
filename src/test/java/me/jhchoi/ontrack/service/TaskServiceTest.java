@@ -1,10 +1,7 @@
 package me.jhchoi.ontrack.service;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.domain.OnTrackTask;
-import me.jhchoi.ontrack.domain.TaskAssignment;
-import me.jhchoi.ontrack.domain.TaskFile;
-import me.jhchoi.ontrack.domain.TaskHistory;
+import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +13,10 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Slf4j
@@ -266,5 +265,76 @@ class TaskServiceTest {
         * 서비스에서의 결과: [CheckComment(id=2, taskId=22, commentId=24, memberId=4, userId=45, checked=false),
         * CheckComment(id=5, taskId=22, commentId=26, memberId=4, userId=45, checked=false)]*/
 
+    }
+
+    @Test @DisplayName("확인 안 한 유저 리스트")
+    void alarmNoticeComment(){
+        // given
+        Long commentId = 24L;
+
+        // 1. (내가 작성한) 중요 소통의 task id와 확인하지 않은 유저 list를 가져온다.
+        List<CheckComment> unchechkedList = taskRepository.findUncheckedCommentByCommentId(commentId);
+
+        // 2. task id, 유저 id list 형태의 map을 만든다.
+        Map<Long, List<Long>> taskAndUserList = new HashMap<>();
+        Long taskId = unchechkedList.get(0).getTaskId();
+        List<Long> userIdList = new ArrayList<>();
+
+        for (int i = 0; i < unchechkedList.size(); i++) {
+            userIdList.add(unchechkedList.get(i).getUserId());
+        }
+
+        taskAndUserList.put(taskId, userIdList);
+        log.info("task id and user id list 전송: {}", taskAndUserList);
+        // {22=[45, 47]}
+
+        // 2-1) 해당 map에서 task id 꺼내올 때.
+        log.info("task id: {}", taskAndUserList.keySet()); // task id: [22]
+        Long tId = (Long) taskAndUserList.keySet().toArray()[0];
+        log.info("set to long: {}", tId); // set to long: 22
+
+        // 2-2) 해당 map에서 user list를 list로 따로 뽑는다.
+        List<Long> unchekcdUserList = new ArrayList<>();
+        for(List<Long> userList: taskAndUserList.values()){
+            unchekcdUserList = userList;
+//            log.info("list를 출력: {}", userList); // list를 출력: [45, 47]
+//            for(int i = 0; i < userIdList.size(); i++){ // user id: 45
+//                log.info("user id: {}", userList.get(i)); // user id: 47
+//            }
+        }
+//        List<Long> userList = Arrays.stream((Long[]) taskAndUserList.values().toArray()).toList();
+        // java.lang.ClassCastException: class [Ljava.lang.Object; cannot be cast to class
+        // [Ljava.lang.Long; ([Ljava.lang.Object; and [Ljava.lang.Long; are in module java.base of loader 'bootstrap')
+
+        log.info("어떻게 되나: {}", unchekcdUserList); // 어떻게 되나: [45, 47]
+
+        // 3. 현재 로그인 중인 유저들. map
+        ConcurrentHashMap<Long, Long> testMap = new ConcurrentHashMap<>();
+        testMap.put(45L, 25L);
+        testMap.put(47L, 26L);
+        testMap.put(49L, 27L);
+        testMap.put(50L, 28L);
+
+
+        // 3-1) 현재 로그인 중인 유저들 중, notice comment에 해당되는 user id에 task id를 보낸다.
+        List<Long> loginUsers = new ArrayList<>();
+        for(Long targetUser: testMap.keySet()){
+            if(unchekcdUserList.stream().anyMatch(Predicate.isEqual(targetUser))){
+                String data = tId + "," + targetUser;
+                log.info("task id와 targetUser id: {}", data);
+            }
+//            log.info("현재 로그인한 유저들의 id를 받는다: {}", logs);
+//            loginUsers.add(logs);
+        }
+
+//        log.info("현재 로그인한 유저들의 id list: {}", loginUsers);
+        // 현재 로그인한 유저들의 id list: [49, 50, 45, 47]
+
+//        List<Long> finalUnchekcdUserList = unchekcdUserList;
+//        List<Long> result = loginUsers.stream().filter(user-> finalUnchekcdUserList.stream().anyMatch(Predicate.isEqual(user))).toList();
+
+//        log.info("매치되는 유저: {}", result);
+
+        // unchekcdUserList.stream().anyMatch(Predicate.isEqual(user))
     }
 }

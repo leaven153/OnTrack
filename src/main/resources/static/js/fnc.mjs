@@ -6,6 +6,10 @@ function parents(el, selector) {
     return parents;
 }
 
+function elExists(el){
+    return el !== undefined && el !== null;
+}
 
-export { parents };
+
+export { parents, elExists };
 

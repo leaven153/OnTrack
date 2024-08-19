@@ -2524,11 +2524,14 @@ window.onload = function(){
     /*---- ▼ Modal(Task comment)소통하기 - 글 등록 ▼ ----*/
     if(elExists(document.querySelector("#btn-submit-comment"))) {
 
+        const btnSubmitComment = document.querySelector("#btn-submit-comment");
+        const commentWriteBox = document.querySelector(".modal-task-comment-write");
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
+        /*
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
-        const commentWriteBox = document.querySelector(".modal-task-comment-write");
-        const btnSubmitComment = document.querySelector("#btn-submit-comment");
+
+
         let commentType = "normal";
         commentNoticeBtn.addEventListener("change", ()=>{
             if(commentNoticeBtn.checked){
@@ -2540,7 +2543,7 @@ window.onload = function(){
                 commentWriteBox.classList.remove("task-comment-write-notice");
                 btnSubmitComment.style.backgroundColor = "#411c02";
             }
-        });
+        }); */
 
         /*---------- 038 ------------*/
         // 글 등록
@@ -2593,11 +2596,7 @@ window.onload = function(){
                         commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
 
                         // web socket
-                        const dataTest = {
-                            commentId: commentId,
-                            taskId: 9
-                        };
-                        ws.socket.send(commentId+"string");
+                        ws.socket.send(commentId);
 
                     });
                 } else {

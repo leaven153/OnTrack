@@ -212,7 +212,7 @@ div#nav-btn-task,
 div#nav-btn-project {
     position: relative;
 }
-
+.alarm-bin,
 .project-alarm-notice {
     position: absolute;
     width: 11px;
@@ -233,7 +233,7 @@ div#nav-btn-project {
     background-color: #451f46;
 }
 
-.task-alarm-comment-required-reading {
+.alarm-notice-comment {
     position: absolute;
     width: 11px;
     height: 11px;
@@ -242,6 +242,34 @@ div#nav-btn-project {
     right: -5px;
     background-color: #9e3f3b;
 }
+
+span.mytasks-title{
+    position: relative;
+    /*display: inline-block;*/
+}
+
+span.mytasks-title::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    top: 0;
+    left: 105%;
+    background-color: #9e3f3b;
+
+}
+
+/*.alarm-bin {*/
+/*    position: absolute;*/
+/*    width: 11px;*/
+/*    height: 11px;*/
+/*    border-radius: 50%;*/
+/*    top: 0;*/
+/*    right: -5px;*/
+/*    background-color: #9e3f3b;*/
+/*}*/
+
 
 /******************************************************/
 /********** 03. nickname *********/
@@ -3312,9 +3340,9 @@ div[class*=task-tab] {
     line-height: 1.5em;
 }
 
-.task-comment-notice {
-    border: 2px solid #9e3f3b;
-}
+/*.task-comment-notice {*/
+/*    border: 2px solid #9e3f3b;*/
+/*}*/
 
 
 .btn-submit-comment {

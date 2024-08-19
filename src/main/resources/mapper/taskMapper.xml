@@ -59,8 +59,8 @@
         WHERE task_id = #{taskId}
     </select>
 
-    <select id="findTaskByMemberId" resultType="TaskAndAssignee">
-        SELECT t.id, t.task_title, t.task_status, t.task_dueDate
+    <select id="findTaskByMemberId" resultType="OnTrackTask">
+        SELECT t.id, t.task_title, t.task_status, t.task_dueDate, t.createdAt, t.updatedAt, t.project_id
         FROM ontrack_task t
         INNER JOIN task_assignment ta
         ON ta.task_id = t.id
@@ -160,6 +160,13 @@
         SELECT *
         FROM check_comment
         WHERE user_id = #{userId}
+        AND checked = false
+    </select>
+
+    <select id="findUncheckedCommentByCommentId" parameterType="Long" resultType="CheckComment">
+        SELECT *
+        FROM check_comment
+        WHERE comment_id = #{commentId}
         AND checked = false
     </select>
 
