@@ -121,4 +121,6 @@ public interface TaskMapper {
     // 할 일 영구 삭제 ③ 진행 내역 삭제
     // 할 일 영구 삭제 ④ 파일 삭제
 
+    // 내 일 모아보기
+    List<MyTask> getAllMyTasks(Long userId);
 }

@@ -3,10 +3,8 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jhchoi.ontrack.dto.BinResponse;
-import me.jhchoi.ontrack.dto.LoginUser;
-import me.jhchoi.ontrack.dto.MyProject;
-import me.jhchoi.ontrack.dto.ProjectRequest;
+import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.http.MediaType;
@@ -28,6 +26,7 @@ import java.util.Map;
 public class MyPageController {
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final MemberService memberService;
 
     @GetMapping(value = "/myProjects")
     public String myProjects(HttpSession session, Model model){
@@ -67,9 +66,11 @@ public class MyPageController {
             return "redirect:../login";
         }
         model.addAttribute("loginUser", loginUser);
-        // 최종수정일, 최종수정자를 보여주는데,
-        // ● 최종 수정 항목 출력 여부 & 무엇무엇을 출력할 것인가
-        // 진행상태, 할 일 명, 마감일, 담당자 배정/해제 + 소통, 파일, 담당자?
+
+        List<MyTask> taskList = memberService.getAllMyTasks(loginUser.getUserId());
+
+        model.addAttribute("myTasks", taskList);
+
         return "/mypage/myTasks";
     }
 

@@ -196,7 +196,7 @@ public class TaskRepositoryTest {
         Long memberId = 31L; // 프로젝트 9의 서머싯 몸은 현재 담당한 일이 0개
 
         //when
-        List<TaskAndAssignee> t = taskRepository.findTaskByMemberId(memberId);
+        List<OnTrackTask> t = taskRepository.findTaskByMemberId(memberId);
 
         // then
         log.info("null을 어떻게 처리해야 할까?: {}", t);
