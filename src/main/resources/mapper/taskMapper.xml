@@ -170,6 +170,15 @@
         AND checked = false
     </select>
 
+    <select id="getAllMyTasks" parameterType="Long" resultType="MyTask">
+        SELECT t.id as taskId, t.task_title, t.task_status, t.task_dueDate, t.createdAt, t.updatedAt, t.project_id, ta.member_id
+        FROM ontrack_task t
+        INNER JOIN task_assignment ta
+        ON ta.task_id = t.id
+        WHERE member_id in (SELECT id FROM project_member WHERE user_id = #{userId})
+        order by updatedAt desc;
+    </select>
+
     <select id="getBin" parameterType="Long" resultType="BinResponse">
         SELECT t.id as taskId, t.project_id, t.task_title, t.author_mid, t.deletedAt, t.deletedBy
         FROM ontrack_task t

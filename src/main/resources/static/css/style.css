@@ -1980,7 +1980,7 @@ input[type=date] {
 }
 
 span.table-task-title {
-    color: #451f46;
+    /*color: #451f46;*/
     padding-left: 5px;
     /*cursor: pointer;*/
 }
@@ -2224,6 +2224,10 @@ span.status-child-count {
     width: 5em;
 }
 
+.img-14em {
+    width: 1.4em;
+}
+
 .img-2em {
     width: 2em;
 }
@@ -2267,6 +2271,12 @@ span.status-child-count {
     width: 20px;
     height: 20px;
 }
+
+.img-22{
+    width: 22px;
+    height: 22px;
+}
+
 
 .img-24{
     width: 24px;
@@ -2318,7 +2328,7 @@ span.status-child-count {
     height: 40px;
 }
 
-.img-15em {
+.img-10p {
     width: 10%;
     height: 10%;
 }
@@ -2333,6 +2343,10 @@ span.status-child-count {
 
 .img-angle180 {
     transform: rotate(180deg);
+}
+
+.img-angle30{
+    tranform: rotate(30deg);
 }
 
 .tableView-status-list {
@@ -3838,13 +3852,17 @@ span.alert-not-attach-col {
 
 .my-tasks-col-names > div:nth-child(2),
 .my-tasks-col > div:nth-child(2) {
-    flex-basis: 350px;
+    flex-basis: 440px;
     flex-shrink: 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    margin-right: 10px;
+    margin-right: 25px;
     /*padding: 0 20px 0 30px;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 .my-tasks-col-names > div:nth-child(3),
 .my-tasks-col > div:nth-child(3) {
@@ -3885,6 +3903,20 @@ span.alert-not-attach-col {
     white-space: nowrap;
 
 }
+
+span.comment {
+    font-size: 12px;
+}
+span.comment-cnt  {
+    margin: 0 5px 0 2px;
+    border-radius: 2px;
+    padding: 2px 4px;
+    background-color: #d1c9bb33;
+    color: #451f46;
+    font-size: 11px;
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+}
+
 /************************************/
 /************ 13. MyPage - Bin ***********/
 /************************************/
