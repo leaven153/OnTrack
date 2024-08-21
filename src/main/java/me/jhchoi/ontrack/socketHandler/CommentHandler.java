@@ -55,7 +55,7 @@ public class CommentHandler extends TextWebSocketHandler {
         // 클라이언트가 보내온 data: [object Object] // map을 보내보았음.
         // 클라이언트가 보내온 data: 43string
 
-        // 해당 notice comment를 확인하지 않은 user list(List<CheckComment> 받아온다.
+        // 해당 notice comment를 확인하지 않은 user list(List<CheckComment>) 받아온다.
         Map<Long, List<Long>> taskIdAndUserList = taskService.alarmNoticeComment(Long.valueOf(receivedData));
         List<Long> unchekcdUserList = new ArrayList<>();
         for(List<Long> userList: taskIdAndUserList.values()){
@@ -63,17 +63,17 @@ public class CommentHandler extends TextWebSocketHandler {
         }
 
         // 현재 loginUser에 해당 user id가 있다면 sendMessage (task id)
-//        List<Long> sendAlarmTo = new ArrayList<>();
-//        log.info("현재 로그인된 유저: {}", loginUsers.get(getUserId(session)));
-//        sendAlarmTo.addAll(loginUsers.keySet());
-
         for(Long targetUser: loginUsers.keySet()){
             if(unchekcdUserList.stream().anyMatch(Predicate.isEqual(targetUser))){
-//                String data = (String) taskIdAndUserList.keySet().toArray()[0] + "," + targetUser;
-//                log.info("taskid와 userid 합침: {}", data);
                 loginUsers.get(targetUser).sendMessage(new TextMessage((CharSequence) taskIdAndUserList.keySet().toArray()[0]));
             }
         }
+
+        //                String data = (String) taskIdAndUserList.keySet().toArray()[0] + "," + targetUser;
+//                log.info("taskid와 userid 합침: {}", data);
+        //        List<Long> sendAlarmTo = new ArrayList<>();
+//        log.info("현재 로그인된 유저: {}", loginUsers.get(getUserId(session)));
+//        sendAlarmTo.addAll(loginUsers.keySet());
 //        loginUsers.get(getUserId(session)).sendMessage(new TextMessage(rawData));
 
 

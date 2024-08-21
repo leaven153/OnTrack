@@ -81,8 +81,8 @@
                     <div class="진행상태 status-sign" th:classappend="${task.statusCode(task.getTaskStatus()).get(1)}"></div>
                     <span class="font-15" th:text="${task.statusCode(task.getTaskStatus()).get(0)}">시작 안 함</span></div>
                 <div class="마감일 flex-row-center-center-nowrap">
-                    <span class="altivo-regular" th:class="${task.getTaskDueDate() == null}?'font-14':'altivo-regular'" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'yy.MM.dd ')}">24.12.10</span>
-                    <span class="font-14 bold" th:text="${task.getTaskDueDate() == null}? _:${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
+                    <span class="altivo-regular" th:class="${task.getTaskDueDate() == null}?'font-14 font-blur':'altivo-regular'" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'yy.MM.dd ')}">24.12.10 </span>
+                    <span class="font-14 bold" th:text="${task.getTaskDueDate() == null}? _:' &nbsp'+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
                 </div>
                 <div class="작성자"><span class="font-14" th:text="${task.getAuthorName()}">크러쉬</span></div>
                 <div class="작성일"><span class="altivo-light font-14" th:text="${#temporals.format(task.getCreatedAt(), 'yy.MM.dd')}">23.11.15</span></div>

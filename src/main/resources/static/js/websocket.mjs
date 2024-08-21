@@ -22,7 +22,9 @@ function connectWs() {
 
         // nav에 알람표시를 출력한다.
         if(document.querySelector("#icon-myTasks") !== undefined && document.querySelector("#icon-myTasks") !== null){
-            document.querySelector("#icon-myTasks").classList.remove("hide");
+            if(document.querySelector("#icon-myTasks").classList.contains("hide")){
+                document.querySelector("#icon-myTasks").classList.remove("hide");
+            }
         }
 
         // 나의 일 list에서 해당 task에 알람 표시를 출력한다.
