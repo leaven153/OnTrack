@@ -2345,10 +2345,6 @@ span.status-child-count {
     transform: rotate(180deg);
 }
 
-.img-angle30{
-    tranform: rotate(30deg);
-}
-
 .tableView-status-list {
     position: absolute;
     top: 130%;
