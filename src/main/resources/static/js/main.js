@@ -2596,7 +2596,7 @@ window.onload = function(){
                         commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
 
                         // web socket
-                        // ws.socket.send(commentId);
+                        ws.socket.send(commentId);
 
                     });
                 } else {

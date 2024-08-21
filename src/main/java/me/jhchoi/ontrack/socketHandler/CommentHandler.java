@@ -65,10 +65,10 @@ public class CommentHandler extends TextWebSocketHandler {
         // 현재 loginUser에 해당 user id가 있다면 sendMessage (task id)
         for(Long targetUser: loginUsers.keySet()){
             if(unchekcdUserList.stream().anyMatch(Predicate.isEqual(targetUser))){
-                loginUsers.get(targetUser).sendMessage(new TextMessage((CharSequence) taskIdAndUserList.keySet().toArray()[0]));
+                loginUsers.get(targetUser).sendMessage(new TextMessage(taskIdAndUserList.keySet().toArray()[0].toString()));
             }
         }
-
+// Closing session due to exception for WebSocketServerSockJsSession[id=ap5kqgwf]
         //                String data = (String) taskIdAndUserList.keySet().toArray()[0] + "," + targetUser;
 //                log.info("taskid와 userid 합침: {}", data);
         //        List<Long> sendAlarmTo = new ArrayList<>();
