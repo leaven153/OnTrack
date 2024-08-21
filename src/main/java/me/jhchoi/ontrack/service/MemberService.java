@@ -42,21 +42,10 @@ public class MemberService {
     // 나의 일 모아보기
     public List<MyTask> getAllMyTasks(Long userId){
 
-        // 1. user id로 내 할 일 가져온다.
-        List<MyTask> allMyTasks = taskRepository.getAllMyTasks(userId);
-
-        // 2. user id로 project_member의 id list 가져온다.
-        List<ProjectMember> myMemberIdList = memberRepository.findByUserId(userId);
-
-        // 2-1. member id로 task_comment에서 해당 task id의 comment 개수 가져온다
-        for(int i = 0; i < myMemberIdList.size(); i++) {
-
-        }
-
-        // 2-2. task_file에서 해당 task id의 file 개수 가져온다.
+//        List<MyTask> allMyTasks = taskRepository.getAllMyTasks(userId);
 
 
-        return null;
+        return taskRepository.getAllMyTasks(userId);
     }
 
 }

@@ -2528,7 +2528,7 @@ window.onload = function(){
         const commentWriteBox = document.querySelector(".modal-task-comment-write");
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
-        /*
+
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
 
 
@@ -2543,7 +2543,7 @@ window.onload = function(){
                 commentWriteBox.classList.remove("task-comment-write-notice");
                 btnSubmitComment.style.backgroundColor = "#411c02";
             }
-        }); */
+        });
 
         /*---------- 038 ------------*/
         // 글 등록
@@ -3557,6 +3557,7 @@ window.onload = function(){
                     document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
                         chkBox.checked = false;
                     });
+
                     // 삭제할 task id array clear
                     checkedTaskList = [];
                     // 화면 리로드
@@ -3593,7 +3594,7 @@ window.onload = function(){
                     body: JSON.stringify(taskBinRequest)
                 }).then(response => {
                     if(response.ok){
-                        console.log(`할 일 개별 row 지우는 중`)
+                        console.log(`할 일 개별 row에서 삭제됨.`)
                         checkedTaskList = [];
                         location.reload();
                     }

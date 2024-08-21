@@ -171,12 +171,19 @@
     </select>
 
     <select id="getAllMyTasks" parameterType="Long" resultType="MyTask">
-        SELECT t.id as taskId, t.task_title, t.task_status, t.task_dueDate, t.createdAt, t.updatedAt, t.project_id, ta.member_id
+        SELECT t.id as taskId, t.task_title, t.author_name, t.task_status, t.task_dueDate, t.createdAt, t.updatedAt, t.project_id, ta.member_id, tf.fileCnt, tc.commCnt, p.project_name
         FROM ontrack_task t
         INNER JOIN task_assignment ta
         ON ta.task_id = t.id
+        INNER JOIN ontrack_project p
+        ON t.project_id = p.id
+        LEFT JOIN (SELECT task_id, count(task_id) commCnt FROM task_comment GROUP BY task_id) tc
+        ON tc.task_id = t.id
+        LEFT JOIN (SELECT task_id, count(task_id) fileCnt FROM task_file GROUP BY task_id) tf
+        ON tf.task_id = t.id
         WHERE member_id in (SELECT id FROM project_member WHERE user_id = #{userId})
-        order by updatedAt desc;
+        AND t.deletedAt IS NULL
+        ORDER BY updatedAt DESC;
     </select>
 
     <select id="getBin" parameterType="Long" resultType="BinResponse">

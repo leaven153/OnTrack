@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="header">
+<head>
     <meta charset="UTF-8">
     <meta name="Author" content="JHCHOI">
     <meta name="Keywords" content="mypage">
     <meta name="Description" content="all projects">
 
-    <title>MMOM -Mypage(tasks)</title>
+    <title>OnTrack - 나의 일</title>
     <link rel="icon" type="image/x-icon" th:href="@{/imgs/icons8-octaedro-32.png}" href="../../static/imgs/icons8-octaedro-32.png">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
     <script type="module" src="../../static/js/myTasks.mjs" th:src="@{/js/myTasks.mjs}"></script>
@@ -43,8 +43,8 @@
         <div class=""><span class="">할 일</span></div>
         <div class=""><span class="">진행상태</span></div>
         <div class=""><span class="">마감일</span></div>
-        <div class=""><span class="">작성일</span></div> <!--/*작성자 추가요망. 내가 작성한 일 모아보기 탭 추가 요망.*/-->
         <div class=""><span class="">작성자</span></div>
+        <div class=""><span class="">작성일</span></div> <!--/*작성자 추가요망. 내가 작성한 일 모아보기 탭 추가 요망.*/-->
         <div class=""><span class="">위치</span></div>
     </div>
 </div>
@@ -65,107 +65,30 @@
     <!-- 나의 모든 일 목록 시작 -->
     <!-- 최종수정일(정렬기준), 최종수정자, 프로젝트명, 할일명, 진행상태, 마감일, 작성일 -->
     <div class="wrapper flex-col-start-center-nowrap">
-        <div class="각row my-tasks-col flex-row-justify-start-align-center">
-            <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
-            <div class="할일 textL ">
-                <span class="">By Your Side</span> <!--/*span.mytasks-title:after*/-->
+        <th:block th:each="task:${myTasks}">
+            <div class="각row my-tasks-col flex-row-justify-start-align-center" >
+                <div class=""><span class="altivo-regular" th:text="${#temporals.format(task.getUpdatedAt(), 'yy.MM.dd HH:mm')}">24.04.17 21:07</span></div>
+                <div class="할일 flex-row-between-nowrap">
+                    <span class="" th:text="${task.getTaskTitle()}">By Your Side</span> <!--/*span.mytasks-title:after*/-->
+                    <div class="상세개수 flex-row-justify-start-align-center">
+                        <span class="detail ">소통</span>
+                        <span class="detail-cnt mr-5" th:text="${task.getCommCnt() == null}?'0':${task.getCommCnt()}">103</span>
+                        <span class="detail">파일</span>
+                        <span class="detail-cnt" th:text="${task.getFileCnt() == null}?'0':${task.getFileCnt()}">21</span>
+                    </div>
+                </div>
                 <div class="flex-row-justify-start-align-center">
-                    <span class="comment ">소통</span>
-                    <span class="comment-cnt mr-5">103</span>
-                    <span class="comment">파일</span>
-                    <span class="comment-cnt">21</span>
+                    <div class="진행상태 status-sign" th:classappend="${task.statusCode(task.getTaskStatus()).get(1)}"></div>
+                    <span class="font-15" th:text="${task.statusCode(task.getTaskStatus()).get(0)}">시작 안 함</span></div>
+                <div class="마감일 flex-row-center-center-nowrap">
+                    <span class="altivo-regular" th:class="${task.getTaskDueDate() == null}?'font-14 font-blur':'altivo-regular'" th:text="${task.getTaskDueDate() == null}?'없음':${#temporals.format(task.getTaskDueDate(), 'yy.MM.dd ')}">24.12.10 </span>
+                    <span class="font-14 bold" th:text="${task.getTaskDueDate() == null}? _:' &nbsp'+${#temporals.dayOfWeekNameShort(task.getTaskDueDate())}"></span>
                 </div>
-            </div>
-            <div class="flex-row-justify-start-align-center">
-                <div class="진행상태 status-sign not-yet"></div>
-                <span class="font-15">시작 안 함</span></div>
-            <div class="">
-                <span class="altivo-regular">24.12.10</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
-            <div class=""><span class="altivo-light font-14">23.11.15</span></div>
-            <div class=""><span class="font-14">크러쉬</span></div>
-            <div class=""><span class="font-14">Essential;</span></div>
-        </div><!-- 각 row 끝 -->
-        <div class="각row my-tasks-col flex-row-justify-start-align-center">
-            <div class=""><span class="altivo-regular">24.01.10 09:07</span></div>
-            <div class="할일 textL ">
-                <span class="">미스 슬로운</span>
-                <div class="flex-row-justify-start-align-center">
-                    <div class="myTask-comment">
-                        <img src="../../static/imgs/icon_comm3730.png" th:src="@{/imgs/icon_comm3730.png}" alt="mytask-comment" class="img-14em"><!--img-2418 -->
-                    </div>
-                    <div class="myTask-file">
-                        <img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="file" class="img-20">
-                    </div>
-                </div>
-            </div>
-            <div class="flex-row-justify-start-align-center">
-                <div class="진행상태 status-sign planning"></div>
-                <span class="font-15">계획중</span></div>
-            <div class="">
-                <span class="altivo-regular">24.03.05</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
-            <div class=""><span class="altivo-light font-14">24.02.15</span></div>
-            <div class=""><span class="font-14">제시카 차스테인</span></div>
-            <div class=""><span class="font-14">목적을 위해 자신을 도구로 삼는 자</span></div>
-        </div><!-- 각 row 끝 -->
-        <div class="각row my-tasks-col flex-row-justify-start-align-center">
-            <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
-            <div class="할일 textL "><span class="">흑조 마스터 하기</span>
-                <div class="">
-                    <div class="icon-with-tip div-inline-block">
-                        <img src="../../static/imgs/icon_comm3730.png" th:src="@{/imgs/icon_comment.png}" alt="comment" class="img-14em mr-5 "> <!--img-2418 -->
-                        <span class="task-detail-cnt">103개의 멘트</span>
-                    </div>
-                    <div class="icon-with-tip div-inline-block">
-                        <img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="file" class="img-20">
-                        <span class="task-detail-cnt">13</span>
-                    </div>
-                </div>
-            </div>
-            <div class="flex-row-justify-start-align-center">
-                <div class="진행상태 status-sign ing"></div>
-                <span class="font-15">진행중</span></div>
-            <div class="">
-                <span class="altivo-regular">24.04.23</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
-            <div class=""><span class="altivo-light font-14">24.01.31</span></div>
-            <div class=""><span class="font-14">나탈리 포트만</span></div>
-            <div class=""><span class="font-14">블랙 스완</span></div>
-        </div><!-- 각 row 끝 -->
-        <div class="각row my-tasks-col flex-row-justify-start-align-center">
-            <div class=""><span class="altivo-regular">24.04.17 21:07</span></div>
-            <div class="할일 textL "><span class="">아이언맨 할 수 있어 하면 된다 해내자 해내보자</span>
-                <div class="">
-                    <img src="../../static/imgs/icon_comm3730.png" th:src="@{/imgs/icon_comment.png}" alt="comment" class="img-14em mr-5"> <!--img-2418 -->
-                    <img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="file" class="img-20">
-                </div>
-            </div>
-            <div class="flex-row-justify-start-align-center">
-                <div class="진행상태 status-sign review"></div>
-                <span class="font-15">검토중</span></div>
-            <div class="">
-                <span class="altivo-regular">24.04.30</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span></div>
-            <div class=""><span class="altivo-light font-14">24.02.07</span></div>
-            <div class=""><span class="font-14">로버트 다우니 주니어</span></div>
-            <div class=""><span class="font-14">배우 미스 슬로운 라라라 빙빙빙</span></div>
-        </div><!-- 각 row 끝 -->
-        <div class="각row my-tasks-col flex-row-justify-start-align-center">
-            <div class=""><span class="altivo-regular">23.11.11 08:15</span></div>
-            <div class="할일 textL "><span class="">안 봤는데 소설부터 보고싶네요</span>
-                <div class="">
-                    <img src="../../static/imgs/icon_comm3730.png" th:src="@{/imgs/icon_comment.png}" alt="comment" class="img-14em mr-5"> <!--img-2418 -->
-                    <img src="../../static/imgs/icon_attachment.png" th:src="@{/imgs/icon_attachment.png}" alt="file" class="img-20">
-                </div>
-            </div>
-            <div class="flex-row-justify-start-align-center">
-                <div class="진행상태 status-sign done"></div>
-                <span class="font-15">완료</span>
-            </div>
-            <div class="">
-                <span class="altivo-regular">24.04.30</span><span class="font-14 vertical-ctrl_005">&nbsp; 화</span>
-            </div>
-            <div class=""><span class="altivo-light font-14">23.12.31</span></div>
-            <div class=""><span class="font-14">젠다야</span></div>
-            <div class=""><span class="font-14">듄 part.2</span></div>
-        </div><!-- 각 row 끝 -->
+                <div class="작성자"><span class="font-14" th:text="${task.getAuthorName()}">크러쉬</span></div>
+                <div class="작성일"><span class="altivo-light font-14" th:text="${#temporals.format(task.getCreatedAt(), 'yy.MM.dd')}">23.11.15</span></div>
+                <div class="프로젝트명 cursorP" th:onclick="|location.href='@{|/project/${task.getProjectId()}}'|"><span class="font-14" th:text="${task.getProjectName()}">Essential;</span></div>
+            </div><!-- 각 row 끝 -->
+        </th:block>
     </div><!-- wrapper 끝 -->
     <!-- 나의 모든 일 목록 끝 -->
 </div>
