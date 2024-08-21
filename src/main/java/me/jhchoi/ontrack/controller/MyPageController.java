@@ -71,6 +71,7 @@ public class MyPageController {
 
         model.addAttribute("myTasks", taskList);
 
+
         return "/mypage/myTasks";
     }
 

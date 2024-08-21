@@ -15,7 +15,6 @@ public class TaskAssignment {
     private Long id;
     private Long projectId;
     private Long taskId;
-    private Long userId;
     private Long memberId;
     private String nickname;
     private String role;

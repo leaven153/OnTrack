@@ -3850,7 +3850,21 @@ span.alert-not-attach-col {
     margin-right: 30px;
 }
 
-.my-tasks-col-names > div:nth-child(2),
+
+.my-tasks-col-names > div:nth-child(2) {
+    flex-basis: 440px;
+    flex-shrink: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .my-tasks-col > div:nth-child(2) {
     flex-basis: 440px;
     flex-shrink: 0;
@@ -3858,12 +3872,12 @@ span.alert-not-attach-col {
     overflow: hidden;
     white-space: nowrap;
     margin-right: 25px;
-    /*padding: 0 20px 0 30px;*/
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    /*margin-left: 10px;*/
 }
+
 .my-tasks-col-names > div:nth-child(3),
 .my-tasks-col > div:nth-child(3) {
     flex-basis: 80px;
@@ -3881,33 +3895,36 @@ span.alert-not-attach-col {
 
 .my-tasks-col-names > div:nth-child(5),
 .my-tasks-col > div:nth-child(5) {
+    max-width: 180px;
+    min-width: 80px;
+    flex-shrink: 0;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.my-tasks-col-names > div:nth-child(6),
+.my-tasks-col > div:nth-child(6) {
     flex-basis: 110px;
     flex-shrink: 0;
     text-align: center;
 }
 
-.my-tasks-col-names > div:nth-child(6),
-.my-tasks-col > div:nth-child(6) {
-    flex-basis: 185px;
-    flex-shrink: 0;
-    text-align: center;
-    margin-right: 25px;
-}
-
 .my-tasks-col-names > div:nth-child(7),
 .my-tasks-col > div:nth-child(7) {
-    flex-basis: 200px;
+    min-width: 100px;
+    max-width: 200px;
     flex-shrink: 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-
+    text-align: center;
 }
 
-span.comment {
+span.detail {
     font-size: 12px;
 }
-span.comment-cnt  {
+
+span.detail-cnt  {
     margin: 0 5px 0 2px;
     border-radius: 2px;
     padding: 2px 4px;
