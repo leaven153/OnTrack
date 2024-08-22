@@ -10,29 +10,44 @@
     <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
         <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
-        <script type="module" src="../../static/js/websocket.mjs" th:src="@{/js/websocket.mjs}"></script>
+<!--        <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>-->
+<!--        <script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>-->
+        <script type="module" src="../../static/js/wsComment.mjs" th:src="@{/js/wsComment.mjs}"></script>
+        <script type="module" src="../../static/js/wsBin.mjs" th:src="@{/js/wsBin.mjs}"></script>
+
         <div class="nav-btn-list">
-            <div class="nav-menu" data-id="" id="nav-btn-task">
-                <!-- task의 모두 확인 요청 사용여부 결정요망 -->
-                <div id="icon-myTasks" class="alarm-notice-comment hide"></div>
-                <a th:href="@{/mypage/myTasks}"><img src="../../static/imgs/icon_tasks2.png" th:src="@{/imgs/icon_tasks2.png}" alt="tasks" class=""></a>
-                <span class="menu-tip">나의 모든일</span>
-            </div>
-            <div class="nav-menu" data-id="" id="nav-btn-project">
-                <div class="project-alarm-notice"></div>
-                <div class="project-alarm-invitation"></div>
-                <a th:href="@{/mypage/myProjects}"><img src="../../static/imgs/icon_projects.png" th:src="@{/imgs/icon_projects.png}" alt="projects" ></a>
-                <span class="menu-tip">나의 모든 프로젝트</span>
-            </div>
-            <div class="nav-menu" data-id="">
-                <div class="alarm-bin"></div>
-                <a th:href="@{/mypage/bin}"><img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" alt="bin"></a>
-            </div>
+            <th:block th:each="alarm : ${navAlarm.keySet()}">
+                <div class="nav-menu" data-id="" id="nav-btn-task" th:if="${alarm == 'noticeComment'}">
+                    <!-- task의 모두 확인 요청 사용여부 결정요망 -->
+                    <div id="icon-myTasks" class="alarm-notice-comment" th:classappend="${navAlarm.get(alarm)}?'hide'"></div>
+                    <a th:href="@{/mypage/myTasks}"><img src="../../static/imgs/icon_tasks2.png" th:src="@{/imgs/icon_tasks2.png}" alt="tasks" class=""></a>
+                    <span class="menu-tip">나의 모든일</span>
+                </div>
+                <div class="nav-menu" data-id="" id="nav-btn-project" th:if="${alarm == 'projectInvitation'}">
+                    <div class="project-alarm-notice"></div>
+                    <div class="project-alarm-invitation"></div>
+                    <a th:href="@{/mypage/myProjects}"><img src="../../static/imgs/icon_projects.png" th:src="@{/imgs/icon_projects.png}" alt="projects" ></a>
+                    <span class="menu-tip">나의 모든 프로젝트</span>
+                </div>
+                <div class="nav-menu" data-id="" th:if="${alarm == 'bin'}">
+                    <!--                        <div class="alarm-bin"></div>-->
+                    <a th:href="@{/mypage/bin}">
+                        <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" alt="bin" class="icon-bin-full" th:classappend="${navAlarm.get(alarm)}?'hide'">
+                        <img src="../../static/imgs/icon_bin(no).png" th:src="@{/imgs/icon_bin(no).png}" alt="bin" class="icon-bin-empty" th:classappend="${!navAlarm.get(alarm)}?'hide'">
+                    </a>
+                </div>
+            </th:block>
         </div>
         <div class="nav-btn-list">
-            <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" th:src="@{/imgs/icon_user_setting.png}" alt="account"></div>
-            <div class="" data-id=""><a href="#"><img src="../../static/imgs/icon_question.png" th:src="@{/imgs/icon_question.png}" alt="qna"></a></div>
+            <th:block th:each="alarm : ${navAlarm.keySet()}" th:if="${alarmStat.first}">
+                <div class="btn-modal-open-account-settings" data-id=""><img src="../../static/imgs/icon_user_setting.png" th:src="@{/imgs/icon_user_setting.png}" alt="account"></div>
+                <div class="" data-id=""><a href="#"><img src="../../static/imgs/icon_question.png" th:src="@{/imgs/icon_question.png}" alt="qna"></a></div>
+            </th:block>
         </div>
+
+
+
+
     </div>
     <input type="hidden" id="userIdforSse" th:attr="data-userid=${loginUser.getUserId()}">
     <!--        <th:block th:replace="~{/fragments/src}"></th:block>-->

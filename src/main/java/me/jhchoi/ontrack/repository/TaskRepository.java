@@ -98,7 +98,7 @@ public class TaskRepository {
     // 할 일 상세: 중요 소통하기 확인여부 조회
     public CheckComment getCheckComment(CheckComment cc) { return taskMapper.getCheckComment(cc); }
 
-    // 중요 소통하기 확인여부 조회(내 일 모아보기, SSE)
+    // 중요 소통하기 확인여부 조회(내 일 모아보기)
     public List<CheckComment> findUnCheckedCommentByUserId(Long userId){ return taskMapper.findUnCheckedCommentByUserId(userId); }
 
     // 중요 소통 확인하지 않은 user list
@@ -133,7 +133,12 @@ public class TaskRepository {
     // 휴지통 목록 조회(내가 담당자이거나 작성자인 할 일 중, 삭제일이 7일 미만 전인 할 일)
     public List<BinResponse> getBin(Long memberId) { return taskMapper.getBin(memberId); }
 
+    // 휴지통에 내 담당 할 일이 있을 때(for nav icon)
+    public List<OnTrackTask> existsMyTaskInBin(Long userId) { return taskMapper.existsMyTaskInBin(userId); }
+
     // 내 일 모아보기
     public List<MyTask> getAllMyTasks(Long userId) { return taskMapper.getAllMyTasks(userId); }
+
+
 
 }

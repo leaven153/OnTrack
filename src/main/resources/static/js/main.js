@@ -1,6 +1,7 @@
 /*로컬에서 file:// 프로토콜을 사용해 웹페이지를 열면 import, export 지시자가 동작하지 않습니다.*/
 // import { elExists } from "./myprojects";
-import * as ws from './websocket.mjs'
+import * as commentWs from './wsComment.mjs'
+import * as binWs from './wsBin.mjs'
 
 function elExists(el){
     return el !== undefined && el !== null;
@@ -8,7 +9,9 @@ function elExists(el){
 
 
 window.onload = function(){
-    ws.connectWs();
+    commentWs.connectCommentWs();
+    binWs.connectBinWs();
+
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
     /*---------- 001 ------------*/
@@ -1891,26 +1894,32 @@ window.onload = function(){
 
     /*---------- 020 ------------*/
      /* 공지쓰기 창 닫기 */
-     const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
-    let noticeFileCnt = 0;
-    let noticeFileDelCnt = 0;
-     btnCloseModalWriteNotice.forEach(function(chosenBtn){
-         chosenBtn.addEventListener("click", ()=>{
-            formWriteNotice.elements.noticeTitle.value = "";
-            formWriteNotice.elements.noticeContent.value = "";
-            formWriteNotice.elements.noticeFile.value = "";
-            modalNoticeFileListContainer.innerHTML = "";
-            createNoticeNoFile.classList.remove("hide");
+    if(elExists(document.querySelectorAll(".btn-close-modal-write-notice"))){
+        const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
+        const modalNoticeFileListContainer = document.querySelector("#modal-notice-write-file-box");
+        const createNoticeNoFile = document.querySelector("span#create-notice-no-file");
+        let noticeFileCnt = 0;
+        let noticeFileDelCnt = 0;
+        const formWriteNotice = document.querySelector("form#form-write-notice");
+        btnCloseModalWriteNotice.forEach(function(chosenBtn){
+            chosenBtn.addEventListener("click", ()=>{
+                formWriteNotice.elements.noticeTitle.value = "";
+                formWriteNotice.elements.noticeContent.value = "";
+                formWriteNotice.elements.noticeFile.value = "";
+                modalNoticeFileListContainer.innerHTML = "";
+                createNoticeNoFile.classList.remove("hide");
 
-            formWriteNotice.reset(); // 없어도 되는 것 같은데... 
-            modalWriteNotice.classList.add("hide");
-         });
-     });
+
+                formWriteNotice.reset(); // 없어도 되는 것 같은데...
+                modalWriteNotice.classList.add("hide");
+            });
+        });
+    }
+
 
     /*---------- 021 ------------*/
     const addTaskForm = document.querySelector("#form-create-task");
     /*---- ▼ 할 일 추가 모달: 담당자 배정 ▼ ----*/
-
     const assigneeBeforeChoose  = document.querySelector("#assignee-before-choose");
     const assignIndication = document.querySelector("#assign-indication");
     const btnShowAssigneeList = document.querySelector("#show-assignee-list");
@@ -2529,6 +2538,7 @@ window.onload = function(){
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
 
+        /*
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
 
 
@@ -2543,7 +2553,7 @@ window.onload = function(){
                 commentWriteBox.classList.remove("task-comment-write-notice");
                 btnSubmitComment.style.backgroundColor = "#411c02";
             }
-        });
+        }); */
 
         /*---------- 038 ------------*/
         // 글 등록
@@ -2596,7 +2606,7 @@ window.onload = function(){
                         commentArea.prepend(createCommentBox(datum["authorname"], commentType, content, date, commentId));
 
                         // web socket
-                        ws.socket.send(commentId);
+                        // commentWs.commentSocket.send(commentId);
 
                     });
                 } else {
@@ -2757,6 +2767,8 @@ window.onload = function(){
 
         const commentDelConfirmY = document.createElement("p");
         commentDelConfirmY.classList.add("btn-confirm-yes");
+        commentDelConfirmY.setAttribute("data-commentid", commentId);
+        commentDelConfirmY.setAttribute("data-deletedby", 'author');
         commentDelConfirmY.innerText = "확인";
 
         const commentDelConfirmN = document.createElement("p");
@@ -2941,73 +2953,77 @@ window.onload = function(){
 
     /*---------- 042 ------------*/
     // 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때
-    if(elExists(document.querySelectorAll(".btn-comment-del"))){
-        const btnCommentDel = document.querySelectorAll(".btn-comment-del");
-        btnCommentDel.forEach(function(chosenBtn){
-            chosenBtn.addEventListener("click", ()=>{
-                const confirmBox = parents(chosenBtn, ".btn-comment-edit-del")[0].querySelector(".popupYN"); //chosenBtn.parentElement.parentElement.children[2];
-                confirmBox.classList.remove("img-hidden");
-                const myComment = parents(chosenBtn, ".modal-task-comment-read")[0];// chosenBtn.parentElement.parentElement.parentElement.parentElement.parentElement;
-                const btnYes = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-yes");// chosenBtn.parentElement.parentElement.children[2].children[1].children[0];
-                const btnNo = parents(chosenBtn, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-no");// chosenBtn.parentElement.parentElement.children[2].children[1].children[1];
-                let cntComment = parents(chosenBtn, ".modal-task-comment-read")[0].children.length;
-                console.log(cntComment);
-                btnYes.addEventListener("click", (e)=>{
-                    e.stopPropagation();
-                    const data = btnYes.dataset;
-                    cntComment--;
-                    if(btnYes.dataset.deletedby === 'author'){ // 작성자에 의해 삭제
-                        console.log("작성자에 의한 소통글 삭제");
-                        // 서버 요청
+    onEvtListener(document, "click", ".btn-comment-del", function(){
+        const confirmBox = parents(this, ".btn-comment-edit-del")[0].querySelector(".popupYN"); //chosenBtn.parentElement.parentElement.children[2];
+        confirmBox.classList.remove("img-hidden");
+        const myComment = parents(this, ".modal-task-comment-read")[0];// chosenBtn.parentElement.parentElement.parentElement.parentElement.parentElement;
+        const btnYes = parents(this, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-yes");// chosenBtn.parentElement.parentElement.children[2].children[1].children[0];
+        const btnNo = parents(this, ".modal-task-comment-info-box")[0].querySelector(".btn-confirm-no");// chosenBtn.parentElement.parentElement.children[2].children[1].children[1];
+        // let cntComment = parents(this, ".modal-task-comment-read")[0].children.length;
+        let cntComment = parents(this, "#task-tab-comment-list")[0].querySelectorAll(".modal-task-comment-read").length;
+        console.log(cntComment);
+        btnYes.addEventListener("click", (e)=>{
+            e.stopPropagation();
+            const data = btnYes.dataset;
+            cntComment--;
+            console.log(`삭제 후 소통글 개수: ${cntComment}`);
+            if(btnYes.dataset.deletedby === 'author'){ // 작성자에 의해 삭제
+                console.log("작성자에 의한 소통글 삭제");
+                // 서버 요청
 
-                        fetch(`http://localhost:8080/task/comment?cId=${data["commentid"]}`, {
-                            method: 'DELETE'
-                        }).then(response => {
-                            if(response.ok){
-                                confirmBox.classList.add("img-hidden");
-                                myComment.remove();
-                            } else {
-                                alert(`글 삭제가 완료되지 않았습니다.`);
-                            }
-                        });
-                    } else { // 관리자에 의해 삭제
-                        console.log("관리자에 의한 소통글 삭제");
-
-                        // 서버 요청
-                        const taskDetailRequest = {
-                            commentId: data["commentid"],
-                            blockedBy: data["deletedby"]
+                fetch(`http://localhost:8080/task/comment?cId=${data["commentid"]}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if(response.ok){
+                        confirmBox.classList.add("img-hidden");
+                        if(cntComment === 0) {
+                            const pNoComment = document.createElement("p");
+                            pNoComment.classList.add("no-comment");
+                            pNoComment.innerText = "등록된 글이 없습니다.";
+                            parents(this, "#task-tab-comment-list")[0].prepend(pNoComment);
                         }
-
-                        fetch(`http://localhost:8080/task/comment?type=blocked`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(taskDetailRequest)
-                        }).then(response => {
-                            if(response.ok){
-                                confirmBox.classList.add("img-hidden");
-                                myComment.remove();
-                                if(cntComment === 0) {
-                                    const pNoComment = document.createElement("p");
-                                    p.classList.add("no-comment");
-                                    p.innerText = "등록된 글이 없습니다.";
-                                    parents(chosenBtn, ".modal-task-comment-read")[0].prepend(pNoComment);
-
-                                }
-                            }
-                        });
+                        myComment.remove();
+                    } else {
+                        alert(`글 삭제가 완료되지 않았습니다.`);
                     }
+                });
+            } else { // 관리자에 의해 삭제
+                console.log("관리자에 의한 소통글 삭제");
 
+                // 서버 요청
+                const taskDetailRequest = {
+                    commentId: data["commentid"],
+                    blockedBy: data["deletedby"]
+                }
+
+                fetch(`http://localhost:8080/task/comment?type=blocked`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskDetailRequest)
+                }).then(response => {
+                    if(response.ok){
+                        confirmBox.classList.add("img-hidden");
+                        if(cntComment === 0) {
+                            const pNoComment = document.createElement("p");
+                            pNoComment.classList.add("no-comment");
+                            pNoComment.innerText = "등록된 글이 없습니다.";
+                            parents(this, "#task-tab-comment-list")[0].prepend(pNoComment);
+                        }
+                        myComment.remove();
+                    }
                 });
-                btnNo.addEventListener("click", (e)=>{
-                    e.stopPropagation();
-                    confirmBox.classList.add("img-hidden");
-                });
-            });
+            }
+
         });
-    }// 소통하기 - (자신의 글)삭제하기 버튼 눌렀을 때 끝
+        btnNo.addEventListener("click", (e)=>{
+            e.stopPropagation();
+            confirmBox.classList.add("img-hidden");
+        });
+
+    });
+
     /*---- ▲  Modal(Task comment)소통하기 - (자신의 글) 수정/삭제 끝 ▲ ----*/
 
 
@@ -3557,6 +3573,9 @@ window.onload = function(){
                     document.querySelectorAll(".task-checkbox").forEach(function(chkBox){
                         chkBox.checked = false;
                     });
+
+                    // web socket
+                    binWs.binSocket.send(checkedTaskList);
 
                     // 삭제할 task id array clear
                     checkedTaskList = [];

@@ -37,7 +37,7 @@ public class CommentHandler extends TextWebSocketHandler {
         // session get attribute: {loginUser=LoginUser(loginId=user@abc.com, loginPw=null, userName=공지철, userId=35)
         // , HTTP.SESSION.ID=B2F8EA55C23D6C16AEA4925D2DE7D5E5}
         loginUsers.put(getUserId(session), session);
-        log.info("같은 공지철이 어떻게 저장되는가: {}", loginUsers);
+        log.info("loginUser map에 어떻게 저장되는가: {}", loginUsers);
 //        try {
 //
 //        } catch(Exception e){

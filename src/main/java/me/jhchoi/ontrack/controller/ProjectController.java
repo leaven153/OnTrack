@@ -33,6 +33,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final NavAlarm navAlarm;
 
 
     @ModelAttribute("statusMap")
@@ -182,6 +183,8 @@ public class ProjectController {
             model.addAttribute("view", view);
 //            return ResponseEntity.created(projectLocation).body(view);
         }
+
+        model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
 
 //        return ResponseEntity.created(projectLocation).build();
         return "project/project"; // url - http://localhost:8080/project/9

@@ -113,6 +113,9 @@ public interface TaskMapper {
     // 휴지통 목록 조회(프로젝트 내 내가 담당자이거나 작성자인 할 일 중, 삭제일이 7일 미만 전인 할 일)
     List<BinResponse> getBin(Long memberId);
 
+    // 휴지통에 내 담당 할 일이 있을 때(for nav icon)
+    List<OnTrackTask> existsMyTaskInBin(Long userId);
+
     // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
     List<OnTrackTask> delTask(Long taskId);
 

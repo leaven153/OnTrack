@@ -11,11 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,8 @@ public class MyPageController {
     private final ProjectService projectService;
     private final TaskService taskService;
     private final MemberService memberService;
+    private final NavAlarm navAlarm;
+
 
     @GetMapping(value = "/myProjects")
     public String myProjects(HttpSession session, Model model){
@@ -51,6 +55,7 @@ public class MyPageController {
         model.addAttribute("noProject", noProject);
         model.addAttribute("myProjects", myProjects);
         model.addAttribute("loginUser", loginUser);
+        model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
         log.info("컨트롤러가 화면으로 넘기는 project list: {}", myProjects);
 
         return "mypage/myProjects";
@@ -70,7 +75,7 @@ public class MyPageController {
         List<MyTask> taskList = memberService.getAllMyTasks(loginUser.getUserId());
 
         model.addAttribute("myTasks", taskList);
-
+        model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
 
         return "/mypage/myTasks";
     }
@@ -89,7 +94,7 @@ public class MyPageController {
         List<BinResponse> binTaskList = taskService.getMyBin(loginUser.getUserId());
         log.info("컨트롤러에서 받은 binTaskList: {}", binTaskList);
         model.addAttribute("binTaskList", binTaskList);
-
+        model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
         return "/mypage/bin";
     }
 }
