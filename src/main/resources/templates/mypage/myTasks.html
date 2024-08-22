@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" th:href="@{/imgs/icons8-octaedro-32.png}" href="../../static/imgs/icons8-octaedro-32.png">
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
     <script type="module" src="../../static/js/myTasks.mjs" th:src="@{/js/myTasks.mjs}"></script>
-    <!-- <script src="/js/main.js"></script> -->
+    <!-- <script src="/js/main.mjs"></script> -->
 </head>
 <body>
 
@@ -45,7 +45,7 @@
         <div class=""><span class="">마감일</span></div>
         <div class=""><span class="">작성자</span></div>
         <div class=""><span class="">작성일</span></div> <!--/*작성자 추가요망. 내가 작성한 일 모아보기 탭 추가 요망.*/-->
-        <div class=""><span class="">위치</span></div>
+        <div class=""><span class="">프로젝트명</span></div>
     </div>
 </div>
 <!-- 상단 고정(my name, page title) 끝 -->
@@ -65,7 +65,8 @@
     <!-- 나의 모든 일 목록 시작 -->
     <!-- 최종수정일(정렬기준), 최종수정자, 프로젝트명, 할일명, 진행상태, 마감일, 작성일 -->
     <div class="wrapper flex-col-start-center-nowrap">
-        <th:block th:each="task:${myTasks}">
+        <div class="font-blur font-20" th:if="${myTasks == null}">내가 담당한 할 일이 없습니다.</div>
+        <th:block th:if="${myTasks.size() != 0}" th:each="task:${myTasks}">
             <div class="각row my-tasks-col flex-row-justify-start-align-center" >
                 <div class=""><span class="altivo-regular" th:text="${#temporals.format(task.getUpdatedAt(), 'yy.MM.dd HH:mm')}">24.04.17 21:07</span></div>
                 <div class="할일 flex-row-between-nowrap">

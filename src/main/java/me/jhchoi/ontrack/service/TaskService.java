@@ -414,13 +414,16 @@ public class TaskService {
     public Map<Long, List<Long>> alarmNoticeComment(Long commentId) {
         List<CheckComment> unchechkedList = taskRepository.findUncheckedCommentByCommentId(commentId);
         Map<Long, List<Long>> taskIdAndUserList = new HashMap<>();
-        Long taskId = unchechkedList.get(0).getTaskId();
-        List<Long> userIdList = new ArrayList<>();
 
-        for (CheckComment checkComment : unchechkedList) {
-            userIdList.add(checkComment.getUserId());
+        List<Long> userIdList = new ArrayList<>();
+        if(!unchechkedList.isEmpty()){
+            Long taskId = unchechkedList.get(0).getTaskId();
+            for (CheckComment checkComment : unchechkedList) {
+                userIdList.add(checkComment.getUserId());
+            }
+            taskIdAndUserList.put(taskId, userIdList);
         }
-        taskIdAndUserList.put(taskId, userIdList);
+
         log.info("task id and user id list 전송: {}", taskIdAndUserList);
 
         return taskIdAndUserList;
@@ -597,7 +600,7 @@ public class TaskService {
 
         // 소속된 프로젝트가 없다면 빈 리스트를 바로 보낸다.
         if(memberInfo.isEmpty()) {
-            log.info("소속된 프로젝트가 없을리 없잖아?");
+            log.info("소속된 프로젝트가 없을 수도 있지");
             return binTaskList;
         }
 

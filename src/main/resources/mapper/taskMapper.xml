@@ -195,6 +195,17 @@
         OR t.id in (SELECT task_id FROM task_assignment WHERE member_id = #{memberId})
     </select>
 
+    <select id="existsMyTaskInBin" parameterType="Long" resultType="OnTrackTask">
+        SELECT t.id, t.task_title, t.author_name, t.task_status, t.task_dueDate, t.createdAt, t.deletedAt, t.project_id
+        FROM ontrack_task t
+        INNER JOIN task_assignment ta
+        ON ta.task_id = t.id
+        INNER JOIN (SELECT id FROM ontrack_task WHERE deletedAt > date_sub(curdate(), interval 7 day)) tt
+        ON t.id = tt.id
+        WHERE member_id in (select id from project_member where user_id = #{userId})
+        AND t.deletedAt IS NOT NULL;
+    </select>
+
     <update id="editTaskTitle" parameterType="TaskEditRequest">
         UPDATE ontrack_task
         SET task_title = #{title}

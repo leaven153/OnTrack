@@ -1,14 +1,9 @@
-// import * as SockJs from 'https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js';
-// import * as sj from 'sockjs';
-// import * as sockJS from 'https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js';
-// import * as SockJS from 'sockjs-client';
-
-let socket = new SockJS(`http://localhost:8080/ws/noticeComment`);
+let commentSocket = new SockJS(`http://localhost:8080/ws/noticeComment`);
 
 window.onload = function(){
-    connectWs();
+    connectCommentWs();
 }
-function connectWs() {
+function connectCommentWs() {
 
     const sock = new SockJS(`http://localhost:8080/ws/noticeComment`);
     // socket = sock;
@@ -47,4 +42,4 @@ function connectWs() {
 }
 
 
-export { socket, connectWs };
+export { commentSocket, connectCommentWs };

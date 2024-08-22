@@ -260,10 +260,45 @@ class TaskServiceTest {
     void getUncheckedNoticeComment(){
         // given
         Long userId = 45L;
-        log.info("서비스에서의 결과: {}", taskRepository.findUnCheckedCommentByUserId(userId));
+        List<CheckComment> uncheckedCommentList = taskRepository.findUnCheckedCommentByUserId(userId);
+        log.info("서비스에서의 결과: {}", uncheckedCommentList);
+        log.info("uncheckedComment의 size: {}", uncheckedCommentList.size()); // uncheckedComment의 size: 21
+        log.info("uncheckedComment의 isEmpty: {}", uncheckedCommentList.isEmpty()); // uncheckedComment의 isEmpty: false
+
         /*
         * 서비스에서의 결과: [CheckComment(id=2, taskId=22, commentId=24, memberId=4, userId=45, checked=false),
         * CheckComment(id=5, taskId=22, commentId=26, memberId=4, userId=45, checked=false)]*/
+
+    }
+
+    @Test @DisplayName("내가 확인하지 않은 중요 소통 글이 있을 때")
+    void alarmForNoticeComment(){
+        Long userId = 35L;
+        List<CheckComment> uncheckedComment = taskRepository.findUnCheckedCommentByUserId(userId);
+        log.info("list: {}", uncheckedComment);
+        log.info("list size: {}", uncheckedComment.size()); // list size: 5
+        log.info("list isEmpty: {}", uncheckedComment.isEmpty()); // list isEmpty: false
+    }
+
+    @Test @DisplayName("내 담당 할 일이 휴지통에 있을 때")
+    void alarmForBin(){
+        // given
+        Long userId = 35L; // 크러쉬 47L, 서머싯 몸 48L
+        Map<String, Boolean> testMap = new HashMap<>();
+
+        // when
+        List<OnTrackTask> myTaskInBin = taskRepository.existsMyTaskInBin(userId);
+
+        log.info("task list: {}", myTaskInBin); // task list: []
+        log.info("task list size: {}", myTaskInBin.size()); // task list size: 0
+        log.info("task list isEmpty: {}", myTaskInBin.isEmpty()); // task list isEmpty: true
+
+        testMap.put("bin", myTaskInBin.isEmpty());
+        log.info("map: {}", testMap);
+        for(String key: testMap.keySet()){
+            log.info("key: {}", key); // key: bin
+            log.info("value: {}", testMap.get(key)); // value: true
+        }
 
     }
 

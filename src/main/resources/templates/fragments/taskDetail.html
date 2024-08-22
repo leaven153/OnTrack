@@ -6,7 +6,7 @@
   <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 <!--  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>-->
-<!--  <script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>-->
+<!--  <script type="module" src="../../static/js/main.mjs" th:src="@{/js/main.mjs}"></script>-->
 </head>
 <body>
   <div id="container-task-detail" class="z3" th:classappend="${!hide}?open" th:fragment="taskDetail(taskDetail, hide, myNickname, myMid, myPosition)"> <!--/*loginMember, , taskCommentForm*/-->
@@ -53,14 +53,14 @@
       <div id="task-tab-comment-write" class="소통하기글입력영역 task-tab-comment modal-task-tab flex-row-center-center-nowrap bottom-line-subtle mb-10" th:classappend="${taskDetail.getTab() != 'comm'}?hide">
         <div class="modal-task-comment-write mb-20">
           <textarea id="task-comment-write-content" class="" maxlength="200" placeholder="이 일에 대한 진행상황을 간단히 공유합니다(400자 이내)"></textarea> <!--th:field="${taskCommentForm.comment}"-->
-          <div class="flex-row-between-nowrap bg-efe pd-a10 border-bottom5"> <!--flex-row-end-center-nowrap-->
-            <div class="flex-row-justify-start-align-center">
-              <span class="ml-3 mr-5 font-13 c411 bold">중요</span>
-              <label class="switch" for="task-comment-notice">
-                <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">
-                <span class="slider"></span>
-              </label>
-            </div>
+          <div class="flex-row-end-center-nowrap bg-efe pd-a10 border-bottom5"> <!--flex-row-between-nowrap-->
+<!--            <div class="flex-row-justify-start-align-center">-->
+<!--              <span class="ml-3 mr-5 font-13 c411 bold">중요</span>-->
+<!--              <label class="switch" for="task-comment-notice">-->
+<!--                <input type="checkbox" id="task-comment-notice" name="commentType" class="opacity0 wh0">-->
+<!--                <span class="slider"></span>-->
+<!--              </label>-->
+<!--            </div>-->
             <button type="button" id="btn-submit-comment" class="btn-submit-comment"
                     th:attr="data-taskid=${taskDetail.getTaskId()}, data-projectid=${taskDetail.getProjectId()},
                     data-authormid=${myMid}, data-authorname=${myNickname}">입력</button>
@@ -93,9 +93,9 @@
           <div class="작성자와중요 flex-row-justify-start-align-center">
             <span class="작성자 commentWriter" th:text="${comment.getAuthorName()}">고윤정</span>
 <!--            <img src="../../static/imgs/icon_chatRR2520.png" th:src="@{/imgs/icon_chatRR2520.png}" th:if="${comment.getType() == 'notice'}">-->
-            <th:block th:if="${taskDetail.getNoticeCommentChk()}" th:each="chk: ${taskDetail.getNoticeCommentChk()}">
-              <button class="notice-chk" th:if="${chk.key == comment.getId() and chk.value == false}" th:attr="data-commentid=${comment.getId()}, data-chekedmember=${myMid}">미확인</button>
-            </th:block>
+<!--            <th:block th:if="${taskDetail.getNoticeCommentChk()}" th:each="chk: ${taskDetail.getNoticeCommentChk()}">-->
+<!--              <button class="notice-chk" th:if="${chk.key == comment.getId() and chk.value == false}" th:attr="data-commentid=${comment.getId()}, data-chekedmember=${myMid}">미확인</button>-->
+<!--            </th:block>-->
           </div>
           <div class="작성일시와tool mr-15 flex-row-justify-start-align-center">
             <span class="날짜 altivo-regular mr-5" th:text="${#temporals.format(comment.getCreatedAt(), 'yy.MM.dd HH:mm')}">24.02.14 17:50</span>
@@ -121,7 +121,7 @@
             </div><!-- tool버튼과 기능 끝 -->
           </div><!-- 작성일시와tool 끝 -->
         </div> <!-- commentInfoBox: 작성자(+중요)+작성일시+tool box 끝-->
-        <div class="작성내용 task-comment-content"> <!-- commentContetn 시작 -->
+        <div class="작성내용 task-comment-content"> <!-- commentContent 시작 -->
           <textarea class="" maxlength="400" th:text="${comment.getComment()}" readonly>그대랑 함께 갈래요 꼭 끌어안고 갈래요 서로에게 서로라면 더할 나위가 없어요 오싹한 낭떠러지도 뜨거운 불구덩이도 상관없어요 두렵지 않아요 이젠 내 손 잡아줘요</textarea>
         </div><!-- commentContent 끝 -->
         <div class="flex-row-between-nowrap">
