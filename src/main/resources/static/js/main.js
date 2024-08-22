@@ -1894,26 +1894,32 @@ window.onload = function(){
 
     /*---------- 020 ------------*/
      /* 공지쓰기 창 닫기 */
-     const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
-    let noticeFileCnt = 0;
-    let noticeFileDelCnt = 0;
-     btnCloseModalWriteNotice.forEach(function(chosenBtn){
-         chosenBtn.addEventListener("click", ()=>{
-            formWriteNotice.elements.noticeTitle.value = "";
-            formWriteNotice.elements.noticeContent.value = "";
-            formWriteNotice.elements.noticeFile.value = "";
-            modalNoticeFileListContainer.innerHTML = "";
-            createNoticeNoFile.classList.remove("hide");
+    if(elExists(document.querySelectorAll(".btn-close-modal-write-notice"))){
+        const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
+        const modalNoticeFileListContainer = document.querySelector("#modal-notice-write-file-box");
+        const createNoticeNoFile = document.querySelector("span#create-notice-no-file");
+        let noticeFileCnt = 0;
+        let noticeFileDelCnt = 0;
+        const formWriteNotice = document.querySelector("form#form-write-notice");
+        btnCloseModalWriteNotice.forEach(function(chosenBtn){
+            chosenBtn.addEventListener("click", ()=>{
+                formWriteNotice.elements.noticeTitle.value = "";
+                formWriteNotice.elements.noticeContent.value = "";
+                formWriteNotice.elements.noticeFile.value = "";
+                modalNoticeFileListContainer.innerHTML = "";
+                createNoticeNoFile.classList.remove("hide");
 
-            formWriteNotice.reset(); // 없어도 되는 것 같은데... 
-            modalWriteNotice.classList.add("hide");
-         });
-     });
+
+                formWriteNotice.reset(); // 없어도 되는 것 같은데...
+                modalWriteNotice.classList.add("hide");
+            });
+        });
+    }
+
 
     /*---------- 021 ------------*/
     const addTaskForm = document.querySelector("#form-create-task");
     /*---- ▼ 할 일 추가 모달: 담당자 배정 ▼ ----*/
-
     const assigneeBeforeChoose  = document.querySelector("#assignee-before-choose");
     const assignIndication = document.querySelector("#assign-indication");
     const btnShowAssigneeList = document.querySelector("#show-assignee-list");

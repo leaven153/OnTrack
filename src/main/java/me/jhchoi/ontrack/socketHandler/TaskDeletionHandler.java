@@ -29,7 +29,7 @@ public class TaskDeletionHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         log.info("************ 할 일 지워짐 task deletion occurred ************");
-        String receivedData = message.getPayload(); // .split(",");
+        String receivedData = message.getPayload(); // .split(","); 클라이언트가 보내온 data: 15,16
         log.info("클라이언트가 보내온 data: {}", receivedData);
     }
 

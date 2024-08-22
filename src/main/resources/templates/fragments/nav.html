@@ -10,9 +10,10 @@
     <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
         <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
-        <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>
-<!--        <script type="module" src="../../static/js/wsComment.mjs" th:src="@{/js/wsComment.mjs}"></script>-->
-<!--        <script type="module" src="../../static/js/wsBin.mjs" th:src="@{/js/wsBin.mjs}"></script>-->
+<!--        <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>-->
+<!--        <script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>-->
+        <script type="module" src="../../static/js/wsComment.mjs" th:src="@{/js/wsComment.mjs}"></script>
+        <script type="module" src="../../static/js/wsBin.mjs" th:src="@{/js/wsBin.mjs}"></script>
 
         <div class="nav-btn-list">
             <th:block th:each="alarm : ${navAlarm.keySet()}">
