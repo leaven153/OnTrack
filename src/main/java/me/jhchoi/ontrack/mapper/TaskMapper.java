@@ -116,6 +116,12 @@ public interface TaskMapper {
     // 휴지통에 내 담당 할 일이 있을 때(for nav icon)
     List<OnTrackTask> existsMyTaskInBin(Long userId);
 
+    // 휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)
+    BinResponse binTaskRow(Long taskId);
+
+    // 해당 일을 담당한 멤버들의 user id 조회(for dkffla)
+    List<Long> findUserByTaskIdForAlarm(Long taskId);
+
     // 할 일 영구 삭제 ⑤ ontrack_task에서 삭제
     List<OnTrackTask> delTask(Long taskId);
 

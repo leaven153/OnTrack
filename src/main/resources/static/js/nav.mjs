@@ -2,6 +2,7 @@ import * as commentWs from './wsComment.mjs'
 import * as binWs from './wsBin.mjs'
 
 window.onload = function(){
+    console.log(`nav.mjs`);
     commentWs.connectCommentWs();
     binWs.connectBinWs();
 

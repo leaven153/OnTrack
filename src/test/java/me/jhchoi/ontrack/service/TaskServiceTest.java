@@ -372,4 +372,42 @@ class TaskServiceTest {
 
         // unchekcdUserList.stream().anyMatch(Predicate.isEqual(user))
     }
+
+    @Test @DisplayName("휴지통으로 이동한 할 일 담당자들의 userId")
+    void alarmBin(){
+        // given
+        // 담당자가 1명일 때, 15,16
+        // 담당자가 2명이상일 때, 12
+        // 담당자가 0명일 때, 26
+        String receivedData = "26"; //
+
+        // 해당 task id로 알림보낼 유저 찾아온다.
+        List<Long> taskIdL = new ArrayList<>();
+        if (receivedData.contains(",")) {
+            String[] taskIds = receivedData.split(",");
+            for(int i = 0; i < taskIds.length; i++){
+                taskIdL.add(Long.valueOf(taskIds[i]));
+            }
+        } else {
+            taskIdL.add(Long.valueOf(receivedData));
+        }
+
+        // when
+        Map<Long, List<Long>> taskIdAndAssigneeUserId = new LinkedHashMap<>();
+        List<Long> pMember = new ArrayList<>();
+        for(int i = 0; i < taskIdL.size(); i++){
+            pMember = taskRepository.findUserByTaskIdForAlarm(taskIdL.get(i));
+            log.info("담당자 userId: {}", pMember); // 담당자 userId: []
+            log.info("담당자 size: {}", pMember.size()); // 담당자 size: 0
+            log.info("담당자 isEmpty: {}", pMember.isEmpty()); // 담당자 isEmpty: true
+            taskIdAndAssigneeUserId.put(taskIdL.get(i), pMember);
+        }
+
+        log.info("result: {}", taskIdAndAssigneeUserId);
+        // result: {15=[45], 16=[50]}
+        // result: {12=[45, 50]}
+        // result: {26=[]}
+
+
+    }
 }

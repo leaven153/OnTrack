@@ -1,5 +1,4 @@
 /*로컬에서 file:// 프로토콜을 사용해 웹페이지를 열면 import, export 지시자가 동작하지 않습니다.*/
-// import { elExists } from "./myprojects";
 import * as commentWs from './wsComment.mjs'
 import * as binWs from './wsBin.mjs'
 
@@ -9,13 +8,14 @@ function elExists(el){
 
 
 window.onload = function(){
+    console.log(`here we are, main.js!`);
     commentWs.connectCommentWs();
     binWs.connectBinWs();
 
     /*---- ▼ 열고닫기.. 시작 ▼ ----*/
 
     /*---------- 001 ------------*/
-    /*** 프로젝트 나가기 ***/
+    /*** 프로젝트 탈퇴 ***/
     if(elExists(document.querySelector(".btn-project-out"))){
         document.querySelector(".btn-project-out").addEventListener("click", ()=>{
             document.querySelector("div#modal-leave-project").classList.remove("hide");
@@ -34,7 +34,7 @@ window.onload = function(){
     /*---------- 002 ------------*/
     /*** 프로젝트 內 별명 설정 ***/
     if(elExists(document.querySelector("div.nickname")) && document.querySelector("span.nickname")){
-        const btnChkNickname = document.querySelector(".btn-chk-nickname-double");
+        const btnChkNickname = document.querySelector(".btn-chk-nickname-taken");
         document.querySelector("div.nickname").addEventListener("click", ()=>{
             document.querySelector("input.modal-configure-nickname").value = "";
             document.querySelector(".nickname-ok").classList.add("hide");
@@ -44,7 +44,7 @@ window.onload = function(){
             btnChkNickname.classList.add("font-blur");
             btnChkNickname.classList.add("cursorNot");
         });
-        document.querySelector(".btn-close-modal-confiture-nickname").addEventListener("click", ()=>{
+        document.querySelector(".btn-close-modal-configure-nickname").addEventListener("click", ()=>{
             document.querySelector("div#modal-configure-nickname").classList.add("hide");
         });
 
@@ -1900,6 +1900,7 @@ window.onload = function(){
         const createNoticeNoFile = document.querySelector("span#create-notice-no-file");
         let noticeFileCnt = 0;
         let noticeFileDelCnt = 0;
+        const modalWriteNotice = document.querySelector("#modal-notice-write");
         const formWriteNotice = document.querySelector("form#form-write-notice");
         btnCloseModalWriteNotice.forEach(function(chosenBtn){
             chosenBtn.addEventListener("click", ()=>{
@@ -2407,69 +2408,8 @@ window.onload = function(){
 
 
     /*---------- 032 ------------*/
-    /*---- ▼ 할일 수정(table view, status view): 담당자 배정·수정 시작 ▼ ----*/
-    //
-    // const edit_assigneeBeforeChoose  = document.querySelector("#edit-assignee-before-choose");
-    // const edit_assignIndication = document.querySelector("#edit-assign-indication");
-    // const edit_btnShowAssigneeList = document.querySelector("#edit-show-assignee-list");
-    //
-    // const edit_assigneeList = document.querySelector("#edit-assignee-list");
-    // const edit_assigneesName = document.querySelectorAll("#edit-assignee-list > input");
-    //
-    // const edit_chosensBoxes = document.querySelector("#edit-chosens-boxes");
-    //
-    // let edit_cntChoosenAssignee = 0; // 하나의 일에 배정되는 담당자의 수를 세기 위한 변수
-    //
-    // // 프로젝트 멤버 목록 나타내기
-    //  edit_btnShowAssigneeList.addEventListener("click", ()=>{
-    //
-    //     // 담당자가 아직 배정되지 않았다면 '담당자 배정하기' 글씨는 출력,
-    //     // 선택된 담당자 이름이 출력될 div는 미출력 (목록 나타내기 클릭할 때마다 체크)
-    //     if (edit_cntChoosenAssignee === 0) {
-    //         edit_chosensBoxes.classList.remove("assignee-display");
-    //         edit_chosensBoxes.classList.add("hide");
-    //         edit_assigneeBeforeChoose.classList.add("assignee-display");
-    //         edit_assigneeBeforeChoose.classList.remove("hide");
-    //     }
-    //     // 1. 목록 보이기 버튼을 목록 숨기기(올리기) 버튼으로
-    //     edit_btnShowAssigneeList.classList.toggle("img-angle180");
-    //     // 1. 담당자 목록 출력
-    //     edit_assigneeList.classList.toggle("hide");
-    //     // 1. '담당자 배정하기' 글씨 흐리기
-    //     edit_assignIndication.classList.toggle("font-blur");
-    //
-    // }); // 프로젝트 멤버 목록 나타내기 끝 (btnShowAssigneeList.addEventListener(click) ends)
-    //
 
     /*---------- 033 ------------*/
-    //
-    // const edit_chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
-    //
-    // // 프로젝트 멤버 목록에서 담당자 선택
-    // edit_assigneesName.forEach(function(edit_chosenName){
-    //     edit_chosenName.addEventListener("click", ()=>{
-    //
-    //         console.log("clicked edit modal list");
-    //         // 2. '담당자 배정하기' 글씨 hide
-    //         edit_assigneeBeforeChoose.classList.remove("assignee-display");
-    //         edit_assigneeBeforeChoose.classList.add("hide");
-    //
-    //         // 3. 선택된 담당자 이름들이 담길 div의 hide 해제
-    //         edit_chosensBoxes.classList.add("assignee-display");
-    //         edit_chosensBoxes.classList.remove("hide");
-    //
-    //         // 하나의 일에 최대 배정되는 담당자 제한(6명), 이미 배정된 담당자는 또 클릭해도 무동작
-    //         if (edit_cntChoosenAssignee < 6 && !edit_chosenAssigneeList.has(edit_chosenName.value)) {
-    //
-    //             // 클릭될 때 마다 div 요소 생성
-    //             edit_chosensBoxes.appendChild(edit_chosenAssigneeBox(edit_chosenName.value));
-    //
-    //             edit_chosenAssigneeList.add(edit_chosenName.value); // 중복 방지를 위한 set
-    //
-    //             edit_cntChoosenAssignee++;
-    //         }
-    //     }); // chosenName.addEventListener(click) ends
-    // });  // 프로젝트 멤버 목록에서 담당자 선택 끝 (assigneesName.map ends)
 
     /*---------- 034 ------------*/
     // 할 일 상세에서 담당자 삭제할 때와 할 일 추가(생성)할 때의 담당자 삭제 구분 요망!!!
@@ -3574,7 +3514,7 @@ window.onload = function(){
                         chkBox.checked = false;
                     });
 
-                    // web socket
+                    // web socket: 휴지통으로 이동한 할 일들의 task id를 array로 전송
                     binWs.binSocket.send(checkedTaskList);
 
                     // 삭제할 task id array clear

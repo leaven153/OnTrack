@@ -94,13 +94,13 @@ public class TaskService {
     }
 
     /**
-     * created : 2024-07-18
+     * created : 2024-08
      * param   : Long taskId
-     * return  : TaskDetailResponse
-     * explain : 할 일 상세 조회 (TaskController에서 repository 불러서 proejctController로 리다이렉트)
+     * return  : BinResponse
+     * explain : 휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)
      * */
-    public void getTaskDetail(Long taskId) {
-        Optional<OnTrackTask> taskDetail = taskRepository.findByTaskId(taskId);
+    public BinResponse binTaskRow(Long taskId) {
+        return taskRepository.binTaskRow(taskId);
     }
 
     /**
@@ -538,6 +538,22 @@ public class TaskService {
 
         return response;
         
+    }
+
+    /**
+     * created : 2024-08-23
+     * param   : Long taskId
+     * return  : Map<Long, List<ProjectMember>>
+     * explain : 할 일 삭제시, 알람(웹소켓) 보낼 해당 할 일의 담당자들 user id 조회
+     * */
+    public Map<Long, List<Long>> alarmBin(List<Long> taskIds){
+        // 해당 task의 담당자들의 userId를 찾는다.
+        Map<Long, List<Long>> taskIdAndAssigneeUserId = new LinkedHashMap<>();
+        for(int i = 0; i < taskIds.size(); i++){
+            List<Long> userId = taskRepository.findUserByTaskIdForAlarm(taskIds.get(i));
+            taskIdAndAssigneeUserId.put(taskIds.get(i), userId);
+        }
+        return taskIdAndAssigneeUserId;
     }
 
     /**

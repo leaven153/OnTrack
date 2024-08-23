@@ -3,23 +3,21 @@ package me.jhchoi.ontrack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jhchoi.ontrack.domain.ErrorResponse;
 import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.ProjectService;
 import me.jhchoi.ontrack.service.TaskService;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -96,5 +94,15 @@ public class MyPageController {
         model.addAttribute("binTaskList", binTaskList);
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
         return "/mypage/bin";
+    }
+
+    @PostMapping("/bin")
+    public ResponseEntity<?> binTaskRow(@RequestBody Long taskId){
+        log.info("휴지통의 할 일 row 동적으로 생성하기 위해 컨트롤러 접근 -task id: {}", taskId);
+        BinResponse binTaskRow = taskService.binTaskRow(taskId);
+        if(binTaskRow == null) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("해당 할 일이 존재하지 않습니다."));
+        }
+        return ResponseEntity.ok().body(binTaskRow);
     }
 }

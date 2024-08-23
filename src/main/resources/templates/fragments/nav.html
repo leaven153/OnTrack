@@ -10,11 +10,7 @@
     <div class="navWrapper flex-col-between-center-nowrap" th:fragment="nav">
         <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
-<!--        <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>-->
-<!--        <script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>-->
-        <script type="module" src="../../static/js/wsComment.mjs" th:src="@{/js/wsComment.mjs}"></script>
-        <script type="module" src="../../static/js/wsBin.mjs" th:src="@{/js/wsBin.mjs}"></script>
-
+        <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>
         <div class="nav-btn-list">
             <th:block th:each="alarm : ${navAlarm.keySet()}">
                 <div class="nav-menu" data-id="" id="nav-btn-task" th:if="${alarm == 'noticeComment'}">
@@ -35,6 +31,9 @@
                         <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" alt="bin" class="icon-bin-full" th:classappend="${navAlarm.get(alarm)}?'hide'">
                         <img src="../../static/imgs/icon_bin(no).png" th:src="@{/imgs/icon_bin(no).png}" alt="bin" class="icon-bin-empty" th:classappend="${!navAlarm.get(alarm)}?'hide'">
                     </a>
+                    <span class="alarm-bin ">휴지통으로 옮겨진 할 일이 있습니다.
+                        <mark class="btn-close-alarm">확인</mark>
+                    </span><!--img-hidden-->
                 </div>
             </th:block>
         </div>
