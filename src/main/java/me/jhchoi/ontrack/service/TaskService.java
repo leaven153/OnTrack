@@ -549,9 +549,9 @@ public class TaskService {
     public Map<Long, List<Long>> alarmBin(List<Long> taskIds){
         // 해당 task의 담당자들의 userId를 찾는다.
         Map<Long, List<Long>> taskIdAndAssigneeUserId = new LinkedHashMap<>();
-        for(int i = 0; i < taskIds.size(); i++){
-            List<Long> userId = taskRepository.findUserByTaskIdForAlarm(taskIds.get(i));
-            taskIdAndAssigneeUserId.put(taskIds.get(i), userId);
+        for (Long taskId : taskIds) {
+            List<Long> userId = taskRepository.findUserByTaskIdForAlarm(taskId);
+            taskIdAndAssigneeUserId.put(taskId, userId);
         }
         return taskIdAndAssigneeUserId;
     }
