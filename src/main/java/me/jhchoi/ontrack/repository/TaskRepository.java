@@ -136,9 +136,13 @@ public class TaskRepository {
     // 휴지통에 내 담당 할 일이 있을 때(for nav icon)
     public List<OnTrackTask> existsMyTaskInBin(Long userId) { return taskMapper.existsMyTaskInBin(userId); }
 
+    // 휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)
+    public BinResponse binTaskRow(Long taskId) { return taskMapper.binTaskRow(taskId); }
+
     // 내 일 모아보기
     public List<MyTask> getAllMyTasks(Long userId) { return taskMapper.getAllMyTasks(userId); }
 
-
+    // 해당 일을 담당한 멤버들의 user id 조회(for dkffla)
+    public List<Long> findUserByTaskIdForAlarm(Long taskId) { return taskMapper.findUserByTaskIdForAlarm(taskId); }
 
 }

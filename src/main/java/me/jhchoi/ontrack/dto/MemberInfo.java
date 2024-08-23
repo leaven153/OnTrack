@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.jhchoi.ontrack.domain.ProjectMember;
 
 import java.time.LocalDate;
 
@@ -25,4 +26,5 @@ public class MemberInfo {
 //        members.put(memberId, nickname);
 //        return members;
 //    }
+
 }

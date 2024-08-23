@@ -81,6 +81,7 @@ import * as fnc from './fnc.mjs'
 document.querySelectorAll(".btn-bin-delete").forEach(function(btn){
     btn.addEventListener("click", (e)=>{
         console.log("영구 삭제 누름");
+        // 영구 삭제가 바로 가능하게 할 것인가? 담당자가 여러 명일 경우, 영구삭제는 불가능하도록 할까?
         e.stopPropagation();
 
     });

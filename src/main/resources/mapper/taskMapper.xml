@@ -40,9 +40,19 @@
     </insert>
 
     <select id="findByTaskId" resultType="OnTrackTask">
-        SELECT project_id, task_title, author_mid, author_name, task_priority, task_status, task_dueDate, createdAt, updatedAt, updatedBy, task_parent_id, hasChild
+        SELECT *
         FROM ontrack_task
         WHERE id = #{id}
+    </select>
+
+    <select id="binTaskRow" parameterType="Long" resultType="BinResponse">
+        SELECT t.id, t.task_title, t.deletedAt, p.project_name, pm.nickname
+        FROM ontrack_task t
+        INNER JOIN ontrack_project p
+        ON t.project_id = p.id
+        INNER JOIN project_member pm
+        ON pm.id = t.deletedBy
+        WHERE t.id = #{taskId}
     </select>
 
     <select id="getAllRemovedTask" parameterType="Long">
@@ -202,8 +212,15 @@
         ON ta.task_id = t.id
         INNER JOIN (SELECT id FROM ontrack_task WHERE deletedAt > date_sub(curdate(), interval 7 day)) tt
         ON t.id = tt.id
-        WHERE member_id in (select id from project_member where user_id = #{userId})
+        WHERE ta.member_id in (select id from project_member where user_id = #{userId})
+        OR t.author_mid in (select id from project_member where user_id = #{userId})
         AND t.deletedAt IS NOT NULL;
+    </select>
+
+    <select id="findUserByTaskIdForAlarm" parameterType="Long" resultType="Long">
+        SELECT user_id
+        FROM project_member
+        WHERE id in (SELECT member_id FROM task_assignment WHERE task_id = #{taskId})
     </select>
 
     <update id="editTaskTitle" parameterType="TaskEditRequest">

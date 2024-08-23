@@ -1,8 +1,8 @@
 let commentSocket = new SockJS(`http://localhost:8080/ws/noticeComment`);
 
-window.onload = function(){
-    connectCommentWs();
-}
+// window.onload = function(){
+//     connectCommentWs();
+// }
 function connectCommentWs() {
 
     const sock = new SockJS(`http://localhost:8080/ws/noticeComment`);
