@@ -4045,16 +4045,16 @@ img.bin-category-title {
     border-bottom: 1px solid #b6b6b6;
 }
 
-/*chkbox*/
-/*.my-bin-col-names > div:nth-child(1),*/
-/*.my-bin-col > div:nth-child(1) {*/
-/*    flex-basis: 15px;*/
-/*    flex-shrink: 0;*/
-/*    padding: 0 0 0 5px;*/
-/*}*/
 
 .my-bin-col-names > div:nth-child(1),
 .my-bin-col > div:nth-child(1) {
+    flex-basis: 15px;
+    flex-shrink: 0;
+    padding: 0 0 0 5px;
+}
+
+.my-bin-col-names > div:nth-child(2),
+.my-bin-col > div:nth-child(2) {
     flex-basis: 140px;
     flex-shrink: 0;
     padding: 0 10px 0 0;
@@ -4065,8 +4065,8 @@ img.bin-category-title {
 /*    flex-shrink: 0;*/
 /*}*/
 
-.my-bin-col-names > div:nth-child(2),
-.my-bin-col > div:nth-child(2) {
+.my-bin-col-names > div:nth-child(3),
+.my-bin-col > div:nth-child(3) {
     flex-basis: 300px;
     flex-shrink: 0;
     /* padding: 0 10px 0 20px; */
@@ -4075,8 +4075,8 @@ img.bin-category-title {
     overflow: hidden;
     white-space: nowrap;
 }
-.my-bin-col-names > div:nth-child(3),
-.my-bin-col > div:nth-child(3) {
+.my-bin-col-names > div:nth-child(4),
+.my-bin-col > div:nth-child(4) {
     flex-basis: 250px;
     flex-shrink: 0;
     margin: 0 20px;
@@ -4085,15 +4085,15 @@ img.bin-category-title {
     white-space: nowrap;
 }
 
-.my-bin-col-names > div:nth-child(4),
-.my-bin-col > div:nth-child(4) {
+.my-bin-col-names > div:nth-child(5),
+.my-bin-col > div:nth-child(5) {
     flex-basis: 150px;
     flex-shrink: 0;
     margin: 0 20px 0 10px;
 }
 
-.my-bin-col-names > div:nth-child(5),
-.my-bin-col > div:nth-child(5) {
+.my-bin-col-names > div:nth-child(6),
+.my-bin-col > div:nth-child(6) {
     flex-basis: 20px;
     flex-shrink: 0;
     margin: 0 0 0 20px;

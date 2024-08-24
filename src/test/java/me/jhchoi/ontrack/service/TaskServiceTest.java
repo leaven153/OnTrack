@@ -410,4 +410,31 @@ class TaskServiceTest {
 
 
     }
+
+    @Test @DisplayName("휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)")
+    void binTaskRow(){
+        // given
+        Long taskId = 8L;
+        Long noTaskId = 7L; // 바로 영구삭제 해 버렸을 때?
+
+        // when
+        BinResponse 태스크있음 = taskRepository.binTaskRow(taskId);
+        BinResponse 태스크없음 = taskRepository.binTaskRow(noTaskId);
+
+        log.info("태스크 있을 때: {}", 태스크있음);
+        // 태스크 있을 때: BinResponse(projectId=null, projectName=By your side,
+        // taskId=8, memberId=null, taskTitle=Tigger can do everything,
+        // deletedBy=null, deleterName=공지철, deletedAt=2024-08-05T00:00,
+        // authorMid=null, authorized=null)
+
+        log.info("태스크 있을 때 not null: {}", 태스크있음 != null);
+        // 태스크 있을 때 not null: true
+
+        log.info("태스크 없을 때: {}", 태스크없음);
+        // 태스크 없을 때: null
+
+        log.info("태스크 없을 때 not null: {}", 태스크없음 != null);
+        // 태스크 없을 때 not null: false
+
+    }
 }

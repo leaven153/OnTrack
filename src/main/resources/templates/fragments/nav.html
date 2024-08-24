@@ -31,7 +31,7 @@
                         <img src="../../static/imgs/icon_bin2.png" th:src="@{/imgs/icon_bin2.png}" alt="bin" class="icon-bin-full" th:classappend="${navAlarm.get(alarm)}?'hide'">
                         <img src="../../static/imgs/icon_bin(no).png" th:src="@{/imgs/icon_bin(no).png}" alt="bin" class="icon-bin-empty" th:classappend="${!navAlarm.get(alarm)}?'hide'">
                     </a>
-                    <span class="alarm-bin ">휴지통으로 옮겨진 할 일이 있습니다.
+                    <span class="alarm-bin img-hidden">휴지통으로 옮겨진 할 일이 있습니다.
                         <mark class="btn-close-alarm">확인</mark>
                     </span><!--img-hidden-->
                 </div>
