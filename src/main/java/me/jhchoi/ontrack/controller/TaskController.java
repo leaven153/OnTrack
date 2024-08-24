@@ -314,7 +314,6 @@ public class TaskController {
      * explain : 담당자 배정/해제
      * */
     @PostMapping("/editAssignee")
-    @ResponseBody
     public ResponseEntity<?> editAssignee(HttpSession session, @RequestParam Long mid, @RequestBody TaskHistory th) {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
@@ -476,6 +475,9 @@ public class TaskController {
 
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanoSec = nowWithNano.getNano();
+
+        // 동적으로 생성된 bin task row에서 복원요청이 왔을 때: uId
+        // user id와 project id롸 member id 찾는 코드 추가..?
 
         // history 남긴다.
         taskRepository.log(TaskHistory.builder()

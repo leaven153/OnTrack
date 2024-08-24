@@ -96,6 +96,7 @@ public class MyPageController {
         return "/mypage/bin";
     }
 
+
     @PostMapping("/bin")
     public ResponseEntity<?> binTaskRow(@RequestBody Long taskId){
         log.info("휴지통의 할 일 row 동적으로 생성하기 위해 컨트롤러 접근 -task id: {}", taskId);

@@ -84,9 +84,10 @@
     <th:block th:each="task : ${tasks}">
       <div class="tableview-taskrow bottom-line ">
         <div class="tableview-column content-chkbox">
-          <label class="chkbox-container">
-            <input type="checkbox" class="task-checkbox" name="" th:value="${task.getId()}" th:if="${project.position == 'creator' or project.position == 'admin'}">
-            <span class="chkmark"></span>
+          <label class="chkbox-container" th:if="${(project.position == 'creator' or project.position == 'admin') and task.getTaskStatus() < 2 }">
+            <!--/* 체크박스 클릭으로 1개 이상의 삭제는 시작 안함, 보류중인 상태의 할 일만 가능하다. */-->
+            <input type="checkbox" class="task-checkbox" name="" th:value="${task.getId()}" th:if="${(project.position == 'creator' or project.position == 'admin') and task.getTaskStatus() < 2 }">
+            <span class="chkmark" th:if="${(project.position == 'creator' or project.position == 'admin') and task.getTaskStatus() < 2 }"></span>
           </label>
         </div>
         <!-- child mark: create or has-->

@@ -1,5 +1,6 @@
 import * as fnc from './fnc.mjs'
 let binSocket = new SockJS(`http://localhost:8080/ws/taskDeletion`);
+// let justDeletedTaskId;
 
 // window.onload = function(){
 //     connectBinWs();
@@ -15,6 +16,7 @@ function connectBinWs() {
 
     sock.onmessage = function (e) {
         console.log(e.data);
+        // justDeletedTaskId = e.data;
 
         // nav.html에 icon이 빈 휴지통이라면 채워진 휴지통으로 바꾼다.
         if(fnc.elExists(document.querySelector("[class^='icon-bin-']"))){
@@ -27,24 +29,17 @@ function connectBinWs() {
         // tip을 띄운다 (3초 뒤에 사라진다.)
         if(fnc.elExists(document.querySelector("span.alarm-bin"))){
             document.querySelector("span.alarm-bin").classList.remove("img-hidden");
-            setTimeout(()=>{
-                document.querySelector("span.alarm-bin").classList.add("img-hidden");
-            }, 3000);
-        }
-        // tip의 '확인'버튼을 눌러도 사라진다.
-        if(elExists(document.querySelector("mark.btn-close-alarm"))){
-            document.querySelector("mark.btn-close-alarm").addEventListener("click", ()=>{
-                console.log(`확인 버튼 clicked`);
-                document.querySelector("span.alarm-bin").classList.add("img-hidden");
-            });
+            // setTimeout(()=>{
+            //     document.querySelector("span.alarm-bin").classList.add("img-hidden");
+            // }, 4000);
         }
 
-        // 만약, 유저가 휴지통에 접속해 있다면, 해당 task row를 생성해서 붙여준다.
+        console.log(`웹소켓 메시지 받고 여기까지 안오나?`);
         const currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
         console.log(`접속 중인 유저의 현재 페이지: ${currUrl}`); // 접속 중인 유저의 현재 페이지: ,project,11
-        console.log(`접속 중인 유저의 현재 페이지: ${currUrl[1]}`); //
-        if(currUrl[1].includes("bin")){
-            fetch(``, {
+        console.log(`접속 중인 유저의 현재 페이지: ${currUrl[2]}`); //
+        if(currUrl[2].includes("bin")){
+            fetch(`http://localhost:8080/mypage/bin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,7 +48,28 @@ function connectBinWs() {
             }).then(response => {
                 if(response.ok){
                     response.json().then(task => {
+                        // 필요정보: deletedAt, taskTitle, projectName, deletedBy, taskId + 복원버튼-projectId, 지금 내 member id,
+                        // 단, 삭제한 사람이 휴지통에 바로 있을 수는 없기 때문에 영구삭제 버튼은 띄우지 않도록 한다.
+
+                        // 1. Object 형태(특히, 날짜)
                         console.log(task);
+                        // {projectId: null, projectName: 'By your side', taskId: null, memberId: null, taskTitle: '크러쉬와 송혜교만',…}
+                        /*
+                        * authorMid: null
+                        * authorized: null
+                        * deletedAt: "2024-08-24T18:14:00"
+                        * deletedBy: null
+                        * deleterName: null
+                        * memberId: null
+                        * projectId: null
+                        * projectName: "By your side"
+                        * taskId: null
+                        * taskTitle: "크러쉬와 송혜교만"*/
+                        console.log(task["deletedAt"]); // 2024-08-24T18:14:00
+                        console.log(task["deletedAt"].slice(0, 10));
+                        console.log(task["deletedAt"].slice(11, 16));
+                        // 2. 여러 개 할 일이 왔을 때
+
                     });
                 } else {
                     const err = response.json();
@@ -64,9 +80,8 @@ function connectBinWs() {
                 }
             });
         }
-        // 필요정보: deletedAt, taskTitle, projectName, deletedBy, taskId
-        // 단, 삭제한 사람이 휴지통에 바로 있을 수는 없기 때문에 영구삭제 버튼은 띄우지 않도록 한다.
-
+        // setTimeOut이 다른 것까지 하지 못하게 하는.. 듯?
+        document.querySelector("span.alarm-bin").classList.add("img-hidden");
     }
 
     sock.close = function(){

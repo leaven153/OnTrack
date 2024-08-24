@@ -1,8 +1,7 @@
 import * as fnc from './fnc.mjs'
 
 
-
-    /*---- ▼ 휴지통: 카테고리 목록 열고 닫기 시작 ▼ ----*/
+/*---- ▼ 휴지통: 카테고리 목록 열고 닫기 시작 ▼ ----*/
     const btnBinList = document.querySelectorAll(".btn-bin-list");
     btnBinList.forEach(function(btn){
         btn.addEventListener("click", ()=>{
@@ -111,6 +110,14 @@ document.querySelectorAll(".btn-bin-restore").forEach(function(btn){
     });
 });
 /*---- ▲ 휴지통: 복원하기 버튼 클릭 이벤트 끝 ▲ ----*/
+// 웹소켓에 의해 출력된 tip의 '확인'버튼 클릭이벤트
+if(fnc.elExists(document.querySelector("mark.btn-close-alarm"))){
+    document.querySelector("mark.btn-close-alarm").addEventListener("click", ()=>{
+        console.log(`확인 버튼 clicked`);
+        document.querySelector("span.alarm-bin").classList.add("img-hidden");
+    });
+}
+
 
 /*---- ▼  ▼ ----*/
 /*---- ▲  ▲ ----*/
