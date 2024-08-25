@@ -218,11 +218,11 @@ public class TaskService {
      * explain : 할 일 수정: 담당자 삭제
      * */
     @Transactional
-    public ResponseEntity unassign(TaskAssignment ta, TaskHistory th){
+    public ResponseEntity<?> unassign(TaskAssignment ta, TaskHistory th){
 
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ta.getTaskId());
-        if(taskExist.get().getDeletedBy() == null){
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             // Transactional을 붙여줬으므로 아래와 같이 하지 않아도 되긴 하다..
             int result = taskRepository.delAssignee(ta);
             if(result == 1) {
