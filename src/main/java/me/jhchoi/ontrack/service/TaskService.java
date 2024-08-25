@@ -106,7 +106,7 @@ public class TaskService {
     public ResponseEntity<?> editTaskTitle(TaskHistory th, TaskEditRequest ter){
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
-        if(taskExist.get().getDeletedBy() == null){
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             taskRepository.log(th);
             Integer result = taskRepository.editTaskTitle(ter);
             if (result != 1){
@@ -128,7 +128,7 @@ public class TaskService {
     public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
-        if(taskExist.get().getDeletedBy() == null){
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
             Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
             if(assignedNum != null) {
@@ -157,7 +157,7 @@ public class TaskService {
     public ResponseEntity<?> editTaskDueDate(TaskHistory th, TaskEditRequest ter){
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
-        if(taskExist.get().getDeletedBy() == null){
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             taskRepository.log(th);
             Integer result = taskRepository.editTaskDueDate(ter);
             if(result == 1) {
@@ -185,7 +185,7 @@ public class TaskService {
 
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ta.getTaskId());
-        if(taskExist.get().getDeletedBy() == null){
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
             Long assigned = taskRepository.chkAssigned(ta);
             if (ta.getTaskId().equals(assigned)) {
