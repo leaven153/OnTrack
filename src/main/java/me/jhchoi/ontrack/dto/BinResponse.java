@@ -21,7 +21,7 @@ public class BinResponse {
     private LocalDateTime deletedAt;
 
     private Long authorMid;
-    // 영구삭제 권한 (없을 경우, 복원만 가능)
+    // 영구삭제 권한 (작성자에게만 주어진다. 없을 경우, 복원만 가능)
     private Boolean authorized;
 
 }

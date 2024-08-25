@@ -108,7 +108,7 @@ public class ProjectController {
 
 
         // 5. 할 일 상세 모달의 hide 여부
-        Boolean detailOpen = true;
+        Boolean detailOpen = true; // 'hide'에 대한 true/false
         TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
         // Task Controller에서 redirect 경우 ↓
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
