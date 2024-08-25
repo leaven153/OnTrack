@@ -102,7 +102,7 @@ public class MyPageController {
         log.info("휴지통의 할 일 row 동적으로 생성하기 위해 컨트롤러 접근 -task id: {}", taskId);
         BinResponse binTaskRow = taskService.binTaskRow(taskId);
         if(binTaskRow == null) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("해당 할 일이 존재하지 않습니다."));
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
         }
         return ResponseEntity.ok().body(binTaskRow);
     }
