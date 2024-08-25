@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -93,15 +94,7 @@ public class TaskService {
         return task.getId();
     }
 
-    /**
-     * created : 2024-08
-     * param   : Long taskId
-     * return  : BinResponse
-     * explain : 휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)
-     * */
-    public BinResponse binTaskRow(Long taskId) {
-        return taskRepository.binTaskRow(taskId);
-    }
+
 
     /**
      * created : 2024-07-31
@@ -111,12 +104,18 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> editTaskTitle(TaskHistory th, TaskEditRequest ter){
-        taskRepository.log(th);
-        Integer result = taskRepository.editTaskTitle(ter);
-        if (result != 1){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
+        if(taskExist.get().getDeletedBy() == null){
+            taskRepository.log(th);
+            Integer result = taskRepository.editTaskTitle(ter);
+            if (result != 1){
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("수정이 완료되지 않았습니다.").removed(false).build());
+            }
+            return ResponseEntity.ok().body(ter.getTitle());
         }
-        return ResponseEntity.ok().body(ter.getTitle());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+
     }
 
     /**
@@ -127,20 +126,25 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> editTaskStatus(TaskHistory th, TaskEditRequest ter){
-
-        // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
-        Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
-        if(assignedNum != null) {
-            taskRepository.log(th);
-            Integer result = taskRepository.editTaskStatus(ter);
-            if(result == 1) {
-                return ResponseEntity.ok().body(ter.getStatus());
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
+        if(taskExist.get().getDeletedBy() == null){
+            // 진행상태는 담당자가 없을 경우, 시작 안함 상태가 될 수 없다.
+            Integer assignedNum = taskRepository.cntAssigneeByTaskId(ter.getTaskId());
+            if(assignedNum != null) {
+                taskRepository.log(th);
+                Integer result = taskRepository.editTaskStatus(ter);
+                if(result == 1) {
+                    return ResponseEntity.ok().body(ter.getStatus());
+                } else {
+                    return ResponseEntity.badRequest().body(ErrorResponse.builder().message("진행상태 변경이 완료되지 않았습니다.").removed(false).build());
+                }
             } else {
-                return ResponseEntity.badRequest().body(new ErrorResponse("진행상태 변경이 완료되지 않았습니다."));
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다.").removed(false).build());
             }
-        } else {
-            return ResponseEntity.badRequest().body(new ErrorResponse("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다."));
         }
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+
     }
 
     /**
@@ -151,13 +155,18 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> editTaskDueDate(TaskHistory th, TaskEditRequest ter){
-        taskRepository.log(th);
-        Integer result = taskRepository.editTaskDueDate(ter);
-        if(result == 1) {
-            return ResponseEntity.ok().body("");
-        } else {
-            return ResponseEntity.badRequest().body(new ErrorResponse("마감일 변경이 완료되지 않았습니다."));
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ter.getTaskId());
+        if(taskExist.get().getDeletedBy() == null){
+            taskRepository.log(th);
+            Integer result = taskRepository.editTaskDueDate(ter);
+            if(result == 1) {
+                return ResponseEntity.ok().body("");
+            } else {
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("마감일 변경이 완료되지 않았습니다.").removed(false).build());
+            }
         }
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
 
     /**
@@ -174,28 +183,33 @@ public class TaskService {
         // assign에는 그닥 오류가 없을 수 있다. 없는 task, project라 해도
         // 이를 test하고 저장하지 않으니까...
 
-        // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
-        Long assigned = taskRepository.chkAssigned(ta);
-        if (ta.getTaskId().equals(assigned)) {
-            return ResponseEntity.badRequest().body("이미 배정된 담당자입니다.");
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ta.getTaskId());
+        if(taskExist.get().getDeletedBy() == null){
+            // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
+            Long assigned = taskRepository.chkAssigned(ta);
+            if (ta.getTaskId().equals(assigned)) {
+                return ResponseEntity.badRequest().body("이미 배정된 담당자입니다.");
+            }
+
+            Integer LIMIT_ASSIGN = 6;
+            // 담당자가 6명 미만인지 확인한다.
+            Integer cntAssignee = taskRepository.cntAssigneeByTaskId(ta.getTaskId());
+            if (LIMIT_ASSIGN.equals(cntAssignee)) {
+                return ResponseEntity.badRequest().body("담당자는 6명을 초과할 수 없습니다.");
+            }
+
+            List<TaskAssignment> taList = new ArrayList<>();
+            taList.add(ta);
+
+            taskRepository.assign(taList);
+            taskRepository.log(th);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-
-        Integer LIMIT_ASSIGN = 6;
-        // 담당자가 6명 미만인지 확인한다.
-        Integer cntAssignee = taskRepository.cntAssigneeByTaskId(ta.getTaskId());
-        if (LIMIT_ASSIGN.equals(cntAssignee)) {
-            return ResponseEntity.badRequest().body("담당자는 6명을 초과할 수 없습니다.");
-        }
-
-        List<TaskAssignment> taList = new ArrayList<>();
-        taList.add(ta);
-
-        taskRepository.assign(taList);
-        taskRepository.log(th);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
+
 
     /**
      * created : 2024-07-16
@@ -204,14 +218,20 @@ public class TaskService {
      * explain : 할 일 수정: 담당자 삭제
      * */
     @Transactional
-    public int unassign(TaskAssignment ta, TaskHistory th){
+    public ResponseEntity unassign(TaskAssignment ta, TaskHistory th){
 
-        // Transactional을 붙여줬으므로 아래와 같이 하지 않아도 되긴 하다..
-        int result = taskRepository.delAssignee(ta);
-        if(result == 1) {
-            taskRepository.log(th);
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ta.getTaskId());
+        if(taskExist.get().getDeletedBy() == null){
+            // Transactional을 붙여줬으므로 아래와 같이 하지 않아도 되긴 하다..
+            int result = taskRepository.delAssignee(ta);
+            if(result == 1) {
+                taskRepository.log(th);
+            }
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 이뤄지지 않았습니다.").removed(false).build());
         }
-        return result;
+        // main.js에서
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
 
     /**
@@ -242,15 +262,17 @@ public class TaskService {
         int nanoSec = nowWithNano.getNano();
         LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
 
-        ResponseEntity<?> result;
+        ResponseEntity<?> result = null;
         try {
             List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
-            taskRepository.attachFile(taskFiles);
+            int fileAttachResult = taskRepository.attachFile(taskFiles);
 //            log.info("파일 저장 후, dto에 fileId 담겼나요?: {}", taskFiles);
-            result = ResponseEntity.ok().body(taskFiles);
+            if(fileAttachResult == 1) {
+                result = ResponseEntity.ok().body(taskFiles);
+            }
         } catch (IOException e) {
             log.info("파일 저장 에러: {}", e.getMessage());
-            result = ResponseEntity.badRequest().body(new ErrorResponse("파일 저장이 완료되지 않았습니다."));
+            result = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 저장이 완료되지 않았습니다.").removed(false).build());
         }
         return result;
     }
@@ -554,6 +576,16 @@ public class TaskService {
             taskIdAndAssigneeUserId.put(taskId, userId);
         }
         return taskIdAndAssigneeUserId;
+    }
+
+    /**
+     * created : 2024-08
+     * param   : Long taskId
+     * return  : BinResponse
+     * explain : 휴지통에 접속 중인 유저에게 방금 삭제된 담당 할 일 동적 출력(웹소켓)
+     * */
+    public BinResponse binTaskRow(Long taskId) {
+        return taskRepository.binTaskRow(taskId);
     }
 
     /**

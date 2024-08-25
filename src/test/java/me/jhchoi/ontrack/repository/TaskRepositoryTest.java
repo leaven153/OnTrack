@@ -243,6 +243,20 @@ public class TaskRepositoryTest {
         log.info("result == 1L이 맞는 건가: {}", result == 1L);
         // result == 1L이 맞는 건가: false >> 틀리지 진화야!!! task_id를 Select하라고 했으면서!
 
+    }
+
+    @Test @DisplayName("할 일 상세를 위한 조회")
+    void findByTaskId(){
+        // given
+        Long deletedTaskId = 8L;
+
+        // when
+        Optional<OnTrackTask> task = taskRepository.findByTaskId(deletedTaskId);
+
+        log.info("task: {}", task); // task: Optional.empty
+        log.info("task.isPresent: {}", task.isPresent()); // task.isPresent: false
+        log.info("task.isEmpty: {}", task.isEmpty()); // task.isEmpty: true
+        log.info("task가 지워졌는가, {}", task.get().getDeletedBy());
 
 
     }

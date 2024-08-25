@@ -189,7 +189,7 @@ window.onload = function(){
     }
 
     /*---------- 009 ------------*/
-    /* 할 일 제목 수정: span을 눌렀을 때 */
+    /* 할 일 명 수정: span을 눌렀을 때 */
     // fetch의 url이 같아서 인지, img에서 fetch 실행해도
     // span의 response가 또 출력됨..
     // 추후 span과 img를 통합하여 분기처리 해보기
@@ -198,11 +198,15 @@ window.onload = function(){
         spanBtnEditTaskTitle.forEach(function(chosenOne){
             chosenOne.addEventListener("click", ()=>{
 
-                // 현 url에서 projectId, taskId, memberId(updatedBy) 정보 추출
+                // 현 url에서 projectId 추출
                 let currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
                 console.log(`제목span누름`);
 
-                // 할 일 제목이 담긴 input 출력
+                // 기존 할 일 명 담는다.
+                const oldTaskTitle = chosenOne.innerHTML;
+                console.log(oldTaskTitle);
+
+                // 할 일 명이 담긴 input 출력
                 const titleInput = next(chosenOne);
                 titleInput.classList.remove("hide");
                 titleInput.focus();
@@ -219,47 +223,64 @@ window.onload = function(){
                 titleInput.addEventListener("blur", ()=>{
                     console.log('blur 발생');
                     console.log(titleInput.value);
-                    const taskHistory = {
-                        projectId: currUrl[2],
-                        taskId: titleInput.dataset.taskid,
-                        modItem: "할 일 명",
-                        modType: "변경",
-                        modContent: titleInput.value,
-                        updatedBy: titleInput.dataset.mid
-                    }
+                    if(titleInput.value !== oldTaskTitle) {
+                        const taskHistory = {
+                            projectId: currUrl[2],
+                            taskId: titleInput.dataset.taskid,
+                            modItem: "할 일 명",
+                            modType: "변경",
+                            modContent: titleInput.value,
+                            updatedBy: titleInput.dataset.mid
+                        }
 
-                    fetch('http://localhost:8080/task/editTask?item=title', {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json'
-                        },
-                        body: JSON.stringify(taskHistory)
-                    })
-                        .then(response => {
-                            if(response.ok) {
-                                return response.text();
-                            } else {
-                                alert(`수정이 완료되지 않았습니다.`);
-                            }
+                        fetch('http://localhost:8080/task/editTask?item=title', {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json'
+                            },
+                            body: JSON.stringify(taskHistory)
                         })
-                        .then(data => {
-                            console.log(`span의 fetch 결과`);
-                            console.log(data);
+                            .then(response => {
+                                if(response.ok) {
+                                    response.text().then(data => {
+                                        console.log(`span의 fetch 결과`);
+                                        console.log(data);
 
-                            // input 숨기고
-                            titleInput.classList.add("hide");
+                                        // input 숨기고
+                                        titleInput.classList.add("hide");
 
-                            // enter 버튼 숨기고
-                            next(next(titleInput)).classList.add("hide");
+                                        // enter 버튼 숨기고
+                                        next(next(titleInput)).classList.add("hide");
 
-                            // span에 새 제목 담고 출력
-                            chosenOne.innerHTML = data;
-                            chosenOne.classList.remove("hide");
+                                        // span에 새 제목 담고 출력
+                                        chosenOne.innerHTML = data;
+                                        chosenOne.classList.remove("hide");
 
-                            // edit 버튼 재 출력
-                            next(titleInput).classList.remove("hide");
-                        }); // fetch ends
+                                        // edit 버튼 재 출력
+                                        next(titleInput).classList.remove("hide");
+                                    });
+                                } else {
+                                    response.json().then(warning => {
+                                        alert(warning["message"]);
+                                        if(warning["removed"]){
+                                            location.reload;
+                                        }
+                                    });
+                                }
+                            }); // fetch ends
+                    } else {
+                        // input 숨기고
+                        titleInput.classList.add("hide");
 
+                        // enter 버튼 숨기고
+                        next(next(titleInput)).classList.add("hide");
+
+                        // span 출력
+                        chosenOne.classList.remove("hide");
+
+                        // edit 버튼 출력
+                        next(titleInput).classList.remove("hide");
+                    }
                 }); // titleInput.addEventListener ends
             });
         });
@@ -639,7 +660,14 @@ window.onload = function(){
                 parents(this)[0].remove();
 
             } else {
-                alert(`담당자 삭제가 이뤄지지 않았습니다.`);
+                response.json().then(warning => {
+                    alert(warning["message"]);
+                    if(warning["removed"]){
+                        location.reload;
+                    }
+
+                });
+                // alert(`담당자 삭제가 이뤄지지 않았습니다.`);
             } // if(response.ok) ends
         }); // fetch ends
     }); // 10-3. (기배정) 담당자 해제 (onEvtListener(.btn-dropOut-task)) 끝

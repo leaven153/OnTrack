@@ -3967,6 +3967,7 @@ span.detail-cnt  {
 /************ 13. MyPage - Bin ***********/
 /************************************/
 
+/* 휴지통에서 체크박스 클릭했을 때 나오는 버튼 (삭제..요망?) */
 .my-bin-btn-after-checked {
     font-size: 20px;
     border-radius: 3px;
