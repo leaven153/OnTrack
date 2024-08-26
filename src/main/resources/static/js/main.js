@@ -263,7 +263,7 @@ window.onload = function(){
                                     response.json().then(warning => {
                                         alert(warning["message"]);
                                         if(warning["removed"]){
-                                            location.reload;
+                                            location.reload();
                                         }
                                     });
                                 }
@@ -286,61 +286,6 @@ window.onload = function(){
         });
     } // edit task title ends (span을 눌렀을 때)
 
-    /* 할 일 제목 수정: img를 눌렀을 때 */
-    /*
-    if(elExists(document.querySelector("img.btn-edit-task-title"))){
-        const btnEditTaskTitle = document.querySelectorAll("img.btn-edit-task-title");
-        btnEditTaskTitle.forEach(function(chosenOne){
-            chosenOne.addEventListener("click", ()=>{
-                console.log(`img 누름`);
-                // 할 일 제목이 담긴 input 출력
-                const currInput = prev(chosenOne);
-                prev(chosenOne).classList.remove("hide");
-                currInput.focus();
-
-                // 기존 할 일 제목이 담긴 span 숨긴다. 추후 바뀐 제목을 담아 출력한다.
-                prev(currInput).classList.add("hide");
-
-                // 바뀐 할 일 제목을 서버에 반영할 엔터 모양 버튼(img)
-                next(chosenOne).classList.remove("hide");
-
-                // 수정 버튼(자기 자신) 숨긴다.
-                chosenOne.classList.add("hide");
-
-
-                currInput.addEventListener("blur", ()=>{
-                    console.log('blur 발생');
-                    console.log(currInput.value);
-
-                    fetch('http://localhost:8080/task/editTask?item=title', {
-                        method: 'POST',
-                        headers: {},
-                        body: currInput.value
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        console.log(`img의 fetch 결과`);
-                        console.log(data);
-
-                        // input 숨기고
-                        currInput.classList.add("hide");
-
-                        // enter 버튼 숨기고
-                        next(chosenOne).classList.add("hide");
-
-                        // span에 새 제목 담고 출력
-                        prev(currInput).innerHTML = data;
-                        prev(currInput).classList.remove("hide");
-
-                        // edit 버튼 재 출력
-                        chosenOne.classList.remove("hide");
-                    }); // fetch ends
-
-                }); // currInput.addEventListener ends 
-            });
-        });
-    } // edit task title ends (img를 눌렀을 때)
-*/
     /*---------- 010 ------------*/
     /* 할 일 담당자 상세보기 및 수정 */
 
@@ -398,7 +343,7 @@ window.onload = function(){
                 console.log(cntAssignee);
                 console.log(parents(chosenOne, "[class$=-assignee]")[0].children[1]);
                 // 담당자가 없는 경우, 참여하기/담당차추가하기 div의 top-line과 padding값을 뺀다.
-                if(cntAssignee === 0) {
+                if(cntAssignee === 0 && elExists(parents(chosenOne, "[class$=-assignee]")[0].querySelector(".btn-add-member-to-assignee"))) {
                     parents(chosenOne, "[class$=-assignee]")[0].querySelector(".btn-add-member-to-assignee").classList.remove("top-line", "pd-t10");
                 }
 
@@ -564,13 +509,15 @@ window.onload = function(){
             if(response.ok){
 
                 // X버튼은 작성자 혹은 담당자 자신에게만 노출된다.
-                // 만약 작성자가 아닌 담당자가 이 일에서 빠지기를 클릭했다면 reponse 이후 reload 한다.
+                // 만약 작성자가 아닌 담당자가 이 일에서 빠지기를 클릭했다면 response 이후 reload 한다.
+                // ∵ 1) 담당자에게만 주어지는 수정 권한 모두를 동적으로 삭제하지 않고
+                // 2) 계획중일때까지는 멤버에게 참여하기 버튼이 나와야 하는데, 이를 체크하고 요소 붙여넣기 하지 않고 그냥 바로 리로드!
                 if(datum["executormid"] !== datum["authormid"]){
                     location.reload();
                 }
 
                 // 2) 미배정 멤버 목록에 (담당 해제된) 해당 멤버 출력 (appendChild): status view에는 미배정 멤버 목록을 출력하지 않는다. (just 검색만 한다.)
-                // 3) 변경된 boxHeight를 멤버목록 top에 반영: status에는 멤버목록이 없기 때문에(검색만 있다) 높이를 반영할 요소가 있는지 확인 후 진행한다.
+                // 3) 변경된 boxHeight를 멤버목록 top에 반영: status에는 멤버목록이 없기 때문에(검색만 있다) view 확인 후 진행한다.
 
                 // parents(parents(chosenOne)[0], ".more-assignInfo")[0].querySelectorAll(`:scope ${".unassigned-member-list"}`)[0].append(unassignedMemberElement(chosenOne.dataset.assigneemid, prev(chosenOne).innerText));
                 if(datum["view"] === "table") {
@@ -661,13 +608,13 @@ window.onload = function(){
 
             } else {
                 response.json().then(warning => {
-                    alert(warning["message"]);
+                    alert(warning["message"]); // 담당자 삭제가 완료되지 않았습니다. or 해당 할 일이 존재하지 않습니다.
                     if(warning["removed"]){
-                        location.reload;
+                        location.reload();
                     }
 
                 });
-                // alert(`담당자 삭제가 이뤄지지 않았습니다.`);
+
             } // if(response.ok) ends
         }); // fetch ends
     }); // 10-3. (기배정) 담당자 해제 (onEvtListener(.btn-dropOut-task)) 끝
@@ -789,11 +736,22 @@ window.onload = function(){
                 // hide했던 참여하기 버튼을 다시 보이게 한다.
                 // parents(this, ".status-assignee")[0].querySelector(".btn-bePartOf-task").classList.remove("hide");
 
+                // 계획중인지 확인한 후
                 // 참여하기 버튼을 생성하여 부착한다.
-                parents(this, ".status-assignee")[0].append(btnBePartOftask(datum));
+                console.log(datum["status"]);
+                if(datum["status"] < 3) {
+                    parents(this, ".status-assignee")[0].append(btnBePartOftask(datum));
+                }
 
                 // 참여취소 버튼 없앤다.
                 this.remove();
+            } else {
+                response.json().then(warning => {
+                    alert(warning["message"]);
+                    if(warning["removed"]){
+                        location.reload();
+                    }
+                });
             }
         });
     }); // 10-4B. status view 참여취소 끝
@@ -894,13 +852,19 @@ window.onload = function(){
                         // 이 일에 참여하기 버튼 숨기기
                         this.classList.add("hide");
                     } else {
-                        alert(`참여할 수 없는 할 일입니다.`);
+                        response.json().then(warning => {
+                            console.log(warning);
+                            alert(warning["message"]);
+                            if(warning["removed"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
 
 
             } else {
-                alert(`담당자는 최대 6명까지만 배정될 수 있습니다.`);
+                alert(`담당자는 6명을 초과할 수 없습니다.`);
             } // if 6명 미만일 때만 참여 가능 ends
 
         } // if table view ends
@@ -1033,8 +997,12 @@ window.onload = function(){
                         // 참여하기 버튼을 동적으로 생성하지 않고 숨기기한다.
                         // this.classList.add("hide");
                     } else {
-                        const msg = response.text();
-                        alert(msg);
+                        response.json().then(warning => {
+                            alert(warning["message"]);
+                            if(warning["removed"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
 
@@ -1053,6 +1021,7 @@ window.onload = function(){
         div.setAttribute("data-nickname", datum["nickname"]);
         div.setAttribute("data-projectid", datum["projectid"]);
         div.setAttribute("data-taskid", datum["taskid"]);
+        div.setAttribute("data-status", datum["status"]);
         span.classList.add("font-11");
         span.innerText = "참여취소";
         div.appendChild(span);
@@ -1068,6 +1037,7 @@ window.onload = function(){
         div.setAttribute("data-nickname", datum["nickname"]);
         div.setAttribute("data-projectid", datum["projectid"]);
         div.setAttribute("data-taskid", datum["taskid"]);
+        div.setAttribute("data-status", datum["status"]);
         div.setAttribute("data-view", "status");
         span.classList.add("font-11");
         span.innerText = "참여하기";
@@ -1075,7 +1045,7 @@ window.onload = function(){
         return div;
         
     }
-    // 10-6A. table view의 담당자 추가하기 버튼(.btn-more-assignInfo): ①검색하여 배정, ②새로운 담당자 배정하기
+    // 10-6A. 미배정 담당자 보기(table view, .btn-more-assignInfo): ①검색, ②미배정 멤버 목록 출력
     // (담당자 상세보기 버튼 클릭 후에 출력되므로, cntAssignee, currAssignees, currUnAssignees가 공유된다.)
     //  (∵table view는 멤버목록 div가 담당자div의 우측으로 추가됨. cf. status view는 btn-more-assignInfo를 누르면 바로 담당자 목록이 뜸)
     // - 작성자에게만 출력되며, 해당 일의 진행상태가 '검토중'일 때까지만 가능
@@ -1110,10 +1080,11 @@ window.onload = function(){
                     next(chosenOne).classList.add("img-hidden");
                 }
             }); // table view: 담당자 추가하기 버튼(btnFindMemberToAssign) click 이벤트 끝
-        }); // table view: 담당자 추가하기 버튼 For Each 끝
-    } // 10-6A. table view 담당자 추가하기: 새로운 담당자 배정하기 끝
+        }); // table view: 담당자 추가하기 (더보기) 버튼 For Each 끝
+    } // 10-6A. 미배정 담당자 보기(table view, .btn-more-assignInfo): ①검색, ②미배정 멤버 목록 출력 끝
 
-    // 10-6B. status view 담당자 관리(검색하여 담당자 추가. 작성자에게만 출력된다.)
+    // 10-6B. 담당자 상세보기, 미배정 담당자 보기(status view; 검색하여 담당자 추가)
+    // 작성자에게만 검토중일 때까지만 출력된다.)
     if(elExists(document.querySelector(".btn-add-assignee"))){
         const btnAddAssignees = document.querySelectorAll(".btn-add-assignee");
         btnAddAssignees.forEach(function(btn){
@@ -1170,7 +1141,7 @@ window.onload = function(){
 
             });
         });
-    } // 10-6B.status view의 담당자관리(.btn-add-assignee) 모달 여닫기(toggle) ends
+    } // 10-6B. 미배정 담당자 보기(status view; 검색하여 담당자 추가) 모달 여닫기(toggle) ends
 
 
     // 10-7. 담당자 추가(.unassigned-member 클릭 이벤트)
@@ -1292,7 +1263,12 @@ window.onload = function(){
                     this.remove();
 
                 } else {
-                    alert(`담당자 배정이 이뤄지지 않았습니다.`);
+                    response.json().then(warning => {
+                        alert(warning["message"]);
+                        if(warning["removed"]){
+                            location.reload();
+                        }
+                    });
                 }
             });
 
@@ -1302,7 +1278,7 @@ window.onload = function(){
     });
 
 
-    // 10-8. '검색' 클릭 이벤트 (<< 담당자 추가하기/담당자관리)
+    // 10-8. 미배정 멤버 '검색' 클릭 이벤트 (<< 담당자 추가하기/담당자관리)
     // table view: 담당자 상세보기 버튼(▼, .btn-more-assignInfo)을 클릭하면
     // status view: 담당자 관리(.btn-add-assignee)를 클릭하면
     // ☞ unassigned-member를 currUnassignedMembers map으로 받아둔다.
@@ -1445,7 +1421,7 @@ window.onload = function(){
 
             });
         });
-    } // // 10-8. 담당자 검색하여 추가하기 끝
+    } // // 10-8. 담당자 검색하기 끝
 
     /* 10-9. 할 일 진행상태 수정 */
     // 담당자가 없는 할 일은 진행상태를 변경할 수 없다.
@@ -1510,6 +1486,9 @@ window.onload = function(){
                                 err.then(warning => {
                                     btn.querySelector(".tableView-status-list").classList.add("img-hidden")
                                     alert(warning["message"]);
+                                    if(warning["removed"]) {
+                                        location.reload();
+                                    }
                                 });
                             }
                         }); // fetch ends
@@ -1605,7 +1584,12 @@ window.onload = function(){
                     if(response.ok){
                         location.reload();
                     } else {
-                        alert(`마감일 수정이 완료되지 않았습니다.`);
+                        response.json().then(warning => {
+                            alert(warning["message"]);
+                            if(warning["removed"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
 

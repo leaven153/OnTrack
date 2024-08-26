@@ -24,6 +24,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TaskRepository taskRepository;
 
+    /**
+     * created : 2024-
+     * param   : SearchCond
+     * return  : ResponseEntity.ok().body(List<ProjectMember>) / badRequest().body(List<ProjectMember>)
+     * explain : 할 일 수정: 파일 추가
+     * */
     // 해당 이름을 가진 멤버가 해당 프로젝트에 존재하는지 검색
     public ResponseEntity<List<ProjectMember>> findByName(SearchCond searchCond){
         ProjectMember pm = ProjectMember.builder()

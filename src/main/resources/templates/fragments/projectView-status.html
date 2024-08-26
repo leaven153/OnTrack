@@ -79,8 +79,9 @@
                                                     <div class="담당자풀네임목록 task-assignee-list pd-t5">
                                                         <div class="개별담당자box assignee-fullname-box mb-7" th:if="${!t.getAssignees().containsValue('noassignee')}" th:each="assignee : ${t.getAssignees()}">
                                                             <p class="div-inline-block mb-5" th:attr="data-mid=${assignee.key}" th:text="${assignee.value}">담당자1</p> <!--/*  th:classappend="${assigneeStat.count == 1}?'mt-5'" */-->
-                                                            <!--/* '완료'전까지 작성자나 담당자를 해제할 수 있다. 담당자도 검토중까지 스스로를 해제할 수 있다. cf. 담당자는 status view에서는 계획중일때까지만 '참여취소'버튼이 노출된다. */-->
-                                                            <span class="btn-dropOut-task ml-3" data-view="status" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}" th:if="${t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span>
+                                                            <!--/* '완료'전까지 작성자는 담당자를 해제할 수 있다. */-->
+                                                            <span class="btn-dropOut-task ml-3" data-view="status" th:attr="data-assigneemid=${assignee.key}, data-executormid=${myMid}, data-authormid=${t.getAuthorMid()}, data-taskid=${t.getId()}, data-projectid=${projectId}"
+                                                                  th:if="${t.getAuthorMid() == myMid} and ${t.getTaskStatus() < 5} and ${!t.getAssignees().containsValue('noassignee')}">&times;</span> <!--/*${t.chkEditAuth(myMid, t)}*/-->
                                                         </div>
                                                     </div>
                                                     <!--/*검색하여 추가히기, 배정안된멤버목록은 '작성자'에게만 출력된다. */-->
@@ -98,21 +99,21 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--/* 해당 할 일의 작성자나 담당자가 아닌 경우: '참여하기'버튼이 출력된다. */-->
+                                            <!--/* 해당 할 일의 작성자나 담당자가 아닌 경우: 계획중일 때까지만 '참여하기'버튼이 출력된다. */-->
                                             <th:block th:if="${!t.chkEditAuth(myMid, t)} and ${t.getTaskStatus() < 3}">
-                                                <div class="참여하기 mr-5 btn-bePartOf-task opacity0" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}">
+                                                <div class="참여하기 mr-5 btn-bePartOf-task opacity0" data-view="status" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}, data-status=${t.getTaskStatus()}">
                                                     <span class="font-11">참여하기</span>
                                                 </div>
                                             </th:block>
                                             <!--/* 해당 할 일의 작성자인 경우: '담당자관리'버튼이 출력된다. */-->
-                                            <th:block th:if="${t.getAuthorMid() == myMid}"> <!--/*t.chkEditAuth(myMid, t)*/-->
+                                            <th:block th:if="${t.getAuthorMid() == myMid}"> <!--/*and ${t.getTaskStatus() < 5}, t.chkEditAuth(myMid, t)*/-->
                                                 <div class="statusview담당자관리 btn-add-assignee mr-5">
                                                     <span class="font-11">담당자관리</span>
                                                 </div>
                                             </th:block>
-                                            <!--/* 해당 할 일의 담당자인 경우: '참여취소'버튼이 출력된다. */-->
-                                            <th:block th:if="${!(t.getAuthorMid() == myMid)} and ${t.chkAssigned(myMid, t)} and ${t.getTaskStatus() < 3}"> <!--/*t.chkEditAuth(myMid, t)*/-->
-                                                <div class="statusview참여취소 btn-cancel-participation mr-5" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}">
+                                            <!--/* 해당 할 일의 담당자인 경우: 진행중일 때까지만 '참여취소'버튼이 출력된다. */-->
+                                            <th:block th:if="${!(t.getAuthorMid() == myMid)} and ${t.chkAssigned(myMid, t)} and ${t.getTaskStatus() < 4}"> <!--/*t.chkEditAuth(myMid, t)*/-->
+                                                <div class="statusview참여취소 btn-cancel-participation mr-5" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}, data-status=${t.getTaskStatus()}">
                                                     <span class="font-11">참여취소</span>
                                                 </div>
                                             </th:block>
