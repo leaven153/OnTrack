@@ -99,7 +99,7 @@ public class TaskService {
     /**
      * created : 2024-07-31
      * param   : TaskHistory, TaskEditRequest
-     * return  : ResponseEntity
+     * return  : ResponseEntity.ok().body(들어온할일명)/ResponseEntity.badRequest().body(ErrorResponse)
      * explain : 할 일 수정: 할 일 명
      * */
     @Transactional
@@ -121,7 +121,7 @@ public class TaskService {
     /**
      * created : 2024-07-29
      * param   : TaskHistory, TaskEditRequest
-     * return  : ResponseEntity.ok().body(들어온진행상태값)/ResponseEntity.badRequest().body(new ErrorResponse("")
+     * return  : ResponseEntity.ok().body(들어온진행상태값)/ResponseEntity.badRequest().body(ErrorResponse)
      * explain : 할 일 수정: 진행상태
      * */
     @Transactional
@@ -150,7 +150,7 @@ public class TaskService {
     /**
      * created : 2024-07-30
      * param   : TaskHistory, TaskEditRequest
-     * return  : ResponseEntity
+     * return  : ResponseEntity.ok().body("")/ResponseEntity.badRequest().body(ErrorResponse)
      * explain : 할 일 수정: 마감일
      * */
     @Transactional
@@ -172,7 +172,7 @@ public class TaskService {
     /**
      * created : 2024-06-18
      * param   : TaskAssignment, TaskHistory
-     * return  : ResponseEntity
+     * return  : ResponseEntity.ok("")/ResponseEntity.badRequest().body(ErrorResponse)
      * explain : 할 일 수정: 담당자 추가
      */
     @Transactional
@@ -189,14 +189,14 @@ public class TaskService {
             // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
             Long assigned = taskRepository.chkAssigned(ta);
             if (ta.getTaskId().equals(assigned)) {
-                return ResponseEntity.badRequest().body("이미 배정된 담당자입니다.");
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("이미 배정된 담당자입니다.").removed(false).build());
             }
 
             Integer LIMIT_ASSIGN = 6;
             // 담당자가 6명 미만인지 확인한다.
             Integer cntAssignee = taskRepository.cntAssigneeByTaskId(ta.getTaskId());
             if (LIMIT_ASSIGN.equals(cntAssignee)) {
-                return ResponseEntity.badRequest().body("담당자는 6명을 초과할 수 없습니다.");
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자는 6명을 초과할 수 없습니다.").removed(false).build());
             }
 
             List<TaskAssignment> taList = new ArrayList<>();
@@ -205,7 +205,7 @@ public class TaskService {
             taskRepository.assign(taList);
             taskRepository.log(th);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok("");
         }
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
@@ -214,7 +214,7 @@ public class TaskService {
     /**
      * created : 2024-07-16
      * param   : TaskAssignment, TaskHistory
-     * return  : int
+     * return  : ResponseEntity.ok("") / ResponseEntity.badRequest().body(ErrorResponse)
      * explain : 할 일 수정: 담당자 삭제
      * */
     @Transactional
@@ -223,12 +223,13 @@ public class TaskService {
         // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(ta.getTaskId());
         if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
-            // Transactional을 붙여줬으므로 아래와 같이 하지 않아도 되긴 하다..
+            // Transactional은 어떻게 되는가
             int result = taskRepository.delAssignee(ta);
             if(result == 1) {
                 taskRepository.log(th);
+                return ResponseEntity.ok("");
             }
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 이뤄지지 않았습니다.").removed(false).build());
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 완료되지 않았습니다.").removed(false).build());
         }
         // main.js에서
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());

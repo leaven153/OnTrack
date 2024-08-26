@@ -437,4 +437,26 @@ class TaskServiceTest {
         // 태스크 없을 때 not null: false
 
     }
+
+    @Test @DisplayName("없는 태스크 혹은 담당자를 삭제하려 할 때")
+    void unassign(){
+        //given
+        Long noSuchTaskId = 7L;
+        Long noSuchMemberId = 5L;
+        Long taskId = 8L;
+        Long memberId = 35L;
+
+        TaskAssignment 없는할일있는멤버 = TaskAssignment.builder().taskId(noSuchTaskId).memberId(memberId).build();
+        TaskAssignment 있는할일없는멤버 = TaskAssignment.builder().taskId(taskId).memberId(noSuchMemberId).build();
+        TaskAssignment 없는할일없는멤버 = TaskAssignment.builder().taskId(noSuchTaskId).memberId(noSuchMemberId).build();
+        // when
+        int 없는할일있는멤버결과 = taskRepository.delAssignee(없는할일있는멤버);
+        int 있는할일없는멤버결과 = taskRepository.delAssignee(있는할일없는멤버);
+        int 없는할일없는멤버결과 = taskRepository.delAssignee(없는할일없는멤버);
+
+        log.info("없는할일있는멤버결과: {}", 없는할일있는멤버결과);
+        log.info("있는할일없는멤버결과: {}", 있는할일없는멤버결과);
+        log.info("없는할일없는멤버결과: {}", 없는할일없는멤버결과);
+
+    }
 }
