@@ -1,6 +1,7 @@
 import * as fnc from './fnc.mjs'
 
 
+
 /*---- ▼ 휴지통: 카테고리 목록 열고 닫기 시작 ▼ ----*/
     const btnBinList = document.querySelectorAll(".btn-bin-list");
     btnBinList.forEach(function(btn){
@@ -50,9 +51,22 @@ import * as fnc from './fnc.mjs'
     });
     /*---- ▲ 휴지통: 체크박스 끝 ▲ ----*/
 
-    /*---- ▼ row 끝 설정버튼(영구삭제/복원하기) 시작 ▼ ----*/
+    /*---- ▼ row 끝 설정버튼(영구삭제/복원하기)  ▼ ----*/
+    fnc.onEvtListener(document, "click", ".btn-bin-disposal", function(){
+        if(this.querySelector(".bin-disposal-box").classList.contains("hide")){
+            // 다른 열려있던 모든 박스 닫고,
+            document.querySelectorAll(".bin-disposal-box").forEach(function(every){
+                every.classList.add("hide");
+            });
+            // 선택된 박스만 연다.
+            this.querySelector(".bin-disposal-box").classList.remove("hide");
+        } else {
+            this.querySelector(".bin-disposal-box").classList.add("hide");
+        }
+    });
+    /*
     const btnBinDelOrBack = document.querySelectorAll(".btn-bin-disposal");
-    let cntEvent = 0;
+
     btnBinDelOrBack.forEach(function(chosenBtn){
 
         // const box = [...chosenBtn.childNodes].filter((child) => child.classList !== undefined && child.classList.contains("bin-disposal-box"))[0];
@@ -72,11 +86,12 @@ import * as fnc from './fnc.mjs'
 
 
         });
-    });
+    });*/
     /*---- ▲ row 끝 설정버튼 끝 ▲ ----*/
 
 
 /*---- ▼ 휴지통: (개별 row) 영구삭제 버튼 클릭 이벤트 ▼ ----*/
+// onEvt로 바꿀...까?
 document.querySelectorAll(".btn-bin-delete").forEach(function(btn){
     btn.addEventListener("click", (e)=>{
         console.log("영구 삭제 누름");

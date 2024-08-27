@@ -2424,60 +2424,11 @@ window.onload = function(){
     /*---------- 033 ------------*/
 
     /*---------- 034 ------------*/
-    // 할 일 상세에서 담당자 삭제할 때와 할 일 추가(생성)할 때의 담당자 삭제 구분 요망!!!
-    // 동적으로 생성된, (배정된)담당자를 삭제(배정해제) 할 때!
-    onEvtListener(document, "click", ".btn-assignee-del", function(){
-        // 중복 확인을 위한 set에서 담당자 이름 삭제
-        edit_chosenAssigneeList.delete([...this.parentElement.children].filter((child) => child !== this)[0].innerText);
-        console.log(`할일 상세의 담당자 목록(추후 할일생성과 구분요망!):`); // set 확인
-        console.log(edit_chosenAssigneeList);
-
-        // 배정 해제된 담당자 box 삭제
-        this.parentElement.remove();
-
-        // 배정된 담당자 수 변경
-        edit_cntChoosenAssignee--;
-
-        // 담당자가 0명이라면 '담당자 배정하기'가 출력되도록 한다.
-        if (edit_cntChoosenAssignee === 0) {
-            edit_chosensBoxes.classList.remove("assignee-display");
-            edit_chosensBoxes.classList.add("hide");
-            edit_assigneeBeforeChoose.classList.add("assignee-display");
-            edit_assigneeBeforeChoose.classList.remove("hide");
-        }
-    });
 
     /*---------- 035 ------------*/
-    // 선택된 담당자 div 동적 생성. 
-    function edit_chosenAssigneeBox(value) {
-        let div = document.createElement("div");
-        let span1 = document.createElement("span");
-        let span2 = document.createElement("span");
-
-        div.className = "assignee-chosen-box";
-        span1.className = "assignee-chosen-name";
-        span2.classList.add("ml-5");
-        span2.classList.add("btn-assignee-del");
-        span2.innerHTML = "&times;";
-        span1.innerText = value;
-        
-        div.appendChild(span1);
-        div.appendChild(span2);
-
-        return div;
-    }
-    /*---- ▲ Modal(Edit Task; 할일 수정(상세): 담당자 배정·수정 끝 ▲ ----*/
-
 
     /*---------- 036 ------------*/
-    /*---- ▼ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 시작 ▼ ----*/
-    // const btnShowChildTaskList = document.querySelector("#btn-show-childTasks");
-    // const childTaskList = document.querySelector("#childTask-list");
-    // btnShowChildTaskList.addEventListener("click", ()=>{
-    //     btnShowChildTaskList.classList.toggle("img-angle180");
-    //     childTaskList.classList.toggle("hide");
-    // });
-    /*---- ▲ Modal(Edit Task; 할일 수정(상세): 세부항목(하위할일;Child Task) 리스트 보기 끝 ▲ ----*/
+
 
 
 
@@ -2486,11 +2437,12 @@ window.onload = function(){
     if(elExists(document.querySelector("#btn-submit-comment"))) {
 
         const btnSubmitComment = document.querySelector("#btn-submit-comment");
-        const commentWriteBox = document.querySelector(".modal-task-comment-write");
+
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
 
         /*
+        const commentWriteBox = document.querySelector(".modal-task-comment-write");
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
 
 
@@ -2562,7 +2514,12 @@ window.onload = function(){
 
                     });
                 } else {
-                    response.text().then(msg => alert(msg));
+                    response.json().then(warning => {
+                        alert(warning["message"]);
+                        if(warning["removed"]){
+                            location.reload();
+                        }
+                    });
                 }
             })
         });
@@ -2615,7 +2572,7 @@ window.onload = function(){
     }
 
     /*---------- 039 ------------*/
-    // 작성한 소통하기 글 바로 출력할 때 사용할 function (쓰게 될까? 쓰게 되겠지...)
+    // 작성한 소통하기 글 바로 출력할 때 사용할 function
     function createCommentBox(writer, type, content, date, commentId) {
         // 0. Container
         const commentBox = document.createElement("div");
@@ -2883,7 +2840,12 @@ window.onload = function(){
                     textarea.setAttribute("readonly", "readonly");
                     textarea.classList.remove("border-editable");
                 } else {
-                    response.text().then(msg => alert(msg));
+                    response.json().then(warning => {
+                        alert(warning["message"]);
+                        if(warning["removed"]){
+                            location.reload();
+                        }
+                    });
                 }
             });
 

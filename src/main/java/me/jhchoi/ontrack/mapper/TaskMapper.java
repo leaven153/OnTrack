@@ -62,6 +62,9 @@ public interface TaskMapper {
     // 할 일 상세: 소통하기 글 삭제(작성자에 의한)
     Integer delComment(Long commentId);
 
+    // 할 일 상세: 소통하기 글 삭제 전 해당 할 일이 삭제되었는지 확인
+    Long findTaskIdByCommentId(Long commentId);
+
     // 할 일 상세: 중요 소통하기 대상자 등록
     Integer registerCheckComment(CheckComment cc);
 

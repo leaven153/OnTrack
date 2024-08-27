@@ -23,10 +23,10 @@
 <!----------------------------------------->
 <!----------- 상단 고정(my name, page title) 시작 ---------->
 <!--(name, title, view tab)-->
-<div class="flex-col-start-nowrap mypage-fixed-top" th:fragment="dunno">
+<div class="flex-col-start-nowrap mypage-fixed-top">
   <div class="flex-row-end-center-nowrap wrapper">
     <div class="user-name flex-row-start-nowrap cursorP">
-      <span class="font-18 bold" th:text="${loginUser.getUserName()}">최진화</span>
+      <span class="font-18 bold userId" th:attr="data-userid=${loginUser.getUserId()}" th:text="${loginUser.getUserName()}">최진화</span>
       <!-- <div class="alarm review"></div>
       <div class="alarm done"></div> -->
     </div>
@@ -82,7 +82,7 @@
         </div>
         <div class="bin-list-content ">
           <div class="각row my-bin-col flex-row-justify-start-align-center">
-            <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
+            <div class="content-chkbox"><input type="checkbox" name=""></div>
             <div class="삭제일시"><span class="altivo-regular">24.04.17 21:07</span></div>
             <div class="이름 textL "><span class="">Guess that's my life without you</span></div>
             <div class=""></div>
@@ -123,7 +123,7 @@
             <img src="../../static/imgs/icon_3dot(h).png" th:src="@{/imgs/icon_3dot(h).png}" alt="" class="img-20">
           </div>
         </div>
-        <div class="bin-list-content ">
+        <div class="bin-list-content bin-task-list">
           <th:block th:each="task: ${binTaskList}">
             <div class="각row my-bin-col flex-row-justify-start-align-center">
               <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>

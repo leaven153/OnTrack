@@ -45,6 +45,12 @@
         WHERE id = #{id}
     </select>
 
+    <select id="findTaskIdByCommentId" resultType="Long">
+        SELECT task_id
+        FROM task_comment
+        WHERE id = #{id}
+    </select>
+
     <select id="binTaskRow" parameterType="Long" resultType="BinResponse">
         SELECT t.project_id, t.id taskId, t.task_title, t.deletedAt, p.project_name, pm.nickname deleterName
         FROM ontrack_task t
