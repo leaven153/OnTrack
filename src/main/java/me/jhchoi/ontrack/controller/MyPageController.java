@@ -11,10 +11,7 @@ import me.jhchoi.ontrack.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.*;
@@ -97,8 +94,8 @@ public class MyPageController {
     }
 
 
-    @PostMapping("/bin")
-    public ResponseEntity<?> binTaskRow(@RequestBody Long taskId){
+    @GetMapping("/removedTask")
+    public ResponseEntity<?> binTaskRow(@RequestParam Long taskId){
         log.info("휴지통의 할 일 row 동적으로 생성하기 위해 컨트롤러 접근 -task id: {}", taskId);
         BinResponse binTaskRow = taskService.binTaskRow(taskId);
         if(binTaskRow == null) {

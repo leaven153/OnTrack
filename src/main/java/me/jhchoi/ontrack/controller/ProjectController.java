@@ -127,8 +127,10 @@ public class ProjectController {
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
 
-                    Map<Long, Boolean> cc = new HashMap<>();
                     // 2-2) notice comment 확인여부 가져온다.
+                    /*
+                    Map<Long, Boolean> cc = new HashMap<>();
+
                     for(int j = 0; j < taskDetail.getTaskComments().size(); j++){
                         CheckComment ccRequest = CheckComment.builder()
                                 .commentId(taskDetail.getTaskComments().get(j).getId())
@@ -140,7 +142,7 @@ public class ProjectController {
                         }
                     }
                     taskDetail.setNoticeCommentChk(cc);
-
+                    */
                     // 3) history 가져온다.
                     taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));
                     if(taskDetail.getTaskHistories() != null && !taskDetail.getTaskHistories().isEmpty()){

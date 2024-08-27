@@ -1,4 +1,6 @@
 import * as fnc from './fnc.mjs'
+import {binRow} from "./createElement.mjs";
+
 let binSocket = new SockJS(`http://localhost:8080/ws/taskDeletion`);
 // let justDeletedTaskId;
 
@@ -26,25 +28,24 @@ function connectBinWs() {
             }
         }
 
-        // tip을 띄운다 (3초 뒤에 사라진다.)
+
+        // tip을 띄운다 (n초 뒤에 사라질까..말까?)
         if(fnc.elExists(document.querySelector("span.alarm-bin"))){
             document.querySelector("span.alarm-bin").classList.remove("img-hidden");
-            // setTimeout(()=>{
-            //     document.querySelector("span.alarm-bin").classList.add("img-hidden");
-            // }, 4000);
         }
 
-        console.log(`웹소켓 메시지 받고 여기까지 안오나?`);
+        // console.log(`웹소켓 메시지 받고 여기까지 안오나?`);
         const currUrl = decodeURIComponent(new URL(location.href).pathname).split("/");
-        console.log(`접속 중인 유저의 현재 페이지: ${currUrl}`); // 접속 중인 유저의 현재 페이지: ,project,11
-        console.log(`접속 중인 유저의 현재 페이지: ${currUrl[2]}`); //
+        // console.log(`접속 중인 유저의 현재 페이지: ${currUrl}`); // 접속 중인 유저의 현재 페이지: ,project,11
+        // console.log(`접속 중인 유저의 현재 페이지: ${currUrl[2]}`); //
         if(currUrl[2].includes("bin")){
-            fetch(`http://localhost:8080/mypage/bin`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(e.data)
+
+            fetch(`http://localhost:8080/mypage/removedTask?taskId=${e.data}`, {
+                method: 'GET',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                // body: JSON.stringify(e.data)
             }).then(response => {
                 if(response.ok){
                     response.json().then(task => {
@@ -65,9 +66,18 @@ function connectBinWs() {
                         * projectName: "By your side"
                         * taskId: null
                         * taskTitle: "크러쉬와 송혜교만"*/
-                        console.log(task["deletedAt"]); // 2024-08-24T18:14:00
-                        console.log(task["deletedAt"].slice(0, 10));
-                        console.log(task["deletedAt"].slice(11, 16));
+                        // console.log(task["deletedAt"]); // 2024-08-24T18:14:00
+                        // console.log(task["deletedAt"].slice(0, 10));
+                        // console.log(task["deletedAt"].slice(11, 16));
+                        let userId;
+                        if(fnc.elExists(document.querySelector("span.userId"))){
+                            userId = document.querySelector("span.userId").dataset.userid;
+                        }
+
+                        if(fnc.elExists(document.querySelector(".bin-task-list"))){
+                            document.querySelector(".bin-task-list").prepend(binRow(task, userId));
+                        }
+
                         // 2. 여러 개 할 일이 왔을 때
 
                     });
@@ -80,8 +90,10 @@ function connectBinWs() {
                 }
             });
         }
-        // setTimeOut이 다른 것까지 하지 못하게 하는.. 듯?
-        document.querySelector("span.alarm-bin").classList.add("img-hidden");
+
+        setTimeout(function(){
+            document.querySelector("span.alarm-bin").classList.add("img-hidden");
+        }, 4000);
     }
 
     sock.close = function(){

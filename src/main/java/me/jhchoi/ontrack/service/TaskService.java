@@ -231,7 +231,7 @@ public class TaskService {
             }
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 완료되지 않았습니다.").removed(false).build());
         }
-        // main.js에서
+
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
 
@@ -358,17 +358,24 @@ public class TaskService {
     @Transactional
     public ResponseEntity<?> addTaskComment(TaskComment taskComment) {
 
-        // 1. comment 등록 후,
-        log.info("등록 전 taskCommentId는 null:{}", taskComment);
-        int result = taskRepository.addComment(taskComment);
-        if(result != 1) {
-            return ResponseEntity.badRequest().body("소통하기 글 내용이 등록되지 않았습니다.");
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskComment.getTaskId());
+
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            // 1. comment 등록 후,
+            log.info("등록 전 taskCommentId는 null:{}", taskComment);
+            int result = taskRepository.addComment(taskComment);
+            if(result != 1) {
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("소통하기 글 내용이 등록되지 않았습니다.").removed(true).build());
+            }
+            return ResponseEntity.ok(taskComment.getId());
         }
-
-        // 2. notice(중요;모두확인요청)일 경우,
-
         log.info("등록 후 taskComment:{}", taskComment);
         log.info("등록 후 taskCommentId는:{}", taskComment.getId());
+
+
+        // 2. notice(중요;모두확인요청)일 경우,
+        /*
         if(taskComment.getType().equals("notice")) {
             // 2-1. comment id를 가지고 check_comment 테이블에도 작성자는 이미 확인한 것으로 입력한다.
             CheckComment chkCommentAuthor = CheckComment.builder()
@@ -401,10 +408,9 @@ public class TaskService {
                 }
             }
 
-        }
+        } */
 
-
-        return ResponseEntity.ok(taskComment.getId());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
 
     /**
@@ -460,18 +466,44 @@ public class TaskService {
      * explain : 할 일 상세: 소통하기 글 수정
      * */
     @Transactional
-    public ResponseEntity<String> editTaskComment(TaskComment editComment) {
-        TaskComment chkExists = taskRepository.findCommentById(editComment.getId());
-        ResponseEntity<String> response = ResponseEntity.ok().body("글 수정이 완료되었습니다.");
-        if(chkExists == null) {
-            return ResponseEntity.badRequest().body("해당 글이 존재하지 않습니다.");
+    public ResponseEntity<?> editTaskComment(TaskComment editComment) {
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(editComment.getTaskId());
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            TaskComment chkExists = taskRepository.findCommentById(editComment.getId());
+            ResponseEntity<?> response = ResponseEntity.ok("");
+            if(chkExists == null) {
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 글이 존재하지 않습니다.").removed(false).build());
+            }
+            Integer result = taskRepository.editTaskComment(editComment);
+            if(result != 1) {
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("글 수정이 완료되지 않았습니다.").removed(false).build());
+            }
+            return response;
         }
-        Integer result = taskRepository.editTaskComment(editComment);
-        if(result != 1) {
-            response = ResponseEntity.badRequest().body("글 수정이 완료되지 않았습니다.");
-        }
-        return response;
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
     }
+
+    /**
+     * created : 2024-08-06
+     * param   : TaskDetailRequest
+     * return  : ResonseEntity<Void>
+     * explain : 할 일 상세: 작성자에 의한 소통하기 글 삭제
+     * */
+    public ResponseEntity<?> delComment(Long commentId) {
+        Long taskId = taskRepository.findTaskIdByCommentId(commentId);
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            Integer result = taskRepository.delComment(commentId);
+            if(result != 1){
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 소통글이 존재하지 않습니다.").removed(false).build());
+            }
+            return ResponseEntity.ok("");
+        }
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+    }
+
 
     /**
      * created : 2024-08-06
@@ -480,7 +512,7 @@ public class TaskService {
      * explain : 할 일 상세: 관리자에 의한 소통하기 글 차단 (DB에는 남아있음. 관리자 화면에서 조회 가능)
      * */
     @Transactional
-    public ResponseEntity<String> blockTaskComment(TaskDetailRequest blockComment){
+    public ResponseEntity<?> blockTaskComment(TaskDetailRequest blockComment){
         TaskComment chkExists = taskRepository.findCommentById(blockComment.getCommentId());
 
         if(chkExists == null) {
@@ -493,19 +525,6 @@ public class TaskService {
         return ResponseEntity.ok("글 삭제가 완료되었습니다.");
     }
 
-    /**
-     * created : 2024-08-06
-     * param   : TaskDetailRequest
-     * return  : ResonseEntity<Void>
-     * explain : 할 일 상세: 작성자에 의한 소통하기 글 차단
-     * */
-    public ResponseEntity<Void> delComment(Long commentId) {
-        Integer result = taskRepository.delComment(commentId);
-        if(result != 1){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     /**
      * created : 2024-08-01

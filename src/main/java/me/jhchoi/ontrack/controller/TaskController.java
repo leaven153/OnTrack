@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.*;
 import me.jhchoi.ontrack.dto.*;
+import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
 import me.jhchoi.ontrack.service.MemberService;
 import me.jhchoi.ontrack.service.TaskService;
@@ -37,6 +38,7 @@ import java.util.*;
 public class TaskController {
     private final TaskService taskService;
     private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
     private final MemberService memberService;
     private final FileStore fileStore;
 
@@ -466,16 +468,22 @@ public class TaskController {
      * explain : 할 일 1개 복원(휴지통 → 프로젝트)
      * */
     @GetMapping("/restore")
-    public String restoreTask(@RequestParam Long pId, @RequestParam Long tId, @RequestParam Long mId){
+    public String restoreTask(@RequestParam Long pId, @RequestParam Long tId, @RequestParam(required = false) Long mId, @RequestParam(required = false) Long uId){
         log.info("1개만 복원할 때 pid, {}", pId); // 1개만 복원할 때 pid, 9
         log.info("1개만 복원할 때 tid, {}", tId); // 1개만 복원할 때 tid, 20
         log.info("1개만 복원할 때 mid, {}", mId); // 1개만 복원할 때 mid, 14
+        log.info("동적으로 생성된 task row에 복원하기 눌렀을 때, {}", uId);
 
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanoSec = nowWithNano.getNano();
 
         // 동적으로 생성된 bin task row에서 복원요청이 왔을 때: uId
-        // user id와 project id롸 member id 찾는 코드 추가..?
+        // user id와 project id로 member id 찾는다.
+        if (mId == null){
+            List<MemberInfo> memberInfo = projectRepository.getMemberInfo(MemberInfo.builder().projectId(pId).userId(uId).build());
+            mId = memberInfo.get(0).getMemberId();
+        }
+
 
         // history 남긴다.
         taskRepository.log(TaskHistory.builder()
