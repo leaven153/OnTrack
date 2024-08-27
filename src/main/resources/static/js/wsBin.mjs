@@ -1,5 +1,4 @@
 import * as fnc from './fnc.mjs'
-import * as ce from './createElement.mjs'
 import {binRow} from "./createElement.mjs";
 
 let binSocket = new SockJS(`http://localhost:8080/ws/taskDeletion`);
