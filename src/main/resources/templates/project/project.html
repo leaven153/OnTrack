@@ -8,7 +8,7 @@
 
   <title th:text="${project.getProject().projectName}">MMOM - Project</title>
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
 
@@ -294,6 +294,12 @@
 <!--/* 모달 컨테이너 */-->
 <th:block th:replace="~{/fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()}, myPosition=${project.position})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
 <!--/* 모달: 할 일 상세 끝 */-->
+
+<!--/*모달: 이미 삭제된 할 일에 대한 접근 경고창 */-->
+<div class="alert-task-removed" th:classappend="${taskRemoved == null or !taskRemoved}?'hide'">
+  <p class="bold font-20">이미 삭제된 할 일입니다.</p>
+  <button class="btn-alert-task-removed">확인</button>
+</div>
 
 <!--/*모달: 첨부되지 않은 파일 안내*/-->
 <div class="첨부되지않은파일안내경고창컨테이너 alert-not-attach-container hide">

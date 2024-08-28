@@ -100,9 +100,13 @@ public class TaskController {
         log.info("어떤 탭을 보여줘야 하는가: {}", tab);
         // task가 어떻게 받아와지는가: Optional[OnTrackTask(id=null, projectId=9, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14)]
 
-        // 휴지통으로 옮겨졌더라도, 시간 차에 의해 다른 멤버에 의해 상세 내역 조회 요청이 왔을 경우 출력은 한다.
-        // 단, 쓰기는 안되도록 한다.
-        redirectAttributes.addFlashAttribute("hide", false);
+        Boolean detailHide = false;
+
+        if(task.isPresent() && task.get().getDeletedBy() != null){
+            detailHide = true;
+            redirectAttributes.addFlashAttribute("taskRemoved", true);
+        }
+        redirectAttributes.addFlashAttribute("hide", detailHide);
         redirectAttributes.addFlashAttribute("taskId", taskId);
         redirectAttributes.addFlashAttribute("tab", tab);
 
@@ -123,7 +127,7 @@ public class TaskController {
      * explain : 할 일 상세: 소통하기 글 등록·수정
      * */
     @PostMapping(value = "/comment")
-    public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
+    public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) { // throws ParseException
         log.info("**************comment controller enter :) ***************");
 //        log.info("task id: {}", taskId); // @PathVariable Long taskId,
         log.info("등록이요 수정이요: {}", type);
@@ -417,7 +421,7 @@ public class TaskController {
      * explain : 프로젝트에서 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<String> moveToBin(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
+    public ResponseEntity<Void> moveToBin(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
         log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
         // 할 일을 여러 개 지우려면 어떻게 받아오면 될까:
         // BinRequest(
@@ -428,7 +432,8 @@ public class TaskController {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
         taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
-        return taskService.moveToBin(taskBinRequest);
+        taskService.moveToBin(taskBinRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/delete")

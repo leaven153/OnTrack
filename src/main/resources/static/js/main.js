@@ -609,7 +609,7 @@ window.onload = function(){
             } else {
                 response.json().then(warning => {
                     alert(warning["message"]); // 담당자 삭제가 완료되지 않았습니다. or 해당 할 일이 존재하지 않습니다.
-                    if(warning["removed"]){
+                    if(warning["taskRemoved"]){
                         location.reload();
                     }
 
@@ -748,7 +748,7 @@ window.onload = function(){
             } else {
                 response.json().then(warning => {
                     alert(warning["message"]);
-                    if(warning["removed"]){
+                    if(warning["taskRemoved"]){
                         location.reload();
                     }
                 });
@@ -855,7 +855,7 @@ window.onload = function(){
                         response.json().then(warning => {
                             console.log(warning);
                             alert(warning["message"]);
-                            if(warning["removed"]){
+                            if(warning["taskRemoved"]){
                                 location.reload();
                             }
                         });
@@ -999,7 +999,7 @@ window.onload = function(){
                     } else {
                         response.json().then(warning => {
                             alert(warning["message"]);
-                            if(warning["removed"]){
+                            if(warning["taskRemoved"]){
                                 location.reload();
                             }
                         });
@@ -1265,7 +1265,7 @@ window.onload = function(){
                 } else {
                     response.json().then(warning => {
                         alert(warning["message"]);
-                        if(warning["removed"]){
+                        if(warning["taskRemoved"]){
                             location.reload();
                         }
                     });
@@ -1486,7 +1486,7 @@ window.onload = function(){
                                 err.then(warning => {
                                     btn.querySelector(".tableView-status-list").classList.add("img-hidden")
                                     alert(warning["message"]);
-                                    if(warning["removed"]) {
+                                    if(warning["taskRemoved"]) {
                                         location.reload();
                                     }
                                 });
@@ -1505,7 +1505,7 @@ window.onload = function(){
     if(elExists(document.querySelector(".btn-edit-task-duedate"))){
         const btnEditTaskDueDate = document.querySelectorAll(".btn-edit-task-duedate");
         btnEditTaskDueDate.forEach(function(btn){
-            btn.addEventListener("click", (e)=>{
+            btn.addEventListener("click", ()=>{
                 // e.stopImmediatePropagation();
                 console.log(`btn click!`);
 
@@ -1586,7 +1586,7 @@ window.onload = function(){
                     } else {
                         response.json().then(warning => {
                             alert(warning["message"]);
-                            if(warning["removed"]){
+                            if(warning["taskRemoved"]){
                                 location.reload();
                             }
                         });
@@ -1730,13 +1730,20 @@ window.onload = function(){
         document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
     }
 
+    /*---------- 067 ------------*/
+    /* 삭제된 할 일 상세 열려고 했을 때 출력된 경고창 닫기 */
+    if(elExists(document.querySelector(".btn-alert-task-removed"))){
+        document.querySelector(".btn-alert-task-removed").addEventListener("click", ()=>{
+            document.querySelector(".alert-task-removed").classList.add("hide");
+        });
+    }
     /*---------- 012 ------------*/
     /* 할 일 상세 모달 탭버튼 클릭*/
     if(elExists(document.querySelector(".btn-modal-task-tab"))){
         let modalTaskTabChosen;
         const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
         const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
-        const modalTaskCommonArea = document.querySelector("#task-detail-common");
+        // const modalTaskCommonArea = document.querySelector("#task-detail-common");
 
         btnTaskTabs.forEach(function(chosenTab){
             chosenTab.addEventListener("click", ()=>{
@@ -2245,7 +2252,7 @@ window.onload = function(){
         // ver.1. 파일명 안에 특수기호는 +, _, -, .만 허용
         const regFileName = /[{}\[\]()\/?,'";:`~<>!@#$%^&*=|\s]/g;
         // ver.2. 윈도우가 허하지 않는 특수기호만 잡는 표현식 (\ / : * ? < > | 9개)
-        const regWinFileName = /[\\/:*?"<>|]/g;
+        // const regWinFileName = /[\\/:*?"<>|]/g;
         const regFileType = /(ade|adp|apk|appx|appxbundle|aspx|bat|bin|cab|cmd|com|cpl|dll|dmg|exe|gadget|hta|inf1|ins|ipa|iso|isp|isu|jar|js|jse|jsp|jsx|lib|lnk|mde|msc|msi|msix|msixbundle|msp|mst|nsh|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|sys|tar|u3p|vb|vbe|vbs|vbscript|vxd|ws|wsc|wsf|wsh)$/i;
 
         const filename = fullfilename.substring(0, fullfilename.lastIndexOf("."));
@@ -2437,7 +2444,7 @@ window.onload = function(){
     if(elExists(document.querySelector("#btn-submit-comment"))) {
 
         const btnSubmitComment = document.querySelector("#btn-submit-comment");
-
+        let commentType = "normal";
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
 
@@ -2446,7 +2453,7 @@ window.onload = function(){
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
 
 
-        let commentType = "normal";
+
         commentNoticeBtn.addEventListener("change", ()=>{
             if(commentNoticeBtn.checked){
                 commentWriteBox.classList.add("task-comment-write-notice");
@@ -2516,7 +2523,7 @@ window.onload = function(){
                 } else {
                     response.json().then(warning => {
                         alert(warning["message"]);
-                        if(warning["removed"]){
+                        if(warning["taskRemoved"]){
                             location.reload();
                         }
                     });
@@ -2526,7 +2533,7 @@ window.onload = function(){
     }
 
 
-    /*---------- 059 날짜형태반환(YY.MM.DD (요일) hh:mm ------------*/
+    /*---------- 059 날짜형태로 반환(YY.MM.DD (요일) hh:mm ------------*/
     function dateYYMMDD(date){
         const YY = date.getFullYear().toString().substring(2);
         let MM = date.getMonth()+1;
@@ -2804,7 +2811,7 @@ window.onload = function(){
 
         // 수정한 내용 등록
         btnSubmitEdit.addEventListener("click", ()=>{
-            const datum = btnSubmitEdit.dataset;
+            // const datum = btnSubmitEdit.dataset;
             const date = new Date();
             // 서버에 보낼 정보
             const taskDetailRequest = {
@@ -2842,7 +2849,7 @@ window.onload = function(){
                 } else {
                     response.json().then(warning => {
                         alert(warning["message"]);
-                        if(warning["removed"]){
+                        if(warning["taskRemoved"]){
                             location.reload();
                         }
                     });
@@ -2926,6 +2933,13 @@ window.onload = function(){
                             parents(this, "#task-tab-comment-list")[0].prepend(pNoComment);
                         }
                         myComment.remove();
+                    } else {
+                        response.json().then(warning => {
+                            alert(warning["message"]);
+                            if(warning["taskRemoved"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
             }
@@ -2993,7 +3007,7 @@ window.onload = function(){
 
             const fileData = new FormData();
             const file = e.dataTransfer.files;
-            let result = new Map();
+            let invalidateFile = new Map();
             if(e.dataTransfer.files.length < 6){
                 for(let i = 0; i < e.dataTransfer.files.length; i++){
 
@@ -3001,7 +3015,7 @@ window.onload = function(){
                     if(validateFile(file[i].name, parseInt(file[i].size)) === 'okay') {
                         fileData.append("files", file[i]); // e.dataTransfer.files[i]
                     } else {
-                        result.set(files[i].name, validateFile(file[i].name, parseInt(file[i].size))); // e.dataTransfer.
+                        invalidateFile.set(files[i].name, validateFile(file[i].name, parseInt(file[i].size))); // e.dataTransfer.
                     }
 
                 }
@@ -3058,16 +3072,21 @@ window.onload = function(){
                     });
                 } else {
                     const err = response.json();
-                    err.then(warning => alert(warning["message"]));
+                    err.then(warning => {
+                        alert(warning["message"]);
+                        if(warning["taskRemoved"]){
+                            location.reload();
+                        }
+                    });
                 }
             });
             
             // const result = validateFile(file.name, parseInt(file.size));
-            if(result.size !== 0){
+            if(invalidateFile.size !== 0){
 
                 let notAttachList = new Map();
                 let warning = [];
-                result.forEach((v, k) => {
+                invalidateFile.forEach((v, k) => {
                     console.log(k, v); // #$%^.txt nay
                     if(v.includes('t')){
                         warning.push("첨부가 불가능한 유형의 파일입니다.");
@@ -3141,10 +3160,10 @@ window.onload = function(){
                 const result = validateFile(files[i].name, parseInt(files[i].size));
                 if(result === 'okay'){
                     createTasknofile.classList.remove("hide");
-                    const name = files[i].name.substring(0, files[i].name.lastIndexOf("."));
-                    const type = files[i].name.substring(files[i].name.lastIndexOf(".")+1);
+                    // const type = files[i].name.substring(files[i].name.lastIndexOf(".")+1);
                     fileData.append("files", files[i]);
                 } else {
+                    const name = files[i].name.substring(0, files[i].name.lastIndexOf("."));
                     invalidFile.set(name, result);
                 }
             }
@@ -3160,17 +3179,61 @@ window.onload = function(){
         }).then(response => {
             if(response.ok){
                 response.json().then(file => {
+                    // 만약 '등록된 파일이 없습니다' 문구가 있다면 삭제
                     if(modalTaskFileListContainer.querySelector("p.no-file")){
                         modalTaskFileListContainer.querySelector("p.no-file").remove();
                     }
 
+                    // 화면에 출력
                     for(let i = 0; i < file.length; i++) {
                         modalTaskFileListContainer.append(fileHistoryRow(data["uploadername"], addFileBox(file[i]["fileOrigName"], file[i]["fileType"], file[i]["formattedFileSize"], file[i]["id"])));
                     }
                 });
 
+            } else {
+
             }
-        });
+        }); // fetch ends
+        if(invalidFile.size !== 0){
+
+            let notAttachList = new Map();
+            let warning = [];
+            invalidFile.forEach((v, k) => {
+                console.log(k, v); // #$%^.txt nay
+                if(v.includes('t')){
+                    warning.push("첨부가 불가능한 유형의 파일입니다.");
+                }
+                if(v.includes('n')){
+                    warning.push(`파일명에는 특수기호와 여백이 포함될 수 없습니다.<br/> (단, +, _, -, .은 포함가능)`);
+                }
+                if(v.includes('s')){
+                    warning.push("5MB이하의 파일만 첨부할 수 있습니다.");
+                }
+                notAttachList.set(k, warning);
+                warning = [];
+            });
+
+            if(elExists(document.querySelector(".alert-not-attach-container"))){
+
+                const modalNotAttachGuide = document.querySelector(".alert-not-attach-container");
+                modalNotAttachGuide.classList.remove("hide");
+
+                for(const entry of notAttachList){
+                    modalNotAttachGuide.querySelector(".alert-not-attach-scroll").appendChild(notAttachedGuide(entry));
+                }
+
+                document.querySelector("#btn-alert-not-attach").addEventListener("click", ()=>{
+                    // 안에 내용 비운다.
+                    [...modalNotAttachGuide.querySelector(".alert-not-attach-scroll").children].forEach(function(item){
+                        item.remove();
+                    });
+
+                    // 창 닫는다.
+                    modalNotAttachGuide.classList.add("hide");
+                });
+            } // 첨부되지 않은 파일들 사유와 함께 출력 ends
+        } // 첨부되지 않은 파일이 있다면 실행 코드 ends
+
     }); // 이미 생성된 할 일에 파일 추가(input) 끝
 
     /*---------- 061 ------------*/
@@ -3244,8 +3307,13 @@ window.onload = function(){
                         }
                         parents(this, ".modal-task-file-history-row")[0].remove();
                     } else {
-                        const warning = response.text();
-                        warning.then(msg => alert(msg));
+                        const err = response.json();
+                        err.then(warning => {
+                            alert(warning["message"]);
+                            if(warning["taskRemoved"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
             } else { // 관리자 삭제
@@ -3258,9 +3326,13 @@ window.onload = function(){
                         parents(this, ".modal-task-file-history-row")[0].querySelector(".deletedByAdminBox").classList.remove("hide");
                         parents(this, ".hoverShadow")[0].remove();
                     } else {
-                        // const warning = response.body; // ReadableStream { locked: false }
-                        const warning = response.text();
-                        warning.then(msg => alert(msg));
+                        const err = response.json();
+                        err.then(warning => {
+                            alert(warning["message"]);
+                            if(warning["taskRemoved"]){
+                                location.reload();
+                            }
+                        });
                     }
                 });
             }
@@ -3528,8 +3600,14 @@ window.onload = function(){
                 }).then(response => {
                     if(response.ok){
                         console.log(`할 일 개별 row에서 삭제됨.`)
+
+                        // web socket: 휴지통으로 이동한 할 일들의 task id를 array로 전송
+                        binWs.binSocket.send(checkedTaskList);
+
                         checkedTaskList = [];
                         location.reload();
+                    } else {
+                        alert(`할 일 삭제가 완료되지 않았습니다.`);
                     }
                 });
             });

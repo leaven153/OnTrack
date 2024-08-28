@@ -118,6 +118,9 @@ public class TaskRepository {
     // 할 일 상세: file 다운
     public TaskFile findFileById(Long fileId) { return taskMapper.findFileById(fileId); }
 
+    // 할 일 상세: 파일 삭제 전 해당 할 일이 삭제되었는지 확인
+    public Long findTaskIdByFileId(Long fileId) { return taskMapper.findTaskIdByFileId(fileId); }
+
     // 할 일 상세: (작성자에 의한)file 삭제
     public int delFile(Long fileId) { return taskMapper.delFile(fileId); }
 
