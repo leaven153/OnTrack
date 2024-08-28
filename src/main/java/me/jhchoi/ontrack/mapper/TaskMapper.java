@@ -28,6 +28,9 @@ public interface TaskMapper {
     // 할 일: 파일 첨부
     int attachFile(List<TaskFile> taskFile);
 
+    // 할 일 상세: 파일 삭제 전 해당 할 일이 삭제되었는지 확인
+    Long findTaskIdByFileId(Long fileId);
+
     // 할 일: (작성자에 의한) 파일 삭제
     int delFile(Long fileId);
 

@@ -417,7 +417,7 @@ public class TaskController {
      * explain : 프로젝트에서 할 일 삭제
      * */
     @DeleteMapping
-    public ResponseEntity<String> moveToBin(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
+    public ResponseEntity<Void> moveToBin(@RequestBody BinRequest taskBinRequest) { // @RequestBody Map<Long, Long> testId
         log.info("할 일을 여러 개 지우려면 어떻게 받아오면 될까: {}", taskBinRequest);
         // 할 일을 여러 개 지우려면 어떻게 받아오면 될까:
         // BinRequest(
@@ -428,7 +428,7 @@ public class TaskController {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
         taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
-        return taskService.moveToBin(taskBinRequest);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/delete")

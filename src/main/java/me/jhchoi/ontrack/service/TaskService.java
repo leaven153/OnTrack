@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -110,11 +109,11 @@ public class TaskService {
             taskRepository.log(th);
             Integer result = taskRepository.editTaskTitle(ter);
             if (result != 1){
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("수정이 완료되지 않았습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("수정이 완료되지 않았습니다.").taskRemoved(false).build());
             }
             return ResponseEntity.ok().body(ter.getTitle());
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
 
     }
 
@@ -137,13 +136,13 @@ public class TaskService {
                 if(result == 1) {
                     return ResponseEntity.ok().body(ter.getStatus());
                 } else {
-                    return ResponseEntity.badRequest().body(ErrorResponse.builder().message("진행상태 변경이 완료되지 않았습니다.").removed(false).build());
+                    return ResponseEntity.badRequest().body(ErrorResponse.builder().message("진행상태 변경이 완료되지 않았습니다.").taskRemoved(false).build());
                 }
             } else {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자가 없는 할 일은 진행상태를 바꿀 수 없습니다.").taskRemoved(false).build());
             }
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
 
     }
 
@@ -163,10 +162,10 @@ public class TaskService {
             if(result == 1) {
                 return ResponseEntity.ok().body("");
             } else {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("마감일 변경이 완료되지 않았습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("마감일 변경이 완료되지 않았습니다.").taskRemoved(false).build());
             }
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
     /**
@@ -189,14 +188,14 @@ public class TaskService {
             // 해당 일에 이미 배정(참여)된 담당자인지 확인 필요
             Long assigned = taskRepository.chkAssigned(ta);
             if (ta.getTaskId().equals(assigned)) {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("이미 배정된 담당자입니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("이미 배정된 담당자입니다.").taskRemoved(false).build());
             }
 
             Integer LIMIT_ASSIGN = 6;
             // 담당자가 6명 미만인지 확인한다.
             Integer cntAssignee = taskRepository.cntAssigneeByTaskId(ta.getTaskId());
             if (LIMIT_ASSIGN.equals(cntAssignee)) {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자는 6명을 초과할 수 없습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자는 6명을 초과할 수 없습니다.").taskRemoved(false).build());
             }
 
             List<TaskAssignment> taList = new ArrayList<>();
@@ -207,7 +206,7 @@ public class TaskService {
 
             return ResponseEntity.ok("");
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
 
@@ -229,10 +228,10 @@ public class TaskService {
                 taskRepository.log(th);
                 return ResponseEntity.ok("");
             }
-            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 완료되지 않았습니다.").removed(false).build());
+            return ResponseEntity.badRequest().body(ErrorResponse.builder().message("담당자 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
         }
 
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
     /**
@@ -259,23 +258,29 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> attachFile(TaskDetailRequest tdr) {
-        LocalDateTime nowWithNano = LocalDateTime.now();
-        int nanoSec = nowWithNano.getNano();
-        LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(tdr.getTaskId());
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            LocalDateTime nowWithNano = LocalDateTime.now();
+            int nanoSec = nowWithNano.getNano();
+            LocalDateTime createdAt = nowWithNano.minusNanos(nanoSec);
 
-        ResponseEntity<?> result = null;
-        try {
-            List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
-            int fileAttachResult = taskRepository.attachFile(taskFiles);
+            ResponseEntity<?> result = null;
+            try {
+                List<TaskFile> taskFiles = fileStore.storeFile(tdr.getTaskFiles(), tdr.getProjectId(), tdr.getTaskId(), tdr.getAuthorMid(), createdAt);
+                int fileAttachResult = taskRepository.attachFile(taskFiles);
 //            log.info("파일 저장 후, dto에 fileId 담겼나요?: {}", taskFiles);
-            if(fileAttachResult == 1) {
-                result = ResponseEntity.ok().body(taskFiles);
+                if(fileAttachResult == 1) {
+                    result = ResponseEntity.ok().body(taskFiles);
+                }
+            } catch (IOException e) {
+                log.info("파일 저장 에러: {}", e.getMessage());
+                result = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 저장이 완료되지 않았습니다.").taskRemoved(false).build());
             }
-        } catch (IOException e) {
-            log.info("파일 저장 에러: {}", e.getMessage());
-            result = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 저장이 완료되지 않았습니다.").removed(false).build());
+            return result;
         }
-        return result;
+
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
     /**
@@ -287,32 +292,41 @@ public class TaskService {
     @Transactional
     public ResponseEntity<?> delFile(Long fileId) {
 
-        ResponseEntity<?> response;
-        // 실제 파일 삭제 후
-        TaskFile file = taskRepository.findFileById(fileId);
-        String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
-        File delFile = new File(path);
-        Boolean deleted = false;
-        if(delFile.exists()){
-             deleted = delFile.delete();
-        } else {
-            response = ResponseEntity.badRequest().body("존재하지 않는 파일입니다.");
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Long taskId = taskRepository.findTaskIdByFileId(fileId);
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            ResponseEntity<?> response;
+
+            // 실제 파일 삭제 후
+            TaskFile file = taskRepository.findFileById(fileId);
+            String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
+            File delFile = new File(path);
+            Boolean deleted = false;
+            if(delFile.exists()){
+                deleted = delFile.delete();
+            } else {
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
+            }
+
+            // DB 기록 삭제
+            int dbResult = 0;
+
+            if(deleted){
+                dbResult = taskRepository.delFile(fileId);
+            }
+
+            if(!deleted || dbResult != 1) {
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
+            }
+
+            response = new ResponseEntity<>(HttpStatus.OK);
+
+            return response;
         }
 
-        // DB 기록 삭제
-        int dbResult = 0;
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
 
-        if(deleted){
-            dbResult = taskRepository.delFile(fileId);
-        }
-
-        if(!deleted || dbResult != 1) {
-            response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
-        }
-
-        response = new ResponseEntity<>(HttpStatus.OK);
-
-        return response;
     }
 
     /**
@@ -323,29 +337,36 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> deleteFileByAdmin(TaskFile deleteItem){
-        ResponseEntity<?> response;
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Long taskId = taskRepository.findTaskIdByFileId(deleteItem.getId());
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            ResponseEntity<?> response;
 
-        // 실제 파일 삭제 후
-        TaskFile file = taskRepository.findFileById(deleteItem.getId());
-        String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
-        File delFile = new File(path);
-        Boolean deleted = false;
-        if(delFile.exists()){
-            deleted = delFile.delete();
-        } else {
-            response = ResponseEntity.badRequest().body("존재하지 않는 파일입니다.");
+            // 실제 파일 삭제 후
+            TaskFile file = taskRepository.findFileById(deleteItem.getId());
+            String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
+            File delFile = new File(path);
+            Boolean deleted = false;
+            if(delFile.exists()){
+                deleted = delFile.delete();
+            } else {
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
+            }
+
+            // DB 기록 수정
+            int result = 0;
+            if(deleted) result = taskRepository.deleteFileByAdmin(deleteItem);
+
+            if(!deleted || result != 1){
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
+            }
+            response = new ResponseEntity<>(HttpStatus.OK);
+
+            return response;
         }
 
-        // DB 기록 수정
-        int result = 0;
-        if(deleted) result = taskRepository.deleteFileByAdmin(deleteItem);
-        
-        if(!deleted || result != 1){
-            response = ResponseEntity.badRequest().body("파일 삭제가 완료되지 않았습니다.");
-        }
-        response = new ResponseEntity<>(HttpStatus.OK);
-
-        return response;
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
 
@@ -366,7 +387,7 @@ public class TaskService {
             log.info("등록 전 taskCommentId는 null:{}", taskComment);
             int result = taskRepository.addComment(taskComment);
             if(result != 1) {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("소통하기 글 내용이 등록되지 않았습니다.").removed(true).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("소통하기 글 내용이 등록되지 않았습니다.").taskRemoved(true).build());
             }
             return ResponseEntity.ok(taskComment.getId());
         }
@@ -410,7 +431,7 @@ public class TaskService {
 
         } */
 
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
     /**
@@ -473,15 +494,15 @@ public class TaskService {
             TaskComment chkExists = taskRepository.findCommentById(editComment.getId());
             ResponseEntity<?> response = ResponseEntity.ok("");
             if(chkExists == null) {
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 글이 존재하지 않습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 글이 존재하지 않습니다.").taskRemoved(false).build());
             }
             Integer result = taskRepository.editTaskComment(editComment);
             if(result != 1) {
-                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("글 수정이 완료되지 않았습니다.").removed(false).build());
+                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("글 수정이 완료되지 않았습니다.").taskRemoved(false).build());
             }
             return response;
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
     /**
@@ -497,11 +518,11 @@ public class TaskService {
         if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
             Integer result = taskRepository.delComment(commentId);
             if(result != 1){
-                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 소통글이 존재하지 않습니다.").removed(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 소통글이 존재하지 않습니다.").taskRemoved(false).build());
             }
             return ResponseEntity.ok("");
         }
-        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").removed(true).build());
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
 
@@ -513,16 +534,22 @@ public class TaskService {
      * */
     @Transactional
     public ResponseEntity<?> blockTaskComment(TaskDetailRequest blockComment){
-        TaskComment chkExists = taskRepository.findCommentById(blockComment.getCommentId());
+        Long taskId = taskRepository.findTaskIdByCommentId(blockComment.getCommentId());
+        // 해당 task가 휴지통으로 이동되었는지 먼저 확인한다.
+        Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
+        if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
+            TaskComment chkExists = taskRepository.findCommentById(blockComment.getCommentId());
 
-        if(chkExists == null) {
-            return ResponseEntity.badRequest().body("해당 글이 존재하지 않습니다.");
+            if(chkExists == null) {
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 글이 존재하지 않습니다.").taskRemoved(false).build());
+            }
+            Integer result = taskRepository.blockComment(blockComment);
+            if(result != 1) {
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("글 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
+            }
+            return ResponseEntity.ok("");
         }
-        Integer result = taskRepository.blockComment(blockComment);
-        if(result != 1) {
-            return ResponseEntity.badRequest().body("글 삭제가 완료되지 않았습니다.");
-        }
-        return ResponseEntity.ok("글 삭제가 완료되었습니다.");
+        return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
     }
 
 
@@ -544,42 +571,36 @@ public class TaskService {
      * explain : 할 일 삭제/복원(update deletedAt, deletedBy)
      * */
     @Transactional
-    public ResponseEntity<String> moveToBin(BinRequest binRequest) {
-
-        ResponseEntity<String> response = ResponseEntity.ok("할 일 삭제가 완료되었습니다.");
+    public void moveToBin(BinRequest binRequest) {
 
         // remove(프로젝트 → 휴지통): 한 개의 projectId, n개의 taskIds(List<Long>)
-        // 1. history남긴다.
         for(int i = 0; i < binRequest.getTaskIds().size(); i++){
-            TaskHistory th = TaskHistory.builder()
-                    .projectId(binRequest.getProjectId())
-                    .taskId(binRequest.getTaskIds().get(i))
-                    .modItem("할 일")
-                    .modType("삭제") // 변경
-                    .modContent("프로젝트에서") // 프로젝트에서 휴지통으로 이동
-                    .updatedAt(binRequest.getDeletedAt())
-                    .updatedBy(binRequest.getDeletedBy())
-                    .build();
-            Long result = taskRepository.log(th);
-            if(result != 1) {
-                response = ResponseEntity.internalServerError().body("삭제 기록이 완료되지 않았습니다.");
-            }
-        }
-        // 2. ontrack_task 컬럼 상태 update
-        for(int i = 0; i < binRequest.getTaskIds().size(); i++){
-            OnTrackTask task = OnTrackTask.builder()
-                    .id(binRequest.getTaskIds().get(i))
-                    .deletedAt(binRequest.getDeletedAt())
-                    .deletedBy(binRequest.getDeletedBy())
-                    .build();
-            Long result = taskRepository.taskSwitchBin(task);
-            if(result != 1) {
-                response = ResponseEntity.internalServerError().body("삭제가 완료되지 않았습니다.");
-            }
-        }
 
-        return response;
-        
+            // 이미 삭제된 할 일인지 확인한다.
+            Optional<OnTrackTask> chk = taskRepository.findByTaskId(binRequest.getTaskIds().get(i));
+            if(chk.isPresent() && chk.get().getDeletedBy() == null) {
+
+                // ontrack_task 컬럼 상태 update
+                OnTrackTask task = OnTrackTask.builder()
+                        .id(binRequest.getTaskIds().get(i))
+                        .deletedAt(binRequest.getDeletedAt())
+                        .deletedBy(binRequest.getDeletedBy())
+                        .build();
+                taskRepository.taskSwitchBin(task);
+
+                // history남긴다.
+                TaskHistory th = TaskHistory.builder()
+                        .projectId(binRequest.getProjectId())
+                        .taskId(binRequest.getTaskIds().get(i))
+                        .modItem("할 일")
+                        .modType("삭제") // 변경
+                        .modContent("프로젝트에서") // 프로젝트에서 휴지통으로 이동
+                        .updatedAt(binRequest.getDeletedAt())
+                        .updatedBy(binRequest.getDeletedBy())
+                        .build();
+                taskRepository.log(th);
+            }
+        }
     }
 
     /**
