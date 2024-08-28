@@ -302,7 +302,7 @@ public class TaskService {
             String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
             File delFile = new File(path);
 
-            Boolean deleted = false;
+            Boolean deleted;
 
             if(delFile.exists()){
                 deleted = delFile.delete();

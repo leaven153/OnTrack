@@ -163,9 +163,6 @@ public class ProjectController {
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("attributes")); // 잡았다! 근데 어떻게 접근하지?: null
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
         } else if (inputFlashMap != null && (boolean)inputFlashMap.get("taskRemoved")){
-
-            log.info("삭제된 할 일의 상세 모달을 열려고 했을 때(taskRemoved): {}", (boolean)inputFlashMap.get("taskRemoved"));
-
             model.addAttribute("taskRemoved", true);
         }
         // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)

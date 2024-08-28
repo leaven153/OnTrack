@@ -101,7 +101,7 @@ public class TaskController {
         // task가 어떻게 받아와지는가: Optional[OnTrackTask(id=null, projectId=9, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14)]
 
         Boolean detailHide = false;
-        log.info("삭제된 할 일의 상세모달 오픈 요청을 했을 때(task의 getDeletedBy): {}", task.get().getDeletedBy());
+
         if(task.isPresent() && task.get().getDeletedBy() != null){
             detailHide = true;
             redirectAttributes.addFlashAttribute("taskRemoved", true);
@@ -127,7 +127,7 @@ public class TaskController {
      * explain : 할 일 상세: 소통하기 글 등록·수정
      * */
     @PostMapping(value = "/comment")
-    public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) throws ParseException {
+    public ResponseEntity<?> taskComment(@RequestParam String type, @RequestBody TaskDetailRequest taskDetailRequest) { // throws ParseException
         log.info("**************comment controller enter :) ***************");
 //        log.info("task id: {}", taskId); // @PathVariable Long taskId,
         log.info("등록이요 수정이요: {}", type);
