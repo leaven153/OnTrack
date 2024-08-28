@@ -73,7 +73,7 @@
         <div class="컬럼명 my-bin-col-names flex-row-justify-start-align-center ">
           <div class="content-chkbox"><input type="checkbox" data-id="binChkAll"></div>
           <div class=""><span class="">삭제일시</span></div>
-          <div class=""><span class="">이름</span></div>
+          <div class=""><span class="">프로젝트명</span></div>
           <div class=""></div>
           <div class=""><span class="">삭제한 사람</span></div>
           <div class="flex-row-justify-start-align-center">
@@ -116,7 +116,8 @@
         <div class="컬럼명 my-bin-col-names flex-row-justify-start-align-center">
           <div class="content-chkbox"><input type="checkbox" data-id="binChkAll"></div>
           <div class=""><span class="">삭제일시</span></div>
-          <div class=""><span class="">이름</span></div>
+          <div class=""><span class="">할 일 명</span></div>
+          <div class=""><span>작성자</span></div>
           <div class=""><span class="">프로젝트명</span></div>
           <div class=""><span class="">삭제한 사람</span></div>
           <div class="flex-row-justify-start-align-center">
@@ -128,8 +129,9 @@
             <div class="각row my-bin-col flex-row-justify-start-align-center">
               <div class="content-chkbox"><input type="checkbox" name="" data-input-type="binChkbox"></div>
               <div class="삭제일시"><span class="altivo-regular" th:text="${#temporals.format(task.getDeletedAt(), 'yy.MM.dd HH:mm')}">24.04.17 21:07</span></div>
-              <div class="이름 textL "><span class="pd-l5" th:text="${task.getTaskTitle()}">정말로 이 번엔 마지막일 거야</span></div>
-              <div class="위치"><span class="" th:text="${task.getProjectName()}">Like I do</span></div>
+              <div class="할일명 textL "><span class="pd-l5" th:text="${task.getTaskTitle()}">정말로 이 번엔 마지막일 거야</span></div>
+              <div class="작성자"><span class="" th:text="${task.getAuthorName()}">리치리치</span></div>
+              <div class="프로젝트명"><span class="" th:text="${task.getProjectName()}">Like I do</span></div>
               <div class="삭제한사람"><span class="" th:text="${task.getDeleterName()}">크리스티나 아길레라</span></div>
               <div class="flex-row-justify-start-align-center btn-bin-disposal">
                 <img src="../../static/imgs/icon_3dot(h).png" th:src="@{/imgs/icon_3dot(h).png}" alt="" class="img-20">

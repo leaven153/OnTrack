@@ -108,12 +108,12 @@ public class ProjectController {
 
 
         // 5. 할 일 상세 모달의 hide 여부
-        Boolean detailOpen = true; // 'hide'에 대한 true/false
+        Boolean detailHide = true; // 'hide'에 대한 true/false
         TaskDetailResponse taskDetail = TaskDetailResponse.builder().build();
         // Task Controller에서 redirect 경우 ↓
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-        if(inputFlashMap != null){
-            detailOpen = (Boolean) inputFlashMap.get("hide");
+        if(inputFlashMap != null && !(boolean)inputFlashMap.get("hide")){
+            detailHide = (Boolean) inputFlashMap.get("hide");
 
             for(int i = 0; i < project.getTaskList().size(); i++) {
                 if(project.getTaskList().get(i).getId().equals(inputFlashMap.get("taskId"))) {
@@ -154,7 +154,6 @@ public class ProjectController {
 
                 }
             }
-
             taskDetail.setTab((String) inputFlashMap.get("tab"));
 //            log.info("task detail이 생성되었는지 확인: {}", taskDetail);
             // task detail이 생성되었는지 확인: TaskAndAssignee(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
@@ -163,6 +162,11 @@ public class ProjectController {
             // flashMap으로 잡은 flash attribute: FlashMap [attributes={hide=false}, targetRequestPath=/project/9, targetRequestParams={}]
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("attributes")); // 잡았다! 근데 어떻게 접근하지?: null
 //            log.info("잡았다! 근데 어떻게 접근하지?: {}", inputFlashMap.get("hide")); // 잡았다! 근데 어떻게 접근하지?: false
+        } else if (inputFlashMap != null && (boolean)inputFlashMap.get("taskRemoved")){
+
+            log.info("삭제된 할 일의 상세 모달을 열려고 했을 때(taskRemoved): {}", (boolean)inputFlashMap.get("taskRemoved"));
+
+            model.addAttribute("taskRemoved", true);
         }
         // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)
 
@@ -176,8 +180,8 @@ public class ProjectController {
 //        model.addAttribute("taskCommentForm", taskCommentForm);
 
 
-        log.info("할 일 상세에 대한 hide(detail): {}", detailOpen);
-        model.addAttribute("hide", detailOpen);
+        log.info("할 일 상세에 대한 hide(detail): {}", detailHide);
+        model.addAttribute("hide", detailHide);
 //        URI projectLocation = URI.create("project/project");
 
         // null일 경우, table view로 처리한다.

@@ -209,12 +209,13 @@
     </select>
 
     <select id="getBin" parameterType="Long" resultType="BinResponse">
-        SELECT t.id as taskId, t.project_id, t.task_title, t.author_mid, t.deletedAt, t.deletedBy
+        SELECT t.id as taskId, t.project_id, t.task_title, t.author_name, t.author_mid, t.deletedAt, t.deletedBy
         FROM ontrack_task t
         INNER JOIN (SELECT id FROM ontrack_task WHERE deletedAt > date_sub(curdate(), interval 7 day)) tt
         ON t.id = tt.id
         WHERE t.author_mid = #{memberId}
         OR t.id in (SELECT task_id FROM task_assignment WHERE member_id = #{memberId})
+        OR t.deletedBy = #{memberId}
     </select>
 
     <select id="existsMyTaskInBin" parameterType="Long" resultType="OnTrackTask">
@@ -226,6 +227,7 @@
         ON t.id = tt.id
         WHERE ta.member_id in (select id from project_member where user_id = #{userId})
         OR t.author_mid in (select id from project_member where user_id = #{userId})
+        OR t.deletedBy in (select id from project_member where user_id = #{userId})
         AND t.deletedAt IS NOT NULL;
     </select>
 

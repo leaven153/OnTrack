@@ -16,6 +16,7 @@ public class BinResponse {
     private Long taskId;
     private Long memberId;
     private String taskTitle;
+    private String authorName;
     private Long deletedBy;
     private String deleterName; // remove를 진행한 사람
     private LocalDateTime deletedAt;

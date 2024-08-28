@@ -3752,6 +3752,7 @@ div.btn-comment-edit-del .popupYN {
     font-family: 'NanumSquareNeo-Bold', sans-serif;
 }
 
+/******** Modal: 미첨부된 파일 사유 안내 (경고창) ********/
 .alert-not-attach-container {
     width: 600px;
     height: 200px;
@@ -3817,6 +3818,31 @@ span.alert-not-attach-col {
 }
 .alert-not-attach-btn-box {
     text-align: center;
+}
+
+/******** Modal: 이미 삭제된 할 일 상세 클릭했을 때(경고창)  ********/
+.alert-task-removed {
+    width: 300px;
+    /*height: 80px;*/
+    text-align: center;
+    padding: 30px 0 20px 0;
+    background-color: #fff5ec;
+    border: 3px solid #411c02;
+    border-radius: 12px;
+    z-index: 4;
+    position: fixed;
+    top: 14%;
+    right: 44%;
+}
+
+.btn-alert-task-removed {
+    font-size: 18px;
+    font-family: 'NanumSquareNeo-Bold', sans-serif;
+    padding: 5px 11px;
+    border-radius: 3px;
+    margin-top: 18px;
+    background-color: #411c02;
+    color: #fff5ec;
 }
 /************************************/
 /************ 12. MyPage - My Tasks ***********/
@@ -4060,11 +4086,7 @@ img.bin-category-title {
     flex-shrink: 0;
     padding: 0 10px 0 0;
 }
-/*.my-bin-col-names > div:nth-child(3),*/
-/*.my-bin-col > div:nth-child(3) {*/
-/*    flex-basis: 70px;*/
-/*    flex-shrink: 0;*/
-/*}*/
+
 
 .my-bin-col-names > div:nth-child(3),
 .my-bin-col > div:nth-child(3) {
@@ -4076,8 +4098,16 @@ img.bin-category-title {
     overflow: hidden;
     white-space: nowrap;
 }
+
 .my-bin-col-names > div:nth-child(4),
 .my-bin-col > div:nth-child(4) {
+    flex-basis: 120px;
+    flex-shrink: 0;
+}
+
+
+.my-bin-col-names > div:nth-child(5),
+.my-bin-col > div:nth-child(5) {
     flex-basis: 250px;
     flex-shrink: 0;
     margin: 0 20px;
@@ -4086,15 +4116,15 @@ img.bin-category-title {
     white-space: nowrap;
 }
 
-.my-bin-col-names > div:nth-child(5),
-.my-bin-col > div:nth-child(5) {
+.my-bin-col-names > div:nth-child(6),
+.my-bin-col > div:nth-child(6) {
     flex-basis: 150px;
     flex-shrink: 0;
     margin: 0 20px 0 10px;
 }
 
-.my-bin-col-names > div:nth-child(6),
-.my-bin-col > div:nth-child(6) {
+.my-bin-col-names > div:nth-child(7),
+.my-bin-col > div:nth-child(7) {
     flex-basis: 20px;
     flex-shrink: 0;
     margin: 0 0 0 20px;

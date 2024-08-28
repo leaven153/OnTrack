@@ -1,10 +1,19 @@
 import * as commentWs from './wsComment.mjs'
 import * as binWs from './wsBin.mjs'
+import * as fnc from './fnc.mjs'
 
 window.onload = function(){
     console.log(`nav.mjs`);
     commentWs.connectCommentWs();
     binWs.connectBinWs();
+
+    // 웹소켓에 의해 출력된 tip의 '확인'버튼 클릭이벤트
+    if(fnc.elExists(document.querySelector("mark.btn-close-alarm"))){
+        document.querySelector("mark.btn-close-alarm").addEventListener("click", ()=>{
+            console.log(`확인 버튼 clicked`);
+            document.querySelector("span.alarm-bin").classList.add("img-hidden");
+        });
+    }
 
     // const navShowBtn = document.querySelector(".navBtn");
     // const navCloseBtn = document.querySelector(".closeBtn");

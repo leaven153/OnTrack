@@ -1505,7 +1505,7 @@ window.onload = function(){
     if(elExists(document.querySelector(".btn-edit-task-duedate"))){
         const btnEditTaskDueDate = document.querySelectorAll(".btn-edit-task-duedate");
         btnEditTaskDueDate.forEach(function(btn){
-            btn.addEventListener("click", (e)=>{
+            btn.addEventListener("click", ()=>{
                 // e.stopImmediatePropagation();
                 console.log(`btn click!`);
 
@@ -1730,13 +1730,20 @@ window.onload = function(){
         document.querySelector("#container-task-detail .modal-Right").classList.add("slide-side");
     }
 
+    /*---------- 067 ------------*/
+    /* 삭제된 할 일 상세 열려고 했을 때 출력된 경고창 닫기 */
+    if(elExists(document.querySelector(".btn-alert-task-removed"))){
+        document.querySelector(".btn-alert-task-removed").addEventListener("click", ()=>{
+            document.querySelector(".alert-task-removed").classList.add("hide");
+        });
+    }
     /*---------- 012 ------------*/
     /* 할 일 상세 모달 탭버튼 클릭*/
     if(elExists(document.querySelector(".btn-modal-task-tab"))){
         let modalTaskTabChosen;
         const btnTaskTabs = document.querySelectorAll(".btn-modal-task-tab");
         const modalTaskTabs = document.querySelectorAll(".modal-task-tab");
-        const modalTaskCommonArea = document.querySelector("#task-detail-common");
+        // const modalTaskCommonArea = document.querySelector("#task-detail-common");
 
         btnTaskTabs.forEach(function(chosenTab){
             chosenTab.addEventListener("click", ()=>{
@@ -2245,7 +2252,7 @@ window.onload = function(){
         // ver.1. 파일명 안에 특수기호는 +, _, -, .만 허용
         const regFileName = /[{}\[\]()\/?,'";:`~<>!@#$%^&*=|\s]/g;
         // ver.2. 윈도우가 허하지 않는 특수기호만 잡는 표현식 (\ / : * ? < > | 9개)
-        const regWinFileName = /[\\/:*?"<>|]/g;
+        // const regWinFileName = /[\\/:*?"<>|]/g;
         const regFileType = /(ade|adp|apk|appx|appxbundle|aspx|bat|bin|cab|cmd|com|cpl|dll|dmg|exe|gadget|hta|inf1|ins|ipa|iso|isp|isu|jar|js|jse|jsp|jsx|lib|lnk|mde|msc|msi|msix|msixbundle|msp|mst|nsh|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|sys|tar|u3p|vb|vbe|vbs|vbscript|vxd|ws|wsc|wsf|wsh)$/i;
 
         const filename = fullfilename.substring(0, fullfilename.lastIndexOf("."));
@@ -2437,7 +2444,7 @@ window.onload = function(){
     if(elExists(document.querySelector("#btn-submit-comment"))) {
 
         const btnSubmitComment = document.querySelector("#btn-submit-comment");
-
+        let commentType = "normal";
         // 모두 확인 요청 시 요소 변화 + task-comment-type: Required Reading
         // 모두 확인 요청 (radio)버튼 클릭 시 css 변경
 
@@ -2446,7 +2453,7 @@ window.onload = function(){
         const commentNoticeBtn = document.querySelector("#task-comment-notice");
 
 
-        let commentType = "normal";
+
         commentNoticeBtn.addEventListener("change", ()=>{
             if(commentNoticeBtn.checked){
                 commentWriteBox.classList.add("task-comment-write-notice");
@@ -2804,7 +2811,7 @@ window.onload = function(){
 
         // 수정한 내용 등록
         btnSubmitEdit.addEventListener("click", ()=>{
-            const datum = btnSubmitEdit.dataset;
+            // const datum = btnSubmitEdit.dataset;
             const date = new Date();
             // 서버에 보낼 정보
             const taskDetailRequest = {
@@ -3153,10 +3160,10 @@ window.onload = function(){
                 const result = validateFile(files[i].name, parseInt(files[i].size));
                 if(result === 'okay'){
                     createTasknofile.classList.remove("hide");
-                    const name = files[i].name.substring(0, files[i].name.lastIndexOf("."));
-                    const type = files[i].name.substring(files[i].name.lastIndexOf(".")+1);
+                    // const type = files[i].name.substring(files[i].name.lastIndexOf(".")+1);
                     fileData.append("files", files[i]);
                 } else {
+                    const name = files[i].name.substring(0, files[i].name.lastIndexOf("."));
                     invalidFile.set(name, result);
                 }
             }

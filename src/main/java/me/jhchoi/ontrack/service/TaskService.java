@@ -296,17 +296,18 @@ public class TaskService {
         Long taskId = taskRepository.findTaskIdByFileId(fileId);
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
         if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
-            ResponseEntity<?> response;
 
             // 실제 파일 삭제 후
             TaskFile file = taskRepository.findFileById(fileId);
             String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
             File delFile = new File(path);
+
             Boolean deleted = false;
+
             if(delFile.exists()){
                 deleted = delFile.delete();
             } else {
-                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
             }
 
             // DB 기록 삭제
@@ -317,12 +318,10 @@ public class TaskService {
             }
 
             if(!deleted || dbResult != 1) {
-                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
             }
 
-            response = new ResponseEntity<>(HttpStatus.OK);
-
-            return response;
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());
@@ -341,7 +340,7 @@ public class TaskService {
         Long taskId = taskRepository.findTaskIdByFileId(deleteItem.getId());
         Optional<OnTrackTask> taskExist = taskRepository.findByTaskId(taskId);
         if(taskExist.isPresent() && taskExist.get().getDeletedBy() == null){
-            ResponseEntity<?> response;
+
 
             // 실제 파일 삭제 후
             TaskFile file = taskRepository.findFileById(deleteItem.getId());
@@ -351,7 +350,7 @@ public class TaskService {
             if(delFile.exists()){
                 deleted = delFile.delete();
             } else {
-                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
             }
 
             // DB 기록 수정
@@ -359,11 +358,10 @@ public class TaskService {
             if(deleted) result = taskRepository.deleteFileByAdmin(deleteItem);
 
             if(!deleted || result != 1){
-                response = ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
+                return ResponseEntity.badRequest().body(ErrorResponse.builder().message("파일 삭제가 완료되지 않았습니다.").taskRemoved(false).build());
             }
-            response = new ResponseEntity<>(HttpStatus.OK);
 
-            return response;
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());

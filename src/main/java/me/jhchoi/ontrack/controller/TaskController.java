@@ -100,9 +100,13 @@ public class TaskController {
         log.info("어떤 탭을 보여줘야 하는가: {}", tab);
         // task가 어떻게 받아와지는가: Optional[OnTrackTask(id=null, projectId=9, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14)]
 
-        // 휴지통으로 옮겨졌더라도, 시간 차에 의해 다른 멤버에 의해 상세 내역 조회 요청이 왔을 경우 출력은 한다.
-        // 단, 쓰기는 안되도록 한다.
-        redirectAttributes.addFlashAttribute("hide", false);
+        Boolean detailHide = false;
+        log.info("삭제된 할 일의 상세모달 오픈 요청을 했을 때(task의 getDeletedBy): {}", task.get().getDeletedBy());
+        if(task.isPresent() && task.get().getDeletedBy() != null){
+            detailHide = true;
+            redirectAttributes.addFlashAttribute("taskRemoved", true);
+        }
+        redirectAttributes.addFlashAttribute("hide", detailHide);
         redirectAttributes.addFlashAttribute("taskId", taskId);
         redirectAttributes.addFlashAttribute("tab", tab);
 
@@ -428,6 +432,7 @@ public class TaskController {
         LocalDateTime nowWithNano = LocalDateTime.now();
         int nanosec = nowWithNano.getNano();
         taskBinRequest.setDeletedAt(nowWithNano.minusNanos(nanosec));
+        taskService.moveToBin(taskBinRequest);
         return ResponseEntity.ok().build();
     }
 

@@ -91,9 +91,9 @@ function connectBinWs() {
             });
         }
 
-        setTimeout(function(){
-            document.querySelector("span.alarm-bin").classList.add("img-hidden");
-        }, 4000);
+        // setTimeout(function(){
+        //     document.querySelector("span.alarm-bin").classList.add("img-hidden");
+        // }, 5000);
     }
 
     sock.close = function(){
