@@ -191,7 +191,12 @@ public class ProjectController {
 
 //        return ResponseEntity.created(projectLocation).build();
         return "project/project"; // url - http://localhost:8080/project/9
+    } // getProject ends
+
+    @PostMapping("/notice")
+    public void writeNotice(){
+
     }
 
 
-}
+} // ProjectController ends

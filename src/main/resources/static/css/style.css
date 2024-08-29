@@ -452,6 +452,8 @@ div.btn-open-settings {
 }
 
 .tab {
+    position: fixed;
+    top: 80px;
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
@@ -545,25 +547,30 @@ button.notice-chk {
 /******** table: task list ********/
 
 .tableview-colName{
-    position: sticky;
-    top: 128px;
+    /*position: sticky;*/
+    position: fixed;
+    top: 127px;
     height: 19px;
     font-size: 12px;
     background-color: #ffffff;
     z-index: 3;
 }
 
-.tableview-notice {
-    position: sticky;
-    top: 145px;
-    background-color: #ffffff;
-    z-index: 1;
-}
-
-.tableview-taskrow,
-.tableview-notice {    
+.tableview-notice-container {
+    position: fixed;
     margin-left: 98px;
     width: 90%;
+    display: flex;
+    flex-direction: column;
+    top: 148px;
+    /*min-height: 42px;*/
+    /*max-height: 126px;*/
+    /*background-color: #ffffff;*/
+}
+
+.tableview-notice {
+    top: 145px;
+    width: 100%;
     padding: 3px 0;
     display: flex;
     flex-direction: row;
@@ -571,6 +578,29 @@ button.notice-chk {
     justify-content: flex-start;
     align-items: center;
 }
+
+.tableview-taskrow-container {
+    position: fixed;
+    top: 272px;
+    width: 90%;
+    height: 90%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin-left: 98px;
+}
+
+.tableview-taskrow {
+    padding: 3px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 
 .tableview-column {
     text-align: center;
@@ -821,38 +851,44 @@ img.btn-create-child-task:hover ~ .hover-tip-child {
 
 /* 할 일 명 */
 .tableview-column:nth-child(3) {
-    flex-basis: 38%;
+    width: 584px;
+    /*flex-basis: 38%;*/
     flex-shrink: 0;
 }
 
 /* 담당자 */
 .tableview-column:nth-child(4) {
-    flex-basis: 15%;
+    /*flex-basis: 15%;*/
+    width: 230px;
     flex-shrink: 0;
 }
 
 /* 진행상태 */
 .tableview-column:nth-child(5) {
-    flex-basis: 10%;
+    /*flex-basis: 10%;*/
     min-width: 105px;
+    max-width: 154px;
     flex-shrink: 0;
 }
 
 /* 마감일 */
 .tableview-column:nth-child(6){
-    flex-basis: 12%;
+    /*flex-basis: 12%;*/
+    width: 184px;
     flex-shrink: 0;
 }
 
 /* 파일 */
 .tableview-column:nth-child(7) {
-    flex-basis: 9%;
+    width: 138px;
+    /*flex-basis: 9%;*/
     flex-shrink: 0;
 }
 
 /* 작성자 */
 .tableview-column:nth-child(8){
-    flex-basis: 10%;
+    width: 153px;
+    /*flex-basis: 10%;*/
     flex-shrink: 0;
 }
 
@@ -3833,6 +3869,7 @@ span.alert-not-attach-col {
     position: fixed;
     top: 14%;
     right: 44%;
+    box-shadow: 2px 2px 5px #d1c9bb44;
 }
 
 .btn-alert-task-removed {

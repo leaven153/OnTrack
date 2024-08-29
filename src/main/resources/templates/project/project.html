@@ -6,8 +6,8 @@
   <meta name="Keywords" content="project">
   <meta name="Description" content="project task list">
 
-  <title th:text="${project.getProject().projectName}">MMOM - Project</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <title th:text="${project.getProject().projectName}">OnTrack - Project</title>
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:src="@{/imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
@@ -26,16 +26,16 @@
 <div class="상단고정래퍼 project-fixed-top flex-col-start-nowrap">
   <div class="wrapper flex-row-end-center-nowrap">
     <div class="nickname flex-row-justify-start-align-center">
-      <img src="/imgs/pen.png" alt="" class="img-15 mr-5 btn-project-nickname">
+      <img src="../../static/imgs/pen.png" th:src="@{/imgs/pen.png}" alt="" class="img-15 mr-5 btn-project-nickname">
       <span class="font-18 bold nickname" th:text="${project.nickname}">제임스 서버</span>
     </div>
-    <img src="/imgs/icon_leave.png" alt="" class="btn-project-out">
+    <img src="../../static/imgs/icon_leave.png" th:src="@{/imgs/icon_leave.png}" alt="" class="btn-project-out">
   </div><!--/* nickname 끝 */-->
   <div class="proj-title wrapper">
     <h1 th:text="${project.getProject().projectName}">올리 초이의 길</h1>
     <button type="button" class="btn-dDay altivo-bold">D-365</button>
     <div class="btn-open-settings flex-row-justify-start-align-center" data-id="projId01">
-      <img src="/imgs/icon_blur_settings.png" alt="project settings" class="img-40">
+      <img src="../../static/imgs/icon_blur_settings.png" th:src="@{/imgs/icon_blur_settings.png}" alt="project settings" class="img-40">
       <!--/* ↓ 프로젝트 설정 버튼 클릭시 나타나는 창 */-->
       <div class="click-proj-setting flex-col-start-nowrap img-hidden">
         <p class="flex-row-justify-start-align-center mb-5 btn-write-notice">
@@ -52,9 +52,9 @@
   <!--/* Begin tab */-->
   <div class="tab wrapper bottom-line">
     <div class="view-box">
-      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=table|}'|" id="btn-table-view" data-view="table-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'table' or view == null}?'btn-view-choosen'"><img src="/imgs/icon_table.png" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
-      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=status|}'|" id="btn-status-view" data-view="status-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'status'}?'btn-view-choosen'"><img src="/imgs/icon_blur_status.png" alt="status" class="img-19 vertical-ctrl015"><span class="saffran-regular">Status</span></button>
-      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=assignee|}'|" id="btn-assignee-view" data-view="assignee-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'assignee'}?'btn-view-choosen'"><img src="/imgs/icon_blur_assignee.png" alt="assignee" class="img-2418 "><span class="saffran-regular">Assignee</span></button>
+      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=table|}'|" id="btn-table-view" data-view="table-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'table' or view == null}?'btn-view-choosen'"><img src="../../static/imgs/icon_table.png" th:src="@{/imgs/icon_table.png}" alt="list" class="img-19 vertical-ctrl015"><span class="saffran-regular">List</span></button>
+      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=status|}'|" id="btn-status-view" data-view="status-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'status'}?'btn-view-choosen'"><img src="../../static/imgs/icon_blur_status.png" th:src="@{/imgs/icon_blur_status.png}" alt="status" class="img-19 vertical-ctrl015"><span class="saffran-regular">Status</span></button>
+      <button type="button" th:onclick="|location.href='@{|/project/${project.getProject().getId()}?view=assignee|}'|" id="btn-assignee-view" data-view="assignee-view" class="btn-view flex-row-justify-start-align-center" th:classappend="${view == 'assignee'}?'btn-view-choosen'"><img src="../../static/imgs/icon_blur_assignee.png" th:src="@{/imgs/icon_blur_assignee.png}" alt="assignee" class="img-2418 "><span class="saffran-regular">Assignee</span></button>
       <button type="button" class="btn-delete-task hide" th:if="${project.position == 'creator' or project.position == 'admin'}" th:attr="data-executormid=${project.memberId}">삭제</button>
       <!--        <button type="button" class="hide">일괄변경</button> -->
     </div>
@@ -63,8 +63,8 @@
       <div class="task-search-box">
         <input type="text" id="" class="task-search-input altivo-light" placeholder="S E A R C H">
         <button type="button" class="btn-search-task" id="btn-search-task">
-          <img src="/imgs/icon_blur_search(r).png" alt="search" class="img-15 hide">
-          <img src="/imgs/icon_search.png" alt="search" class="img-20 vertical-ctrl01">
+          <img src="../../static/imgs/icon_blur_search(r).png" th:src="@{/imgs/icon_blur_search(r).png}" alt="search" class="img-15 hide">
+          <img src="../../static/imgs/icon_search.png" th:src="@{/imgs/icon_search.png}" alt="search" class="img-20 vertical-ctrl01">
         </button>
       </div>
       <button type="button" id="btn-add-task" class="btn-add-task">+  할 일 추가</button>
@@ -92,7 +92,7 @@
 <!-- 모달: 프로젝트 나가기 시작 -->
 <div id="modal-leave-project" class="modal-container hide">
   <div class="modal-center400 flex-col-start-center-nowrap">
-    <img src="/imgs/alert.png" alt="" class="mb-5">
+    <img src="../../static/imgs/alert.png" th:src="@{/imgs/alert.png}" alt="" class="mb-5">
     <div class="flex-row-justify-start-align-center mb-30">
       <span class="font-22 bold project-name-ellipsis mr-3" th:text="${project.getProject().projectName}">현재 프로젝트명</span>
       <span class="font-20 bold">에서 탈퇴하시겠습니까?</span>
@@ -133,150 +133,10 @@
 
 <!-- nav에 menu 중 계정설정은 모달로 제작하자.. -->
 
-<!-- 모달: 공지읽기 -->
-<!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
-<div id="modal-notice-read" class="modal-container hide">
-  <!-- 공지읽기 모달 시작 -->
-  <div class="modal-Right flex-col-between-nowrap">
-    <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 -->
-    <div class="">
-      <div class="닫기버튼div flex-row-end-center-nowrap">
-        <span class="font-24 cursorP btn-close-modal-notice-read">&times;</span>
-      </div> <!-- 상단 닫기 버튼(X) 끝 -->
-      <div class="공지제목 flex-row-justify-start-align-center modal-notice-title">
-        <img src="/imgs/icon_notice(pin)_s.png" alt="notice" class="ml-3">
-        <span class="modal-notice-title ml-7">하얗게 피어난 얼음꽃 하나가</span>
-      </div> <!-- 공지제목 끝 -->
-      <div class="작성자작성일시 flex-row-between-nowrap margin-a10">
-        <div class="작성자 ml-20">
-          <span class="font-15 c411 mr-5">작성자</span>
-          <span class="">크리스 에반스</span>
-        </div>
-        <div class="작성일시">
-          <span class="font-15 c411 mr-5">작성일</span>
-          <span class="altivo-regular">24.03.07</span>
-          <span class="mr-15">(목)</span>
-        </div>
-      </div><!-- 작성자, 작성일 끝 -->
-      <div class="공지내용 notice-content flex-col-between-nowrap">
-        <div class="pd-a20">
-            <pre class="">달가운 바람에 얼굴을 내밀었다고 아무 말 못하지 마시고 
-              궁금한 사항은 반드시 소통하기를 통해 문의해주시기 바랍니다.
-  
-              너와 나 언젠가 남이 되어도 영영 닿을 수 없는 사이 되어도 
-              잊어버리지마 날 잊어버리지마 혹시나 다른 사람의 손 잡고 있어도
-              언젠가는 기억해주길 한 번 쯤은 뒤돌아보길 부디 놓지 말아줘 
-              우릴 계속 바라봐 주길 
-              너와 나 언젠가 남이 되어도 영영 닿을 수 없는 사이 되어도 
-              잊어버리지마 날 잊어버리지마 혹시나 다른 사람의 손 잡고 있어도
-              언젠가는 기억해주길 한 번 쯤은 뒤돌아보길 부디 
-              놓지 말아줘 우릴 계속 바라봐 주길
-              너와 나 언젠가 남이 되어도 영영 닿을 수 없는 사이 되어도 
-              잊어버리지마 날 잊어버리지마 혹시나 다른 사람의 손 잡고 있어도
-              언젠가는 기억해주길 한 번 쯤은 뒤돌아보길 부디 놓지 말아줘 
-              우릴 계속 바라봐 주길
-            </pre>
-        </div>
-        <div class="flex-row-end-center-nowrap done-bg008 pd-t7 pd-r10">
-          <span class="mr-5">확인</span><span class="altivo-regular mr-20">5</span>
-          <span class="mr-5">미확인</span><span class="altivo-regular">3</span>
-        </div>
-      </div><!-- 공지 내용 끝 -->
+<!--/* 모달: 공지 읽기, 쓰기 */-->
+<th:blcok th:replace="~{fragments/modalNotice}"></th:blcok>
+<!--/**/-->
 
-      <!-- ml-24 mb-20 mr-15 -->
-      <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
-        <div class="font-15 c411 flex-row-center-center-nowrap">
-          <span class="item-file">첨부파일</span>
-        </div>
-        <div class="flex-col-start-nowrap modal-notice-files">
-          <span class="ml-5 vertical-ctrl01 no-file hide">첨부된 파일이 없습니다.</span>
-          <div class="flex-row-justify-start-align-center modal-notice-file-box">
-            <img src="/imgs/icon_download1716.png" alt="download" class="img-1716 mr-5 ml-3">
-            <span class="modal-file-name mr-10">document.pdf</span>
-            <span class="modal-file-size">194.0KB</span>
-          </div>
-          <div class="flex-row-justify-start-align-center modal-notice-file-box">
-            <img src="/imgs/icon_download1716.png" alt="download" class="img-1716 mr-5 ml-3">
-            <span class="modal-file-name mr-10">document.pdf</span>
-            <span class="modal-file-size">194.0KB</span>
-          </div>
-          <div class="flex-row-justify-start-align-center modal-notice-file-box">
-            <img src="/imgs/icon_download1716.png" alt="download" class="img-1716 mr-5 ml-3">
-            <span class="modal-file-name mr-10">document.pdf</span>
-            <span class="modal-file-size">194.0KB</span>
-          </div>
-          <div class="flex-row-justify-start-align-center modal-notice-file-box">
-            <img src="/imgs/icon_download1716.png" alt="download" class="img-1716 mr-5 ml-3">
-            <span class="modal-file-name mr-10">document.pdf</span>
-            <span class="modal-file-size">194.0KB</span>
-          </div>
-          <div class="flex-row-justify-start-align-center modal-notice-file-box">
-            <img src="/imgs/icon_download1716.png" alt="download" class="img-1716 mr-5 ml-3">
-            <span class="modal-file-name mr-10">document.pdf</span>
-            <span class="modal-file-size">194.0KB</span>
-          </div>
-        </div>
-      </div> <!-- 첨부파일 끝 -->
-    </div> <!-- 내부 1: 상단닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
-
-    <!-- 내부 2: 확인, 닫기 버튼 -->
-    <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
-      <button class="mr-15 btn-large-ok review font-white">확인</button>
-      <button class="btn-large btn-blur btn-close-modal-notice-read">닫기</button>
-    </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
-  </div> <!-- 공지읽기 모달 끝 -->
-</div> <!-- 모달 감싸는 컨테이너 끝 -->
-<!-- 모달: 공지읽기 끝 -->
-
-
-<!-- 모달: 공지쓰기 → 파일첨부 바꿀 것(할일추가의 파일첨부로!)-->
-<!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
-<div id="modal-notice-write" class="modal-container hide">
-  <!-- 공지쓰기 모달 시작 -->
-  <div class="modal-Right-noslide flex-col-between-nowrap modal-notice-write">
-    <form id="form-write-notice" action="#" method="POST" class="" enctype="multipart/form-data">
-      <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 -->
-      <div class="">
-        <input type="hidden" name="author" value="author01">
-        <!-- <input type="hidden" name="createdAt" value=""> -->
-        <div class="닫기버튼div flex-row-end-center-nowrap">
-          <span class="font-24 cursorP btn-close-modal-write-notice">&times;</span>
-        </div> <!-- 상단 닫기 버튼(X) 끝 -->
-        <div class="공지제목 flex-row-justify-start-align-center modal-notice-title">
-          <img src="/imgs/icon_notice(pin)_s.png" alt="notice" class="ml-3">
-          <input type="text" name="noticeTitle" placeholder="공지제목(20자이내)" maxlength="20" class="modal-notice-title">
-        </div> <!-- 공지제목 끝 -->
-
-        <div class="공지내용 notice-content modal-notice-write">
-          <textarea form="form-write-notice" name="noticeContent" class="" maxlength="500" placeholder="공지 내용(500자 이내)"></textarea>
-        </div><!-- 공지 내용 끝 -->
-
-        <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
-          <div class="ml-3 flex-row-justify-start-align-center">
-            <input type="file" id="notice-file" name="noticeFile" class="opacity0 wh0" multiple>
-            <label for="notice-file" class="flex-row-justify-start-align-center btn-attach">
-              <img src="/imgs/icon_upload1519.png" alt="upload" class="">
-              <span class="font-15 c411 ml-5">파일첨부</span>
-            </label>
-          </div>
-          <div class="flex-col-start-nowrap modal-notice-files">
-            <span id="create-notice-no-file" class="ml-5 vertical-ctrl032 no-file">첨부된 파일이 없습니다.</span>
-            <div id="modal-notice-write-file-box" class="업로드된개별파일 flex-col-start-nowrap modal-notice-write-file-box">
-            </div> <!-- 업로드된 개별 파일 끝 -->
-          </div>
-        </div> <!-- 첨부파일 끝 -->
-      </div> <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
-
-      <!-- 내부 2: 확인, 닫기 버튼 -->
-      <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
-        <a href="#" id="notice-write-submit" class="mr-15 btn-large-ok review font-white">확인</a>
-        <button type="button" class="btn-large btn-blur btn-close-modal-write-notice">닫기</button>
-
-      </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
-    </form>
-  </div> <!-- 공지쓰기 모달 끝 -->
-</div> <!-- 모달 감싸는 컨테이너 끝 -->
-<!-- 모달: 공지쓰기 끝 -->
 
 <!-- 모달: 프로젝트 설정 시작 -->
 <th:block th:replace="~{/fragments/configProject}"></th:block>
@@ -320,7 +180,7 @@
 </div>
 <!--/* Modal Ends */-->
 <!--  <th:block th:replace="~{/fragments/src}"></th:block>-->
-<script type="module" src="/js/main.js" th:src="@{/js/main.js}"></script>
+<script type="module" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>
 </body>
 </html>
 
