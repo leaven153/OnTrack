@@ -111,8 +111,8 @@
                                                     <span class="font-11">담당자관리</span>
                                                 </div>
                                             </th:block>
-                                            <!--/* 해당 할 일의 담당자인 경우: 진행중일 때까지만 '참여취소'버튼이 출력된다. */-->
-                                            <th:block th:if="${!(t.getAuthorMid() == myMid)} and ${t.chkAssigned(myMid, t)} and ${t.getTaskStatus() < 4}"> <!--/*t.chkEditAuth(myMid, t)*/-->
+                                            <!--/* 해당 할 일의 담당자인 경우: 검토중일 때까지 '참여취소'버튼이 출력된다. */-->
+                                            <th:block th:if="${!(t.getAuthorMid() == myMid)} and ${t.chkAssigned(myMid, t)} and ${t.getTaskStatus() < 5}"> <!--/*t.chkEditAuth(myMid, t)*/-->
                                                 <div class="statusview참여취소 btn-cancel-participation mr-5" th:attr="data-mid=${myMid}, data-nickname=${myNickname}, data-projectid=${projectId}, data-taskid=${t.getId()}, data-status=${t.getTaskStatus()}">
                                                     <span class="font-11">참여취소</span>
                                                 </div>
