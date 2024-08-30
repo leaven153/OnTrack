@@ -4,102 +4,86 @@
     <meta charset="UTF-8">
     <title>OnTrack - notice</title>
     <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
-    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
+    <!--    <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">-->
 </head>
-<body>
-<!--/*모달: 첨부되지 않은 파일 안내*/-->
-<div class="첨부되지않은파일안내경고창컨테이너 alert-not-attach-container hide">
-    <div class="첨부되지않음안내문구 mb-10 ">
-        <span class="font-20 bold">파일 첨부 실패</span>
-    </div>
-    <div class="첨부되지않은사유컨테이너 alert-not-attach-list">
-        <div class="컬럼헤더 flex-row-justify-start-align-center bottom-line">
-            <span class="alert-not-attach-col">파일명</span>
-            <span class="alert-not-attach-col">사유</span>
-        </div>
-        <div class="스크롤범위 alert-not-attach-scroll">
-        </div>
-    </div>
-    <div class="버튼컨테이너 alert-not-attach-btn-box">
-        <button type="button" id="btn-alert-not-attach" class="btn-confirm-yes">확인</button>
-    </div>
-</div>
-<!-- 모달: 공지쓰기 → 파일첨부 바꿀 것(할일추가의 파일첨부로!)-->
-<!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
-<div id="modal-notice-write" class="modal-container " th:fragment="writeNotice">
-    <!-- 공지쓰기 모달 시작 -->
-    <div class="modal-Right-noslide flex-col-between-nowrap modal-notice-write">
-        <form id="form-write-notice" action="#" method="POST" class="" enctype="multipart/form-data">
+<body th:fragment="projectNotice(myMid)">
+
+    <!-- 모달: 공지쓰기 → 파일첨부 바꿀 것(할일추가의 파일첨부로!)-->
+    <!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
+    <div id="modal-notice-write" class="modal-container hide"><!--/*th:fragment="writeNotice(myMid)"*/-->
+        <!-- 공지쓰기 모달 시작 -->
+        <div class="modal-Right-noslide flex-col-between-nowrap modal-notice-write ">
+            <form id="form-write-notice" action="#" method="POST" class="" enctype="multipart/form-data">
+                <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 -->
+                <div class="">
+                    <input type="hidden" name="authorMid" th:value="${myMid}">
+                    <!-- <input type="hidden" name="createdAt" value=""> -->
+                    <div class="닫기버튼div flex-row-end-center-nowrap">
+                        <span class="font-24 cursorP btn-close-modal-write-notice">&times;</span>
+                    </div> <!-- 상단 닫기 버튼(X) 끝 -->
+                    <div class="공지제목 flex-row-justify-start-align-center modal-notice-title">
+                        <img src="../../static/imgs/icon_notice(pin)_s.png" th:src="@{/imgs/icon_notice(pin)_s.png}" alt="notice" class="ml-3">
+                        <input type="text" name="title" placeholder="공지제목(20자이내)" maxlength="20" class="modal-notice-title">
+                    </div> <!-- 공지제목 끝 -->
+
+                    <div class="공지내용 notice-content modal-notice-write">
+                        <textarea form="form-write-notice" name="content" class="" maxlength="500" placeholder="공지 내용(500자 이내)"></textarea>
+                    </div><!-- 공지 내용 끝 -->
+
+                    <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
+                        <div class="ml-3 flex-row-justify-start-align-center">
+                            <input type="file" id="notice-file" name="noticeFile" class="opacity0 wh0" multiple>
+                            <label for="notice-file" class="flex-row-justify-start-align-center btn-attach">
+                                <img src="../../static/imgs/icon_upload1519.png" th:src="@{/imgs/icon_upload1519.png}" alt="upload" class="">
+                                <span class="font-15 c411 ml-5">파일첨부</span>
+                            </label>
+                        </div>
+                        <div class="flex-col-start-nowrap modal-notice-files">
+                            <span id="create-notice-no-file" class="ml-5 vertical-ctrl032 no-file">첨부된 파일이 없습니다.</span>
+                            <div id="modal-notice-write-file-box" class="업로드된개별파일 flex-col-start-nowrap modal-notice-write-file-box">
+                            </div> <!-- 업로드된 개별 파일 끝 -->
+                        </div>
+                    </div> <!-- 첨부파일 끝 -->
+                </div> <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
+
+                <!-- 내부 2: 확인, 닫기 버튼 -->
+                <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
+                    <a href="#" id="notice-write-submit" class="mr-15 btn-large-ok review font-white">등록</a>
+                    <button type="button" class="btn-large btn-blur btn-close-modal-write-notice">닫기</button>
+
+                </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
+            </form>
+        </div> <!-- 공지쓰기 모달 끝 -->
+    </div> <!-- 모달 감싸는 컨테이너 끝 -->
+    <!-- 모달: 공지쓰기 끝 -->
+
+    <!-- 모달: 공지읽기 -->
+    <!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
+    <div id="modal-notice-read" class="modal-container hide" > <!--/*th:fragment="readNotice"*/-->
+        <!-- 공지읽기 모달 시작 -->
+        <div class="modal-Right-noslide flex-col-between-nowrap hide">
             <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 -->
             <div class="">
-                <input type="hidden" name="author" value="author01">
-                <!-- <input type="hidden" name="createdAt" value=""> -->
                 <div class="닫기버튼div flex-row-end-center-nowrap">
-                    <span class="font-24 cursorP btn-close-modal-write-notice">&times;</span>
+                    <span class="font-24 cursorP btn-close-modal-notice-read">&times;</span>
                 </div> <!-- 상단 닫기 버튼(X) 끝 -->
                 <div class="공지제목 flex-row-justify-start-align-center modal-notice-title">
                     <img src="../../static/imgs/icon_notice(pin)_s.png" th:src="@{/imgs/icon_notice(pin)_s.png}" alt="notice" class="ml-3">
-                    <input type="text" name="noticeTitle" placeholder="공지제목(20자이내)" maxlength="20" class="modal-notice-title">
+                    <span class="modal-notice-title ml-7">하얗게 피어난 얼음꽃 하나가</span>
                 </div> <!-- 공지제목 끝 -->
-
-                <div class="공지내용 notice-content modal-notice-write">
-                    <textarea form="form-write-notice" name="noticeContent" class="" maxlength="500" placeholder="공지 내용(500자 이내)"></textarea>
-                </div><!-- 공지 내용 끝 -->
-
-                <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
-                    <div class="ml-3 flex-row-justify-start-align-center">
-                        <input type="file" id="notice-file" name="noticeFile" class="opacity0 wh0" multiple>
-                        <label for="notice-file" class="flex-row-justify-start-align-center btn-attach">
-                            <img src="../../static/imgs/icon_upload1519.png" th:src="@{/imgs/icon_upload1519.png}" alt="upload" class="">
-                            <span class="font-15 c411 ml-5">파일첨부</span>
-                        </label>
+                <div class="작성자작성일시 flex-row-between-nowrap margin-a10">
+                    <div class="작성자 ml-20">
+                        <span class="font-15 c411 mr-5">작성자</span>
+                        <span class="">크리스 에반스</span>
                     </div>
-                    <div class="flex-col-start-nowrap modal-notice-files">
-                        <span id="create-notice-no-file" class="ml-5 vertical-ctrl032 no-file">첨부된 파일이 없습니다.</span>
-                        <div id="modal-notice-write-file-box" class="업로드된개별파일 flex-col-start-nowrap modal-notice-write-file-box">
-                        </div> <!-- 업로드된 개별 파일 끝 -->
+                    <div class="작성일시">
+                        <span class="font-15 c411 mr-5">작성일</span>
+                        <span class="altivo-regular">24.03.07</span>
+                        <span class="mr-15">(목)</span>
                     </div>
-                </div> <!-- 첨부파일 끝 -->
-            </div> <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
-
-            <!-- 내부 2: 확인, 닫기 버튼 -->
-            <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
-                <a href="#" id="notice-write-submit" class="mr-15 btn-large-ok review font-white">등록</a>
-                <button type="button" class="btn-large btn-blur btn-close-modal-write-notice">닫기</button>
-
-            </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
-        </form>
-    </div> <!-- 공지쓰기 모달 끝 -->
-</div> <!-- 모달 감싸는 컨테이너 끝 -->
-<!-- 모달: 공지쓰기 끝 -->
-
-<!-- 모달: 공지읽기 -->
-<!-- 모달 감싸는 컨테이너: 화면 내 다른 모든 요소 blur -->
-<div id="modal-notice-read" class="modal-container hide" th:fragment="readNotice">
-    <!-- 공지읽기 모달 시작 -->
-    <div class="modal-Right-noslide flex-col-between-nowrap hide">
-        <!-- 내부 1: 닫기버튼, 제목, 작성자&일, 내용, 첨부파일 -->
-        <div class="">
-            <div class="닫기버튼div flex-row-end-center-nowrap">
-                <span class="font-24 cursorP btn-close-modal-notice-read">&times;</span>
-            </div> <!-- 상단 닫기 버튼(X) 끝 -->
-            <div class="공지제목 flex-row-justify-start-align-center modal-notice-title">
-                <img src="../../static/imgs/icon_notice(pin)_s.png" th:src="@{/imgs/icon_notice(pin)_s.png}" alt="notice" class="ml-3">
-                <span class="modal-notice-title ml-7">하얗게 피어난 얼음꽃 하나가</span>
-            </div> <!-- 공지제목 끝 -->
-            <div class="작성자작성일시 flex-row-between-nowrap margin-a10">
-                <div class="작성자 ml-20">
-                    <span class="font-15 c411 mr-5">작성자</span>
-                    <span class="">크리스 에반스</span>
-                </div>
-                <div class="작성일시">
-                    <span class="font-15 c411 mr-5">작성일</span>
-                    <span class="altivo-regular">24.03.07</span>
-                    <span class="mr-15">(목)</span>
-                </div>
-            </div><!-- 작성자, 작성일 끝 -->
-            <div class="공지내용 notice-content flex-col-between-nowrap">
-                <div class="pd-a20">
+                </div><!-- 작성자, 작성일 끝 -->
+                <div class="공지내용 notice-content flex-col-between-nowrap">
+                    <div class="pd-a20">
             <pre class="">달가운 바람에 얼굴을 내밀었다고 아무 말 못하지 마시고
               궁금한 사항은 반드시 소통하기를 통해 문의해주시기 바랍니다.
 
@@ -116,57 +100,59 @@
               언젠가는 기억해주길 한 번 쯤은 뒤돌아보길 부디 놓지 말아줘
               우릴 계속 바라봐 주길
             </pre>
-                </div>
-                <div class="flex-row-end-center-nowrap done-bg008 pd-t7 pd-r10">
-                    <span class="mr-5">확인</span><span class="altivo-regular mr-20">5</span>
-                    <span class="mr-5">미확인</span><span class="altivo-regular">3</span>
-                </div>
-            </div><!-- 공지 내용 끝 -->
+                    </div>
+                    <div class="flex-row-end-center-nowrap done-bg008 pd-t7 pd-r10">
+                        <span class="mr-5">확인</span><span class="altivo-regular mr-20">5</span>
+                        <span class="mr-5">미확인</span><span class="altivo-regular">3</span>
+                    </div>
+                </div><!-- 공지 내용 끝 -->
 
-            <!-- ml-24 mb-20 mr-15 -->
-            <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
-                <div class="font-15 c411 flex-row-center-center-nowrap">
-                    <span class="item-file">첨부파일</span>
-                </div>
-                <div class="flex-col-start-nowrap modal-notice-files">
-                    <span class="ml-5 vertical-ctrl01 no-file hide">첨부된 파일이 없습니다.</span>
-                    <div class="flex-row-justify-start-align-center modal-notice-file-box">
-                        <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
-                        <span class="modal-file-name mr-10">document.pdf</span>
-                        <span class="modal-file-size">194.0KB</span>
+                <!-- ml-24 mb-20 mr-15 -->
+                <div class="첨부파일 flex-row-start-nowrap modal-notice-attachment">
+                    <div class="font-15 c411 flex-row-center-center-nowrap">
+                        <span class="item-file">첨부파일</span>
                     </div>
-                    <div class="flex-row-justify-start-align-center modal-notice-file-box">
-                        <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
-                        <span class="modal-file-name mr-10">document.pdf</span>
-                        <span class="modal-file-size">194.0KB</span>
+                    <div class="flex-col-start-nowrap modal-notice-files">
+                        <span class="ml-5 vertical-ctrl01 no-file hide">첨부된 파일이 없습니다.</span>
+                        <div class="flex-row-justify-start-align-center modal-notice-file-box">
+                            <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
+                            <span class="modal-file-name mr-10">document.pdf</span>
+                            <span class="modal-file-size">194.0KB</span>
+                        </div>
+                        <div class="flex-row-justify-start-align-center modal-notice-file-box">
+                            <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
+                            <span class="modal-file-name mr-10">document.pdf</span>
+                            <span class="modal-file-size">194.0KB</span>
+                        </div>
+                        <div class="flex-row-justify-start-align-center modal-notice-file-box">
+                            <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
+                            <span class="modal-file-name mr-10">document.pdf</span>
+                            <span class="modal-file-size">194.0KB</span>
+                        </div>
+                        <div class="flex-row-justify-start-align-center modal-notice-file-box">
+                            <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
+                            <span class="modal-file-name mr-10">document.pdf</span>
+                            <span class="modal-file-size">194.0KB</span>
+                        </div>
+                        <div class="flex-row-justify-start-align-center modal-notice-file-box">
+                            <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
+                            <span class="modal-file-name mr-10">document.pdf</span>
+                            <span class="modal-file-size">194.0KB</span>
+                        </div>
                     </div>
-                    <div class="flex-row-justify-start-align-center modal-notice-file-box">
-                        <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
-                        <span class="modal-file-name mr-10">document.pdf</span>
-                        <span class="modal-file-size">194.0KB</span>
-                    </div>
-                    <div class="flex-row-justify-start-align-center modal-notice-file-box">
-                        <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
-                        <span class="modal-file-name mr-10">document.pdf</span>
-                        <span class="modal-file-size">194.0KB</span>
-                    </div>
-                    <div class="flex-row-justify-start-align-center modal-notice-file-box">
-                        <img src="../../static/imgs/icon_download1716.png" th:src="@{/imgs/icon_download1716.png}" alt="download" class="img-1716 mr-5 ml-3">
-                        <span class="modal-file-name mr-10">document.pdf</span>
-                        <span class="modal-file-size">194.0KB</span>
-                    </div>
-                </div>
-            </div> <!-- 첨부파일 끝 -->
-        </div> <!-- 내부 1: 상단닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
+                </div> <!-- 첨부파일 끝 -->
+            </div> <!-- 내부 1: 상단닫기버튼, 제목, 작성자&일, 내용, 첨부파일 끝 -->
 
-        <!-- 내부 2: 확인, 닫기 버튼 -->
-        <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
-            <button class="mr-15 btn-large-ok review font-white">확인</button>
-            <button class="btn-large btn-blur btn-close-modal-notice-read">닫기</button>
-        </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
-    </div> <!-- 공지읽기 모달 끝 -->
-</div> <!-- 모달 감싸는 컨테이너 끝 -->
-<!-- 모달: 공지읽기 끝 -->
+            <!-- 내부 2: 확인, 닫기 버튼 -->
+            <div class="확인닫기버튼div flex-row-center-center-nowrap mb-20 mt-20 pd-b25">
+                <button class="mr-15 btn-large-ok review font-white">확인</button>
+                <button class="btn-large btn-blur btn-close-modal-notice-read">닫기</button>
+            </div> <!-- 내부 2: 확인, 닫기 버튼 끝-->
+        </div> <!-- 공지읽기 모달 끝 -->
+    </div> <!-- 모달 감싸는 컨테이너 끝 -->
+    <!-- 모달: 공지읽기 끝 -->
+
+
 <script type="module" src="../../static/js/notice.js" th:src="@{/js/notice.js}"></script>
 </body>
 </html>

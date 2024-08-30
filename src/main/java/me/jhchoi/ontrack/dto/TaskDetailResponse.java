@@ -25,7 +25,9 @@ public class TaskDetailResponse{
     private Map<Long, String> assignees;
 //    private Integer assigneeCnt;
     private String tab;
-    
+    private Boolean authorized;
+
+
     /** OnTrackTask 에 있지만 현재 포함되지 않은 필드
      *     private Integer taskPriority; // vip: 0, ip: 1, norm: 2
      *     private Integer taskStatus; // not-yet: 1, planning: 2, ing: 3, review: 4, done: 5

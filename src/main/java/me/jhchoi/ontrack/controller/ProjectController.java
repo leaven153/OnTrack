@@ -117,17 +117,22 @@ public class ProjectController {
 
             for(int i = 0; i < project.getTaskList().size(); i++) {
                 if(project.getTaskList().get(i).getId().equals(inputFlashMap.get("taskId"))) {
-
-                    // 1) 할 일에 대한 기본 정보 (이미 있기 대문에, 굳이 서비스에 다녀오지 않고)
+                    // 1) 할 일에 대한 기본 정보 (이미 받아온 정보이고, assignees를 또 받아와야 하기 때문에,
+                    // 굳이 서비스에 다녀오지 않고)
                     // Project Response 객체 안에서 해당 task에 대한 정보를 추출한다.
                     taskDetail = TaskDetailResponse.entityToDTO(project.getTaskList().get(i), projectId);
+                    // 해당 할 일의 담당자/작성자인지 확인한다.
+                    taskDetail.setAuthorized(project.getTaskList().get(i).chkEditAuth(project.getMemberId(), project.getTaskList().get(i)));
 
-                    // 2-1) comment 가져온다.
-                    taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
+                }
+            }
+
+            // 2-1) comment 가져온다.
+            taskDetail.setTaskComments(taskService.getTaskComment((Long) inputFlashMap.get("taskId")));
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments().size());
 //                    log.info("소통하기 글이 없는 상태의 사이즈: {}", taskDetail.getTaskComments());
 
-                    // 2-2) notice comment 확인여부 가져온다.
+            // 2-2) notice comment 확인여부 가져온다.
                     /*
                     Map<Long, Boolean> cc = new HashMap<>();
 
@@ -143,17 +148,15 @@ public class ProjectController {
                     }
                     taskDetail.setNoticeCommentChk(cc);
                     */
-                    // 3) history 가져온다.
-                    taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));
-                    if(taskDetail.getTaskHistories() != null && !taskDetail.getTaskHistories().isEmpty()){
-                        TaskDetailResponse.historyCnt(taskDetail.getTaskHistories());
-                    }
-
-                    // 4) file 가져온다.
-                    taskDetail.setTaskFiles(taskService.getTaskFile((Long) inputFlashMap.get("taskId")));
-
-                }
+            // 3) history 가져온다.
+            taskDetail.setTaskHistories(taskService.getTaskHistory((Long) inputFlashMap.get("taskId")));
+            if(taskDetail.getTaskHistories() != null && !taskDetail.getTaskHistories().isEmpty()){
+                TaskDetailResponse.historyCnt(taskDetail.getTaskHistories());
             }
+
+            // 4) file 가져온다.
+            taskDetail.setTaskFiles(taskService.getTaskFile((Long) inputFlashMap.get("taskId")));
+
             taskDetail.setTab((String) inputFlashMap.get("tab"));
 //            log.info("task detail이 생성되었는지 확인: {}", taskDetail);
             // task detail이 생성되었는지 확인: TaskAndAssignee(id=8, taskTitle=Tigger can do everything, authorMid=14, authorName=공지철, taskPriority=3, taskStatus=3, taskDueDate=null, taskParentId=null, createdAt=2024-05-24T12:56:29, updatedAt=2024-05-24T12:56:29, updatedBy=14, assigneeMids=[4, 26, 27, 28], assigneeNames=[Adele, 송혜교, 크러쉬, 스칼렛 요한슨], assignees={4=Adele, 26=송혜교, 27=크러쉬, 28=스칼렛 요한슨}, taskFiles=null)
@@ -168,34 +171,27 @@ public class ProjectController {
         // thymeleaf가 taskDetail이 널값일 때 An error happened during template parsing를 던진다... (화면상에서는 문제가 없다.)
 
         model.addAttribute("taskDetail", taskDetail);
-        // 일단 소통하기 글 작성은 fetch로 진행하도록 한다..
-//        TaskDetailRequest taskCommentForm = new TaskDetailRequest();
-//        taskCommentForm.setProjectId(9L);
-//        taskCommentForm.setTaskId(35L);
-
-        // if문(hide != null)안 에 넣으면 계속 에러 남 ㅠㅠ
-//        model.addAttribute("taskCommentForm", taskCommentForm);
 
 
         log.info("할 일 상세에 대한 hide(detail): {}", detailHide);
         model.addAttribute("hide", detailHide);
-//        URI projectLocation = URI.create("project/project");
 
         // null일 경우, table view로 처리한다.
         if(view != null){
             model.addAttribute("view", view);
-//            return ResponseEntity.created(projectLocation).body(view);
         }
 
+        // nav에 알람 출력: 프로젝트 초대/공지, 나의 할 일이 휴지통에 있을 경우
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
 
-//        return ResponseEntity.created(projectLocation).build();
-        return "project/project"; // url - http://localhost:8080/project/9
+        // 프로젝트 공지 쓰기 form: 내가 생성자일 경우에만 부착...
+
+        return "project/project";
     } // getProject ends
 
     @PostMapping("/notice")
-    public void writeNotice(){
-
+    public void writeNotice(@RequestBody NoticeDTO writeNotice){
+        log.info("공지등록: {}", writeNotice);
     }
 
 

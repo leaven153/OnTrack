@@ -7,7 +7,7 @@
   <meta name="Description" content="project task list">
 
   <title th:text="${project.getProject().projectName}">OnTrack - Project</title>
-  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:src="@{/imgs/icons8-octaedro-32.png}">
+  <link rel="icon" type="image/x-icon" href="../../static/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/web-socket-js/1.0.0/web_socket.min.js"></script>-->
@@ -133,10 +133,13 @@
 
 <!-- nav에 menu 중 계정설정은 모달로 제작하자.. -->
 
-<!--/* 모달: 공지 읽기, 쓰기 */-->
-<th:blcok th:replace="~{fragments/modalNotice}"></th:blcok>
-<!--/**/-->
+<!--/* 모달: 공지 쓰기 */-->
+<th:block th:replace="~{fragments/modalNotice :: projectNotice(myMid=${project.memberId})}"></th:block>
+<!--/*모달: 공지 쓰기 끝*/-->
 
+<!--/* 모달: 공지 읽기 */-->
+<!--<th:blcok th:replace="~{fragments/modalNotice :: readNotice(myMid=${project.memberId})}"></th:blcok>-->
+<!--/*모달: 공지 읽기 끝*/-->
 
 <!-- 모달: 프로젝트 설정 시작 -->
 <th:block th:replace="~{/fragments/configProject}"></th:block>
