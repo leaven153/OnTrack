@@ -1,5 +1,6 @@
 import * as fnc from './fnc.mjs'
 
+console.log(`왜 인식안되는가`);
 function elExists(el){
     return el !== undefined && el !== null;
 }
@@ -117,11 +118,24 @@ function notAttachedGuide(notAttachList){
     return contentBox;
 }
 
-window.onload = function(){
+// window.onload = function(){
 
     let rewriteNoticeFileList = [];
     let noticeFileCnt = 0;
     const createNoticeNoFile = document.querySelector("span#create-notice-no-file");
+
+    /*---------- 016 ------------*/
+    /* 공지쓰기 열기 */
+    if(elExists(document.querySelector(".btn-write-notice"))){
+        const btnOpenWriteNotice = document.querySelector(".btn-write-notice");
+        const modalWriteNotice = document.querySelector("#modal-notice-write");
+        btnOpenWriteNotice.addEventListener("click", ()=>{
+            modalWriteNotice.classList.remove("hide");
+            document.querySelector(".modal-notice-write").classList.remove("hide");
+        });
+    }
+
+
     /*---------- 018 ------------*/
     /*---- ▼ 공지쓰기: 파일첨부 시작 ▼ ----*/
     if(elExists(document.querySelector("#notice-file"))){
@@ -230,17 +244,53 @@ window.onload = function(){
         // let noticeFileDelCnt = 0;
         btnSubmitWriteNotice.addEventListener("click", ()=>{
             // 서버에 보낼 값 확인.
-            console.log(formWriteNotice.elements.author.value); // ok
-            console.log(formWriteNotice.elements.noticeTitle.value); // ok
-            console.log(formWriteNotice.elements.noticeContent.value); // ok (콘솔에는 개행 반영됨. db에는 어떻게 저장되는지 확인요망)
+            console.log(formWriteNotice.elements.authorMid.value); // ok
+            console.log(formWriteNotice.elements.title.value); // ok
+            console.log(formWriteNotice.elements.content.value); // ok (콘솔에는 개행 반영됨. db에는 어떻게 저장되는지 확인요망)
             console.log(rewriteNoticeFileList);
+
+
+            // formData에 파일 첨부
             for(let i = 0; i < rewriteNoticeFileList.length; i++) {
                 formWriteNotice.append("noticeFiles", rewriteNoticeFileList[i]);
             }
 
+            //서버 전송
+            fetch(`http://localhost:8080/project/notice`, {
+                method: 'POST',
+                headers: {},
+                body: formWriteNotice
+            });
 
         });
     }
 
     /*---- ▲ 공지쓰기: submit 끝 ▲ ----*/
-}
+
+    /*---------- 020 ------------*/
+    /* 공지쓰기 창 닫기: 모달 안에 X와 '닫기' 버튼 2개가 있다. */
+    if(elExists(document.querySelector(".btn-close-modal-write-notice"))){
+        const btnCloseModalWriteNotice = document.querySelectorAll(".btn-close-modal-write-notice");
+        const modalNoticeFileListContainer = document.querySelector("#modal-notice-write-file-box");
+        const createNoticeNoFile = document.querySelector("span#create-notice-no-file");
+        let noticeFileCnt = 0;
+        let noticeFileDelCnt = 0;
+        const modalWriteNotice = document.querySelector("#modal-notice-write");
+        const formWriteNotice = document.querySelector("form#form-write-notice");
+
+        btnCloseModalWriteNotice.forEach(function(btn){
+            btn.addEventListener("click", ()=>{
+                formWriteNotice.elements.title.value = "";
+                formWriteNotice.elements.content.value = "";
+                formWriteNotice.elements.noticeFile.value = "";
+                modalNoticeFileListContainer.innerHTML = "";
+                createNoticeNoFile.classList.remove("hide");
+
+
+                formWriteNotice.reset(); // 없어도 되는 것 같은데...
+                modalWriteNotice.classList.add("hide");
+            });
+        });
+
+    }
+// }

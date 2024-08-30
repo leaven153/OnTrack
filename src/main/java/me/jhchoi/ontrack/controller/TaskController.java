@@ -102,10 +102,12 @@ public class TaskController {
 
         Boolean detailHide = false;
 
+        // 해당 할 일이 휴지통에 있는지 확인한다.
         if(task.isPresent() && task.get().getDeletedBy() != null){
             detailHide = true;
             redirectAttributes.addFlashAttribute("taskRemoved", true);
         }
+
         redirectAttributes.addFlashAttribute("hide", detailHide);
         redirectAttributes.addFlashAttribute("taskId", taskId);
         redirectAttributes.addFlashAttribute("tab", tab);

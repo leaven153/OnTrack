@@ -5,7 +5,7 @@
     <title>project - Table view</title>
   <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 <!--  <script src="../../static/js/projectView.js" th:src="@{/js/projectView.js.js}"></script>-->
-  <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
+  <link rel="icon" type="image/x-icon" th:href="@{/imgs/icons8-octaedro-32.png}">
 </head>
 <body>
   <div id="assignee-view" class="project-view" th:classappend="${view != 'assignee' or view == null}?'hide'" th:fragment="assigneeView(assignees, noAssigneeTasks, myNickname, myMid)">
@@ -45,38 +45,38 @@
                   <div class="flex-row-start-nowrap">
                     <div class="mr-15 각 진행상황 div">
                       <span class="">보류</span>
-                      <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}"></span> <!--?${task.countStatus(assignee.getTList(), 1)}:'0'-->
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">시작 안 함</span>
-                      <th:block th:each="task : ${assignee.getTList()}"> <!--check9 -->
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}"></span> <!--?${task.countStatus(assignee.getTList(), 1)}:'0'-->
+                      <th:block th:each="task : ${assignee.getTList()}">
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">계획중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}"></span><!--?${task.countStatus(assignee.getTList(), 2)}:'0'-->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">진행중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}"></span><!--?${task.countStatus(assignee.getTList(), 3)}:'0'-->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">검토중</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}"></span><!--?${task.countStatus(assignee.getTList(), 4)}:'0'-->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">완료</span>
                       <th:block th:each="task : ${assignee.getTList()}">
-                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 5)}"></span><!--?${task.countStatus(assignee.getTList(), 5)}:'0'-->
+                        <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 5)}"></span>
                       </th:block>
                     </div>
                   </div>

@@ -459,7 +459,9 @@ div.btn-open-settings {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    margin: 12px 0 4px 0;
+    /*margin: 12px 0 4px 0;*/
+    background-color: #fff;
+    height: 40px;
 }
 
 .view-box, .search-n-add-task {
@@ -1127,7 +1129,7 @@ span.status-assignee {
 .sort-box {
     padding: 0 0 8px 12px;
     color: #999;
-    margin-top: 4px;
+    /*margin-top: 4px;*/
 }
 
 .assignee-box {
