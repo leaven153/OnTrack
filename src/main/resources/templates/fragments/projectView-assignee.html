@@ -28,7 +28,7 @@
               </div>
               <!-- 2rows 담을 div: ①진행상황 그래프, ②개수 -->
               <div class="flex-col-between-nowrap ml-5 overflow-hidden">
-                <div class="flex-row-start-nowrap">
+                <div class="flex-row-start-nowrap" th:if="${assignee.getTList().size() != 0}">
                   <th:block th:if="${assignee.getTList().size() != null}">
                     <th:block th:each="task : ${assignee.getTList()}">
                       <div class="status-graph pause" th:if="${task.getTaskStatus() == 0}"></div>
@@ -45,52 +45,48 @@
                   <div class="flex-row-start-nowrap">
                     <div class="mr-15 각 진행상황 div">
                       <span class="">보류</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 0)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">시작 안 함</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 1)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">계획중</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 2)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">진행중</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 3)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">검토중</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 4)}"></span>
                       </th:block>
                     </div>
                     <div class="mr-15 각 진행상황 div">
                       <span class="">완료</span>
+                      <span class="altivo-regular" th:if="${assignee.getTList().size() == 0}">0</span>
                       <th:block th:each="task : ${assignee.getTList()}">
                         <span class="altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), 5)}"></span>
                       </th:block>
                     </div>
                   </div>
 
-                  <!-- <div class="flex-row-start-nowrap">
-                    <div class="mr-15 각 진행상황 div">
-                      <span class="">보류</span>
-                      <span class="altivo-regular">2</span>
-                    </div>
-                    <div class="각 진행상황 div">
-                      <span class="">취소</span>
-                      <span class="altivo-regular">0</span>
-                    </div>
-                  </div> -->
                 </div>
               </div>
 
@@ -110,18 +106,21 @@
                       <div class="assignee-bar" th:classappend="${tStatus.value[1]}"></div> <!--/* css 상태바 not-yet */-->
                       <span class="ml-5 font-15" th:text="${tStatus.value[0]}">시작 안 함</span>
                     </div>
+                    <div class="mr-10 altivo-regular" th:if="${assignee.getTList().size == 0}">0</div>
                     <th:block th:each="task : ${assignee.getTList()}">
                       <div class="mr-9 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.countStatus(assignee.getTList(), tStatus.key)}?${task.countStatus(assignee.getTList(), tStatus.key)}:'-'"></div>
                     </th:block>
                   </div>
                   <div class="공동작업 flex-row-between-nowrap font-11">
                     <span class="ml-15">공동작업</span>
+                    <div class="mr-10 altivo-regular" th:if="${assignee.getTList().size == 0}">0</div>
                     <th:block th:each="task : ${assignee.getTList()}">
                       <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'team', tStatus.key, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'team', tStatus.key, assignee.getAssigneeName())}:'-'"></div>
                     </th:block>
                   </div>
                   <div class="개인작업 flex-row-between-nowrap font-11">
                     <span class="ml-15">개인작업</span>
+                    <div class="mr-10 altivo-regular" th:if="${assignee.getTList().size == 0}">0</div>
                     <th:block th:each="task : ${assignee.getTList()}">
                       <div class="mr-10 altivo-regular" th:if="${taskStat.count == 1}" th:text="${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', tStatus.key, assignee.getAssigneeName())}?${task.cntTeamOrSoloTask(assignee.getTList(), 'solo', tStatus.key, assignee.getAssigneeName())}:'-'"></div>
                     </th:block>
