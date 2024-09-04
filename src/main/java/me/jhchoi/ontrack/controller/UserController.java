@@ -112,7 +112,7 @@ public class UserController {
     public String loginForm(Model model){
         log.info("로그인폼요청");
         model.addAttribute("loginRequest", new LoginUser());
-        return "/login/login";
+        return "login/login";
     }
     
     /**
