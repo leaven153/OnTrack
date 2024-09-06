@@ -44,17 +44,17 @@ public class WebConfig implements WebMvcConfigurer {
 //    }
 
     // 참고: https://www.baeldung.com/spring-boot-internationalization
-    @Bean
-    public LocaleResolver localeResolver(){
-        // https://stackoverflow.com/questions/38803656/spring-thymeleaf-changing-locale-and-stay-on-the-current-page
-//        Locale defaultLocale = new Locale("ko");
-//        CookieLocaleResolver clr = new CookieLocaleResolver();
-//        clr.setDefaultLocale(defaultLocale);
-//        return clr;
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.KOREA);
-        return localeResolver;
-    }
+//    @Bean
+//    public LocaleResolver localeResolver(){
+//        // https://stackoverflow.com/questions/38803656/spring-thymeleaf-changing-locale-and-stay-on-the-current-page
+////        Locale defaultLocale = new Locale("ko");
+////        CookieLocaleResolver clr = new CookieLocaleResolver();
+////        clr.setDefaultLocale(defaultLocale);
+////        return clr;
+//        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+//        localeResolver.setDefaultLocale(Locale.KOREA);
+//        return localeResolver;
+//    }
 
     // https://stackoverflow.com/questions/78330023/springboot-thymeleaf-set-locale
 //    @Bean

@@ -1,7 +1,9 @@
 package me.jhchoi.ontrack.dto;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jhchoi.ontrack.domain.TaskFile;
+import me.jhchoi.ontrack.util.CustomS3Util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,13 +19,20 @@ import java.util.UUID;
 
 
 @Component @Slf4j
+@RequiredArgsConstructor
 public class FileStore {
     @Value("${file.dir}")
     private String fileDir;
 
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucket;
+
+    private final CustomS3Util s3Util;
+
     // 파일 저장할 폴더 생성 (프로젝트id/할일id)
     public String makeFolder(Long projectId, Long taskId){
-        Path path = Paths.get(fileDir, String.valueOf(projectId), String.valueOf(taskId));
+//        Path path = Paths.get(fileDir, String.valueOf(projectId), String.valueOf(taskId));
+        Path path = Paths.get(bucket, String.valueOf(projectId), String.valueOf(taskId));
 
         File uploadFolderPath = new File(String.valueOf(path));
 
@@ -61,7 +70,9 @@ public class FileStore {
                 String storeFileName = createFileName(file.getOriginalFilename());
                 Path savePath = Paths.get(makeFolder(projectId, taskId), storeFileName);
                 log.info("저장경로(폴더, 파일이름): {}", savePath.toAbsolutePath()); // 저장경로(폴더, 파일이름)
-                file.transferTo(new File(String.valueOf(savePath)));
+                file.transferTo(new File(String.valueOf(savePath))); // 이게.. 저장하는 거였던 가?
+                s3Util.uploadFiles((List<Path>) savePath, true);
+
                 fileList.add(TaskFile.builder()
                         .projectId(projectId)
                         .taskId(taskId)
