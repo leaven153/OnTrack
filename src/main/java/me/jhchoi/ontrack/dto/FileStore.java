@@ -21,8 +21,8 @@ import java.util.UUID;
 @Component @Slf4j
 @RequiredArgsConstructor
 public class FileStore {
-    @Value("${file.dir}")
-    private String fileDir;
+//    @Value("${file.dir}")
+//    private String fileDir;
 
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucket;
