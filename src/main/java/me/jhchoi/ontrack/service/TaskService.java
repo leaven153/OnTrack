@@ -7,6 +7,7 @@ import me.jhchoi.ontrack.dto.*;
 import me.jhchoi.ontrack.repository.MemberRepository;
 import me.jhchoi.ontrack.repository.ProjectRepository;
 import me.jhchoi.ontrack.repository.TaskRepository;
+import me.jhchoi.ontrack.util.CustomS3Util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,6 +29,7 @@ public class TaskService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final CustomS3Util s3Util;
 
     /**
      * created  : 2024-05-14
@@ -301,11 +304,14 @@ public class TaskService {
             TaskFile file = taskRepository.findFileById(fileId);
             String path = Paths.get(file.getFilePath(), file.getFileNewName()).toString();
             File delFile = new File(path);
+            List<Path> paths = new ArrayList<>();
+            paths.add(delFile.toPath());
 
             Boolean deleted;
 
             if(delFile.exists()){
                 deleted = delFile.delete();
+                s3Util.deleteFiles(paths);
             } else {
                 return ResponseEntity.badRequest().body(ErrorResponse.builder().message("존재하지 않는 파일입니다.").taskRemoved(false).build());
             }

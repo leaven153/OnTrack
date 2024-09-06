@@ -71,7 +71,9 @@ public class FileStore {
                 Path savePath = Paths.get(makeFolder(projectId, taskId), storeFileName);
                 log.info("저장경로(폴더, 파일이름): {}", savePath.toAbsolutePath()); // 저장경로(폴더, 파일이름)
                 file.transferTo(new File(String.valueOf(savePath))); // 이게.. 저장하는 거였던 가?
-                s3Util.uploadFiles((List<Path>) savePath, true);
+                List<Path> pathList = new ArrayList<>();
+                pathList.add(savePath);
+                s3Util.uploadFiles(pathList, true);
 
                 fileList.add(TaskFile.builder()
                         .projectId(projectId)
