@@ -113,7 +113,7 @@ public class UserService {
                 <h4 style='margin-top:2px; margin-bottom:10px'>Step 2/2</h4>
                 <p style='margin-bottom:20px;'>아래 링크를 클릭하여 가입을 완료하고<br/>
                 On Track의 서비스를 이용해보세요 ;D</p>
-                <a href='http://localhost:8080/signup/step2?vCode=%s' style='text-decoration: none'>
+                <a href='http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/signup/step2?vCode=%s' style='text-decoration: none'>
                 <p style='display:inline-block; width:200px; padding:10px; background-color: #533e47;color:#fff5ec;text-align:center; border-radius:5px; font-weight:600; margin-bottom: 20px'>
                 가입완료 하러가기
                 </p></a>
