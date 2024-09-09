@@ -1,7 +1,7 @@
 import * as fnc from './fnc.mjs'
 import {binRow} from "./createElement.mjs";
 
-let binSocket = new SockJS(`http://localhost:8080/ws/taskDeletion`);
+let binSocket = new SockJS(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/ws/taskDeletion`);
 // let justDeletedTaskId;
 
 // window.onload = function(){
@@ -9,7 +9,7 @@ let binSocket = new SockJS(`http://localhost:8080/ws/taskDeletion`);
 // }
 function connectBinWs() {
 
-    const sock = new SockJS(`http://localhost:8080/ws/taskDeletion`);
+    const sock = new SockJS(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/ws/taskDeletion`);
     // socket = sock;
 
     sock.onopen = function () {
@@ -40,7 +40,7 @@ function connectBinWs() {
         // console.log(`접속 중인 유저의 현재 페이지: ${currUrl[2]}`); //
         if(currUrl[2].includes("bin")){
 
-            fetch(`http://localhost:8080/mypage/removedTask?taskId=${e.data}`, {
+            fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/mypage/removedTask?taskId=${e.data}`, {
                 method: 'GET',
                 // headers: {
                 //     'Content-Type': 'application/json'

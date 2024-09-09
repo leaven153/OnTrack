@@ -105,7 +105,7 @@ window.onload = function(){
 
 
                 // 컨트롤러 통해서 메일 전송,
-                fetch(`http://localhost:8080/signup/step1`, {
+                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/signup/step1`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

@@ -256,7 +256,7 @@ function notAttachedGuide(notAttachList){
             }
 
             //서버 전송
-            fetch(`http://localhost:8080/project/notice`, {
+            fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/project/notice`, {
                 method: 'POST',
                 headers: {},
                 body: formWriteNotice
