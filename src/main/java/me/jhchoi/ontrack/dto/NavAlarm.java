@@ -20,7 +20,7 @@ public class NavAlarm {
 
         // nav에 출력할 알람내용: ① 프로젝트 공지, ②프로젝트 초대, ③휴지통, ④중요 소통
         Map<String, Boolean> navAlarmList = new LinkedHashMap<>();
-        navAlarmList.put("noticeComment", memberService.alarmForNoticeComment(userId));
+//        navAlarmList.put("noticeComment", memberService.alarmForNoticeComment(userId));
         navAlarmList.put("projectInvitation", false);
         navAlarmList.put("projectNotice", false);
         navAlarmList.put("bin", memberService.alarmForBin(userId));
