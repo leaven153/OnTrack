@@ -3,7 +3,7 @@ function elExists(el){
 }
 console.log(`myprojects.js 인식됨`);
 
-window.onload = function(){
+// window.onload = function(){
     /*---------- 0 ------------*/
     /* 새 프로젝트 추가 모달 */
     if(elExists(document.querySelector(".btn-open-modal-create-project"))){
@@ -97,4 +97,4 @@ window.onload = function(){
 
     /*---- ▼  시작 ▼ ----*/
     /*---- ▲  끝 ▲ ----*/
-} // window.onload = function(){} 끝
+// } // window.onload = function(){} 끝
