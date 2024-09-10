@@ -62,7 +62,7 @@ public class TaskDeletionHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         if(getUserId(session) != null){
-            log.info("************ 할 일 지우기 소켓 연결 끊김task deletion web socket connection closed ************");
+            log.info("************ task deletion web socket connection closed ************");
             loginUsers.remove(getUserId(session));
         }
     }

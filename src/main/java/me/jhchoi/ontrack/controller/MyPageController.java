@@ -35,7 +35,7 @@ public class MyPageController {
         model.addAttribute("createProjectRequest", new ProjectRequest());
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            log.info("로그인 정보 없음");
+            log.info("NO LOGIN INFORMATION");
             return "redirect:../login";
         }
         log.info("session: {}", loginUser);

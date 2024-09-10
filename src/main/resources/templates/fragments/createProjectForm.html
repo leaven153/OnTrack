@@ -14,7 +14,7 @@
             <div class="상단닫기버튼 flex-row-end-center-nowrap">
                 <button type="button" id="btn-close-modal-create-project" class="btn-close font-24">&times;</button>
             </div>
-            <form action="/project/createProject" th:action="@{project/createProject}" th:object="${createProjectRequest}" method="POST" id="form-create-project">
+            <form action="/project/createProject" th:action="@{/project/createProject}" th:object="${createProjectRequest}" method="POST" id="form-create-project">
                 <div class="프로젝트제목입력 bottom-line mb-30 pd-b5 modal-create-proj-name">
                     <input type="text" class="modal-create-proj-name" name="projectName" th:field="${createProjectRequest.projectName}" max="20" placeholder="새 프로젝트명을 입력하세요">
                 </div>
