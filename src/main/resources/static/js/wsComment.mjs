@@ -1,4 +1,4 @@
-let commentSocket = new SockJS(`http://localhost:8080/ws/noticeComment`);
+let commentSocket = new SockJS(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/ws/noticeComment`);
 
 // window.onload = function(){
 //     connectCommentWs();

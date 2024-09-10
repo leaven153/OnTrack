@@ -17,7 +17,7 @@
 
 <!-----/* Begin nav */----->
 <nav>
-  <th:block th:replace="~{/fragments/nav :: nav}"></th:block>
+  <th:block th:replace="~{fragments/nav :: nav}"></th:block>
 </nav>
 <!--/* nav End /*-->
 
@@ -75,15 +75,15 @@
 
 <!--/* 하위task 불러올 때는 담당자별로 정렬될 수 있도록 하자... */-->
 <!--/* 테이블뷰 시작 Table View Starts */-->
-<th:block th:replace="~{/fragments/projectView-table :: tableView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
+<th:block th:replace="~{fragments/projectView-table :: tableView(tasks=${project.getTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
 <!---/* 테이블뷰 끝 Table View Ends */--->
 
 <!-- Status View Starts -->
-<th:block th:replace="~{/fragments/projectView-status :: statusView(tasks=${project.getStatusTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
+<th:block th:replace="~{fragments/projectView-status :: statusView(tasks=${project.getStatusTaskList()}, memberList=${project.getMemberList()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block>
 <!-- Status View Ends -->
 
 <!-- Assignee View Starts -->
-<th:block th:replace="~{/fragments/projectView-assignee :: assigneeView(assignees=${project.getAssignmentList()}, noAssigneeTasks=${project.getNoAssigneeTasks()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block> <!--, loginMember=${loginMember}-->
+<th:block th:replace="~{fragments/projectView-assignee :: assigneeView(assignees=${project.getAssignmentList()}, noAssigneeTasks=${project.getNoAssigneeTasks()}, myNickname=${project.nickname}, myMid=${project.memberId})}"></th:block> <!--, loginMember=${loginMember}-->
 <!-- Assignee View Ends -->
 
 
@@ -142,20 +142,20 @@
 <!--/*모달: 공지 읽기 끝*/-->
 
 <!-- 모달: 프로젝트 설정 시작 -->
-<th:block th:replace="~{/fragments/configProject}"></th:block>
+<th:block th:replace="~{fragments/configProject}"></th:block>
 
 <!-- 모달: 프로젝트 설정 끝 -->
 
 <!--/* 모달: 새 할 일 추가 */-->
 <!--/* 모달 컨테이너 */-->
-<th:block th:replace="~{/fragments/addTaskForm :: addTaskForm(taskFormRequest=${taskFormRequest}, myNickname=${project.nickname}, myMid=${project.memberId}, memberList=${project.getMemberList()}, myPosition=${project.position})}">
+<th:block th:replace="~{fragments/addTaskForm :: addTaskForm(taskFormRequest=${taskFormRequest}, myNickname=${project.nickname}, myMid=${project.memberId}, memberList=${project.getMemberList()}, myPosition=${project.position})}">
 </th:block>
 <!--/* 모달: 새 할 일 추가 끝 */-->
 
 
 <!--/* 모달: 할 일 상세 */-->
 <!--/* 모달 컨테이너 */-->
-<th:block th:replace="~{/fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()}, myPosition=${project.position})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
+<th:block th:replace="~{fragments/taskDetail :: taskDetail(taskDetail=${taskDetail}, hide=${hide}, myNickname=${project.getNickname()}, myMid=${project.getMemberId()}, myPosition=${project.position})}"></th:block> <!--loginMember=${loginMember}, , taskCommentForm=${taskCommentForm}-->
 <!--/* 모달: 할 일 상세 끝 */-->
 
 <!--/*모달: 이미 삭제된 할 일에 대한 접근 경고창 */-->
