@@ -75,8 +75,8 @@ public class UserController {
         }
 
         ResponseEntity<?> result = userService.signUpVerifyLink(vCode);
-        log.info("ResponseEntity확인: {}", result);
-        log.info("ResponseEntity 안의 객체는 어떻게 접근?: {}", result.getBody());
+        log.info("ResponseEntity: {}", result);
+//        log.info("ResponseEntity?: {}", result.getBody());
         // ResponseEntity 안의 객체는 어떻게 접근?:
         // NewUser(userEmail=users1@abc.com,
         // password=$2a$10$5OiektMZnzXs6oei6SRwGewTaWcsm2Rgh9CTb2pxOKmY5ZpEubZGW,
@@ -84,7 +84,7 @@ public class UserController {
 
         // 해당 인증코드를 가진 유저가 없거나 이미 인증을 마친 유저라면 에러 페이지로 이동
         if(result.getStatusCode().is4xxClientError() || result.getStatusCode().is5xxServerError()){
-            log.info("해당 인증코드를 가진 유저가 없거나 이미 인증을 마친 유저의 에러페이지로 이동필요: {}", result.getBody());
+            log.info("NO SUCH VERIFIEDCODE OR ALREADY VERIFIED: {}", result.getBody());
 //            redirectAttributes.addFlashAttribute("errorMsg", result.getBody());
 //            return new RedirectView("/error/error-verify-signup");
             model.addAttribute("errorMsg", result.getBody());
@@ -110,7 +110,7 @@ public class UserController {
      * */
     @GetMapping("/login")
     public String loginForm(Model model){
-        log.info("로그인폼요청");
+        log.info("REQUEST LOGIN FORM");
         model.addAttribute("loginRequest", new LoginUser());
         return "login/login";
     }
@@ -123,7 +123,7 @@ public class UserController {
      * */
     @PostMapping("/login")
     public RedirectView login(@ModelAttribute LoginUser loginRequest, HttpServletRequest request, RedirectAttributes redirectAttributes){
-        log.info("로그인 입력정보: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
+        log.info("LOGIN INFORMATION: {}", loginRequest); // 로그인 입력정보: LoginUser(loginId=user1@abc.com, loginPw=admin1234)
 
         // 이렇게 유효성 검사를 해도 됐겠네?!
 //        if(loginRequest.getLoginId().isEmpty() || loginRequest.getLoginPw().isEmpty()) {
@@ -139,7 +139,7 @@ public class UserController {
 
         HttpSession session = request.getSession();
         session.setAttribute("loginUser", result.getBody());
-        log.info("session 생성: {}", session.getAttribute("loginUser"));
+        log.info("CREATE session: {}", session.getAttribute("loginUser"));
         return new RedirectView("/mypage/myProjects");
     }
 
@@ -156,7 +156,7 @@ public class UserController {
     // project 서비스에 넘긴다.
     @GetMapping("/join")
     public String acceptInvitation(HttpSession session, @RequestParam("projectType") String projectType, @RequestParam("projectId") Long projectId, @RequestParam("invitedAs") String invitedAs){
-        log.info("========== 프로젝트 수락 버튼 눌러서 controller 진입 ==========");
+        log.info("========== ACCEPT PROJECT INVITATION AND ENTER controller ==========");
         LoginUser user = (LoginUser) session.getAttribute("loginUser");
         ResponseInvitation newCrew = ResponseInvitation.builder()
                 .projectId(projectId)

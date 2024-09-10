@@ -28,15 +28,15 @@ public class TaskDeletionHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        log.info("************ 할 일 지우기 소켓 연결 ************");
+        log.info("************ DELETE TASK SOCKET CONNECTED ************");
         loginUsers.put(getUserId(session), session);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("************ 할 일 지워짐 task deletion occurred ************");
+        log.info("************ TASK DELETION OCCURRED ************");
         String receivedData = message.getPayload(); // .split(",");
-        log.info("클라이언트가 보내온 data: {}", receivedData); // 클라이언트가 보내온 data: 15,16
+        log.info("DATA SENT BY CLIENT: {}", receivedData); // 클라이언트가 보내온 data: 15,16
 
         // 휴지통으로 옮겨진 할 일의 task id를 배열로 만든다.
         List<Long> taskIdL = new ArrayList<>();

@@ -3,9 +3,11 @@ function elExists(el){
 }
 
 window.onload = function(){
+    console.log(`myproject.js 인식됨`);
     /*---------- 0 ------------*/
     /* 새 프로젝트 추가 모달 */
     if(elExists(document.querySelector(".btn-open-modal-create-project"))){
+        console.log(`새프로젝트 추가 버튼 인식`);
         // 모달 컨테이너 (add/remove hide)
         const modalCreateProject = document.querySelector("#modal-create-project");
 
@@ -18,6 +20,7 @@ window.onload = function(){
         /* 새 프로젝트 추가 모달 열기 */
         document.querySelectorAll(".btn-open-modal-create-project").forEach(function(chosenBtn){
             chosenBtn.addEventListener("click", ()=>{
+                console.log(`새프로젝트 추가 버튼 클릭`);
                 modalCreateProject.classList.remove("hide");
                 // 생성하기 버튼(submit) 비활성화
                 submitCreateProject.disabled = true;

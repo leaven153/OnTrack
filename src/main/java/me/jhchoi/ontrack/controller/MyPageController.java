@@ -51,7 +51,7 @@ public class MyPageController {
         model.addAttribute("myProjects", myProjects);
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
-        log.info("컨트롤러가 화면으로 넘기는 project list: {}", myProjects);
+        log.info("MYPAGE CONTROLLER PASS project list: {}", myProjects);
 
         return "mypage/myProjects";
     }
@@ -62,7 +62,7 @@ public class MyPageController {
         log.info("=================myTasks====================");
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            log.info("로그인 정보 없음");
+            log.info("NO LOGIN INFORMATION");
             return "redirect:../login";
         }
         model.addAttribute("loginUser", loginUser);
@@ -80,14 +80,14 @@ public class MyPageController {
         log.info("=================bin====================");
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
-            log.info("로그인 정보 없음");
+            log.info("NO LOGIN INFORMATION");
             return "redirect:../login";
         }
         // 영구 삭제의 권한은 누구에게? >> 할 일 작성자 only? (생성자creator, 관리자admin??)
         model.addAttribute("loginUser", loginUser);
-        log.info("컨트롤러에서 넘기는 userId: {}", loginUser.getUserId());
+        log.info("PASSED BY CONTROLLER - userId: {}", loginUser.getUserId());
         List<BinResponse> binTaskList = taskService.getMyBin(loginUser.getUserId());
-        log.info("컨트롤러에서 받은 binTaskList: {}", binTaskList);
+        log.info("CONTROLLER GOT THIS - binTaskList: {}", binTaskList);
         model.addAttribute("binTaskList", binTaskList);
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
         return "/mypage/bin";
@@ -96,7 +96,7 @@ public class MyPageController {
 
     @GetMapping("/removedTask")
     public ResponseEntity<?> binTaskRow(@RequestParam Long taskId){
-        log.info("휴지통의 할 일 row 동적으로 생성하기 위해 컨트롤러 접근 -task id: {}", taskId);
+        log.info("BIN TASK ROW ELEMENT CREATE - task id: {}", taskId);
         BinResponse binTaskRow = taskService.binTaskRow(taskId);
         if(binTaskRow == null) {
             return ResponseEntity.badRequest().body(ErrorResponse.builder().message("해당 할 일이 존재하지 않습니다.").taskRemoved(true).build());

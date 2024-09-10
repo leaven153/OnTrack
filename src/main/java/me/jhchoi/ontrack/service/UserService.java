@@ -39,7 +39,7 @@ public class UserService {
      * explain  : 로그인
      * */
     public ResponseEntity<?> login(String loginId, String loginPw){
-        log.info("service 진입: id={}, pw={}", loginId, loginPw);
+        log.info("ENTER USER SERVICE : id={}, pw={}", loginId, loginPw);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Optional<OnTrackUser> user = userRepository.findByEmail(loginId);
 

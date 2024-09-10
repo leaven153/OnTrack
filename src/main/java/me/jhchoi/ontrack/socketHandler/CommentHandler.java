@@ -37,7 +37,7 @@ public class CommentHandler extends TextWebSocketHandler {
         // session get attribute: {loginUser=LoginUser(loginId=user@abc.com, loginPw=null, userName=공지철, userId=35)
         // , HTTP.SESSION.ID=B2F8EA55C23D6C16AEA4925D2DE7D5E5}
         loginUsers.put(getUserId(session), session);
-        log.info("loginUser map에 어떻게 저장되는가: {}", loginUsers);
+        log.info("HOW TO BE SAVED IN loginUser map: {}", loginUsers);
 //        try {
 //
 //        } catch(Exception e){
@@ -49,9 +49,9 @@ public class CommentHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String receivedData = message.getPayload(); // .split(",");
 
-        log.info("handleTextMessage가 받는 session: {}", session.getAttributes());
+        log.info("session THAT PASSED handleTextMessage: {}", session.getAttributes());
         // handleTextMessage가 받는 session: {loginUser=LoginUser(loginId=user@abc.com, loginPw=null, userName=공지철, userId=35), HTTP.SESSION.ID=B2F8EA55C23D6C16AEA4925D2DE7D5E5}
-        log.info("클라이언트가 보내온 data: {}", receivedData);
+        log.info("DATA SENT BY CLIENT: {}", receivedData);
         // 클라이언트가 보내온 data: [object Object] // map을 보내보았음.
         // 클라이언트가 보내온 data: 43string
 

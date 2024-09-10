@@ -25,7 +25,7 @@ public class NavAlarm {
         navAlarmList.put("projectNotice", false);
         navAlarmList.put("bin", memberService.alarmForBin(userId));
 
-        log.info("navAlarm 호출: {}", navAlarmList);
+        log.info("CALLING navAlarm: {}", navAlarmList);
         // hashMap일 때 - navAlarm 호출: {projectNotice=false, bin=true, noticeComment=false, projectInvitation=false}
         return navAlarmList;
     }
