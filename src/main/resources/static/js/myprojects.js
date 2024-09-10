@@ -1,9 +1,9 @@
 function elExists(el){
     return el !== undefined && el !== null;
 }
+console.log(`myprojects.js 인식됨`);
 
 window.onload = function(){
-    console.log(`myproject.js 인식됨`);
     /*---------- 0 ------------*/
     /* 새 프로젝트 추가 모달 */
     if(elExists(document.querySelector(".btn-open-modal-create-project"))){
