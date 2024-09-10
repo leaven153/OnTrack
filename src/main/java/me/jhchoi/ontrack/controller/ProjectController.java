@@ -59,14 +59,14 @@ public class ProjectController {
      * */
     @PostMapping("/createProject")
     public String createProjectSubmit(@ModelAttribute ProjectRequest newProjectRequest, HttpSession session){
-        log.info("======= 새 프로젝트 등록 =========");
-        log.info("프로젝트 폼: {}", newProjectRequest);
+        log.info("======= REGISTER NEW PROJECT =========");
+        log.info("PROJECT FORM DATA: {}", newProjectRequest);
         LoginUser user = (LoginUser) session.getAttribute("loginUser");
         newProjectRequest.setCreator(user.getUserId());
         ProjectMember newCreator = ProjectRequest.creator(user.getUserId(), user.getUserName());
         projectService.createProject(newProjectRequest.toProjectEntity(), newCreator);
-        log.info("프로젝트 엔티티생성확인: {}", newProjectRequest.toProjectEntity());
-        log.info("멤버 엔티티생성확인: {}", newCreator);
+        log.info("CREATE PROJECT ENTITY: {}", newProjectRequest.toProjectEntity());
+        log.info("CREATE MEMBER ENTITY: {}", newCreator);
         return "redirect:/mypage/myProjects";
     }
 
@@ -79,9 +79,9 @@ public class ProjectController {
      * */
     @GetMapping("/{projectId}")
     public String getProject(@PathVariable Long projectId, @RequestParam(required = false) String view, HttpSession session, Model model, HttpServletRequest request){
-        log.info("==============================개별 프로젝트 controller 진입==============================");
+        log.info("==============================ENTER GET PROJECT controller==============================");
         log.info("project id: {}", projectId);
-        log.info("선택한 view: {}", view);
+        log.info("CHOSEN view: {}", view);
 
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         if (loginUser == null) {
@@ -173,7 +173,7 @@ public class ProjectController {
         model.addAttribute("taskDetail", taskDetail);
 
 
-        log.info("할 일 상세에 대한 hide(detail): {}", detailHide);
+        log.info("TASK DETAIL hide(detail) OR NOT: {}", detailHide);
         model.addAttribute("hide", detailHide);
 
         // null일 경우, table view로 처리한다.
@@ -191,7 +191,7 @@ public class ProjectController {
 
     @PostMapping("/notice")
     public void writeNotice(@RequestBody NoticeDTO writeNotice){
-        log.info("공지등록: {}", writeNotice);
+        log.info("REGISTER NOTICE: {}", writeNotice);
     }
 
 

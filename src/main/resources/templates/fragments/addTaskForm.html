@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <title>addTaskForm</title>
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png" th:href="@{/imgs/icons8-octaedro-32.png}">
-<!--  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">-->
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 </head>
 <body>
-  <div id="container-create-task" class="modal-container hide" th:fragment="addTaskForm(taskFormRequest, myNickname, myMid, myPosition, memberList)">
+  <div id="container-create-task" class="modal-container" th:fragment="addTaskForm(taskFormRequest, myNickname, myMid, myPosition, memberList)">
   <!-- 새 할 일 추가 시작 -->
   <div class="modal-center flex-col-start-nowrap">
     <div class="상단닫기버튼과하위task일경우부모tasktitle flex-row-between-nowrap ">
@@ -17,7 +17,7 @@
       </div>
       <span class="btn-close-modal-createTask font-24">&times;</span>
     </div>
-    <form th:action="@{/task/addTask}" th:object="${taskFormRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
+    <form th:action="@{/task}" th:object="${taskFormRequest}" method="POST" id="form-create-task" enctype="multipart/form-data">
       <input type="hidden" th:field="${taskFormRequest.projectId}">
       <input type="hidden" th:field="${taskFormRequest.authorMid}">
       <input type="hidden" name="authorName" th:value="${myNickname}">

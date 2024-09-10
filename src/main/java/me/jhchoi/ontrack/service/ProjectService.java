@@ -32,7 +32,7 @@ public class ProjectService {
      * */
     @Transactional
     public void createProject(OnTrackProject newProj, ProjectMember creator){
-        log.info("===============project 생성 service 접근===============");
+        log.info("===============ENTERING CREATE project service ===============");
         projectRepository.save(newProj);
         creator.setProjectId(newProj.getId());
         memberRepository.joinProject(creator);

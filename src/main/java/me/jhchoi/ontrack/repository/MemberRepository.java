@@ -19,8 +19,8 @@ public class MemberRepository {
 
     // 프로젝트 멤버 등록: ①생성, ②초대 수락
     public void joinProject(ProjectMember pMember){
-        log.info("===============member repository 접근===============");
-        log.info("member 정보: {}", pMember);
+        log.info("===============ENTER member repository ===============");
+        log.info("member DATA: {}", pMember);
         memberMapper.joinProject(pMember);
     }
 
