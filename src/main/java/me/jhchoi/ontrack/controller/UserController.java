@@ -50,7 +50,7 @@ public class UserController {
      * */
     @PostMapping("/signup/step1")
     public ResponseEntity<?> signupSendMail(@RequestBody NewUser newUser){
-        log.info("회원가입 신청(email): {}", newUser);
+        log.info("REQUEST SIGN UP(email): {}", newUser);
         return userService.sendVerificationMail(newUser);
 //        return null;
     }
@@ -64,7 +64,7 @@ public class UserController {
     @GetMapping("/signup/step2")
     public String signUpLinkVerify(@RequestParam(required = false) String vCode, Model model){
         // 메일의 링크를 통해 들어옴!: 881ac812-8fa4-48af-b9a0-60dafb77a9c5 (메리포핀스: users1@abc.com, id=38)
-        log.info("인증 링크 통해 들어옴!: {}", vCode);
+        log.info("ENTER VIA VERIFIED LINK(EMAIL): {}", vCode);
 
         // vCode 없이 url 접근 시 에러페이지로 이동
         if(vCode == null) {
