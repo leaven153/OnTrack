@@ -47,7 +47,9 @@ console.log(`myprojects.js 인식됨`);
 
             // 프로젝트 이름은 유효성 검사 안해도 됩니까? 
             // 20글자 이하! + ?
-            if (document.getElementsByName("newProjectName")[0].value !== "" && newProjectType !== "") {
+            console.log(document.getElementsByName("projectName")[0]);
+            console.log(document.getElementsByName("projectName")[0].value);
+            if (document.getElementsByName("projectName")[0].value !== "" && newProjectType !== "") {
                 submitCreateProject.disabled = false;
                 submitCreateProject.classList.add("bg533");
                 submitCreateProject.classList.remove("btn-blur");

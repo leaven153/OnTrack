@@ -8,7 +8,7 @@
 
   <title>OnTrack -Mypage(projects)</title>
   <link rel="icon" type="image/x-icon" href="/imgs/icons8-octaedro-32.png">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="../../static/css/style.css" th:href="@{/css/style.css}">
 
   <!-- <script src="/js/main.js"></script> -->
  </head>
@@ -120,7 +120,51 @@
   <th:block th:replace="~{fragments/createProjectForm :: createProjectForm(createProjectRequest=${createProjectRequest})}"></th:block>
   <!--/* 모달: 새프로젝트 추가 끝 */-->
 
+  <!--/* 임시: js 확인을 위한 fragment 포함*/-->
+<!--  <div id="modal-create-project" class="modal-container hide" th:fragment="createProjectForm(createProjectRequest)">-->
+<!--      &lt;!&ndash;/* 새프로젝트 추가 시작 */&ndash;&gt;-->
+<!--      <div class="modal-center flex-col-start-nowrap">-->
+<!--          <div class="상단닫기버튼 flex-row-end-center-nowrap">-->
+<!--              <button type="button" id="btn-close-modal-create-project" class="btn-close font-24">&times;</button>-->
+<!--          </div>-->
+<!--          <form action="/project/createProject" th:action="@{project/createProject}" th:object="${createProjectRequest}" method="POST" id="form-create-project">-->
+<!--              <div class="프로젝트제목입력 bottom-line mb-30 pd-b5 modal-create-proj-name">-->
+<!--                  <input type="text" class="modal-create-proj-name" name="projectName" th:field="${createProjectRequest.projectName}" max="20" placeholder="새 프로젝트명을 입력하세요">-->
+<!--              </div>-->
+<!--              <div class="프로젝트유형 flex-row-justify-start-align-center modal-create-proj-items mb-30">-->
+<!--                  <span class="font-18 c411">프로젝트 유형</span>-->
+<!--                  <div class="">-->
+<!--                      <input type="radio" id="solo" th:field="${createProjectRequest.type}" value="solo" class="new-project-type input-radio-project-type hide">-->
+<!--                      <input type="radio" id="team" th:field="${createProjectRequest.type}" value="team" class="new-project-type input-radio-project-type hide">-->
+<!--                      <div class="">-->
+<!--                          <label for="solo" class="btn-radio w100 radio-r">-->
+<!--                              <img src="/imgs/icon_solo1315.png" alt="solo" class="vertical-ctrl015 hide">-->
+<!--                              <img src="/imgs/icon_blur_solo1315.png" alt="solo" class="vertical-ctrl015">-->
+<!--                              <span class="font-blur">개인</span>-->
+<!--                          </label><label for="team" class="btn-radio w100 radio-l">-->
+<!--                          <img src="/imgs/icon_group2215.png" alt="team" class="vertical-ctrl015 hide">-->
+<!--                          <img src="/imgs/icon_blur_group2215.png" alt="team" class="vertical-ctrl015">-->
+<!--                          <span class="font-blur">팀</span>-->
+<!--                      </label>-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--              <div class="프로젝트마감일 flex-row-justify-start-align-center modal-create-proj-items">-->
+<!--                  <span class="font-18 c411">프로젝트 마감일</span>-->
+<!--                  <div class="modal-create-proj-dueDate">-->
+<!--                      <div class="bottom-line200">-->
+<!--                          <input type="date" name="newProjectDueDate" th:field="${createProjectRequest.dueDate}" class="altivo-light">-->
+<!--                      </div>-->
+<!--                  </div>-->
+<!--              </div>-->
+<!--              <div class="확인(프로젝트생성버튼) flex-row-center-center-nowrap mt-60 mb-5">-->
+<!--                  <button type="submit" class="btn-large-ok bg533 font-white btn-submit-create-project">생성하기</button> &lt;!&ndash;form="form-create-project" &ndash;&gt;-->
+<!--              </div>-->
+<!--          </form>-->
+<!--      </div> &lt;!&ndash;/* 새프로젝트 추가 끝 */&ndash;&gt;-->
+<!--  </div>-->
+
 <!--  <script type="module" src="../../static/js/sse.mjs" th:src="@{/js/sse.mjs}"></script>-->
-  <script src="/js/myprojects.js" th:src="@{/js/myprojects.js}"></script>
+  <script src="../../static/js/myprojects.js" th:src="@{/js/myprojects.js}"></script>
  </body>
 </html>
