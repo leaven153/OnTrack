@@ -12,13 +12,13 @@
         <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
         <script type="module" src="../../static/js/nav.mjs" th:src="@{/js/nav.mjs}"></script>
         <div class="nav-btn-list">
+            <div class="nav-menu" data-id="" id="nav-btn-task" ><!--/* th:if="${alarm == 'noticeComment'}" */-->
+                <!-- task의 모두 확인 요청 사용여부 결정요망 -->
+                <!--                    <div id="icon-myTasks" class="alarm-notice-comment" th:classappend="${navAlarm.get(alarm)}?'hide'"></div>-->
+                <a th:href="@{/mypage/myTasks}"><img src="../../static/imgs/icon_tasks2.png" th:src="@{/imgs/icon_tasks2.png}" alt="tasks" class=""></a>
+                <span class="menu-tip">나의 모든일</span>
+            </div>
             <th:block th:each="alarm : ${navAlarm.keySet()}">
-                <div class="nav-menu" data-id="" id="nav-btn-task" ><!--/* th:if="${alarm == 'noticeComment'}" */-->
-                    <!-- task의 모두 확인 요청 사용여부 결정요망 -->
-<!--                    <div id="icon-myTasks" class="alarm-notice-comment" th:classappend="${navAlarm.get(alarm)}?'hide'"></div>-->
-                    <a th:href="@{/mypage/myTasks}"><img src="../../static/imgs/icon_tasks2.png" th:src="@{/imgs/icon_tasks2.png}" alt="tasks" class=""></a>
-                    <span class="menu-tip">나의 모든일</span>
-                </div>
                 <div class="nav-menu" data-id="" id="nav-btn-project" th:if="${alarm == 'projectInvitation'}">
                     <div class="project-alarm-notice"></div>
                     <div class="project-alarm-invitation"></div>
