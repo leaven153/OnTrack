@@ -2353,10 +2353,12 @@ window.onload = function(){
         // 9: input#create-task-attach-file.opacity0.wh0, … }
 
         console.log(addTaskForm.elements.assigneeMids);
+        console.log(Array.of(addTaskForm.elements.assigneeMids));
+        console.log(Array.of(addTaskForm.elements));
         // <input id="34" class="hide" type="checkbox" name="assigneeMids" value="34" data-nickname="busmoja">
         const inputs = addTaskForm.elements.assigneeMids;
         // 선택했던 담당자 input 모두 해제
-        [...inputs].forEach(function(eachOne){
+        Array.of(addTaskForm.elements.assigneeMids).forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
