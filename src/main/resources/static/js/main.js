@@ -2160,6 +2160,9 @@ window.onload = function(){
         // // console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
         // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
         //
+        console.log(addTaskForm);
+        console.log(addTaskForm.elements);
+        console.log(addTaskForm.elements.assigneeMids);
         addTaskForm.elements.assigneeMids.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
