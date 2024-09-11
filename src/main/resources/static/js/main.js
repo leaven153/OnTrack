@@ -2163,7 +2163,7 @@ window.onload = function(){
         console.log(addTaskForm);
         console.log(addTaskForm.elements);
         console.log(addTaskForm.elements.assigneeMids);
-        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
                 chosenAssigneeMids.push(eachOne.id);
@@ -2230,7 +2230,7 @@ window.onload = function(){
             addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
             // 선택했던 담당자 input 모두 해제
-            addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+            [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
                 eachOne.classList.remove("chosen");
             });
 
@@ -2292,7 +2292,7 @@ window.onload = function(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
@@ -2346,7 +2346,7 @@ window.onload = function(){
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
