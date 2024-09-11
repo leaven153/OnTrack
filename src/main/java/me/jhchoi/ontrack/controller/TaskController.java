@@ -56,9 +56,9 @@ public class TaskController {
             return ResponseEntity.created(location).build();
 //            return "redirect:/login/login";
         }
-        log.info("=============from 할일추가 form==================");
+        log.info("============= ENTER ADD TASK CONTROLLER ==================");
 
-        log.info("전체 = {}", taskFormRequest);
+        log.info("ADD TASK FORM DATA = {}", taskFormRequest);
         // 전체 = TaskAndAssignee(id=null, taskTitle=파일 테스트, authorMid=6, authorName=크러쉬,
         // taskPriority=3, taskStatus=null, taskDueDate=2024-08-14, taskParentId=null,
         // createdAt=null, updatedAt=null, updatedBy=null, projectId=11,

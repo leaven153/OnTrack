@@ -2223,7 +2223,53 @@ window.onload = function(){
             headers: {},
             body: addTaskData
         }).then(response => {
-            afterAddTaskSubmit();
+            // afterAddTaskSubmit();
+            addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
+
+            // 선택했던 담당자 input 모두 해제
+            addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+                eachOne.classList.remove("chosen");
+            });
+
+            // 담당자 담은 array clear (data to controller)
+            chosenAssigneeMids = [];
+            choosenAssigneeNames = [];
+
+            // 담당자 담은 set clear (화면)
+            chosenAssigneeList.clear();
+            console.log(`모달 닫은 후에 set: `);
+            console.log(chosenAssigneeList);
+
+
+            // 선택된 담당자 이름이 출력된 div 삭제
+            if(elExists(document.querySelectorAll(".assignee-chosen-box"))){
+                const assigneeNamediv = document.querySelectorAll(".assignee-chosen-box");
+                for(const el of assigneeNamediv) el.remove();
+            }
+
+            // 선택된 담당자들이 담기는 box hide
+            chosensBoxes.classList.remove("assignee-display");
+            chosensBoxes.classList.add("hide");
+
+
+            //담당자 배정하기 문구 출력
+            assigneeBeforeChoose.classList.add("assignee-display");
+            assigneeBeforeChoose.classList.remove("hide");
+
+            // 첨부된 파일 화면(div)에서 삭제
+            for(const div of createTaskFiles.querySelectorAll("div")) {
+                div.remove();
+            }
+            createTasknofile.classList.remove("hide");
+
+            // 첨부된 파일 fileList array 비우기
+            // addTaskForm.elements.taskFile.files = [];
+            // createTaskFileDelCnt = 0;
+            rewriteCreateTaskFileList = [];
+
+            // 모달 닫기
+            modalCreateTask.classList.add("hide");
+
             if (response.ok) {
                 location.reload();
             }
@@ -2293,7 +2339,52 @@ window.onload = function(){
     const btnCloseModalCreateTask = document.querySelector(".btn-close-modal-createTask");
     
     btnCloseModalCreateTask.addEventListener("click", ()=>{
-        afterAddTaskSubmit();
+        // afterAddTaskSubmit();
+        addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
+
+        // 선택했던 담당자 input 모두 해제
+        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+            eachOne.classList.remove("chosen");
+        });
+
+        // 담당자 담은 array clear (data to controller)
+        chosenAssigneeMids = [];
+        choosenAssigneeNames = [];
+
+        // 담당자 담은 set clear (화면)
+        chosenAssigneeList.clear();
+        console.log(`모달 닫은 후에 set: `);
+        console.log(chosenAssigneeList);
+
+
+        // 선택된 담당자 이름이 출력된 div 삭제
+        if(elExists(document.querySelectorAll(".assignee-chosen-box"))){
+            const assigneeNamediv = document.querySelectorAll(".assignee-chosen-box");
+            for(const el of assigneeNamediv) el.remove();
+        }
+
+        // 선택된 담당자들이 담기는 box hide
+        chosensBoxes.classList.remove("assignee-display");
+        chosensBoxes.classList.add("hide");
+
+
+        //담당자 배정하기 문구 출력
+        assigneeBeforeChoose.classList.add("assignee-display");
+        assigneeBeforeChoose.classList.remove("hide");
+
+        // 첨부된 파일 화면(div)에서 삭제
+        for(const div of createTaskFiles.querySelectorAll("div")) {
+            div.remove();
+        }
+        createTasknofile.classList.remove("hide");
+
+        // 첨부된 파일 fileList array 비우기
+        // addTaskForm.elements.taskFile.files = [];
+        // createTaskFileDelCnt = 0;
+        rewriteCreateTaskFileList = [];
+
+        // 모달 닫기
+        modalCreateTask.classList.add("hide");
     });
 
 
