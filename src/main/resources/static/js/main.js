@@ -2354,9 +2354,9 @@ window.onload = function(){
 
         console.log(addTaskForm.elements.assigneeMids);
         // <input id="34" class="hide" type="checkbox" name="assigneeMids" value="34" data-nickname="busmoja">
-
+        const inputs = addTaskForm.elements.assigneeMids;
         // 선택했던 담당자 input 모두 해제
-        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
+        [...inputs].forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
