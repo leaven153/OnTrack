@@ -2158,12 +2158,12 @@ window.onload = function(){
         // // console.log(addTaskForm.elements.taskTitle.value); // 할 일 추가중
         // // console.log(addTaskForm.elements.taskPriority.value); // 1
         // // console.log(addTaskForm.elements.taskDueDate.value); // 2024-06-11
-        // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen, 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide, 4: input#28.hide, value: "", length: 5 }
+        // // console.log(addTaskForm.elements.assigneesMid); // RadioNodeList { 0: input#4.hide.chosen,
+        // 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide,
+        // 4: input#28.hide, value: "", length: 5 }
         //
-        console.log(addTaskForm);
-        console.log(addTaskForm.elements);
-        console.log(addTaskForm.elements.assigneeMids);
-        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
+
+        addTaskForm.elements.assigneeMids.forEach(function(eachOne){
             if(eachOne.classList.contains("chosen")) {
                 console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
                 chosenAssigneeMids.push(eachOne.id);
@@ -2344,6 +2344,16 @@ window.onload = function(){
     btnCloseModalCreateTask.addEventListener("click", ()=>{
         // afterAddTaskSubmit();
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
+
+        console.log(addTaskForm); // <form id="form-create-task" action="/task" method="POST" enctype="multipart/form-data">
+        console.log(addTaskForm.elements); // HTMLFormControlsCollection { 0: input#projectId,
+        // 1: input#authorMid, 2: input, 3: input.modal-add-task,
+        // 4: input#vip.input-radio.hide, 5: input#ip.input-radio.hide,
+        // 6: input#norm.input-radio.hide, 7: input.altivo-light, 8: input#34.hide,
+        // 9: input#create-task-attach-file.opacity0.wh0, … }
+
+        console.log(addTaskForm.elements.assigneeMids);
+        // <input id="34" class="hide" type="checkbox" name="assigneeMids" value="34" data-nickname="busmoja">
 
         // 선택했던 담당자 input 모두 해제
         [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
