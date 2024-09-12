@@ -352,7 +352,7 @@ btnCreateTaskSubmit.addEventListener("click", (e)=>{
         addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
 
         // 선택했던 담당자 input 모두 해제
-        [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
+        document.querySelectorAll("input[name='assigneeMids']").forEach(function(eachOne){
             eachOne.classList.remove("chosen");
         });
 
@@ -405,53 +405,9 @@ btnCreateTaskSubmit.addEventListener("click", (e)=>{
 
 /*---------- 030 ------------*/
 // 할 일 추가 모달 닫는 기능
-function afterAddTaskSubmit(){
-    addTaskForm.reset(); // 파일첨부: 콘솔에는 length 0으로 찍힘. 담당자: 콘솔과 화면 모두 reset 필요
-
-    // 선택했던 담당자 input 모두 해제
-    [...addTaskForm.elements.assigneeMids].forEach(function(eachOne){
-        eachOne.classList.remove("chosen");
-    });
-
-    // 담당자 담은 array clear (data to controller)
-    chosenAssigneeMids = [];
-    choosenAssigneeNames = [];
-
-    // 담당자 담은 set clear (화면)
-    chosenAssigneeList.clear();
-    console.log(`모달 닫은 후에 set: `);
-    console.log(chosenAssigneeList);
-
-
-    // 선택된 담당자 이름이 출력된 div 삭제
-    if(fnc.elExists(document.querySelectorAll(".assignee-chosen-box"))){
-        const assigneeNamediv = document.querySelectorAll(".assignee-chosen-box");
-        for(const el of assigneeNamediv) el.remove();
-    }
-
-    // 선택된 담당자들이 담기는 box hide
-    chosensBoxes.classList.remove("assignee-display");
-    chosensBoxes.classList.add("hide");
-
-
-    //담당자 배정하기 문구 출력
-    assigneeBeforeChoose.classList.add("assignee-display");
-    assigneeBeforeChoose.classList.remove("hide");
-
-    // 첨부된 파일 화면(div)에서 삭제
-    for(const div of createTaskFiles.querySelectorAll("div")) {
-        div.remove();
-    }
-    createTasknofile.classList.remove("hide");
-
-    // 첨부된 파일 fileList array 비우기
-    // addTaskForm.elements.taskFile.files = [];
-    // createTaskFileDelCnt = 0;
-    rewriteCreateTaskFileList = [];
-
-    // 모달 닫기
-    modalCreateTask.classList.add("hide");
-}
+// function afterAddTaskSubmit(){
+//
+// }
 
 /*---------- 031 ------------*/
 /* 할 일 추가 모달 닫기 버튼 */
@@ -469,16 +425,13 @@ btnCloseModalCreateTask.addEventListener("click", ()=>{
     // 6: input#norm.input-radio.hide, 7: input.altivo-light, 8: input#34.hide,
     // 9: input#create-task-attach-file.opacity0.wh0, … }
 
-    console.log(addTaskForm.elements.assigneeMids);
-    console.log(Array.of(addTaskForm.elements.assigneeMids));
-    console.log(Array.of(addTaskForm.elements));
+
+    // console.log(Array.of(addTaskForm.elements.assigneeMids));
+    // console.log(Array.of(addTaskForm.elements));
     // <input id="34" class="hide" type="checkbox" name="assigneeMids" value="34" data-nickname="busmoja">
 
-    addTaskForm.elements.assigneeMids.forEach(function(testB){
-        console.log(testB);
-    });
     // 선택했던 담당자 input 모두 해제
-    Array.of(addTaskForm.elements.assigneeMids).forEach(function(eachOne){
+    document.querySelectorAll("input[name='assigneeMids']").forEach(function(eachOne){
         eachOne.classList.remove("chosen");
     });
 

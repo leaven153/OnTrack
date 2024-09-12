@@ -71,7 +71,7 @@
             <!-- 프로젝트 멤버 목록 -->
             <div id="assignee-list-box" class="hide" > <!--/* th:each="member : ${memberList}" */-->
               <th:block th:each="member : ${memberList}"> <!--/* taskAssignee */-->
-                <input type="checkbox" class="hide" name="assigneeMids" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickname()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickname()}">test1</label>
+                <input type="checkbox" class="hide" name="assigneeMids" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickname()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickname()}"></label>
 <!--                <input type="checkbox" class="hide" name="assigneeMids" th:attr="id=${member.getMemberId()}, data-nickname=${member.getNickname()}" th:value="${member.getMemberId()}"><label th:for="${member.getMemberId()}" class="display-block lists" th:text="${member.getNickname()}">test2</label>-->
               </th:block>
             </div>
