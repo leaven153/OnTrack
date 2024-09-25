@@ -6,6 +6,7 @@ function elExists(el){
     return el !== undefined && el !== null;
 }
 
+const baseUrl = "http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com";
 
 window.onload = function(){
     console.log(`here we are, main.js!`);
@@ -233,7 +234,7 @@ window.onload = function(){
                             updatedBy: titleInput.dataset.mid
                         }
 
-                        fetch('http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editTask?item=title', {
+                        fetch(baseUrl+"/task/editTask?item=title", {
                             method: 'POST',
                             headers: {
                                 'Content-type': 'application/json'
@@ -648,7 +649,7 @@ window.onload = function(){
         // modContent에 이름과 id를 묶어서 보내어 끊어 사용하려 해봤으나 (json stringfy로 전달된 객체의 값은 배열이었다...)
         // 예) 심지호(34) ← 괄호의 위치를 찾아 인덱스로 받아 끊어내는 작업을 하느니, 파라미터로 던지는 게 낫다고 판단함.
 
-        fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editAssignee?mid=${datum["mid"]}`, {
+        fetch(baseUrl+`/task/editAssignee?mid=${datum["mid"]}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -793,7 +794,7 @@ window.onload = function(){
 
                 // fetch
 
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editAssignee?mid=${datum["executormid"]}`, {
+                fetch(baseUrl+`/task/editAssignee?mid=${datum["executormid"]}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -934,7 +935,7 @@ window.onload = function(){
                 console.log(taskHistory);
 
                 // 2-5. 서버로 전송
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editAssignee?mid=${this.dataset.mid}`, {
+                fetch(baseUrl+`/task/editAssignee?mid=${this.dataset.mid}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1184,7 +1185,7 @@ window.onload = function(){
             console.log(taskHistory);
 
 
-            fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editAssignee?mid=${newAssigneeMid}`, {
+            fetch(baseUrl+`/task/editAssignee?mid=${newAssigneeMid}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1355,7 +1356,7 @@ window.onload = function(){
                             nickname: prev(btn).value
                         };
 
-                        fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/search?object=member`, {
+                        fetch(baseUrl+`/task/search?object=member`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -1468,7 +1469,7 @@ window.onload = function(){
                         };
                         console.log(taskHistory);
 
-                        fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editTask?item=status&statusNum=${datum["status"]}`, {
+                        fetch(baseUrl+`/task/editTask?item=status&statusNum=${datum["status"]}`, {
                             method: 'POST',
                             headers: {
                                 'Content-type': 'application/json'
@@ -1583,7 +1584,7 @@ window.onload = function(){
                 console.log(taskHistory);
 
                 // fetch
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/editTask?item=dueDate`, {
+                fetch(baseUrl+`/task/editTask?item=dueDate`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2470,7 +2471,7 @@ window.onload = function(){
 
 
                 // 서버에 보내기 (작성자, 글내용, 타입(RR일 경우, 확인cnt=1(작성자id, check True)), 작성일시)
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/comment?type=add`, {
+                fetch(baseUrl+`/task/comment?type=add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2800,7 +2801,7 @@ window.onload = function(){
             console.log(taskDetailRequest);
 
             // fetch
-            fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/comment?type=edit`, { //${datum["taskid"]}/
+            fetch(baseUrl+`/task/comment?type=edit`, { //${datum["taskid"]}/
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -2869,7 +2870,7 @@ window.onload = function(){
                 console.log("작성자에 의한 소통글 삭제");
                 // 서버 요청
 
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/comment?cId=${data["commentid"]}`, {
+                fetch(baseUrl+`/task/comment?cId=${data["commentid"]}`, {
                     method: 'DELETE'
                 }).then(response => {
                     if(response.ok){
@@ -2894,7 +2895,7 @@ window.onload = function(){
                     blockedBy: data["deletedby"]
                 }
 
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/comment?type=blocked`, {
+                fetch(baseUrl+`/task/comment?type=blocked`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -3004,7 +3005,7 @@ window.onload = function(){
 
 
                 // fetch
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/file?pId=${datum["projectid"]}&tId=${datum["taskid"]}&mId=${datum["uploadermid"]}`, { // /upload
+                fetch(baseUrl+`/task/file?pId=${datum["projectid"]}&tId=${datum["taskid"]}&mId=${datum["uploadermid"]}`, { // /upload
                     method: 'POST',
                     headers: {},
                     body: fileData
@@ -3152,7 +3153,7 @@ window.onload = function(){
                     }
                 }
                 // 서버 전송
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/file?pId=${data["projectid"]}&tId=${data["taskid"]}&mId=${data["uploadermid"]}`, {
+                fetch(baseUrl+`/task/file?pId=${data["projectid"]}&tId=${data["taskid"]}&mId=${data["uploadermid"]}`, {
                     method: 'POST',
                     headers: {},
                     body: fileData
@@ -3283,7 +3284,7 @@ window.onload = function(){
             if(data["deletedby"] === "uploader"){ // 작성자 삭제
                 console.log("작성자에 의한 삭제");
                 // 서버 요청
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/file?fId=${data["fileid"]}`, {
+                fetch(baseUrl+`/task/file?fId=${data["fileid"]}`, {
                     method: 'DELETE'
                 }).then(response => {
                     if(response.ok){
@@ -3308,7 +3309,7 @@ window.onload = function(){
             } else { // 관리자 삭제
                 console.log("관리자에 의한 삭제");
                 // 서버 요청
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task/file?fId=${data["fileid"]}&executorMid=${data["deletedby"]}`, {
+                fetch(baseUrl+`/task/file?fId=${data["fileid"]}&executorMid=${data["deletedby"]}`, {
                     method: 'DELETE'
                 }).then(response => {
                     if(response.ok){
@@ -3535,7 +3536,7 @@ window.onload = function(){
 
             console.log(taskBinRequest);
 
-            fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task`, {
+            fetch(baseUrl+`/task`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -3580,7 +3581,7 @@ window.onload = function(){
                     deletedBy: data["executormid"]
                 };
 
-                fetch(`http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/task`, {
+                fetch(baseUrl+`/task`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
