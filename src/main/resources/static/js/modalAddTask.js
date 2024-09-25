@@ -1,5 +1,7 @@
 import * as fnc from './fnc.mjs';
 
+console.log(`modalAddTask.js가 인식이 되고 있는가?`);
+
 /*---------- 021 ------------*/
 const addTaskForm = document.querySelector("#form-create-task");
 /*---- ▼ 할 일 추가 모달: 담당자 배정 ▼ ----*/
@@ -21,6 +23,7 @@ const chosenAssigneeList = new Set(); // 중복 선택 방지를 위한 Set
 // 프로젝트 멤버 목록 나타내기
 btnShowAssigneeList.addEventListener("click", ()=>{
 
+    console.log(`할 일 추가: 프로젝트 멤버 목록 나타내기 버튼 클릭됨`);
     // 담당자가 아직 배정되지 않았다면 '담당자 배정하기' 글씨는 출력,
     // 선택된 담당자 이름이 출력될 div는 미출력 (목록 나타내기 클릭할 때마다 체크)
     if (chosenAssigneeList.size === 0) {
