@@ -396,6 +396,8 @@ btnCreateTaskSubmit.addEventListener("click", (e)=>{
         modalCreateTask.classList.add("hide");
 
         if (response.ok) {
+            console.log("왜 화면 reload가 이렇게 되는거지?");
+            console.log(location);
             location.reload();
         }
     });
