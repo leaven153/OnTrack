@@ -477,5 +477,5 @@ btnCloseModalCreateTask.addEventListener("click", ()=>{
     rewriteCreateTaskFileList = [];
 
     // 모달 닫기
-    // modalCreateTask.classList.add("hide");
+    modalCreateTask.classList.add("hide");
 });
