@@ -287,8 +287,8 @@ btnCreateTaskSubmit.addEventListener("click", (e)=>{
     // 1: input#14.hide.chosen, 2: input#26.hide.chosen, 3: input#27.hide,
     // 4: input#28.hide, value: "", length: 5 }
     //
-
-    addTaskForm.elements.assigneeMids.forEach(function(eachOne){
+//addTaskForm.elements.assigneeMids
+    document.querySelectorAll("input[name='assigneeMids']").forEach(function(eachOne){
         if(eachOne.classList.contains("chosen")) {
             console.log(`배정된 담당자 id: ${eachOne.id}, 배정된 담당자 nickname: ${eachOne.dataset.nickname}`);
             chosenAssigneeMids.push(eachOne.id);
