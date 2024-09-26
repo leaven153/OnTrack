@@ -72,7 +72,7 @@ public class MyPageController {
         model.addAttribute("myTasks", taskList);
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
 
-        return "/mypage/myTasks";
+        return "mypage/myTasks";
     }
 
     @GetMapping("/bin")
@@ -90,7 +90,7 @@ public class MyPageController {
         log.info("CONTROLLER GOT THIS - binTaskList: {}", binTaskList);
         model.addAttribute("binTaskList", binTaskList);
         model.addAttribute("navAlarm", navAlarm.getAlarm(loginUser.getUserId()));
-        return "/mypage/bin";
+        return "mypage/bin";
     }
 
 
