@@ -27,17 +27,15 @@ public class CustomS3Util {
     // 폴더 생성
     public void createFolderAWS(Long projectId, Long taskId){
         S3Client client = S3Client.builder().build();
-        String folder = String.valueOf(projectId) + "/" + String.valueOf(taskId) + "/";
+        String folder = projectId + "/" + taskId + "/";
 
         // 현재 버킷 내에 있는 폴더 리스트 확인
         ListObjectsRequest request = ListObjectsRequest.builder().bucket(bucket).build();
         ListObjectsResponse response = client.listObjects(request);
         List<S3Object> objects = response.contents();
-        log.info("objects list without prefix: ", objects);
+        log.info("objects list without prefix: {}", objects);
 
-        ListIterator<S3Object> listIterator = objects.listIterator();
-        while(listIterator.hasNext()){
-            S3Object object = listIterator.next();
+        for (S3Object object : objects) {
             log.info("object key: {}", object.key());
         }
 
@@ -49,11 +47,9 @@ public class CustomS3Util {
         ListObjectsResponse response2 = client.listObjects(request2);
 
         List<S3Object> objects2 = response2.contents();
-        log.info("objects list with prefix: ", objects2);
+        log.info("objects list with prefix: {}", objects2);
 
-        ListIterator<S3Object> listIterator1 = objects2.listIterator();
-        while(listIterator1.hasNext()){
-            S3Object object2 = listIterator1.next();
+        for (S3Object object2 : objects2) {
             log.info("specific folder name: {}", object2.key());
         }
 
