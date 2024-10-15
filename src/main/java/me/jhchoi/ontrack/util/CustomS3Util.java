@@ -26,25 +26,27 @@ public class CustomS3Util {
 
     // 폴더 생성
     public void createFolderAWS(Long projectId, Long taskId){
-        S3Client client = S3Client.builder().build();
-        String folder = projectId + "/" + taskId + "/";
+        ListObjectsResponse response2;
+        try (S3Client client = S3Client.builder().build()) {
+            String folder = projectId + "/" + taskId + "/";
 
-        // 현재 버킷 내에 있는 폴더 리스트 확인
-        ListObjectsRequest request = ListObjectsRequest.builder().bucket(bucket).build();
-        ListObjectsResponse response = client.listObjects(request);
-        List<S3Object> objects = response.contents();
-        log.info("objects list without prefix: {}", objects);
+            // 현재 버킷 내에 있는 폴더 리스트 확인
+            ListObjectsRequest request = ListObjectsRequest.builder().bucket(bucket).build();
+            ListObjectsResponse response = client.listObjects(request);
+            List<S3Object> objects = response.contents();
+            log.info("objects list without prefix: {}", objects);
 
-        for (S3Object object : objects) {
-            log.info("object key: {}", object.key());
+            for (S3Object object : objects) {
+                log.info("object key: {}", object.key());
+            }
+
+            ListObjectsRequest request2 = ListObjectsRequest.builder()
+                    .bucket(bucket)
+                    .prefix(folder)
+                    .build();
+
+            response2 = client.listObjects(request2);
         }
-
-        ListObjectsRequest request2 = ListObjectsRequest.builder()
-                .bucket(bucket)
-                .prefix(folder)
-                .build();
-
-        ListObjectsResponse response2 = client.listObjects(request2);
 
         List<S3Object> objects2 = response2.contents();
         log.info("objects list with prefix: {}", objects2);
