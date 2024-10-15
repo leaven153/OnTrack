@@ -21,6 +21,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(commentHandler, "/ws/noticeComment")
                 .addHandler(taskDeletionHandler, "/ws/taskDeletion")
                 .addInterceptors(new HttpSessionHandshakeInterceptor())
-                .setAllowedOrigins("http://localhost:8080").withSockJS();
+                .setAllowedOrigins("http://ontrack-env.eba-mpbdgazx.ap-northeast-2.elasticbeanstalk.com/").withSockJS(); //http://localhost:8080
     }
 }

@@ -30,32 +30,32 @@ public class UserRepositoryTest {
     void save(){
         OnTrackUser user = OnTrackUser.builder()
                 .userEmail("user30@abc.com")
-                .password(encoder.encode("user1234"))
+                .password(encoder.encode("asdf123"))
                 .userName("베토벤")
                 .registeredAt(LocalDate.now())
                 .build();
         userRepository.save(user);
 
-        log.info("비밀번호 일치 = {}", encoder.matches("user1234", user.getPassword()));
+        log.info("비밀번호 일치 = {}", encoder.matches("asdf123", user.getPassword()));
 
     }
 
-    @Test @DisplayName("회원가입테스트")
+    @Test @DisplayName("회원 data")
     void multisave(){
-        String[] names = new String[]{"토르", "메리 포핀스", "줄리 앤드류스",
+        String[] names = new String[]{"Thor", "메리 포핀스", "줄리 앤드류스",
                 "블랙위도우", "아이언맨", "크리스 에반스",
-                "캡틴 아메리카", "비욘세", "Adele",
-                "어린왕자", "크러쉬", "서머싯 몸",
-                "제임스 서버", "스칼렛 요한슨", "제시카 차스테인",
+                "캡틴 아메리카", "챈들러", "Adele",
+                "윈터 솔져", "크러쉬", "서머싯 몸",
+                "제임스 서버", "토니 스타크", "제시카 차스테인",
                 "톰 하디", "말콤 글래드웰", "헤밍웨이",
-                "도리스 레싱", "장 자크 루소", "장폴 사르트르",
+                "로버트 다우니 주니어", "세바스찬 스탠", "장폴 사르트르",
                 "윤동주", "공지철", "고윤정",
                 "송혜교", "안유진", "나탈리 포트만",
                 "코난 오브라이언", "젠다야", "전길남"};
 
         IntStream.range(0,29).forEach(i -> {
             OnTrackUser user = OnTrackUser.builder()
-                    .userEmail("users"+i+"@abc.com")
+                    .userEmail("user"+i+"@abc.com")
                     .password(encoder.encode("asdf123"))
                     .userName(names[i])
                     .registeredAt(LocalDate.now()).build();

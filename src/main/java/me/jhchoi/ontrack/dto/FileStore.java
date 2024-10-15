@@ -43,6 +43,7 @@ public class FileStore {
         return path.toAbsolutePath().toString();
     }
 
+
     // 확장자 추출
     private String extractExt(String originalFilename) {
         int idx = originalFilename.lastIndexOf(".");
@@ -63,6 +64,8 @@ public class FileStore {
         }
         List<TaskFile> fileList = new ArrayList<>();
 
+        s3Util.createFolderAWS(projectId, taskId);
+
         for(MultipartFile file : multipartFiles) {
             if(!file.isEmpty()) {
                 int idx = file.getOriginalFilename().lastIndexOf(".");
@@ -73,7 +76,7 @@ public class FileStore {
                 file.transferTo(new File(String.valueOf(savePath))); // 이게.. 저장하는 거였던 가?
                 List<Path> pathList = new ArrayList<>();
                 pathList.add(savePath);
-                s3Util.uploadFiles(pathList, true);
+                s3Util.uploadFiles(pathList); // , true
 
                 fileList.add(TaskFile.builder()
                         .projectId(projectId)
